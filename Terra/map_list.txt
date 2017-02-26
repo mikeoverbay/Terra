@@ -1,0 +1,57 @@
+﻿#_ This is a comment line.
+#_ Any line containting # will be ignored
+#_ The format for this is:
+#_ Image Name:Map ingame name
+#_ The program will replace .png with .pkg to load the map
+#_ The png images come from .pgk gui.pkg  path: maps/icons/map/
+00_tank_tutorial.png:Tank Tutorial
+01_karelia.png:Karelia
+02_malinovka.png:Malinovka
+#03_campania.png:Province
+04_himmelsdorf.png:Himmelsdorf
+05_prohorovka.png:Firey Salient
+06_ensk.png:Ensk
+07_lakeville.png:Lakeville
+08_ruinberg.png:Ruinberg
+10_hills.png:Mines
+11_murovanka.png:Murovanka
+13_erlenberg.png:Erlenberg
+14_siegfried_line.png:Siegfried Line
+#15_komarin.png:Komarin
+17_munchen.png:Widepark
+18_cliff.png:Cliff
+19_monastery.png:Abby
+22_slough.png:Swamp
+23_westfeld.png:Westfield
+28_desert.png:Sand River
+29_el_hallouf.png:El Hallouf
+31_airfield.png:Air Field
+33_fjord.png:Fjords
+34_Redshire.png:Redshire
+35_steppes.png:Steppes
+36_fishing_bay.png:Fisherman's Bay
+37_caucasus.png:Mountain Pass
+38_mannerheim_line.png:Arctic Region
+# 39_crimea.png:South Coast <-- this map has been removed completely
+# 43_north_america.png:NorthWest <-- this map has been removed completely
+44_north_america.png:Live Oaks
+45_north_america.png:Highway
+47_canada_a.png:Serene Coast
+# 51_asia.png:Dragon Ridge
+# 53_japan.png:Hidden Village
+# 60_asia_miao.png:Pearl River
+63_tundra.png:Tundra
+73_asia_korea.png:Sacred Valley
+83_kharkiv.png:Kharkov
+84_winter.png:Windstorm
+# 85_winter.png:Severogorsk
+86_himmelsdorf_winter.png:Winter Himmelsdorf
+# 87_ruinberg_on_fire.png:Ruinberg on Fire
+92_stalingrad.png:Stalingrad
+95_lost_city.png:Ghost Town
+100_thepit.png:Mittengard
+101_dday.png:Overlord
+103_ruinberg_winter.png:Winterberg
+114_czech.png:Pilsen
+# 109_battlecity_ny.png:Battle City
+#112_eiffel_tower_ctf.png:Paris - unloadable.. Its 10 x 12 grid is not normal

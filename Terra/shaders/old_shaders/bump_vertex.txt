@@ -1,0 +1,51 @@
+﻿// bump_vertex.txt
+// used to render all building and other models
+
+
+varying vec3 lightVec; 
+varying vec3 eyeVec;
+varying vec2 texCoord_0;
+varying vec2 texCoord_1;
+varying vec3 norm,halfVector;
+varying float ln;
+uniform vec3 cam_position;
+varying vec4 RGB;
+void main(void)
+{ 
+
+	texCoord_0 = gl_MultiTexCoord0.xy;
+	texCoord_1 = gl_MultiTexCoord1.xy;
+	vec3 vVertex = vec3(gl_ModelViewMatrix * gl_Vertex);
+
+norm = normalize(gl_NormalMatrix * gl_Normal);
+//norm = gl_Normal;
+vec3 tn;
+tn.z = norm.z;
+tn.y = norm.y;
+tn.x = norm.x;
+norm = tn;
+
+vec3 lightDir =  gl_LightSource[0].position.xyz;
+halfVector = normalize(vec3(gl_LightSource[0].halfVector.xyz));
+
+
+vec3 camPos = vec3 (gl_ModelViewMatrix * vec4(cam_position,1.0));
+camPos = normalize(cam_position);
+
+norm = normalize( norm);
+	vec3 point = vec3(gl_Vertex.xzy);
+	gl_Position = ftransform();		
+
+// This is the cut off distance for bumpping the surface.
+vec3 camera = vec3(gl_ModelViewMatrix * vec4(cam_position,1.0) );
+ln = distance(vVertex ,camPos);
+if (ln<100.0)
+{
+	ln = cos(1.57079 *( ln/100.0));
+	}
+	else
+	{
+	ln = 0.0;
+}
+
+}

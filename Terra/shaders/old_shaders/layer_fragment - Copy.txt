@@ -1,0 +1,109 @@
+﻿
+uniform sampler2D layer_1;
+uniform sampler2D layer_2;
+uniform sampler2D layer_3;
+uniform sampler2D layer_4;
+uniform sampler2D mixtexture;
+uniform int layers;
+uniform float s1;
+uniform float s2;
+uniform float s3;
+uniform float s4;
+uniform float col;
+uniform float row;
+uniform float tile_width;
+uniform int main_layer;
+varying vec4 VertexPosition;
+
+void main (void)
+{
+float size = 1024.0;
+	vec4 t0;
+	vec4 t1;
+	vec4 t2;
+	vec4 t3;
+	vec4 mix1;
+	vec4 outmix;
+	vec2 mix_coords;
+	vec2 loc;
+	float uv_scale = 10.0;
+			float adj_scale = 256.0 / 272.0;
+
+			float pad = ( 8.0 / (272.0*tile_width) )/uv_scale;
+
+			loc.xy =  gl_TexCoord[0].st/uv_scale;
+		;	loc = loc / tile_width;
+			;loc = loc * adj_scale;
+			;loc = loc /2.0;
+			mix_coords.x = -((row)/ tile_width);
+			mix_coords.y = -((col)/ tile_width);
+			;mix_coords.x = mix_coords.x - pad;
+			;mix_coords.y = mix_coords.y - pad;
+
+			mix_coords = mix_coords - loc;
+			;mix_coords.x = mix_coords.x - loc.x;
+			;mix_coords.y = mix_coords.y - loc.y;
+
+
+
+
+			mix1 = texture2D(mixtexture, mix_coords.xy).rgba;
+
+			vec2 texUV = gl_TexCoord[0].xy;
+ 
+ 			t3 = texture2D(layer_4, texUV * s4 );
+			t2 = texture2D(layer_3, texUV * s3 );
+			t1 = texture2D(layer_2, texUV * s2 );				
+			t0 = texture2D(layer_1, texUV * s1 );
+
+		if ( main_layer == 1)
+			{
+				t0 = texture2D(layer_1, gl_TexCoord[0].st/uv_scale);
+			}
+		if ( main_layer == 2)
+			{ 			
+				t1 = texture2D(layer_2, gl_TexCoord[0].st/uv_scale);
+			}
+		if ( main_layer == 3)
+			{ 			
+				t2 = texture2D(layer_3, gl_TexCoord[0].st/uv_scale);
+			}
+		if ( main_layer == 4)
+			{ 			
+				t3 = texture2D(layer_4, gl_TexCoord[0].st/uv_scale);
+			}
+		if (layers == 4)
+			{
+				outmix = mix(outmix, t3, mix1.a);
+				outmix = mix(outmix, t2, mix1.b);
+				outmix = mix(outmix, t1, mix1.g);
+				outmix = mix(outmix, t0, mix1.r);
+			}
+		if (layers == 3)
+			{
+				outmix = mix(outmix, t2, mix1.b);
+				outmix = mix(outmix, t1, mix1.g);
+				outmix = mix(outmix, t0, mix1.r);
+			}
+	if (layers == 2)
+		{
+				outmix = mix(outmix, t1, mix1.g);
+				outmix = mix(outmix, t0, mix1.r);
+		}
+	if (layers == 1)
+		{
+				outmix = mix(outmix, t0, mix1.r);
+		}
+
+	if (texUV.x > 0.0)
+		{
+		//	outmix.g = 255.0;
+		}
+	if (texUV.x < -10.0)
+		{
+		//	outmix.g = 255.0;
+		}
+
+
+		gl_FragColor = mix1;
+}

@@ -1,0 +1,60 @@
+﻿// Shadow map rendering
+// This is not used yet.
+
+uniform sampler2D shadowMap;
+
+
+varying vec4 ShadowCoord;
+varying vec4 vVertex;
+varying vec3 norm;
+varying vec2 texCoord;
+vec4 ShadowCoordPostW;
+vec2 moments ;
+float chebyshevUpperBound( float distance)
+{
+	moments = texture2D(shadowMap,ShadowCoordPostW.xy).rg;
+
+	// Surface is fully lit. as the current fragment is before the light occluder
+	if (distance <= moments.x)
+		return 1.0 ;
+
+	// The fragment is either in shadow or penumbra. We now use chebyshev's upperBound to check
+	// How likely this pixel is to be lit (p_max)
+	float variance = moments.y - (moments.x*moments.x);
+	variance = max(variance,0.000001);
+
+	float d = distance - moments.x;
+	float p_max =  smoothstep(0.50, 1.0, variance / (variance + d*d));
+
+	return p_max ;
+}
+
+
+void main()
+{	
+	ShadowCoordPostW = ShadowCoord / ShadowCoord.w;
+	
+
+	float shadow = chebyshevUpperBound(ShadowCoordPostW.z);
+
+	//gl_FragColor = vec4(shadow ) *gl_Color;
+
+//--------------------------------------------------------------------------------------------
+// do normal lighting.
+	vec3 n = normalize(norm);
+	vec3 lightDir = vec3(normalize( gl_LightSource[0].position.xyz));
+
+	lightDir.x *= -1.0;
+
+	vec4 Ambient = vec4( 0.5 ,0.5 , 0.5 , 0.0);
+	vec4 color = Ambient;
+	float NdotL = max(dot(n, lightDir.xzy),0.0);
+	if (NdotL > 0.0) {
+		color += Ambient * NdotL;
+		}
+
+	gl_FragColor  = shadow * color;
+//gl_FragColor.r =  pow( moments.r, 5.0)*8.0 ;
+//gl_FragColor.g =  pow( moments.g, 5.0)*8.0 ;
+//gl_FragColor.rgb  = moments.r - moments.g;
+}

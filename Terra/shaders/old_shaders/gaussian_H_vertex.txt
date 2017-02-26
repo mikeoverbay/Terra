@@ -1,0 +1,29 @@
+﻿// used for blurring textures
+// This is pure beta testing.
+// gaussian_H_vertex
+
+varying vec2 v_texCoord;
+varying vec2 v_blurTexCoords[14];
+uniform float size;
+
+void main()
+{
+ 	gl_Position = ftransform();
+	v_texCoord.xy = gl_MultiTexCoord0.xy;
+float s = 1.0 / size;
+
+     v_blurTexCoords[ 0] = v_texCoord + vec2(- s * 7.0, 0.0);
+    v_blurTexCoords[ 1] = v_texCoord + vec2(- s * 6.0, 0.0);
+    v_blurTexCoords[ 2] = v_texCoord + vec2(- s * 5.0, 0.0);
+    v_blurTexCoords[ 3] = v_texCoord + vec2(- s * 4.0, 0.0);
+    v_blurTexCoords[ 4] = v_texCoord + vec2(- s * 3.0, 0.0);
+    v_blurTexCoords[ 5] = v_texCoord + vec2(- s * 2.0, 0.0);
+    v_blurTexCoords[ 6] = v_texCoord + vec2(- s , 0.0);
+    v_blurTexCoords[ 7] = v_texCoord + vec2( s , 0.0);
+    v_blurTexCoords[ 8] = v_texCoord + vec2( s* 2.0, 0.0);
+    v_blurTexCoords[ 9] = v_texCoord + vec2( s* 3.0, 0.0);
+    v_blurTexCoords[10] = v_texCoord + vec2( s* 4.0, 0.0);
+    v_blurTexCoords[11] = v_texCoord + vec2( s* 5.0, 0.0);
+    v_blurTexCoords[12] = v_texCoord + vec2( s* 6.0, 0.0);
+    v_blurTexCoords[13] = v_texCoord + vec2( s* 7.0, 0.0);
+}

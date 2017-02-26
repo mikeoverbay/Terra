@@ -1,0 +1,251 @@
+﻿// render_fragment.txt
+// used to render blended hirez terrain
+uniform sampler2D normalMap;
+//
+uniform sampler2D layer_1;
+uniform sampler2D layer_2;
+uniform sampler2D layer_3;
+uniform sampler2D layer_4;
+uniform sampler2D n_layer_1;
+uniform sampler2D n_layer_2;
+uniform sampler2D n_layer_3;
+uniform sampler2D n_layer_4;
+uniform sampler2D colorMap;
+uniform sampler2D mixtexture;
+//uniform sampler2D shadowMap;
+//uniform float s1;
+//uniform float s2;
+//uniform float s3;
+//uniform float s4;
+uniform float col;
+uniform float row;
+uniform float tile_width;
+// more and more crap added :)
+uniform vec4 layer0U;
+uniform vec4 layer1U;
+uniform vec4 layer2U;
+uniform vec4 layer3U;
+uniform int enable_fog;
+uniform float l_ambient;
+uniform float l_texture;
+uniform float gamma;
+uniform int main_texture;
+
+varying vec3 lightVec;
+varying vec3 eyeVec;
+varying vec2 texCoord;
+varying vec4 RGB;
+varying vec3 norm;
+varying vec4 Vposition;
+varying vec3 Vertex;
+varying float ln;
+varying float ln_b;
+varying vec4 mask;
+varying vec4 mask_2;
+void main (void)
+
+{
+   vec4 t1;
+   vec4 t2;
+   vec4 t3;
+   vec4 t4;
+   vec4 n1;
+   vec4 n2;
+   vec4 n3;
+   vec4 n4;
+   vec4 MixLevel;
+   vec4 Nmix1;
+   vec4 Coutmix;
+   vec4 Noutmix;
+   vec2 mix_coords;
+   vec2 loc;
+   vec3 tc;
+
+   float uv_scale = 10.0;
+         vec2 texUV = -gl_TexCoord[0].xy;
+ 
+         float adj_scale = uv_scale/tile_width;
+         float cell_scale = (256.0/272.0);
+         float pad = ( 8.0 / (272.0*tile_width) );
+         adj_scale = (adj_scale * cell_scale)/uv_scale;
+
+         loc.xy =  texUV.xy/uv_scale;
+
+         loc = loc * adj_scale; // ok
+         
+         mix_coords.x =  + loc.x-((row)/ tile_width);
+         mix_coords.y =  - loc.y-((col+1.0)/ tile_width);
+         mix_coords.x = mix_coords.x - pad;//-(pad/8.0);
+         mix_coords.y = mix_coords.y + pad;//+(pad/8.0);
+
+// useless so far. I dont know how to use it.
+//vec4 shadow = texture2D(shadowMap, gl_TexCoord[0].st/uv_scale).xyzw;
+//float angle_1 = shadow.r + (shadow.g * 256.0);
+//float angle_2 = shadow.b + (shadow.a * 256.0);
+//////////
+// five weeks to figure this out! I have tried everything from pre-creating
+// the textures to a combo of premixed and shader to finaly this.
+// Its not perfect but its as close as I can get and I'm tired
+// of working on this!!!!!!!!!!
+//----------------------------------------------------------------
+vec2 tv;
+////// layer 4
+//------------------------------------------------------------------
+vec3 u = vec3(layer3U.zyx);
+vec3 v = vec3(layer3U.xyz);
+v.x *=-1.0;
+
+tv = vec2( dot( u, Vposition.xyz), dot( v, Vposition.xyz) );
+         t4 = texture2D(layer_4,  tv+.5  ); // new
+         n4 = texture2D(n_layer_4, tv+.5 ); // mew
+
+////// layer 3
+//------------------------------------------------------------------
+u = vec3(layer2U.zyx);
+v = vec3(layer2U.xyz);
+v.x *=-1.0;
+
+tv = vec2( dot( u, Vposition.xyz), dot( v, Vposition.xyz) );
+         t3 = texture2D(layer_3,  tv+.5  ); // new
+         n3 = texture2D(n_layer_3, tv+.5 ); // mew
+
+////// layer 2
+//------------------------------------------------------------------
+u = vec3(layer1U.zyx);
+v = vec3(layer1U.xyz);
+v.x *=-1.0;
+
+tv = vec2( dot( u, Vposition.xyz), dot( v, Vposition.xyz) );
+         t2 = texture2D(layer_2,  tv+.5  ); // new
+         n2 = texture2D(n_layer_2, tv+.5 ); // mew
+
+////// layer 1
+//------------------------------------------------------------------
+u = vec3(layer0U.zyx);
+v = vec3(layer0U.xyz);
+v.x *=-1.0;
+
+tv = vec2( dot( u, Vposition.xyz), dot( v, Vposition.xyz) );
+         t1 = texture2D(layer_1,  tv+.5  ); // new
+         n1 = texture2D(n_layer_1, tv+.5 ); // mew
+
+//------------------------------------------------------------------
+
+      MixLevel = texture2D(mixtexture, mix_coords.xy).rgba;
+      Nmix1 = MixLevel;
+float c_scale = 0.5; // trial and error... These are best fit values.
+float m_scale = 1.0;
+               MixLevel.r *= mask.r;
+               MixLevel.g *= mask.g;
+               MixLevel.b *= mask.b;
+               MixLevel.a *= mask.a;
+
+t1 = mix(texture2D(layer_1, gl_TexCoord[0].st/uv_scale), t1, mask_2.r);
+t2 = mix(texture2D(layer_2, gl_TexCoord[0].st/uv_scale), t2, mask_2.g);
+t3 = mix(texture2D(layer_3, gl_TexCoord[0].st/uv_scale), t3, mask_2.b);
+t4 = mix(texture2D(layer_4, gl_TexCoord[0].st/uv_scale), t4, mask_2.a);
+
+            // mix our color and normal maps
+            Coutmix = mix(Coutmix, t4, MixLevel.a);
+            Coutmix = mix(Coutmix, t3, MixLevel.b);
+            Coutmix = mix(Coutmix, t2, MixLevel.g);
+            Coutmix = mix(Coutmix, t1, MixLevel.r);
+
+vec4 bump;
+   bump.xyz = mix( Noutmix.xyz, vec3(0.0,0.0,0.0),1.0-ln);
+ //  bump.xyz = Noutmix.xyz;
+//-------------------------------------------------------------
+// this blends between low and highrez with distance
+float texture_level = (l_texture *.5) + 0.5;
+vec4 lowrez = texture2D(colorMap, gl_TexCoord[0].st/uv_scale);
+vec4 base = mix(Coutmix,lowrez,1.0-ln) * texture_level; /// blend based on distance to camera
+base.a = 0.0;
+//-------------------------------------------------------------
+// Do shading
+
+float invRadius = 1.5;
+   float distSqr = dot(lightVec, lightVec);
+   //float att = clamp(1.0 - (invRadius * sqrt(distSqr)), 0.5, 0.5);
+   vec3 lVec =normalize( lightVec);// * inversesqrt(distSqr);
+
+   vec3 vVec = normalize(eyeVec);   
+
+   vec4 vAmbient =  vec4(l_ambient,l_ambient,l_ambient,1.0);
+
+
+   n1 =  normalize(2.0 * n1 - 1.0) ; n1.x *= -1.0;
+   n2 =  normalize(2.0 * n2 - 1.0) ; n2.x *= -1.0;
+   n3 = normalize(2.0 * n3 - 1.0) ; n3.x *= -1.0;
+   n4 =  normalize(2.0 * n4 - 1.0) ; n4.x *= -1.0;
+//There is no good way to add normals together and not destroy them.
+// We have to do the math on each one THAN mix them together.
+   float d4 = max( dot(n4.xyz,lVec), 0.1);
+   float d3 = max( dot(n3.xyz,lVec), 0.1);
+   float d2 = max( dot(n2.xyz,lVec), 0.1);
+   float d1 = max( dot(n1.xyz,lVec), 0.1);
+   
+float diffuse;
+const float bump_tweak = 0.5;
+diffuse = mix( diffuse, d4, Nmix1.a * bump_tweak );
+diffuse = mix( diffuse, d3, Nmix1.b * bump_tweak );
+diffuse = mix( diffuse, d2, Nmix1.g * bump_tweak );
+diffuse = mix( diffuse, d1, Nmix1.r * bump_tweak);
+
+diffuse = max(diffuse, 0.11);
+
+const float spec_scale = 0.2;
+float specular = 0.0;
+   specular  += clamp(dot(reflect(lVec, n4.xyz), vVec), 0.0, 1.0) * Nmix1.a;
+   specular  += clamp(dot(reflect(lVec, n3.xyz), vVec), 0.0, 1.0) * Nmix1.b;
+   specular  += clamp(dot(reflect(lVec, n2.xyz), vVec), 0.0, 1.0) * Nmix1.g;
+   specular  += clamp(dot(reflect(lVec, n1.xyz), vVec), 0.0, 1.0) * Nmix1.r;
+specular = pow((Coutmix.a * specular)* spec_scale, 1000.0);
+//specular = min(max(specular,0.0), 1.0);
+//if (specular < 0.0) specular = 0.0;
+
+vec3 lightDir = vec3(normalize(gl_LightSource[0].position.xyz - Vertex.xyz));
+vec3 n = normalize(norm )*.3 ;
+
+float diffuse_2 =   max( dot(n,lightDir), l_ambient) ;
+
+// final color mix
+
+gl_FragColor.rgb = clamp(specular + (diffuse_2 * diffuse*4.5) * base * 3.5 *ln, 0.0 ,0.4) ;
+// This adds brightnees shift from zooming out to cancel the shift in brightness;
+gl_FragColor.rgb += clamp(( 1.0-ln ) * base.xyz * (diffuse_2  ), 0.0,0.4) ;
+
+gl_FragColor += vAmbient * base;
+gl_FragColor *= 2.5;
+
+vec3 vG = vec3(1.0 , 1.0 , 1.0);
+gl_FragColor.rgb = pow(gl_FragColor.rgb, vG/gamma);
+
+//----------------------------------------------------------------------
+// debug crap
+//gl_FragColor *=l_texture;
+//gl_FragColor.xyz =vSpecular + (gl_FragColor.xyz*.1);
+//gl_FragColor.xyz = diffuse+ vSpecular + (gl_FragColor.xyz*.01);
+//gl_FragColor.xyz = diffuse* diffuse_2;
+
+//gl_FragColor.xyz = specular;
+
+//gl_FragColor.xyz = up;
+//gl_FragColor = n2 *1.5;
+
+//----------------------------------------------------------------------
+// FOG addition
+ const float LOG2 = 1.442695;
+
+float z = gl_FragCoord.z / gl_FragCoord.w;
+float fogFactor = exp2( -gl_Fog.density * gl_Fog.density * z * z * LOG2 );
+fogFactor = clamp(fogFactor, 0.0, 1.0);
+if (enable_fog == 1)
+   {
+      gl_FragColor = mix(gl_Fog.color, gl_FragColor, fogFactor );
+   }
+   else
+   {
+      gl_FragColor = gl_FragColor;         
+   };
+
+}

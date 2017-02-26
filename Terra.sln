@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Terra", "Terra\Terra.vbproj", "{744FFA48-6735-484B-AE7C-DBB5949E1F81}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B67F236A-EC7F-4739-83EE-5A33E2029DF5}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Terra Setup", "Setup\Setup.vdproj", "{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Debug|x86.ActiveCfg = Debug|x86
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Debug|x86.Build.0 = Debug|x86
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Debug|x86.Deploy.0 = Debug|x86
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Release|x86.ActiveCfg = Release|x86
+		{744FFA48-6735-484B-AE7C-DBB5949E1F81}.Release|x86.Build.0 = Release|x86
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Debug|Any CPU.ActiveCfg = Debug
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Debug|Any CPU.Build.0 = Debug
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Debug|x86.ActiveCfg = Debug
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Debug|x86.Build.0 = Debug
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Release|Any CPU.ActiveCfg = Release
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Release|Any CPU.Build.0 = Release
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Release|x86.ActiveCfg = Release
+		{4ED90AB9-78CB-4BF4-9274-A11A5E579BDC}.Release|x86.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = .
+	EndGlobalSection
+EndGlobal
