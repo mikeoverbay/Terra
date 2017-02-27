@@ -976,7 +976,8 @@ set_mask:
         'Dim bitmap = New System.Drawing.Bitmap(lc.x, -lc.y, PixelFormat.Format24bppRgb)
         If temp_bmp IsNot Nothing Then
             temp_bmp.Dispose()
-
+            GC.Collect()
+            GC.WaitForFullGCComplete()
         End If
         temp_bmp = New System.Drawing.Bitmap(lc.x, -lc.y, PixelFormat.Format24bppRgb)
         Dim rect As Rectangle = New Rectangle(0, 0, lc.x, -lc.y)
@@ -993,7 +994,9 @@ set_mask:
 
         'success = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
         Il.ilBindImage(0)
-        ilu.iludeleteimage(texID)
+        Ilu.iluDeleteImage(texID)
+        GC.Collect()
+        GC.WaitForFullGCComplete()
         'frmMain.pb2.Visible = False
         'frmMain.pb2.SendToBack()
         Return image

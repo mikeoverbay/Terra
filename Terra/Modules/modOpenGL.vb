@@ -115,7 +115,7 @@ Module modOpenGL
             Dim ms As String = System.Reflection.MethodBase.GetCurrentMethod().Name
             MsgBox("Function: " + ms + vbCrLf + "Error! " + s, MsgBoxStyle.Exclamation, "OpenGL Issue")
         End If
-        make_post_FBO_and_Textures()
+        'make_post_FBO_and_Textures()
         create_decal_FBO()
         noise_map_id = Load_DDS_File(Application.StartupPath + "\Resources\noise.dds")
         Gl.glGetFloatv(Gl.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)

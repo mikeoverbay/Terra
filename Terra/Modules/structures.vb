@@ -279,15 +279,10 @@ Module structures
         Public col, row As Single
         Public name As String
         Public scr_coords() As Single
-        Public chunkdata() As Byte
         Public cdata() As Byte
         Public model_count As UInt32
-        ' Public external() As Boolean
         Public model_list As List(Of String)
         Public tree_list As List(Of String)
-        ' Public model_transforms() As transformStruct
-        ' Public tree_transforms() As transformStruct
-        ' Public models() As primitive
         Public flora() As flora_
         Public flora_count As UInt32
         Public heights(,) As Single

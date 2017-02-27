@@ -51,6 +51,9 @@ Public Class frmMain
     'Dim TabArea As Rectangle
 #Region "variables"
 
+    Dim swat2 As New Stopwatch
+    Dim swat1 As New Stopwatch
+    Dim angle_offset As Single
     Dim real_names_list As New List(Of String)
     Dim Lx, Ly As Single
     Dim angle As Single
@@ -98,6 +101,7 @@ Public Class frmMain
     Dim sun_lock As Boolean = False
     Dim leaf_c_map, leaf_n_map, leaf_level, leaf_contrast, leaf_camPos, leaf_matrix, leaf_gray_level, leaf_fog_enable As Integer
     Dim leaf_ambient, branch_ambient, decal_ambient, model_ambient As Integer
+    Public decal_u_wrap, decal_v_wrap As Integer
     Dim phong_cam_pos As Integer
     Dim bump_out_ As Integer
     Public Shared vismap_address As Integer
@@ -617,7 +621,7 @@ fail_path:
         npb.Update()
         Application.DoEvents()
         If _STARTED Then
-            make_post_FBO_and_Textures()
+            'make_post_FBO_and_Textures()
         End If
         If Not SHOW_MAPS Then
             draw_scene()
@@ -766,6 +770,9 @@ fail_path:
         gamma_5 = Gl.glGetUniformLocation(shader_list.decals_shader, "gamma")
         matrix_1 = Gl.glGetUniformLocation(shader_list.decals_shader, "ModelMatrix1")
         decal_ambient = Gl.glGetUniformLocation(shader_list.decals_shader, "ambient")
+        decal_u_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "u_wrap")
+        decal_v_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "v_wrap")
+
         '-----------------------------------------------------------------
         leaf_c_map = Gl.glGetUniformLocation(shader_list.leaf_shader, "colorMap")
         leaf_camPos = Gl.glGetUniformLocation(shader_list.leaf_shader, "camPos")
@@ -2218,56 +2225,8 @@ nope:
         'Gl.glDisable(Gl.GL_DEPTH_TEST)
         'Gl.glEnable(Gl.GL_LIGHTING)
     End Sub
-    '--------------------------------------------------------
-    Dim smrs As Int32 = 256
-    Dim Frustum(8) As vect3
-    Dim modelMatrix(16) As Double
-    Dim projMatrix(16) As Double
-    Dim viewPort(4) As Integer
-    Dim MV(16) As Single
-    Dim lightProject(16) As Single
-    Public Sub get_shadow_bounds()
-        If Not maploaded Then
-            Return
-        End If
-        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-            MessageBox.Show("Unable to make rendering context current")
-            End
-        End If
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glDepthFunc(Gl.GL_ALWAYS)
-        Gl.glDepthFunc(Gl.GL_LEQUAL)
-        Gl.glFrontFace(Gl.GL_CW)
-        Gl.glCullFace(Gl.GL_BACK)
-        Gl.glLineWidth(1)
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
 
-        ResizeGL()
-        ViewPerspective()   ' set 3d view mode
-        'set_eyes()
-        Gl.glEnable(Gl.GL_CULL_FACE)
-        Gl.glColor3f(0.5, 0.5, 0.5)
-        Gl.glPushMatrix()
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        'Gl.glUseProgram(depth_shader)
-        For i = 0 To test_count
-            Gl.glCallList(maplist(i).calllist_Id)
-            Gl.glCallList(maplist(i).seamCallId)
 
-        Next
-        Gl.glPopMatrix()
-        Gdi.SwapBuffers(pb1_hDC)
-        'Gl.glFinish()
-        Gl.glFlush()
-        'draw_little_window()
-
-        'look_point_X = old_look_point.x
-        'look_point_Y = old_look_point.y
-        'look_point_Z = old_look_point.z
-
-    End Sub
     Private Sub show_data(ByVal v As vect3, ByVal n As Integer)
         frmDebug.tb.Text += "N:" + n.ToString + String.Format("X{0,12:F4} Y{0,12:F4} Z{0,12:F4} ", v.x, v.y, v.z) + vbCrLf
     End Sub
@@ -2368,6 +2327,7 @@ nope:
         Gl.glPopMatrix()
 
     End Sub
+
     Private Function check_bounds(ByVal v As vect2) As vect2
         If v.x > x_max Then
             v.x = x_max
@@ -2384,241 +2344,6 @@ nope:
         Return v
     End Function
 
-
-
-    Public drawbuffer0() = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_NONE}
-    Public drawbuffer1() = {Gl.GL_NONE, Gl.GL_COLOR_ATTACHMENT1_EXT}
-    Public attachstatus(5) As Integer
-    Public Sub make_shadow_map()
-        If Not maploaded Then
-            Return
-        End If
-        'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, fboID)
-        attach_decal(coMapID)
-        'Gl.glDrawBuffers(2, drawbuffer0(0))
-        'check status
-        Dim er = Gl.glGetError
-        'ResizeGL()
-        'lightTransform()
-        'lightTransform_preview()
-        Gl.glColorMask(Gl.GL_TRUE, Gl.GL_TRUE, Gl.GL_TRUE, Gl.GL_TRUE)
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        'Gl.glColorMask(Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE)
-        Gl.glDepthFunc(Gl.GL_LEQUAL)
-        Gl.glFrontFace(Gl.GL_CW)
-        Gl.glCullFace(Gl.GL_FRONT)
-        Gl.glLineWidth(1)
-        'ViewPerspective()
-        'terra
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        'Gl.glEnable(Gl.GL_LIGHTING)
-        Gl.glColor4f(1.0, 1.0, 1.0, 0.0)
-        Gl.glCullFace(Gl.GL_FRONT)
-        Gl.glDisable(Gl.GL_CULL_FACE)
-
-        ' Gl.glUseProgram(depth_shader)
-        Gl.glUseProgram(shader_list.depth_shader)
-        For i = 0 To test_count
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
-            Gl.glCallList(maplist(i).calllist_Id)
-            Gl.glCallList(maplist(i).seamCallId)
-
-        Next
-        Gl.glCullFace(Gl.GL_FRONT)
-        'models
-        For model As UInt32 = 0 To Models.matrix.Length - 1
-            For k = 0 To Models.models(model)._count - 1
-                Gl.glPushMatrix()
-                Gl.glMultMatrixf(Models.matrix(model).matrix)
-                Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                Gl.glPopMatrix()
-            Next
-        Next
-
-        'trees
-        'For map = 0 To test_count
-        '    If maplist(map).flora IsNot Nothing Then
-        '        For i As UInt32 = 0 To maplist(map).flora_count
-        '            Dim mapL As vect3 = maplist(map).location
-        '            Gl.glPushMatrix()
-        '            Gl.glTranslatef(mapL.x + 50, mapL.z, mapL.y - 50)
-
-        '            'Gl.glDisable(Gl.GL_CULL_FACE)
-        '            If maplist(map).flora(i).branch_displayID > 0 Then
-        '                Gl.glCallList(maplist(map).flora(i).branch_displayID)
-        '            Else
-        '            End If
-        '            If maplist(map).flora(i).frond_displayID > 0 Then
-        '                Gl.glCallList(maplist(map).flora(i).frond_displayID)
-        '            End If
-        '            If maplist(map).flora(i).leaf_displayID > 0 Then
-        '                Gl.glCallList(maplist(map).flora(i).leaf_displayID)
-        '            End If
-
-        '            Gl.glPopMatrix()
-        '        Next
-
-        '    End If
-        'Next
-        ' must save the matrix!
-        Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, MV)
-        Gl.glGetFloatv(Gl.GL_PROJECTION_MATRIX, lightProject)
-
-        Gl.glMatrixMode(Gl.GL_TEXTURE)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 7)
-
-        Gl.glLoadIdentity()
-        Gl.glLoadMatrixf(bias)
-
-        ' concatating all matrices into one.
-        Gl.glMultMatrixf(lightProject)
-        Gl.glMultMatrixf(MV)
-        'Gl.glPopMatrix()
-        ' Go back to normal matrix mode
-        Gl.glMatrixMode(Gl.GL_MODELVIEW)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        er = Gl.glGetError
-        Gl.glUseProgram(0)
-        blur_shadow(0)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, coMapID)
-        'Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D) ' this makes no sense
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        er = Gl.glGetError
-        'attache_texture(0)
-        ' switch back to window-system-provided framebuffer
-        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        Gl.glDrawBuffer(Gl.GL_BACK)
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Thread.Sleep(5)
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Gl.glPushMatrix()
-
-    End Sub
-    Public Sub blur_shadow(ByVal texture_id As Integer)
-
-        'Dim uc As vect2
-        'Dim lc As vect2
-        Dim comap, si As Integer
-        'frmMain.pb2.Location = New Point(0, 0)
-        'frmMain.pb2.BringToFront()
-        'frmMain.pb2.Visible = True
-
-        'lc.x = smrs
-        'lc.y = -smrs    ' top to bottom is negitive ' may wanna change this!
-        'uc.x = 0.0
-        'uc.y = 0.0
-
-        '---------------------------------------------------------
-        '1st render/blur vert coMapID to coMapID2
-        attach_decal(coMapID2)
-        Dim e5 = Gl.glGetError
-
-        Gl.glViewport(0, 0, smrs, smrs)
-        Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
-        Gl.glLoadIdentity() 'Reset The Matrix
-        Dim e3 = Gl.glGetError
-        Gl.glOrtho(0, smrs, -smrs, 0.0, 100.0, -100.0)    'Select Ortho Mode
-        Dim e2 = Gl.glGetError
-        ' TODO: use create a real furstum for this!
-        'Gl.glOrtho(Frustum(4).x, Frustum(5).x, Frustum(0).y, Frustum(6).y, -1500, 1500.0) 'Select Ortho Mode
-        Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
-        Gl.glLoadIdentity() 'Reset The Matrix
-
-
-        Gl.glDisable(Gl.GL_LIGHTING)
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glDisable(Gl.GL_DEPTH_TEST)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
-
-
-
-        comap = Gl.glGetUniformLocation(shader_list.gaussian_shader, "s_texture")
-        si = Gl.glGetUniformLocation(shader_list.gaussian_shader, "blurScale")
-        Gl.glUseProgram(shader_list.gaussian_shader)
-        'set switch
-        Gl.glUniform3f(si, 1.0 / smrs, 0.0, 0.0)
-
-        Gl.glUniform1i(comap, 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, texture_id)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, minimap_textureid)
-        Dim e = Gl.glGetError
-
-        Dim gridS = smrs
-        Gl.glBegin(Gl.GL_QUADS)
-        '---
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(-0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(-0, -gridS, 0.0)
-        Gl.glEnd()
-        'Gl.glUseProgram(0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        e = Gl.glGetError
-        'Gdi.SwapBuffers(pb1_hDC)
-        '-------------------------------------------------------------
-        ' 2nd. horzonal. render/blur horz coMapID2 in to coMapID
-
-        attach_decal(texture_id)
-        'attache_texture(0)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-
-
-        Gl.glUseProgram(shader_list.gaussian_shader)
-        'set switch
-        Gl.glUniform3f(si, 0.0, 1.0 \ smrs, 0.0)
-
-
-        Gl.glUniform1i(comap, 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, utility_texture)
-        e = Gl.glGetError
-
-        Gl.glBegin(Gl.GL_QUADS)
-        '---
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(-0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(-0, -gridS, 0.0)
-        Gl.glEnd()
-
-        Gl.glUseProgram(0)
-
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        Gl.glDrawBuffer(Gl.GL_BACK)
-        '--------------------
-
-        'frmMain.pb2.Visible = False
-        'frmMain.pb2.SendToBack()
-
-    End Sub
-
-    '--------------------------------------------------------
-    Public testing As Boolean = True
 
 
     Public Sub draw_maps()
@@ -2789,7 +2514,6 @@ nope:
         'Gl.glEnable(Gl.GL_LIGHTING)
 
     End Sub
-    Public selected_map_hit As Integer = 0
     Public Sub gl_pick_map(ByVal x As Integer, ByVal y As Integer)
         If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
             'MessageBox.Show("Unable to make rendering context current")
@@ -2833,10 +2557,9 @@ nope:
         Application.DoEvents()
         draw_maps()
     End Sub
-    '------------------------------------------------------------------------------------------------
-    '------------------------------------------------------------------------------------------------
-    '------------------------------------------------------------------------------------------------
-    '------------------------------------------------------------------------------------------------
+
+
+
     Private Sub start_drawing()
 
     End Sub
@@ -3615,15 +3338,12 @@ nope:
 
     End Sub
 
-
     Public Sub draw_scene()
         If Not _STARTED Then Return
         If Not maploaded Then
             Return
         End If
-
-
-        'draw_little_window()
+        swat1.Restart()
         If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
             End
@@ -3649,7 +3369,6 @@ nope:
         '========================================================================
         Gl.glEnable(Gl.GL_CULL_FACE)
         Gl.glEnable(Gl.GL_COLOR_MATERIAL)
-        'Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
         '----------------------------------------------------
         Gl.glDisable(Gl.GL_SMOOTH)
         '----------------------------------------------------
@@ -3665,7 +3384,6 @@ nope:
         setup_view()
         '---------------------------------
         ' this gets the point on the screen for chunkIDs
-
         '---------------------------------
         Dim model_view(16) As Double
         Dim projection(16) As Double
@@ -3701,32 +3419,37 @@ nope:
         Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
         '---------------------------------------------------------------------------------
         'draw the map sections and seams SOLID
+        swat2.Restart()
         draw_terrain()
+        If frmStats.Visible = True Then
+            frmStats.rt_terrian.Text = swat2.ElapsedMilliseconds.ToString
+        End If
+
         '---------------------------------------------------------------------------------
- 
-        '---------------------------------------------------------------------------------
-        'Dim global_ambient2() As Single = {0.8F, 0.8F, 0.8F, 1.0F}
-        'Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient2)
-        '---------------------------------------------------------------------------------
+        swat2.Restart()
         draw_models()
+        If frmStats.Visible = True Then
+            frmStats.rt_models.Text = swat2.ElapsedMilliseconds.ToString
+        End If
         '---------------------------------------------------------------------------------
+        swat2.Restart()
         draw_trees()
+        If frmStats.Visible = True Then
+            frmStats.rt_trees.Text = swat2.ElapsedMilliseconds.ToString
+        End If
         '---------------------------------------------------------------------------------
-         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Gl.glDisable(Gl.GL_CULL_FACE)
         Gl.glDisable(Gl.GL_ALPHA_TEST)
         Gl.glDisable(Gl.GL_TEXTURE_2D)
-        'Gl.glStencilFunc(Gl.GL_EQUAL, 255, 255)
-        'Gl.glStencilMask(0)
-        'Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glDepthMask(Gl.GL_FALSE)
         'draw decals
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-
-
+        '-------- decals
+        swat2.Restart()
         If maploaded And m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
             If Not view_mode Then
                 ViewPerspective_d()
@@ -3738,26 +3461,19 @@ nope:
             Gl.glUniform1f(bump_out_, -0.005)
             Gl.glDisable(Gl.GL_BLEND)
             Gl.glColor3f(0.2, 0.05, 0.0)
-            'Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            'Gl.glPolygonOffset(1.0, 1.0)
-            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
             For k = 0 To decal_matrix_list.Length - 1
                 If decal_matrix_list(k).good Then
-                    'Gl.glStencilFunc(Gl.GL_GREATER, decal_matrix_list(k).priority, &HFFFF)
                     Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
             Next
 
-            'Gl.glDisable(Gl.GL_POLYGON_OFFSET_FILL)
-            Gl.glPolygonOffset(0.0, 0.0)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(0.0, 0.0, 0.0)
             Gl.glUniform1f(bump_out_, -0.015)
 
             For k = 0 To decal_matrix_list.Length - 1
                 If decal_matrix_list(k).good Then
-                    'Gl.glStencilFunc(Gl.GL_GREATER, decal_matrix_list(k).priority + 1, &HFFFF)
                     Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
             Next
@@ -3776,7 +3492,6 @@ nope:
                 Gl.glUseProgram(0)
             End If
         End If
-        'Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         If maploaded And Not m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
             If Not view_mode Then
                 ViewPerspective_d()
@@ -3785,11 +3500,7 @@ nope:
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
             Gl.glColor3f(0.5, 0.5, 0.5)
-            'Gl.glDisable(Gl.GL_BLEND)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            'Gl.glDisable(Gl.GL_LIGHTING)
-
-            'Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glUseProgram(shader_list.decals_shader)
             'If m_show_fog.Checked Then
             '    Gl.glUniform1i(f_address5, 1)
@@ -3804,7 +3515,6 @@ nope:
             Gl.glUniform1f(gamma_5, gamma_level)
             Gl.glUniform1f(decal_ambient, lighting_ambient)
 
-
             Dim E = Gl.glGetError
             Gl.glEnable(Gl.GL_BLEND)
             Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
@@ -3812,12 +3522,11 @@ nope:
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
             E = Gl.glGetError
             ''''''''''''''''''''''''''''''''''''''''''''''''''
-            'Gl.glPolygonOffset(-10.0, -10.0)
-            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
             For k = 0 To decal_matrix_list.Length - 1
-                'Gl.glStencilFunc(Gl.GL_GREATER, decal_matrix_list(k).priority, &HFFFF)
-                'Gl.glUniformMatrix4fv(matrix_1, 1, 1, decal_matrix_list(k).matrix)
                 If decal_matrix_list(k).good Then
+                    Gl.glUniform1f(decal_u_wrap, decal_matrix_list(k).u_wrap)
+                    Gl.glUniform1f(decal_v_wrap, decal_matrix_list(k).v_wrap)
+
                     Gl.glActiveTexture(Gl.GL_TEXTURE0)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
@@ -3826,33 +3535,17 @@ nope:
                     Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
             Next
-            Gl.glDisable(Gl.GL_POLYGON_OFFSET_FILL)
             Gl.glUseProgram(0)
             Gl.glEnable(Gl.GL_DEPTH_TEST)
             Gl.glDisable(Gl.GL_BLEND)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-
-
-            '---------------------------------------------------------------------------------
-            '---------------------------------------------------------------------------------
-            ' this is screwed.. I must clear the Z buffer and redraw the terrain because of
-            'the shit in z the decals cause.
-            Gl.glDisable(Gl.GL_STENCIL_TEST)
-            Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT)
-            'Gl.glColorMask(0, 0, 0, 0)
-            'For i = 0 To test_count
-            '    Gl.glCallList(maplist(i).calllist_Id)
-            '    Gl.glCallList(maplist(i).seamCallId)
-            'Next
-            'Gl.glColorMask(1, 1, 1, 1)
         End If
         If Not view_mode Then
             ViewPerspective()
 
         End If
-        Gl.glDisable(Gl.GL_STENCIL_TEST)
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDepthMask(Gl.GL_TRUE)
         '---------------------------------------------------------------------------------
@@ -3866,7 +3559,6 @@ nope:
             For k = 0 To decal_matrix_list.Length - 1
                 Dim m = decal_matrix_list(k).matrix
                 If decal_matrix_list(k).good Then
-                    'Gl.glEnable(Gl.GL_DEPTH_TEST)
                     With decal_matrix_list(k)
                         If k = d_counter Then
                             If frmBiasing.SHOW_SELECT_MESH Then
@@ -3892,7 +3584,6 @@ nope:
                             Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
                             Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
                             Gl.glEnd()
-                            'Gl.glDisable(Gl.GL_DEPTH_TEST)
                             Gl.glLineWidth(2.0)
                         Else
                             Gl.glLineWidth(2.0)
@@ -3922,6 +3613,10 @@ nope:
             Gl.glEnable(Gl.GL_LIGHTING)
             Gl.glLineWidth(1.0)
         End If
+        If frmStats.Visible = True Then
+            frmStats.rt_decals.Text = swat2.ElapsedMilliseconds.ToString
+        End If
+
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         ViewPerspective()
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
@@ -4001,7 +3696,6 @@ nope:
                         Gl.glDisable(Gl.GL_STENCIL_TEST)
 
                     Else
-                        'Gl.glColor3f(0.2, 0.0, 0.0)
                         Gl.glCallList(tdl)
                     End If
                     Gl.glPopMatrix()
@@ -4065,28 +3759,22 @@ nope:
             Next
         End If
         Gl.glUseProgram(0)
-        Gl.glDisable(Gl.GL_LIGHTING)
         '---------------------------------
         ' base locations
         draw_base_rings()
 
         '---------------------------------
         '------------------------------------
-        Gl.glEnable(Gl.GL_LIGHTING)
-        For i = 0 To 4
-            Gl.glActiveTexture(Gl.GL_TEXTURE0 + i)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Next
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
 
         'draw the water. IF there is water?
         If water.IsWater And maploaded And m_show_water.Checked And Not m_hell_mode.Checked Then
+            Gl.glEnable(Gl.GL_LIGHTING)
             Gl.glEnable(Gl.GL_DEPTH_TEST)
 
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Gl.glEnable(Gl.GL_ALPHA_TEST)
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-            'Gl.glDisable(Gl.GL_DEPTH_TEST)
             Gl.glPushMatrix()
             Gl.glEnable(Gl.GL_BLEND)
             Gl.glColor4f(0.1, 0.1, 0.2, 0.5)
@@ -4100,29 +3788,8 @@ nope:
 
             Gl.glDisable(Gl.GL_BLEND)
             Gl.glDisable(Gl.GL_FOG)
-
-            ''Gl.glDisable(Gl.GL_STENCIL_TEST)
-            ''Dim eqr() = {0.0, 1.0, 0.0, 0.0}
-
-            'Gl.glPushMatrix()
-            ''Gl.glEnable(Gl.GL_CLIP_PLANE0)
-            ''Gl.glClipPlane(Gl.GL_CLIP_PLANE0, eqr)
-
-            'Gl.glTranslatef(0.0, water.position.y * 2.0, 0.0)
-
-
-            'Gl.glScalef(1.0, -1.0, 1.0)
-            ''Gl.glEnable(Gl.GL_CULL_FACE)
-            ''Gl.glPolygonMode(Gl.GL_BACK, Gl.GL_FILL)
-            'Gl.glEnable(Gl.GL_DEPTH_TEST)
-
-            ''-----------------------------------
-            'Gl.glActiveTexture(Gl.GL_TEXTURE0)
-
-
-
-            'Gl.glDisable(Gl.GL_ALPHA_TEST)
         End If
+
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_BLEND)
         Gl.glDisable(Gl.GL_STENCIL_TEST)
@@ -4130,22 +3797,15 @@ nope:
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         '---------------------------------------------------------------------------------
         '---------------------------------------------------------------------------------
-
         Gl.glDisable(Gl.GL_TEXTURE_2D)
-
-
-
         '---------------------------------
         'draw_XZ_grid()
         '---------------------------------
-        Gl.glLineWidth(1.0)
         Gl.glDisable(Gl.GL_LIGHTING)
         Gl.glColor3f(1.0, 1.0, 1.0)
 
         If move_mod Or z_move Then  'draw reference lines to eye center
-            'Gl.glLineStipple(1, &HF00F)
-            'Gl.glEnable(Gl.GL_LINE_STIPPLE)
-            Gl.glLineWidth(1)
+            Gl.glLineWidth(1.0)
             Gl.glBegin(Gl.GL_LINES)
             If Not NetData Then
                 Gl.glVertex3f(u_look_point_X, u_look_point_Y + 1000, u_look_point_Z)
@@ -4168,29 +3828,20 @@ nope:
                 Gl.glVertex3f(Packet_in.Ex, Packet_in.Ey, Packet_in.Ez - 1000)
             End If
             Gl.glEnd()
-            'Gl.glLineStipple(1, &HFFFF)
-            'Gl.glDisable(Gl.GL_LINE_STIPPLE)
         End If
         Gl.glDisable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
-
         '---------------------------------
-        copy_to_post_map()
+        'copy_to_post_map()
         '---------------------------------
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, post_depth_image_id)
-        'Gl.glReadBuffer(Gl.GL_BACK) 'Ensure we are reading from the back buffer.
-        'Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_DEPTH_COMPONENT, 0, 0, post_map_width, post_map_height, 0)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        '---------------------------------
-
 
         'all below is 2D ortho stuff
         '---------------------------------
         ViewOrtho()
         '==========================
-        draw_post_test()
+        'draw_post_test()
         '==========================
-        Gl.glPushMatrix()
         Gl.glDisable(Gl.GL_DEPTH_TEST)
+
         Gl.glTranslatef(0.0, 0.0F, -0.01F)
         If maploaded And EDIT_INCULDERS Then
             For k = 0 To decal_matrix_list.Length - 1
@@ -4204,35 +3855,8 @@ nope:
                 End With
             Next
         End If
+
         If Not m_hell_mode.Checked And m_show_status.Checked Then
-
-            draw_heading()
-            Dim w As Single = 0
-            If m_show_minimap.Checked And mini_map_loaded Then
-                w = (minimap_size * 1.066666)    ' used to make room for the minimap
-            End If
-            Gl.glDisable(Gl.GL_DEPTH_TEST)
-            If m_show_minimap.Checked And mini_map_loaded Then
-                draw_minimap()
-            End If
-            Gl.glDisable(Gl.GL_LIGHTING)
-            Gl.glEnable(Gl.GL_BLEND)
-            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-            Gl.glColor4f(0.3, 0.0, 0.0, 0.6)
-            Gl.glBegin(Gl.GL_TRIANGLES)
-            Gl.glVertex3f(0.0, -pb1.Height, 0.0)
-            Gl.glVertex3f(0.0, -pb1.Height + 20, 0.0)
-            Gl.glVertex3f(pb1.Width - w, -pb1.Height + 20, 0.0)
-
-            Gl.glVertex3f(pb1.Width - w, -pb1.Height + 20, 0.0)
-            Gl.glVertex3f(pb1.Width - w, -pb1.Height, 0.0)
-            Gl.glVertex3f(0.0, -pb1.Height, 0.0)
-            Gl.glEnd()
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glEnable(Gl.GL_LIGHTING)
-            'Dim ambient2() As Single = {1.0, 1.0, 1.0}
-            'Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, ambient2)
-
             If maploaded And m_show_chuckIds.Checked Then
                 For i = 0 To maplist.Length - 2
                     If maplist(i).scr_coords(2) < 1.0 Then
@@ -4241,9 +3865,6 @@ nope:
                     End If
                 Next
             End If
-            Gl.glPopMatrix()
-            Gl.glPushMatrix()
-            Gl.glTranslatef(0.0, 0.0F, -50.1F)
             If maploaded And m_show_tank_names.Checked Then
                 For i = 0 To 14
                     If locations.team_1(i).track_displaylist > -1 Then
@@ -4274,6 +3895,32 @@ nope:
                     End If
                 Next
             End If
+            '====================================
+            draw_heading()
+            Dim w As Single = 0
+            If m_show_minimap.Checked And mini_map_loaded Then
+                w = (minimap_size * 1.066666)    ' used to make room for the minimap
+            End If
+            Gl.glDisable(Gl.GL_DEPTH_TEST)
+            If m_show_minimap.Checked And mini_map_loaded Then
+                draw_minimap()
+            End If
+            Gl.glDisable(Gl.GL_LIGHTING)
+            Gl.glEnable(Gl.GL_BLEND)
+            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+            Gl.glColor4f(0.3, 0.0, 0.0, 0.6)
+            Gl.glBegin(Gl.GL_QUADS)
+            Gl.glVertex3f(0.0, -pb1.Height, 0.0)
+            Gl.glVertex3f(0.0, -pb1.Height + 20, 0.0)
+            Gl.glVertex3f(pb1.Width - w, -pb1.Height + 20, 0.0)
+            Gl.glVertex3f(pb1.Width - w, -pb1.Height, 0.0)
+            Gl.glEnd()
+            Gl.glDisable(Gl.GL_BLEND)
+            Gl.glEnable(Gl.GL_LIGHTING)
+            If frmStats.Visible = True Then
+                frmStats.rt_total.Text = swat1.ElapsedMilliseconds.ToString
+            End If
+
             If maploaded Then
                 Gl.glDisable(Gl.GL_DEPTH_TEST)
                 Dim fps As Integer = 1.0 / (screen_totaled_draw_time * 0.001)
@@ -4287,26 +3934,12 @@ nope:
                 glutPrint(10, 8 - pb1.Height, str.ToString, 0.0, 1.0, 0.0, 1.0)
             End If
         End If
-        Gl.glPopMatrix()
-        'ViewPerspective()
         Gdi.SwapBuffers(pb1_hDC)
-        'Gl.glFinish()
-        'Gl.glFlush()
         If frmTestView.Visible Then
             frmTestView.update_screen()
         End If
-        gl_busy = False
     End Sub
-    '--------------------------------------------------------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    '--------------------------------------------------------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    '--------------------------------------------------------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    '--------------------------------------------------------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
-
-    Dim numer() = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
-    Dim alpha() = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}
     Public Sub draw_minimap()
         Dim uc As vect2
         Dim lc As vect2
@@ -5423,12 +5056,7 @@ no_move_xz:
             Packet_out.Rx = Cam_X_angle
             Packet_out.Ry = Cam_Y_angle
             Packet_out.Lr = View_Radius
-            If Not gl_busy Then
-                If Not m_fly_map.Checked Then
-                    'draw_scene()
-                    'draw_minimap()
-                End If
-            End If
+
         End If
         If move_cam_z Then
             If e.Y > (mouse.Y + dead) Then
@@ -5461,12 +5089,7 @@ no_move_xz:
             Packet_out.Rx = Cam_X_angle
             Packet_out.Ry = Cam_Y_angle
             Packet_out.Lr = View_Radius
-            If Not gl_busy Then
-                If Not m_fly_map.Checked Then
-                    'draw_scene()
-                    'draw_minimap()
-                End If
-            End If
+
         End If
 
     End Sub
@@ -5739,10 +5362,7 @@ no_move_xz:
             If Cam_Y_angle > -0.3 Then Cam_Y_angle = -0.3
             If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
             If Not NetData Then
-                If Not gl_busy Then
-                    draw_scene()
-                    '	draw_minimap()
-                End If
+                draw_scene()
             End If
         End If
         If move_cam_z Then
@@ -5770,17 +5390,13 @@ no_move_xz:
             If View_Radius > -0.5 Then View_Radius = -0.5
             If View_Radius < -150 Then View_Radius = -150
             If Not NetData Then
-                If Not gl_busy Then
-                    draw_scene()
-                    'draw_minimap()
-                End If
+                draw_scene()
             End If
 
         End If
         Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
         look_point_Y = Z_Cursor ' + 5
     End Sub
-    Dim angle_offset As Single
 
     Public Sub flush_data()
         M_DOWN = False
@@ -5803,7 +5419,7 @@ no_move_xz:
         Next
 
         Try
-            For i = 7 To 3000
+            For i = 4 To 3000
                 Gl.glDeleteTextures(1, i)
                 Il.ilBindImage(i)
                 Ilu.iluDeleteImage(i)
@@ -5824,8 +5440,6 @@ no_move_xz:
             maplist(i) = New grid_sec
             'maplist(i).bmap.Dispose()
             ReDim maplist(i).cdata(0)
-            ReDim maplist(i).chunkdata(0)
-            'ReDim map_layers(i).layers(0)
         Next
         ReDim map_layers(0)
         map_layers(0) = New layer_
@@ -6630,7 +6244,6 @@ no_move_xz:
         End If
         Return update
     End Function
-    Dim FLY_ As Boolean = False
     Private Sub update_mouse()
         'This will run for the duration that Terra! is open.
         'Its in a closed loop
@@ -6649,13 +6262,13 @@ no_move_xz:
                             Screen_draw_time = 30
                         End If
                         screen_avg_counter += 1
-                        screen_avg_draw_time += Screen_draw_time + 5
+                        screen_avg_draw_time += Screen_draw_time
                     End If
                     swat.Reset()
                     swat.Start()
                     update_screen()
                     Screen_draw_time = CInt(swat.ElapsedMilliseconds)
-                    Thread.Sleep(10)
+                    ' Thread.Sleep(5)
                 End If
             End If
             If SHOW_MAPS Then
@@ -6667,6 +6280,7 @@ no_move_xz:
         End While
         'Thread.CurrentThread.Abort()
     End Sub
+
     Private Delegate Sub update_screen_delegate()
     Public Sub update_screen()
         Try
@@ -6704,7 +6318,6 @@ no_move_xz:
             'position(2) = old_light_position.z
         End If
     End Sub
-    Dim swat2 As New Stopwatch
     Public Sub fly()
         Dim scale As Single = MAP_BB_UR.x - 50.0
         Dim lx, ly, lz As Single
@@ -6732,13 +6345,13 @@ no_move_xz:
                         Screen_draw_time = 30
                     End If
                     screen_avg_counter += 1
-                    screen_avg_draw_time += (Screen_draw_time + 5)
+                    screen_avg_draw_time += (Screen_draw_time)
                 End If
                 If need_update() Then
-                    swat2.Reset()
-                    swat2.Start()
+                    'swat1.Reset()
+                    'swat1.Start()
                     draw_scene()
-                    Screen_draw_time = CInt(swat2.ElapsedMilliseconds)
+                    Screen_draw_time = CInt(swat1.ElapsedMilliseconds)
                 End If
                 If view_rot > 2 * PI Then
                     view_rot -= (2 * PI)
@@ -6771,15 +6384,15 @@ no_move_xz:
                             Screen_draw_time = 30
                         End If
                         screen_avg_counter += 1
-                        screen_avg_draw_time += (Screen_draw_time + 5)
+                        screen_avg_draw_time += (Screen_draw_time)
                     End If
-                    swat2.Reset()
-                    swat2.Start()
+                    'swat2.Reset()
+                    'swat2.Start()
                     need_update()
 
                     update_screen()
 
-                    Screen_draw_time = CInt(swat2.ElapsedMilliseconds)
+                    Screen_draw_time = CInt(swat1.ElapsedMilliseconds)
                 End If
                 If light_rot > 2 * PI Then
                     light_rot -= (2 * PI)
@@ -6950,6 +6563,10 @@ no_move_xz:
 
     Private Sub m_post_effect_viewer_Click(sender As Object, e As EventArgs) Handles m_post_effect_viewer.Click
         frmTestView.Visible = True
+    End Sub
+
+    Private Sub m_render_stats_Click(sender As Object, e As EventArgs) Handles m_render_stats.Click
+        frmStats.Show()
     End Sub
 End Class
 

@@ -8,9 +8,7 @@
 		If search_tb.Text.Length = 0 Then
 			Return
 		End If
-        Dim x1, x2, y1, y2 As Single
-        Dim x, y As Single
-        Dim map, mc As Integer
+     
         If Not maploaded Then
             MsgBox("Load a map before trying to find something, OK?", MsgBoxStyle.Exclamation, "No MAP Loaded!")
             Return

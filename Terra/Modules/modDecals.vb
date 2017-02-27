@@ -31,10 +31,6 @@ Module modDecals
         Gl.glViewport(0, 0, decal_depth_size, decal_depth_size)     'Gl.glLoadIdentity() 'Reset The Matrix
         Gl.glDisable(Gl.GL_LIGHTING)
         Dim scale As Single = 1.0 'pb1.Height / pb1.Width
-        'ViewPerspective()
-        Dim lr = 6.0
-        'Gl.glOrtho(-lr, lr, (-lr) * scale, (lr) * scale, -30.0, 30.0) 'Select Ortho Mode
-        'Gl.glOrtho(-Abs(Abs(tr.x) - Abs(tl.x)), Abs(Abs(tr.x) - Abs(tl.x)), -Abs(Abs(tl.z) - Abs(br.z)), Abs(Abs(tl.z) - Abs(br.z)), -300.0, 500.0) 'Select Ortho Mode
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity() 'Reset The Matrix
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
@@ -48,30 +44,19 @@ Module modDecals
         bl = translate_to(bl, m)
         br = translate_to(br, m)
         c_pos = translate_to(c_pos, m)
-        'l_ = translate_to(l_, m)
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity() 'Reset The Mat4rix
         With decal_matrix_list(decal)
-
             If depth_flag Then 'true is for terrain
-                'If Model_too Then
                 Gl.glOrtho(br.x, tl.x, bl.y, tr.y, -Abs(get_length_vect3(near) * .t_bias), Abs(get_length_vect3(far) * .t_bias)) 'Select Ortho Mode
-                'Else
-                '    Gl.glOrtho(br.x, tl.x, bl.y, tr.y, -Abs(near.l * 12.0), Abs(far.l * 12.0)) 'Select Ortho Mode
-                'End If
             Else
                 Gl.glOrtho(br.x, tl.x, bl.y, tr.y, -Abs(get_length_vect3(near) * .d_bias), Abs(get_length_vect3(far) * .d_bias)) 'Select Ortho Mode
 
             End If
-            'If Not frmMain.tb1.Text.Contains("Flags") Then
-            '    'frmMain.tb1.Text = ""
-            '    frmMain.tb1.Text += vbCrLf + "Flags:" + decal_matrix_list(decal).flags.ToString("X")
-            'End If
             Glu.gluLookAt(c_.x, c_.y, c_.z, l_.x, l_.y, l_.z, c_rot.x, c_rot.y, c_rot.z)
             Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
             Gl.glLoadIdentity() 'Reset The Matrix
         End With
-        'Gl.glScaled(0.5, 0.5, 0.5)
 
     End Sub
     Public Sub mask_makers(ByVal decal As Integer)
@@ -135,18 +120,18 @@ Module modDecals
         Gl.glDrawBuffer(Gl.GL_BACK)
 
     End Sub
-    Public Sub attach_decal(ByVal textureID As Integer)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+    Public Sub attach_texture_to_FBO(ByVal textureID As Integer)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0) 'ensure we are using texture 0
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureID)
         Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, textureID, 0)
 
     End Sub
-  
+
     Public Sub make_decal_depthMap(decal)
 
         'Gl.glDrawBuffers(2, drawbuffer0(0))
         'frmMain.attache_texture(coMapID)
-        attach_decal(coMapID)
+        attach_texture_to_FBO(coMapID)
         'check status
         Dim er = Gl.glGetError
         'ResizeGL()
@@ -186,7 +171,7 @@ Module modDecals
         ''first render both in solid black for making
         ''than render the model in green
         'frmMain.attache_texture(coMapID2)
-        attach_decal(coMapID2)
+        attach_texture_to_FBO(coMapID2)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         lightTransform(decal, False)
         mask_makers(decal)
@@ -205,7 +190,7 @@ Module modDecals
             End If
         Next
 
-        attach_decal(0)
+        attach_texture_to_FBO(0)
 
         Dim c As Integer = decal_depth_size / 2
 
@@ -325,6 +310,10 @@ Module modDecals
 
         For k = 0 To decal_matrix_list.Length - 1
             decal_matrix_list(k).good = True
+            If decal_matrix_list(k).decal_texture Is Nothing Then
+                decal_matrix_list(k).good = False
+                GoTo skipthis
+            End If
             If decal_matrix_list(k).decal_texture.Contains("Shadow_true") Then
                 decal_matrix_list(k).good = False
                 GoTo skipthis

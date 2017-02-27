@@ -69,7 +69,7 @@ Module modDeferred
             Return
         End If
         'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, fboID)
-        attach_decal(coMapID)
+        attach_texture_to_FBO(coMapID)
         'Gl.glDrawBuffers(2, drawbuffer0(0))
         'check status
         Dim er = Gl.glGetError
@@ -193,7 +193,7 @@ Module modDeferred
 
         '---------------------------------------------------------
         '1st render/blur vert coMapID to coMapID2
-        attach_decal(coMapID2)
+        attach_texture_to_FBO(coMapID2)
         Dim e5 = Gl.glGetError
 
         Gl.glViewport(0, 0, smrs, smrs)
@@ -251,7 +251,7 @@ Module modDeferred
         '-------------------------------------------------------------
         ' 2nd. horzonal. render/blur horz coMapID2 in to coMapID
 
-        attach_decal(texture_id)
+        attach_texture_to_FBO(texture_id)
         'attache_texture(0)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
 

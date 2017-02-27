@@ -113,6 +113,7 @@ Partial Class frmMain
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.m_render_stats = New System.Windows.Forms.ToolStripMenuItem()
         Me.pb1.SuspendLayout()
         Me.mainMenu.SuspendLayout()
         Me.SuspendLayout()
@@ -160,7 +161,7 @@ Partial Class frmMain
         '
         'm_file
         '
-        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_developer, Me.m_edit_biasing, Me.m_post_effect_viewer})
+        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_developer, Me.m_edit_biasing, Me.m_post_effect_viewer, Me.m_render_stats})
         Me.m_file.ForeColor = System.Drawing.Color.Black
         Me.m_file.Name = "m_file"
         resources.ApplyResources(Me.m_file, "m_file")
@@ -668,6 +669,11 @@ Partial Class frmMain
         resources.ApplyResources(Me.SaveFileDialog1, "SaveFileDialog1")
         Me.SaveFileDialog1.InitialDirectory = Global.Terra.My.MySettings.Default.game_path
         '
+        'm_render_stats
+        '
+        Me.m_render_stats.Name = "m_render_stats"
+        resources.ApplyResources(Me.m_render_stats, "m_render_stats")
+        '
         'frmMain
         '
         resources.ApplyResources(Me, "$this")
@@ -779,5 +785,6 @@ Partial Class frmMain
     Friend WithEvents m_show_decals As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_edit_biasing As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_post_effect_viewer As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_render_stats As System.Windows.Forms.ToolStripMenuItem
 
 End Class

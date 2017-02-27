@@ -482,45 +482,45 @@ clouds:
 			skyDomeName = skyrow("SkyDome_Text")
 		End Try
 		Try
-			sun_scale = skyrow("PS_SUN_MULT_CORRECTOR")
-			sun_multiplier = Convert.ToSingle(sun_scale)
+            'sun_scale = skyrow("PS_SUN_MULT_CORRECTOR")
+            'sun_multiplier = Convert.ToSingle(sun_scale)
 		Catch ex As Exception
 			sun_multiplier = 0.5
         End Try
-        Try
+        'Try
 
 
-            Dim q1 = From row In terrain _
-            Where row.Field(Of String)("version") = _
-            200 _
-            Select _
-            ilodMapSize = row.Field(Of String)("lodMapSize"), _
-            iaoMapSize = row.Field(Of String)("aoMapSize"), _
-            iheightMapSize = row.Field(Of String)("heightMapSize"), _
-            inormalMapSize = row.Field(Of String)("normalMapSize"), _
-            iholeMapSize = row.Field(Of String)("holeMapSize"), _
-            ishadowMapSize = row.Field(Of String)("shadowMapSize"), _
-            iblendMapSize = row.Field(Of String)("blendMapSize")
+        '    Dim q1 = From row In terrain _
+        '    Where row.Field(Of String)("version") = _
+        '    200 _
+        '    Select _
+        '    ilodMapSize = row.Field(Of String)("lodMapSize"), _
+        '    iaoMapSize = row.Field(Of String)("aoMapSize"), _
+        '    iheightMapSize = row.Field(Of String)("heightMapSize"), _
+        '    inormalMapSize = row.Field(Of String)("normalMapSize"), _
+        '    iholeMapSize = row.Field(Of String)("holeMapSize"), _
+        '    ishadowMapSize = row.Field(Of String)("shadowMapSize"), _
+        '    iblendMapSize = row.Field(Of String)("blendMapSize")
 
-            For Each item In q1
-                lodMapSize = Convert.ToInt32(item.ilodMapSize)
-                aoMapSize = Convert.ToInt32(item.iaoMapSize)
-                heightMapSize = Convert.ToInt32(item.iheightMapSize)
-                normalMapSize = Convert.ToInt32(item.inormalMapSize)
-                holeMapSize = Convert.ToInt32(item.iholeMapSize)
-                shadowMapSize = Convert.ToInt32(item.ishadowMapSize)
-                blendMapsize = Convert.ToInt32(item.iblendMapSize)
-            Next
-        Catch ex As Exception
-            lodMapSize = 256
-            aoMapSize = 256
-            heightMapSize = 64
-            normalMapSize = 256
-            holeMapSize = 64
-            shadowMapSize = 64
-            blendMapsize = 256
+        '    For Each item In q1
+        '        lodMapSize = Convert.ToInt32(item.ilodMapSize)
+        '        aoMapSize = Convert.ToInt32(item.iaoMapSize)
+        '        heightMapSize = Convert.ToInt32(item.iheightMapSize)
+        '        normalMapSize = Convert.ToInt32(item.inormalMapSize)
+        '        holeMapSize = Convert.ToInt32(item.iholeMapSize)
+        '        shadowMapSize = Convert.ToInt32(item.ishadowMapSize)
+        '        blendMapsize = Convert.ToInt32(item.iblendMapSize)
+        '    Next
+        'Catch ex As Exception
 
-        End Try
+        'End Try
+        lodMapSize = 256
+        aoMapSize = 256
+        heightMapSize = 64
+        normalMapSize = 256
+        holeMapSize = 64
+        shadowMapSize = 64
+        blendMapsize = 256
 
 
 

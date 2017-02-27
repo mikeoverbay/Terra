@@ -1579,7 +1579,7 @@ jump_normal:
         Gl.glEndList()
     End Sub
 
-    Public Sub build_trees(ByVal tree As UInt32, ByVal map_name As String)
+    Public Sub build_tree(ByVal tree As UInt32, ByVal map_name As String)
 
         'This took days of looking at hex to figure out.. 
         'As im typing this, it has been 2 weeks of constant

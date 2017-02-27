@@ -8,6 +8,9 @@ uniform float gray_level;
 uniform int is_bumped;
 uniform float gamma;
 uniform float ambient;
+uniform float u_wrap;
+uniform float v_wrap;
+
 varying vec2 texCoord;
 
 varying float ln;
@@ -43,20 +46,22 @@ void main (void)
 {
 if (ln == 0.0) { discard; } // no point in rendering if it's invisible.
     
+    vec2 wrap = vec2(u_wrap, v_wrap);
+
 vec3 N = normalize(g_vertexnormal);
 vec3 L = normalize(lightDirection);
 float a;
 
 float NdotL;
    
-vec4 color = texture2D(colorMap,  texCoord);
+vec4 color = texture2D(colorMap,  texCoord*wrap);
 a = color.a;
 if ( a <0.1 ) { discard; }
 color.xyz *= l_texture;
 a *= ln;
 //color.rgb = (color.rgb *0.001) + vec3(0.5,0.5,0.5);
 
-vec4 bump = texture2D(normalMap, texCoord);
+vec4 bump = texture2D(normalMap, texCoord*wrap);
 bump.xyz = bump.xyz * 2.0 -1.0;
 
 bump.x *= -1.0;

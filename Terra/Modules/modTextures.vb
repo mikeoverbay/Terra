@@ -138,6 +138,10 @@ Module modTextures
         Dim success = Il.ilGetError
         Il.ilLoadL(Il.IL_DDS, textIn, textIn.Length)
         success = Il.ilGetError
+        ms.Close()
+        ms.Dispose()
+        GC.Collect()
+        GC.WaitForFullGCComplete()
         If success = Il.IL_NO_ERROR Then
             Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
             Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
@@ -167,6 +171,10 @@ Module modTextures
 
             frmMain.pb2.Height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
             frmMain.pb2.Width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
+            Il.ilBindImage(0)
+            Ilu.iluDeleteImage(texID)
+            GC.Collect()
+            GC.WaitForFullGCComplete()
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             ' has to run on vertical and horz
             image = blur_image(image, "vert", False)
@@ -174,13 +182,9 @@ Module modTextures
             bmap = New Bitmap(temp_bmp.Width, temp_bmp.Height, temp_bmp.PixelFormat)
             bmap = temp_bmp.Clone
             Gl.glDeleteTextures(1, image)
-            Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
         Else
             Stop
         End If
-        ms.Close()
-        ms.Dispose()
         Return bmap
     End Function
     Public Sub build_layer_textures_no_bmp(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer)

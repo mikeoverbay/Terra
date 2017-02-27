@@ -21,6 +21,8 @@ Module Mod_Space_Bin_Functions
     End Structure
     Public decal_matrix_list() As decal_matrix_list_
     Public Structure decal_matrix_list_
+        Public u_wrap As Single
+        Public v_wrap As Single
         Public decal_data() As vertex_data
         Public decal_count As Integer
         Public texture_id As Integer
@@ -32,7 +34,7 @@ Module Mod_Space_Bin_Functions
         Public matrix() As Single
         Public good As Boolean
         Public offset As vect4
-        Public priority As Byte
+        Public priority As Integer
         Public cam_pos As vect3
         Public look_at As vect3
         Public far_clip As vect3
@@ -633,12 +635,14 @@ Module Mod_Space_Bin_Functions
 
             WGSD.Table_Entries(k).uv_wrapping_u = br.ReadSingle
             WGSD.Table_Entries(k).uv_wrapping_v = br.ReadSingle
-            If WGSD.Table_Entries(k).uv_wrapping_u > 1.0 Then
-                Stop
-            End If
-            If WGSD.Table_Entries(k).uv_wrapping_v > 1.0 Then
-                Stop
-            End If
+            decal_matrix_list(k).u_wrap = WGSD.Table_Entries(k).uv_wrapping_u
+            decal_matrix_list(k).v_wrap = WGSD.Table_Entries(k).uv_wrapping_v
+            'If WGSD.Table_Entries(k).uv_wrapping_u > 1.0 Then
+            '    Stop
+            'End If
+            'If WGSD.Table_Entries(k).uv_wrapping_v > 1.0 Then
+            '    Stop
+            'End If
 
 
             WGSD.Table_Entries(k).visibilityMask = br.ReadUInt32 'always 0xFFFFFFFF?
@@ -656,7 +660,7 @@ Module Mod_Space_Bin_Functions
                 'Console.WriteLine("b1:" + WGSD.Table_Entries(k).flags.ToString("x") + " id:" + k.ToString("0000"))
             End If
             'If b1 = 1 Then
-            decal_matrix_list(k).priority = k + (9 - WGSD.Table_Entries(k).flags And &HFF)
+            decal_matrix_list(k).priority = k + (WGSD.Table_Entries(k).flags And &HFF)
             'Else
             '    decal_matrix_list(k).priority = False
             'End If

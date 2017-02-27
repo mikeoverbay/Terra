@@ -29,12 +29,12 @@ Module ModDepthMap
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
 
             Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, PostFBO_ID)
-            attach_decal(post_3D_image_id)
+            attach_texture_to_FBO(post_3D_image_id)
 
             ResizeGL()
             ViewPerspective()
             render_depths()
-            attach_decal(0)
+            attach_texture_to_FBO(0)
             Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
 
         End If
