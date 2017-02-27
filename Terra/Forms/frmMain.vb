@@ -2841,223 +2841,6 @@ nope:
 
     End Sub
     Private Sub draw_terrain()
-
-    End Sub
-    Private Sub draw_render_models()
-
-    End Sub
-    Private Sub draw_trees()
-
-    End Sub
-    Private Sub draw_decals()
-
-    End Sub
-
-
-
-
-    Public Sub draw_scene()
-        If Not _STARTED Then Return
-        If Not maploaded Then
-            Return
-        End If
-
-
-        'draw_little_window()
-        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-            MessageBox.Show("Unable to make rendering context current")
-            End
-        End If
-
-        Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
-        Dim d1, d2, d3 As Single
-        'gl_busy = True
-        If stopGL Then Return
-
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-
-        Gl.glDepthFunc(Gl.GL_LEQUAL)
-        Gl.glFrontFace(Gl.GL_CW)
-        Gl.glCullFace(Gl.GL_BACK)
-        Gl.glLineWidth(1)
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
-        ResizeGL()
-        Gl.glEnable(Gl.GL_NORMALIZE)
-        If Not view_mode Then
-
-            ViewPerspective()   ' set 3d view mode
-            'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
-            'set_eyes()
-        Else
-            '========================================================================
-            If maploaded Then
-                Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
-
-                Dim c_ As vect3 = decal_matrix_list(d_counter).cam_pos
-                Dim l_ As vect3 = decal_matrix_list(d_counter).look_at
-                Dim tl = decal_matrix_list(d_counter).top_left
-                Dim tr = decal_matrix_list(d_counter).top_right
-                Dim bl = decal_matrix_list(d_counter).bot_left
-                Dim br = decal_matrix_list(d_counter).bot_right
-                Dim c_rot = decal_matrix_list(d_counter).cam_rotation
-                Dim c_pos = decal_matrix_list(d_counter).cam_location
-                Dim near = decal_matrix_list(d_counter).near_clip
-                Dim far = decal_matrix_list(d_counter).far_clip
-                Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
-                Gl.glLoadIdentity() 'Reset The Matrix
-                Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
-                Gl.glLoadIdentity() 'Reset The Matrix
-
-                Glu.gluLookAt(c_.x, c_.y, c_.z, l_.x, l_.y, l_.z, c_rot.x, c_rot.y, c_rot.z)
-                Dim m(16) As Single
-                Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, m)
-                tl = translate_to(tl, m)
-                tr = translate_to(tr, m)
-                bl = translate_to(bl, m)
-                br = translate_to(br, m)
-                'l_ = translate_to(l_, m)
-                Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
-                Gl.glLoadIdentity() 'Reset The Mat4rix
-                With decal_matrix_list(d_counter)
-                    Dim scale = pb1.Height / pb1.Width
-                    'Gl.glOrtho(-lr, lr, (-lr) * Scale(), (lr) * Scale(), -5, 40) 'Select Ortho Mode
-                    Gl.glOrtho(br.x / scale, tl.x / scale, bl.y, tr.y, -Abs(get_length_vect3(near) * .d_bias), Abs(get_length_vect3(far) * .d_bias)) 'Select Ortho Mode
-                End With
-                Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
-                Gl.glLoadIdentity() 'Reset The Matrix
-                Glu.gluLookAt(c_.x, c_.y, c_.z, l_.x, l_.y, l_.z, c_rot.x, c_rot.y, c_rot.z)
-
-                look_point_X = c_pos.x
-                look_point_Z = c_pos.z
-            End If
-
-            'Gl.glOrtho(-128, 128, (-128) * scale, (128) * scale, -300.0, 500.0) 'Select Ortho Mode
-
-        End If
-
-        '========================================================================
-        Gl.glEnable(Gl.GL_CULL_FACE)
-        Gl.glEnable(Gl.GL_COLOR_MATERIAL)
-        'Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-        '----------------------------------------------------
-        Gl.glDisable(Gl.GL_SMOOTH)
-        '----------------------------------------------------
-        Dim ambientn As Single = 0.8 'm_Ambient_level.TrackBar.Value / 100
-        Dim ambient() As Single = {ambientn, ambientn, ambientn}
-        Dim diffusen As Single = 0.9!
-        Dim diffuse() As Single = {diffusen, diffusen, diffusen}
-
-        Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, diffuse)
-        Gl.glMateriali(Gl.GL_FRONT, Gl.GL_SHININESS, 95)
-        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, ambient)
-        '----------------------------------------------------
-        '---------------------------------
-        ' this gets the point on the screen for chunkIDs
-
-        '---------------------------------
-        Dim model_view(16) As Double
-        Dim projection(16) As Double
-        Dim viewport(4) As Integer
-        Gl.glGetDoublev(Gl.GL_MODELVIEW_MATRIX, model_view)
-        Gl.glGetDoublev(Gl.GL_PROJECTION_MATRIX, projection)
-        Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
-        Dim cp(2) As Single
-        Dim sx, sy, sz As Single
-        If m_show_chuckIds.Checked Then
-            For i = 0 To maplist.Length - 1
-                ReDim maplist(i).scr_coords(3)
-                cp(0) = maplist(i).location.x
-                cp(1) = maplist(i).location.y
-                cp(2) = maplist(i).heights_avg + 10
-                Glu.gluProject(cp(0), cp(2), cp(1), model_view, projection, viewport, sx, sy, sz)
-                maplist(i).scr_coords(0) = sx
-                maplist(i).scr_coords(1) = sy
-                maplist(i).scr_coords(2) = sz
-            Next
-        End If
-        '---------------------------------
-        'Draw SkyDome
-        '---------------------------------
-        If mini_map_loaded Then
-
-            Gl.glColor3f(1.0, 1.0, 1.0)
-            Gl.glDisable(Gl.GL_LIGHTING)
-            Gl.glDisable(Gl.GL_DEPTH_TEST)
-
-            Gl.glPushMatrix()
-            'Position to get best view of sky while loading a map.
-            'otherwise. translate to usual position.
-            If Not maploaded Then
-                u_Cam_Y_angle = -0.15
-                u_Cam_X_angle = 0.0
-                Gl.glTranslatef(eyeX, eyeY - 8.0, eyeZ - 6.0)
-                Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
-            Else
-                Gl.glTranslatef(eyeX, eyeY - 1.0, eyeZ)
-                Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
-
-            End If
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            Gl.glColor4f(0.6, 0.6, 0.6, 0.5)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, skydometextureID)
-            Gl.glDisable(Gl.GL_CULL_FACE)
-            Gl.glCallList(skydomelist)
-
-
-            Gl.glEnable(Gl.GL_CULL_FACE)
-            Gl.glPopMatrix()
-            Gl.glDisable(Gl.GL_TEXTURE_2D)
-            Gl.glEnable(Gl.GL_DEPTH_TEST)
-            Gl.glEnable(Gl.GL_LIGHTING)
-        End If
-        '---------------------------------
-        'draw the lights location
-        '---------------------------------
-        If m_Orbit_Light.Checked And Not m_hell_mode.Checked Then
-            '---------------------------------
-            'draw the sphere as our sun
-            '---------------------------------
-            'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)
-            Gl.glDisable(Gl.GL_LIGHTING)
-            Gl.glPushMatrix()
-            Gl.glTranslatef(position(0), position(1), position(2))
-            Gl.glColor3f(1.0, 1.0, 0.0)
-            glutSolidSphere(4.0, 8, 8)
-            Gl.glPopMatrix()
-            Gl.glEnable(Gl.GL_LIGHTING)
-        End If
-        '---------------------------------
-
-        '---------------------------------
-        'fog!
-        '---------------------------------
-        If m_show_fog.Checked Then
-            'Gl.glEnable(Gl.GL_FOG)
-            Dim fmode As Integer = Gl.GL_EXP2
-            Gl.glFogi(Gl.GL_FOG_MODE, fmode)
-            Dim fogcolor() As Single = {0.6, 0.6, 0.65}
-
-            Gl.glFogfv(Gl.GL_FOG_COLOR, fogcolor)
-            Gl.glFogf(Gl.GL_FOG_DENSITY, lighting_fog_level * 0.8)
-            Gl.glHint(Gl.GL_FOG_HINT, Gl.GL_NICEST)
-            Gl.glFogf(Gl.GL_FOG_START, 1.0)
-            Gl.glFogf(Gl.GL_FOG_END, 2.0)
-        Else
-        End If
-        'Gl.glDisable(Gl.GL_FOG)
-        '---------------------------------
-        Dim global_ambient() As Single = {0.99F, 0.99F, 0.99F, 1.0F}
-        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
-        '---------------------------------------------------------------------------------
-        '---------------------------------------------------------------------------------
-        '---------------------------------------------------------------------------------
-        'draw the map sections and seams SOLID
-        '---------------------------------------------------------------------------------
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
         'dim shadowMap As Integer
         'c_address = -1
@@ -3066,7 +2849,7 @@ nope:
         'Gl.glStencilFunc(Gl.GL_ALWAYS, 0, &HFFFF)
         'Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_ZERO, Gl.GL_REPLACE)
 
-
+        Dim d1, d2, d3 As Single
         If maploaded And Not m_wire_terrain.Checked Then
             Gl.glDisable(Gl.GL_TEXTURE_2D)
             Gl.glColor4f(0.6, 0.0, 0.0, 0.5)
@@ -3302,10 +3085,8 @@ nope:
 
         '---------------------------------------------------------------------------------
 
-        '---------------------------------------------------------------------------------
-        Dim global_ambient2() As Single = {0.8F, 0.8F, 0.8F, 1.0F}
-        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient2)
-        '---------------------------------------------------------------------------------
+    End Sub
+    Private Sub draw_models()
         ' draw the models
         If maploaded And m_wire_models.Checked And m_show_models.Checked Then
             Gl.glUseProgram(shader_list.comp_shader)
@@ -3496,7 +3277,8 @@ nope:
         'Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glDisable(Gl.GL_TEXTURE_2D)
 
-        '---------------------------------------------------------------------------------
+    End Sub
+    Private Sub draw_trees()
         'draw trees wire
         If maploaded And m_wire_trees.Checked And m_show_trees.Checked And Not m_hell_mode.Checked Then
             Gl.glEnable(Gl.GL_LIGHTING)
@@ -3694,7 +3476,243 @@ nope:
 
 
         End If
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+
+    End Sub
+    Private Sub draw_decals()
+
+    End Sub
+    Private Sub draw_dome()
+        If mini_map_loaded Then
+
+            Gl.glColor3f(1.0, 1.0, 1.0)
+            Gl.glDisable(Gl.GL_LIGHTING)
+            Gl.glDisable(Gl.GL_DEPTH_TEST)
+
+            Gl.glPushMatrix()
+            'Position to get best view of sky while loading a map.
+            'otherwise. translate to usual position.
+            If Not maploaded Then
+                u_Cam_Y_angle = -0.15
+                u_Cam_X_angle = 0.0
+                Gl.glTranslatef(eyeX, eyeY - 8.0, eyeZ - 6.0)
+                Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
+            Else
+                Gl.glTranslatef(eyeX, eyeY - 1.0, eyeZ)
+                Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
+
+            End If
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+            Gl.glColor4f(0.6, 0.6, 0.6, 0.5)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, skydometextureID)
+            Gl.glDisable(Gl.GL_CULL_FACE)
+            Gl.glCallList(skydomelist)
+
+
+            Gl.glEnable(Gl.GL_CULL_FACE)
+            Gl.glPopMatrix()
+            Gl.glDisable(Gl.GL_TEXTURE_2D)
+            Gl.glEnable(Gl.GL_DEPTH_TEST)
+            Gl.glEnable(Gl.GL_LIGHTING)
+        End If
+
+    End Sub
+    Private Sub draw_light_sphear()
+        If m_Orbit_Light.Checked And Not m_hell_mode.Checked Then
+            '---------------------------------
+            'draw the sphere as our sun
+            '---------------------------------
+            'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)
+            Gl.glDisable(Gl.GL_LIGHTING)
+            Gl.glPushMatrix()
+            Gl.glTranslatef(position(0), position(1), position(2))
+            Gl.glColor3f(1.0, 1.0, 0.0)
+            glutSolidSphere(4.0, 8, 8)
+            Gl.glPopMatrix()
+            Gl.glEnable(Gl.GL_LIGHTING)
+        End If
+    End Sub
+    Private Sub setup_fog()
+        If m_show_fog.Checked Then
+            'Gl.glEnable(Gl.GL_FOG)
+            'fog is currently disabled in all shaders.
+            'Im working towards adding this in deferred rendering
+            Dim fmode As Integer = Gl.GL_EXP2
+            Gl.glFogi(Gl.GL_FOG_MODE, fmode)
+            Dim fogcolor() As Single = {0.6, 0.6, 0.65}
+
+            Gl.glFogfv(Gl.GL_FOG_COLOR, fogcolor)
+            Gl.glFogf(Gl.GL_FOG_DENSITY, lighting_fog_level * 0.8)
+            Gl.glHint(Gl.GL_FOG_HINT, Gl.GL_NICEST)
+            Gl.glFogf(Gl.GL_FOG_START, 1.0)
+            Gl.glFogf(Gl.GL_FOG_END, 2.0)
+        Else
+        End If
+    End Sub
+    Private Sub draw_base_rings()
+        If maploaded And Not m_hell_mode.Checked And SHOW_RINGS Then
+            Gl.glColor3f(0.5, 0.0, 0.0)
+            Gl.glCallList(ringDisplayID_1)
+
+            Gl.glColor3f(0.0, 0.7, 0.0)
+            Gl.glCallList(ringDisplayID_2)
+        End If
+
+    End Sub
+    Private Sub setup_view()
+        If Not view_mode Then
+
+            ViewPerspective()   ' set 3d view mode
+            'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
+            'set_eyes()
+        Else
+            '========================================================================
+            If maploaded Then
+                Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
+
+                Dim c_ As vect3 = decal_matrix_list(d_counter).cam_pos
+                Dim l_ As vect3 = decal_matrix_list(d_counter).look_at
+                Dim tl = decal_matrix_list(d_counter).top_left
+                Dim tr = decal_matrix_list(d_counter).top_right
+                Dim bl = decal_matrix_list(d_counter).bot_left
+                Dim br = decal_matrix_list(d_counter).bot_right
+                Dim c_rot = decal_matrix_list(d_counter).cam_rotation
+                Dim c_pos = decal_matrix_list(d_counter).cam_location
+                Dim near = decal_matrix_list(d_counter).near_clip
+                Dim far = decal_matrix_list(d_counter).far_clip
+                Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
+                Gl.glLoadIdentity() 'Reset The Matrix
+                Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
+                Gl.glLoadIdentity() 'Reset The Matrix
+
+                Glu.gluLookAt(c_.x, c_.y, c_.z, l_.x, l_.y, l_.z, c_rot.x, c_rot.y, c_rot.z)
+                Dim m(16) As Single
+                Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, m)
+                tl = translate_to(tl, m)
+                tr = translate_to(tr, m)
+                bl = translate_to(bl, m)
+                br = translate_to(br, m)
+                'l_ = translate_to(l_, m)
+                Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
+                Gl.glLoadIdentity() 'Reset The Mat4rix
+                With decal_matrix_list(d_counter)
+                    Dim scale = pb1.Height / pb1.Width
+                    'Gl.glOrtho(-lr, lr, (-lr) * Scale(), (lr) * Scale(), -5, 40) 'Select Ortho Mode
+                    Gl.glOrtho(br.x / scale, tl.x / scale, bl.y, tr.y, -Abs(get_length_vect3(near) * .d_bias), Abs(get_length_vect3(far) * .d_bias)) 'Select Ortho Mode
+                End With
+                Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
+                Gl.glLoadIdentity() 'Reset The Matrix
+                Glu.gluLookAt(c_.x, c_.y, c_.z, l_.x, l_.y, l_.z, c_rot.x, c_rot.y, c_rot.z)
+
+                look_point_X = c_pos.x
+                look_point_Z = c_pos.z
+            End If
+
+            'Gl.glOrtho(-128, 128, (-128) * scale, (128) * scale, -300.0, 500.0) 'Select Ortho Mode
+
+        End If
+
+    End Sub
+
+
+    Public Sub draw_scene()
+        If Not _STARTED Then Return
+        If Not maploaded Then
+            Return
+        End If
+
+
+        'draw_little_window()
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+
+        Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
+        'gl_busy = True
+        If stopGL Then Return
+
+        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+
+        Gl.glDepthFunc(Gl.GL_LEQUAL)
+        Gl.glFrontFace(Gl.GL_CW)
+        Gl.glCullFace(Gl.GL_BACK)
+        Gl.glLineWidth(1)
+        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+        ResizeGL()
+        Gl.glEnable(Gl.GL_NORMALIZE)
+
+        '========================================================================
+        Gl.glEnable(Gl.GL_CULL_FACE)
+        Gl.glEnable(Gl.GL_COLOR_MATERIAL)
+        'Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
+        '----------------------------------------------------
+        Gl.glDisable(Gl.GL_SMOOTH)
+        '----------------------------------------------------
+        Dim ambientn As Single = 0.8 'm_Ambient_level.TrackBar.Value / 100
+        Dim ambient() As Single = {ambientn, ambientn, ambientn}
+        Dim diffusen As Single = 0.9!
+        Dim diffuse() As Single = {diffusen, diffusen, diffusen}
+
+        Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, diffuse)
+        Gl.glMateriali(Gl.GL_FRONT, Gl.GL_SHININESS, 95)
+        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, ambient)
+        '----------------------------------------------------
+        setup_view()
+        '---------------------------------
+        ' this gets the point on the screen for chunkIDs
+
+        '---------------------------------
+        Dim model_view(16) As Double
+        Dim projection(16) As Double
+        Dim viewport(4) As Integer
+        Gl.glGetDoublev(Gl.GL_MODELVIEW_MATRIX, model_view)
+        Gl.glGetDoublev(Gl.GL_PROJECTION_MATRIX, projection)
+        Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
+        Dim cp(2) As Single
+        Dim sx, sy, sz As Single
+        If m_show_chuckIds.Checked Then
+            For i = 0 To maplist.Length - 1
+                ReDim maplist(i).scr_coords(3)
+                cp(0) = maplist(i).location.x
+                cp(1) = maplist(i).location.y
+                cp(2) = maplist(i).heights_avg + 10
+                Glu.gluProject(cp(0), cp(2), cp(1), model_view, projection, viewport, sx, sy, sz)
+                maplist(i).scr_coords(0) = sx
+                maplist(i).scr_coords(1) = sy
+                maplist(i).scr_coords(2) = sz
+            Next
+        End If
+        '---------------------------------
+        'Draw SkyDome
+        draw_dome()
+        '---------------------------------
+        'draw the lights location
+        draw_light_sphear()
+        '---------------------------------
+        'fog!
+        setup_fog()
+        '---------------------------------
+        Dim global_ambient() As Single = {0.99F, 0.99F, 0.99F, 1.0F}
+        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
+        '---------------------------------------------------------------------------------
+        'draw the map sections and seams SOLID
+        draw_terrain()
+        '---------------------------------------------------------------------------------
+ 
+        '---------------------------------------------------------------------------------
+        'Dim global_ambient2() As Single = {0.8F, 0.8F, 0.8F, 1.0F}
+        'Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient2)
+        '---------------------------------------------------------------------------------
+        draw_models()
+        '---------------------------------------------------------------------------------
+        draw_trees()
+        '---------------------------------------------------------------------------------
+         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Gl.glDisable(Gl.GL_CULL_FACE)
         Gl.glDisable(Gl.GL_ALPHA_TEST)
         Gl.glDisable(Gl.GL_TEXTURE_2D)
@@ -3838,8 +3856,7 @@ nope:
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDepthMask(Gl.GL_TRUE)
         '---------------------------------------------------------------------------------
-        'decal testing junk
-        'If maploaded Then
+        'decal editing junk
         If maploaded And EDIT_INCULDERS Then
             If Not view_mode Then
                 ViewPerspective_d()
@@ -4051,26 +4068,15 @@ nope:
         Gl.glDisable(Gl.GL_LIGHTING)
         '---------------------------------
         ' base locations
-        '---------------------------------
-        If maploaded And Not m_hell_mode.Checked And SHOW_RINGS Then
-            Gl.glColor3f(0.5, 0.0, 0.0)
-            Gl.glCallList(ringDisplayID_1)
+        draw_base_rings()
 
-            Gl.glColor3f(0.0, 0.7, 0.0)
-            Gl.glCallList(ringDisplayID_2)
-        End If
+        '---------------------------------
         '------------------------------------
         Gl.glEnable(Gl.GL_LIGHTING)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE2)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE3)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE4)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        For i = 0 To 4
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + i)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Next
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
 
         'draw the water. IF there is water?
