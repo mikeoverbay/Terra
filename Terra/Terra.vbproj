@@ -400,120 +400,44 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="light_settings\00_tank_tutorial.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\01_karelia.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\02_malinovka.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\04_himmelsdorf.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\05_prohorovka.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\06_ensk.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\07_lakeville.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\100_thepit.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\101_dday.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\10_hills.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\114_czech.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\11_murovanka.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\13_erlenberg.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\14_siegfried_line.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\15_komarin.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\18_cliff.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\19_monastery.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\22_slough.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\23_westfeld.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\28_desert.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\29_el_hallouf.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\31_airfield.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\33_fjord.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\34_Redshire.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\35_steppes.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\36_fishing_bay.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\37_caucasus.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\38_mannerheim_line.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\44_north_america.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\45_north_america.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\47_canada_a.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\53_japan.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\60_asia_miao.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\63_tundra.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\73_asia_korea.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\83_kharkiv.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\86_himmelsdorf_winter.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\95_lost_city.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="light_settings\00_tank_tutorial.pkg.light" />
+    <None Include="light_settings\01_karelia.pkg.light" />
+    <None Include="light_settings\02_malinovka.pkg.light" />
+    <None Include="light_settings\04_himmelsdorf.pkg.light" />
+    <None Include="light_settings\05_prohorovka.pkg.light" />
+    <None Include="light_settings\06_ensk.pkg.light" />
+    <None Include="light_settings\07_lakeville.pkg.light" />
+    <None Include="light_settings\100_thepit.pkg.light" />
+    <None Include="light_settings\101_dday.pkg.light" />
+    <None Include="light_settings\10_hills.pkg.light" />
+    <None Include="light_settings\114_czech.pkg.light" />
+    <None Include="light_settings\11_murovanka.pkg.light" />
+    <None Include="light_settings\13_erlenberg.pkg.light" />
+    <None Include="light_settings\14_siegfried_line.pkg.light" />
+    <None Include="light_settings\15_komarin.pkg.light" />
+    <None Include="light_settings\18_cliff.pkg.light" />
+    <None Include="light_settings\19_monastery.pkg.light" />
+    <None Include="light_settings\22_slough.pkg.light" />
+    <None Include="light_settings\23_westfeld.pkg.light" />
+    <None Include="light_settings\28_desert.pkg.light" />
+    <None Include="light_settings\29_el_hallouf.pkg.light" />
+    <None Include="light_settings\31_airfield.pkg.light" />
+    <None Include="light_settings\33_fjord.pkg.light" />
+    <None Include="light_settings\34_Redshire.pkg.light" />
+    <None Include="light_settings\35_steppes.pkg.light" />
+    <None Include="light_settings\36_fishing_bay.pkg.light" />
+    <None Include="light_settings\37_caucasus.pkg.light" />
+    <None Include="light_settings\38_mannerheim_line.pkg.light" />
+    <None Include="light_settings\44_north_america.pkg.light" />
+    <None Include="light_settings\45_north_america.pkg.light" />
+    <None Include="light_settings\47_canada_a.pkg.light" />
+    <None Include="light_settings\53_japan.pkg.light" />
+    <None Include="light_settings\60_asia_miao.pkg.light" />
+    <None Include="light_settings\63_tundra.pkg.light" />
+    <None Include="light_settings\73_asia_korea.pkg.light" />
+    <None Include="light_settings\83_kharkiv.pkg.light" />
+    <None Include="light_settings\86_himmelsdorf_winter.pkg.light" />
+    <None Include="light_settings\95_lost_city.pkg.light" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -731,90 +655,34 @@
     <None Include="shaders\fog_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="decal_includer_files\00_tank_tutorial_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\01_karelia_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\02_malinovka_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\04_himmelsdorf_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\05_prohorovka_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\06_ensk_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\07_lakeville_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\100_thepit_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\101_dday_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\10_hills_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\13_erlenberg_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\14_siegfried_line_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\18_cliff_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\19_monastery_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\28_desert_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\29_el_hallouf_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\31_airfield_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\33_fjord_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\34_Redshire_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\36_fishing_bay_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\37_caucasus_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\38_mannerheim_line_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\44_north_america_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\45_north_america_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\47_canada_a_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\63_tundra_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\83_kharkiv_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\95_lost_city_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="decal_includer_files\00_tank_tutorial_decal_includers.txt" />
+    <Content Include="decal_includer_files\01_karelia_decal_includers.txt" />
+    <Content Include="decal_includer_files\02_malinovka_decal_includers.txt" />
+    <Content Include="decal_includer_files\04_himmelsdorf_decal_includers.txt" />
+    <Content Include="decal_includer_files\05_prohorovka_decal_includers.txt" />
+    <Content Include="decal_includer_files\06_ensk_decal_includers.txt" />
+    <Content Include="decal_includer_files\07_lakeville_decal_includers.txt" />
+    <Content Include="decal_includer_files\100_thepit_decal_includers.txt" />
+    <Content Include="decal_includer_files\101_dday_decal_includers.txt" />
+    <Content Include="decal_includer_files\10_hills_decal_includers.txt" />
+    <Content Include="decal_includer_files\13_erlenberg_decal_includers.txt" />
+    <Content Include="decal_includer_files\14_siegfried_line_decal_includers.txt" />
+    <Content Include="decal_includer_files\18_cliff_decal_includers.txt" />
+    <Content Include="decal_includer_files\19_monastery_decal_includers.txt" />
+    <Content Include="decal_includer_files\28_desert_decal_includers.txt" />
+    <Content Include="decal_includer_files\29_el_hallouf_decal_includers.txt" />
+    <Content Include="decal_includer_files\31_airfield_decal_includers.txt" />
+    <Content Include="decal_includer_files\33_fjord_decal_includers.txt" />
+    <Content Include="decal_includer_files\34_Redshire_decal_includers.txt" />
+    <Content Include="decal_includer_files\36_fishing_bay_decal_includers.txt" />
+    <Content Include="decal_includer_files\37_caucasus_decal_includers.txt" />
+    <Content Include="decal_includer_files\38_mannerheim_line_decal_includers.txt" />
+    <Content Include="decal_includer_files\44_north_america_decal_includers.txt" />
+    <Content Include="decal_includer_files\45_north_america_decal_includers.txt" />
+    <Content Include="decal_includer_files\47_canada_a_decal_includers.txt" />
+    <Content Include="decal_includer_files\63_tundra_decal_includers.txt" />
+    <Content Include="decal_includer_files\83_kharkiv_decal_includers.txt" />
+    <Content Include="decal_includer_files\95_lost_city_decal_includers.txt" />
     <Content Include="tanks\selected_tanks.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

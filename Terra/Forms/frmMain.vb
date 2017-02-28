@@ -82,30 +82,7 @@ Public Class frmMain
     Private _appCuKey As Microsoft.Win32.RegistryKey
     Public pfc As New PrivateFontCollection
     Public update_thread As New Thread(AddressOf update_mouse)
-    Dim c_address, n_address, f_address, a_address, t_address, c_position As Integer
-    Dim c_address2, n_address2, f_address2, a_address2, t_address2 As Integer
-    Dim c_address3, n_address3, f_address3, a_address3, t_address3 As Integer
-    Dim c_address4, n_address4, f_address4, a_address4, t_address4 As Integer
-    Dim c_address5, n_address5, f_address5, a_address5, t_address5 As Integer
-    Dim c_address6, n_address6, f_address6, a_address6, t_address6 As Integer
-    Dim layer_1, layer_2, layer_3, layer_4, n_layer_1, n_layer_2, n_layer_3, n_layer_4 As Integer
-    Dim used_layers, col, row, tile_w, main_texture, is_bumped, is_multi_textured, colormap2, gamma, gamma_2 As Integer
-    Dim gamma_3, gamma_4, gamma_5, gamma_6, c_position3, c_position4, c_position5, is_bumped3, is_bumped4, is_bumped5 As Integer
-    Dim layer0U, layer1U, layer2U, layer3U As Integer
-    Dim layer0V, layer1V, layer2V, layer3V As Integer
-    Dim gray_level_1, gray_level_2, gray_level_3, gray_level_6, gray_level_4, gray_level_5 As Integer
-    Dim is_GAmap, alphaRef, alphaTestEnable, tangent, binormal As Integer
-    Public matrix_1 As Integer
-    Dim u_mat1, u_mat2, u_mat3 As Integer
-    Dim mixtexture, dominateTex As Integer
-    Dim sun_lock As Boolean = False
-    Dim leaf_c_map, leaf_n_map, leaf_level, leaf_contrast, leaf_camPos, leaf_matrix, leaf_gray_level, leaf_fog_enable As Integer
-    Dim leaf_ambient, branch_ambient, decal_ambient, model_ambient As Integer
-    Public decal_u_wrap, decal_v_wrap As Integer
-    Dim phong_cam_pos As Integer
-    Dim bump_out_ As Integer
-    Public Shared vismap_address As Integer
-    Public Shared noise_map_address As Integer
+
     Public Shared d_counter As Integer = 0
     Dim clip_distance As Integer
     Public view_mode As Boolean = False
@@ -681,117 +658,6 @@ fail_path:
         lighting_terrain_texture = My.Settings.s_terrian_texture_level / 50.0!
         lighting_model_level = My.Settings.s_model_level / 100.0!
         gamma_level = (My.Settings.s_gamma / 100.0!) * 2.0!
-    End Sub
-    Public Sub set_shader_variables()
-        'I moved this out side of the main rendering loop.
-        'Im hoping to speed up rendering as much as I can.
-        c_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "colorMap")
-        n_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "normalMap")
-        f_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "enable_fog")
-        a_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "l_ambient")
-        t_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "l_texture")
-        gray_level_2 = Gl.glGetUniformLocation(shader_list.ss_shader, "gray_level")
-        gamma_2 = Gl.glGetUniformLocation(shader_list.ss_shader, "gamma")
-        '--------------------------------------------------------------------------
-        c_address6 = Gl.glGetUniformLocation(shader_list.clip_shader, "colorMap")
-        'n_address6 = Gl.glGetUniformLocation(clip_shader, "normalMap")
-        'f_address6 = Gl.glGetUniformLocation(clip_shader, "enable_fog")
-        'a_address6 = Gl.glGetUniformLocation(clip_shader, "l_ambient")
-        't_address6 = Gl.glGetUniformLocation(clip_shader, "l_texture")
-        'gray_level_6 = Gl.glGetUniformLocation(clip_shader, "gray_level")
-        'gamma_6 = Gl.glGetUniformLocation(clip_shader, "gamma")
-        'clip_distance = Gl.glGetUniformLocation(clip_shader, "clip_distance")
-        '--------------------------------------------------------------------------
-        main_texture = Gl.glGetUniformLocation(shader_list.render_shader, "main_texture")
-        n_address = Gl.glGetUniformLocation(shader_list.render_shader, "normalMap")
-        c_position = Gl.glGetUniformLocation(shader_list.render_shader, "cam_position")
-        ' f_address = Gl.glGetUniformLocation(shader_list.render_shader, "enable_fog")
-        a_address = Gl.glGetUniformLocation(shader_list.render_shader, "l_ambient")
-        t_address = Gl.glGetUniformLocation(shader_list.render_shader, "l_texture")
-        gray_level_1 = Gl.glGetUniformLocation(shader_list.render_shader, "gray_level")
-        gamma = Gl.glGetUniformLocation(shader_list.render_shader, "gamma")
-        '--------------------------------------------------------------------------
-        layer_1 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_1")
-        layer_2 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_2")
-        layer_3 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_3")
-        layer_4 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_4")
-        n_layer_1 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_1")
-        n_layer_2 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_2")
-        n_layer_3 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_3")
-        n_layer_4 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_4")
-        mixtexture = Gl.glGetUniformLocation(shader_list.render_shader, "mixtexture")
-        c_address = Gl.glGetUniformLocation(shader_list.render_shader, "colorMap")
-        row = Gl.glGetUniformLocation(shader_list.render_shader, "row")
-        col = Gl.glGetUniformLocation(shader_list.render_shader, "col")
-        tile_w = Gl.glGetUniformLocation(shader_list.render_shader, "tile_width")
-        used_layers = Gl.glGetUniformLocation(shader_list.render_shader, "used_layers")
-        dominateTex = Gl.glGetUniformLocation(shader_list.render_shader, "DominateMap")
-        layer0U = Gl.glGetUniformLocation(shader_list.render_shader, "layer0U")
-        layer1U = Gl.glGetUniformLocation(shader_list.render_shader, "layer1U")
-        layer2U = Gl.glGetUniformLocation(shader_list.render_shader, "layer2U")
-        layer3U = Gl.glGetUniformLocation(shader_list.render_shader, "layer3U")
-        layer0V = Gl.glGetUniformLocation(shader_list.render_shader, "layer0V")
-        layer1V = Gl.glGetUniformLocation(shader_list.render_shader, "layer1V")
-        layer2V = Gl.glGetUniformLocation(shader_list.render_shader, "layer2V")
-        layer3V = Gl.glGetUniformLocation(shader_list.render_shader, "layer3V")
-        '--------------------------------------------------------------------------
-        c_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "colorMap")
-        colormap2 = Gl.glGetUniformLocation(shader_list.bump_shader, "colorMap_2")
-        n_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "normalMap")
-        ' f_address3 = Gl.glGetUniformLocation(bump_shader, "enable_fog")
-        'c_position3 = Gl.glGetUniformLocation(bump_shader, "camPos")
-        t_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "l_texture")
-        gray_level_3 = Gl.glGetUniformLocation(shader_list.bump_shader, "gray_level")
-        is_bumped3 = Gl.glGetUniformLocation(shader_list.bump_shader, "is_bumped")
-        is_GAmap = Gl.glGetUniformLocation(shader_list.bump_shader, "is_GAmap")
-        is_multi_textured = Gl.glGetUniformLocation(shader_list.bump_shader, "is_multi_textured")
-        gamma_3 = Gl.glGetUniformLocation(shader_list.bump_shader, "gamma")
-        alphaRef = Gl.glGetUniformLocation(shader_list.bump_shader, "alphaRef")
-        alphaTestEnable = Gl.glGetUniformLocation(shader_list.bump_shader, "alphaTestEnable")
-        u_mat3 = Gl.glGetUniformLocation(shader_list.bump_shader, "ModelMatrix1")
-        model_ambient = Gl.glGetUniformLocation(shader_list.bump_shader, "ambient")
-        '--------------------------------------------------------------------------
-        c_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "colorMap")
-        n_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "normalMap")
-        ' f_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "enable_fog")
-        c_position4 = Gl.glGetUniformLocation(shader_list.trees_shader, "cam_position")
-        t_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "l_texture")
-        gray_level_4 = Gl.glGetUniformLocation(shader_list.trees_shader, "gray_level")
-        is_bumped4 = Gl.glGetUniformLocation(shader_list.trees_shader, "is_bumped")
-        gamma_4 = Gl.glGetUniformLocation(shader_list.trees_shader, "gamma")
-        branch_ambient = Gl.glGetUniformLocation(shader_list.trees_shader, "ambient")
-        '--------------------------------------------------------------------------
-        c_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "colorMap")
-        n_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "normalMap")
-        ' f_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "enable_fog")
-        c_position5 = Gl.glGetUniformLocation(shader_list.decals_shader, "cam_position")
-        t_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "l_texture")
-        gray_level_5 = Gl.glGetUniformLocation(shader_list.decals_shader, "gray_level")
-        gamma_5 = Gl.glGetUniformLocation(shader_list.decals_shader, "gamma")
-        matrix_1 = Gl.glGetUniformLocation(shader_list.decals_shader, "ModelMatrix1")
-        decal_ambient = Gl.glGetUniformLocation(shader_list.decals_shader, "ambient")
-        decal_u_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "u_wrap")
-        decal_v_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "v_wrap")
-
-        '-----------------------------------------------------------------
-        leaf_c_map = Gl.glGetUniformLocation(shader_list.leaf_shader, "colorMap")
-        leaf_camPos = Gl.glGetUniformLocation(shader_list.leaf_shader, "camPos")
-        leaf_matrix = Gl.glGetUniformLocation(shader_list.leaf_shader, "matrix")
-        'leaf_fog_enable = Gl.glGetUniformLocation(shader_list.leaf_shader, "enable_fog")
-        leaf_camPos = Gl.glGetUniformLocation(shader_list.leaf_shader, "cam_position")
-        leaf_level = Gl.glGetUniformLocation(shader_list.leaf_shader, "l_texture")
-        leaf_gray_level = Gl.glGetUniformLocation(shader_list.leaf_shader, "gray_level")
-        leaf_contrast = Gl.glGetUniformLocation(shader_list.leaf_shader, "gamma")
-        leaf_ambient = Gl.glGetUniformLocation(shader_list.leaf_shader, "ambient")
-        '-----------------
-        phong_cam_pos = Gl.glGetUniformLocation(shader_list.comp_shader, "cam_pos")
-        bump_out_ = Gl.glGetUniformLocation(shader_list.comp_shader, "amount")
-        '-----------------
-        vismap_address = Gl.glGetUniformLocation(shader_list.fog_shader, "map")
-        noise_map_address = Gl.glGetUniformLocation(shader_list.fog_shader, "noise_map")
-        '-----------------
-        view_normal_mode_ = Gl.glGetUniformLocation(shader_list.normal_shader, "mode")
-        normal_length_ = Gl.glGetUniformLocation(shader_list.normal_shader, "l_length")
     End Sub
     Private Sub add_view_distance_menu_events()
         AddHandler m_200.Click, AddressOf set_radio
@@ -1900,11 +1766,11 @@ nope:
                             If frmBiasing.Visible Then
                                 Application.DoEvents()
 
-                                frmBiasing.terrain_clip.Value = CInt((TERRAIN_BIAS / 10.0) * 1000.0)
+                                frmBiasing.terrain_clip.Value = CInt((TERRAIN_BIAS / 15.0) * 1000.0)
                                 frmBiasing.terrain_clip.PerformLayout()
                                 frmBiasing.terrain_clip.Invalidate()
                                 Application.DoEvents()
-                                frmBiasing.decal_clip.Value = CInt((DECAL_BIAS / 10.0) * 1000.0)
+                                frmBiasing.decal_clip.Value = CInt((DECAL_BIAS / 15.0) * 1000.0)
                                 frmBiasing.decal_clip.PerformLayout()
                                 frmBiasing.decal_clip.Invalidate()
                                 Application.DoEvents()
@@ -2617,11 +2483,11 @@ nope:
                     Gl.glUniform1f(gamma_2, gamma_level * 0.75)
                     Gl.glUniform1f(gray_level_2, gray_level)
 
-                    'If m_show_fog.Checked Then
-                    '    Gl.glUniform1i(f_address2, 1)
-                    'Else
-                    '    Gl.glUniform1i(f_address2, 0)
-                    'End If
+                    If m_show_fog.Checked Then
+                        Gl.glUniform1i(f_address2, 1)
+                    Else
+                        Gl.glUniform1i(f_address2, 0)
+                    End If
                     rendermode = True
                     Gl.glActiveTexture(Gl.GL_TEXTURE0)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
@@ -2633,8 +2499,8 @@ nope:
                     Gl.glUseProgram(shader_list.render_shader)
                     'Dim er = Gl.glGetError
                     'sr = Glu.gluErrorString(er)
-                    Gl.glUniform1f(row, maplist(i).row)
-                    Gl.glUniform1f(col, maplist(i).col)
+                    Gl.glUniform1f(row_address, maplist(i).row)
+                    Gl.glUniform1f(col_address, maplist(i).col)
                     Gl.glUniform1f(tile_w, tile_width)
                     Gl.glUniform1i(used_layers, map_layers(i).used_layers)
                     u = map_layers(i).layers(1).uP
@@ -2664,11 +2530,11 @@ nope:
                     Gl.glUniform3f(c_position, eyeX, eyeY, eyeZ)
                     Gl.glUniform1i(n_address, 1)
                     Gl.glUniform1f(gamma, gamma_level * 0.75)
-                    'If m_show_fog.Checked Then
-                    '    Gl.glUniform1i(f_address, 1)
-                    'Else
-                    '    Gl.glUniform1i(f_address, 0)
-                    'End If
+                    If m_show_fog.Checked Then
+                        Gl.glUniform1i(f_address, 1)
+                    Else
+                        Gl.glUniform1i(f_address, 0)
+                    End If
                     'er = Gl.glGetError
                     'bind the lowrez normal map
                     Gl.glUniform1i(n_address, 0)
@@ -2875,11 +2741,11 @@ nope:
                 'Gl.glDisable(Gl.GL_LIGHTING)
                 Gl.glDisable(Gl.GL_TEXTURE_2D)
                 Gl.glUseProgram(shader_list.bump_shader)
-                'If m_show_fog.Checked Then
-                '    Gl.glUniform1i(f_address3, 1)
-                'Else
-                '    Gl.glUniform1i(f_address3, 0)
-                'End If
+                If m_show_fog.Checked Then
+                    Gl.glUniform1i(f_address3, 1)
+                Else
+                    Gl.glUniform1i(f_address3, 0)
+                End If
                 Gl.glUniform1i(c_address3, 0)
                 Gl.glUniform1i(n_address3, 1)
                 Gl.glUniform1i(colormap2, 2)
@@ -3102,11 +2968,11 @@ nope:
 
                     If mode = 0 Then
                         Gl.glUseProgram(shader_list.trees_shader)
-                        'If m_show_fog.Checked Then
-                        '    Gl.glUniform1i(f_address4, 1)
-                        'Else
-                        '    Gl.glUniform1i(f_address4, 0)
-                        'End If
+                        If m_show_fog.Checked Then
+                            Gl.glUniform1i(f_address4, 1)
+                        Else
+                            Gl.glUniform1i(f_address4, 0)
+                        End If
                         Gl.glUniform1i(c_address4, 0)
                         Gl.glUniform1i(n_address4, 1)
                         Gl.glUniform3f(c_position4, eyeX, eyeZ, eyeY)
@@ -3116,11 +2982,11 @@ nope:
                         Gl.glUniform1f(branch_ambient, lighting_ambient)
                     Else
                         Gl.glUseProgram(shader_list.leaf_shader)
-                        'If m_show_fog.Checked Then
-                        '    Gl.glUniform1i(leaf_fog_enable, 1)
-                        'Else
-                        '    Gl.glUniform1i(leaf_fog_enable, 0)
-                        'End If
+                        If m_show_fog.Checked Then
+                            Gl.glUniform1i(leaf_fog_enable, 1)
+                        Else
+                            Gl.glUniform1i(leaf_fog_enable, 0)
+                        End If
                         Gl.glUniform1i(leaf_c_map, 0)
                         Gl.glUniform1i(leaf_n_map, 1)
                         Gl.glUniform3f(leaf_camPos, eyeX, eyeZ, eyeY)
@@ -3502,11 +3368,11 @@ nope:
             Gl.glColor3f(0.5, 0.5, 0.5)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
             Gl.glUseProgram(shader_list.decals_shader)
-            'If m_show_fog.Checked Then
-            '    Gl.glUniform1i(f_address5, 1)
-            'Else
-            '    Gl.glUniform1i(f_address5, 0)
-            'End If
+            If m_show_fog.Checked Then
+                Gl.glUniform1i(f_address5, 1)
+            Else
+                Gl.glUniform1i(f_address5, 0)
+            End If
             Gl.glUniform1i(c_address5, 0)
             Gl.glUniform1i(n_address5, 1)
             Gl.glUniform3f(c_position5, eyeX, eyeY, eyeZ)
@@ -6275,7 +6141,7 @@ no_move_xz:
                 'draw_maps_buttons()
                 'Thread.Sleep(30)
             End If
-            Application.DoEvents()
+            'Application.DoEvents()
             Thread.Sleep(5)
         End While
         'Thread.CurrentThread.Abort()

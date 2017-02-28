@@ -23,6 +23,7 @@ Module Mod_space_bin
         ReDim space_table_rows(table_size - 1)
 
         mr.Position = &H18 ' point at next row in the table
+        'create the table index information.
         Dim old_pos = br.BaseStream.Position
         For t_cnt = 0 To table_size - 1
             br.BaseStream.Position = old_pos
@@ -61,6 +62,7 @@ Module Mod_space_bin
         ReDim spaceBindata(0)
         GC.Collect()
         GC.WaitForFullGCComplete()
+        'The order these tables are created is very important as some rely on previous tables data!
         For t_cnt = 0 To table_size - 1
             Dim header As String = space_table_rows(t_cnt).header
             Select Case True

@@ -7,6 +7,8 @@ Imports System.Text
 
 
 Module Mod_Space_Bin_Functions
+#Region "Structures"
+
     Public Model_Matrix_list() As model_matrix_list_
     Public Structure model_matrix_list_
         Public primitive_name As String
@@ -52,9 +54,12 @@ Module Mod_Space_Bin_Functions
         Public exclude As Boolean
         Public old_bias As Single
     End Structure
+#End Region
 
 
     Public Sub get_BSMA_data(ByVal t_cnt As Integer)
+        'bigworld Static Model Array
+        'more model data.
         'ms is pointing at the BSMA secion after this next line
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
@@ -97,10 +102,10 @@ Module Mod_Space_Bin_Functions
         BSMA.t5_dc = br.ReadUInt32
         ReDim BSMA.bsma_t5(BSMA.t5_dc)
         For k = 0 To BSMA.t5_dc - 1
-            BSMA.bsma_t5(k).vector4.X = br.ReadSingle
-            BSMA.bsma_t5(k).vector4.Y = br.ReadSingle
-            BSMA.bsma_t5(k).vector4.Z = br.ReadSingle
-            BSMA.bsma_t5(k).vector4.W = br.ReadSingle
+            BSMA.bsma_t5(k).vector4.x = br.ReadSingle
+            BSMA.bsma_t5(k).vector4.y = br.ReadSingle
+            BSMA.bsma_t5(k).vector4.z = br.ReadSingle
+            BSMA.bsma_t5(k).vector4.w = br.ReadSingle
         Next
 
         br.BaseStream.Position = BSMA.t3_start + 8
@@ -131,10 +136,10 @@ Module Mod_Space_Bin_Functions
                 Case Is = 5
                     Dim v As vect4 = BSMA.bsma_t5(BSMA.bsma_t3(k).value).vector4
                     BSMA.bsma_t3(k).value_string = _
-                        v.X.ToString("00.000000") + " " + _
-                        v.Y.ToString("00.000000") + " " + _
-                        v.Z.ToString("00.000000") + " " + _
-                        v.W.ToString("00.000000")
+                        v.x.ToString("00.000000") + " " + _
+                        v.y.ToString("00.000000") + " " + _
+                        v.z.ToString("00.000000") + " " + _
+                        v.w.ToString("00.000000")
                 Case Is = 6
                     BSMA.bsma_t3(k).value_string = find_str_BWST(BSMA.bsma_t3(k).value)
                 Case Is = 7
@@ -185,6 +190,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_BSMO_data(ByVal t_cnt As Integer)
+        'more model data
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -205,13 +211,13 @@ Module Mod_Space_Bin_Functions
         ReDim BSMO.bsmo_t2(BSMO.t2_dc)
         'get node entries
         For k = 0 To BSMO.t2_dc - 1
-            BSMO.bsmo_t2(k).min_BB.X = br.ReadSingle
-            BSMO.bsmo_t2(k).min_BB.Y = br.ReadSingle
-            BSMO.bsmo_t2(k).min_BB.Z = br.ReadSingle
+            BSMO.bsmo_t2(k).min_BB.x = br.ReadSingle
+            BSMO.bsmo_t2(k).min_BB.y = br.ReadSingle
+            BSMO.bsmo_t2(k).min_BB.z = br.ReadSingle
 
-            BSMO.bsmo_t2(k).max_BB.X = br.ReadSingle
-            BSMO.bsmo_t2(k).max_BB.Y = br.ReadSingle
-            BSMO.bsmo_t2(k).max_BB.Z = br.ReadSingle
+            BSMO.bsmo_t2(k).max_BB.x = br.ReadSingle
+            BSMO.bsmo_t2(k).max_BB.y = br.ReadSingle
+            BSMO.bsmo_t2(k).max_BB.z = br.ReadSingle
 
             BSMO.bsmo_t2(k).BWST_String_key = br.ReadUInt32
 
@@ -241,13 +247,13 @@ Module Mod_Space_Bin_Functions
         ReDim BSMO.bsmo_t4(BSMO.t4_dc)
         'get table data
         For k = 0 To BSMO.t4_dc - 1
-            BSMO.bsmo_t4(k).min_BB.X = br.ReadSingle
-            BSMO.bsmo_t4(k).min_BB.Y = br.ReadSingle
-            BSMO.bsmo_t4(k).min_BB.Z = br.ReadSingle
+            BSMO.bsmo_t4(k).min_BB.x = br.ReadSingle
+            BSMO.bsmo_t4(k).min_BB.y = br.ReadSingle
+            BSMO.bsmo_t4(k).min_BB.z = br.ReadSingle
 
-            BSMO.bsmo_t4(k).max_BB.X = br.ReadSingle
-            BSMO.bsmo_t4(k).max_BB.Y = br.ReadSingle
-            BSMO.bsmo_t4(k).max_BB.Z = br.ReadSingle
+            BSMO.bsmo_t4(k).max_BB.x = br.ReadSingle
+            BSMO.bsmo_t4(k).max_BB.y = br.ReadSingle
+            BSMO.bsmo_t4(k).max_BB.z = br.ReadSingle
         Next
 
         Dim dmy_dl = br.ReadUInt32
@@ -336,6 +342,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_WSMI_data(ByVal t_cnt As Integer)
+
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -366,6 +373,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_BWWa_data(ByVal t_cnt As Integer)
+        'water data
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -374,6 +382,11 @@ Module Mod_Space_Bin_Functions
         BWWa.t1_dl = br.ReadUInt32
         BWWa.t1_dc = br.ReadUInt32
         ReDim BWWa.bwwa_t1(1)
+        If BWWa.t1_dc = 0 Then
+            'no water
+            water.IsWater = False
+            Return
+        End If
         Try
             BWWa.bwwa_t1(0).position.x = br.ReadSingle
             BWWa.bwwa_t1(0).position.y = br.ReadSingle
@@ -389,6 +402,7 @@ Module Mod_Space_Bin_Functions
 
 
     Public Sub get_BSMI_data(ByVal t_cnt As Integer)
+        'model matrix and index data
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -438,7 +452,7 @@ Module Mod_Space_Bin_Functions
             End If
         Next
         'As far as I can tell, the rest of this data is
-        'all all FFFF FFFFF (-1 hex) or BF80 00000 (1- float)
+        'all FFFF FFFFF (-1 hex) or BF80 00000 (-1.0 float)
         'not sure what its for but I dont need it
         Return
 
@@ -482,6 +496,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_BWT2_data(ByVal t_cnt As Integer)
+        'terrain 2 data
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -519,17 +534,17 @@ Module Mod_Space_Bin_Functions
             'sb.Append(":")
             For r = 0 To size - 1
                 'sb.Append(maplist((c * size) + r).name)
-                If maplist((c * size) + r).location.X > 0 Then
-                    sb.Append("( " + maplist((c * size) + r).location.X.ToString("000.0"))
+                If maplist((c * size) + r).location.x > 0 Then
+                    sb.Append("( " + maplist((c * size) + r).location.x.ToString("000.0"))
                 Else
-                    sb.Append("(" + maplist((c * size) + r).location.X.ToString("000.0"))
+                    sb.Append("(" + maplist((c * size) + r).location.x.ToString("000.0"))
 
                 End If
                 sb.Append(":")
-                If maplist((c * size) + r).location.Y > 0 Then
-                    sb.Append(" " + maplist((c * size) + r).location.Y.ToString("000.0") + ")" + " ")
+                If maplist((c * size) + r).location.y > 0 Then
+                    sb.Append(" " + maplist((c * size) + r).location.y.ToString("000.0") + ")" + " ")
                 Else
-                    sb.Append(maplist((c * size) + r).location.Y.ToString("000.0") + ")" + " ")
+                    sb.Append(maplist((c * size) + r).location.y.ToString("000.0") + ")" + " ")
                 End If
             Next
             sb.Append(vbCrLf)
@@ -571,7 +586,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_WGSD_data(ByVal t_cnt As Integer)
-        Dim mask() = {0, 1, 2, 4, 8, 16, 32, 64, 128}
+        'Static Decals
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -605,10 +620,6 @@ Module Mod_Space_Bin_Functions
 
             WGSD.Table_Entries(k).flags = br.ReadUInt32
             decal_matrix_list(k).flags = WGSD.Table_Entries(k).flags
-            'Dim b1 = br.ReadByte
-            'Dim b2 = br.ReadByte
-            'Dim b3 = br.ReadByte
-            'Dim b4 = br.ReadByte
 
             WGSD.Table_Entries(k).off_x = br.ReadSingle
             WGSD.Table_Entries(k).off_y = br.ReadSingle
@@ -620,18 +631,18 @@ Module Mod_Space_Bin_Functions
             decal_matrix_list(k).offset.z = WGSD.Table_Entries(k).off_z
             decal_matrix_list(k).offset.w = WGSD.Table_Entries(k).off_w
 
-            If decal_matrix_list(k).offset.x <> 0 Then
-                Stop
-            End If
-            If decal_matrix_list(k).offset.y <> 0 Then
-                Stop
-            End If
-            If decal_matrix_list(k).offset.z <> 0 Then
-                Stop
-            End If
-            If decal_matrix_list(k).offset.w <> 0 Then
-                Stop
-            End If
+            'If decal_matrix_list(k).offset.x <> 0 Then
+            '    Stop
+            'End If
+            'If decal_matrix_list(k).offset.y <> 0 Then
+            '    Stop
+            'End If
+            'If decal_matrix_list(k).offset.z <> 0 Then
+            '    Stop
+            'End If
+            'If decal_matrix_list(k).offset.w <> 0 Then
+            '    Stop
+            'End If
 
             WGSD.Table_Entries(k).uv_wrapping_u = br.ReadSingle
             WGSD.Table_Entries(k).uv_wrapping_v = br.ReadSingle
@@ -644,7 +655,6 @@ Module Mod_Space_Bin_Functions
             '    Stop
             'End If
 
-
             WGSD.Table_Entries(k).visibilityMask = br.ReadUInt32 'always 0xFFFFFFFF?
             'now we can get the strings from the keys.
             WGSD.Table_Entries(k).diffuseMap = find_str_BWST(WGSD.Table_Entries(k).diffuseMapKey)
@@ -656,15 +666,11 @@ Module Mod_Space_Bin_Functions
                 WGSD.Table_Entries(k).normalMap = "Stone06_NM.dds"
             End If
             decal_matrix_list(k).decal_normal = WGSD.Table_Entries(k).normalMap
-            If WGSD.Table_Entries(k).flags <> &H10200 Then
-                'Console.WriteLine("b1:" + WGSD.Table_Entries(k).flags.ToString("x") + " id:" + k.ToString("0000"))
-            End If
-            'If b1 = 1 Then
-            decal_matrix_list(k).priority = k + (WGSD.Table_Entries(k).flags And &HFF)
-            'Else
-            '    decal_matrix_list(k).priority = False
-            'End If
+
+            decal_matrix_list(k).priority = (WGSD.Table_Entries(k).flags And &HFF)
         Next
+
+        'have to sort these by priority.
         Dim cnt As Integer = 0
         Dim level As Integer = 300
         For k = 0 To 300
@@ -677,29 +683,21 @@ Module Mod_Space_Bin_Functions
             Next
             level -= 1
         Next
-        'For i = 0 To temp.Length - 1
-        '    Dim t = decal_matrix_list(i)
-        '    If Not t.priority Then
-        '        temp(cnt) = t
-        '        cnt += 1
-        '    End If
-        'Next
+
         'Console.WriteLine("------------------------------")
 
         For i = 0 To temp.Length - 1
             Dim t = temp(i)
             decal_matrix_list(i) = t
             'Console.WriteLine("b1:" + decal_matrix_list(i).priority.ToString("00") + " id:" + i.ToString("0000"))
-
         Next
 
-
-        'string table 0
         br.Close()
         ms.Dispose()
     End Sub
 
     Public Sub get_BSGD_data(ByVal t_cnt As Integer)
+        'game data
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ReDim BSGD.data(ms.Length)
@@ -713,6 +711,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_BWSG_data(ByVal t_cnt As Integer)
+        'model data.. need to use this at some point.
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -829,6 +828,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_BWST_data(ByVal t_cnt As Integer)
+        'string table
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
@@ -859,6 +859,7 @@ Module Mod_Space_Bin_Functions
     End Sub
 
     Public Sub get_SpTr_data(ByVal t_cnt As Integer)
+        'speed tree data
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0

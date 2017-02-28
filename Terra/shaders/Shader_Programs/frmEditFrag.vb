@@ -82,7 +82,7 @@ Public Class frmEditFrag
             .set_call_id(id)
             .shader_id = id
         End With
-        frmMain.set_shader_variables() ' update uniform addresses
+        set_shader_variables() ' update uniform addresses
         gl_busy = False
         frmMain.draw_scene()
         frmMain.draw_scene()

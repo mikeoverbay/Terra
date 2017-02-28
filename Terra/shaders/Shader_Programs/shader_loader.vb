@@ -50,7 +50,30 @@ Module shader_loader
     Public view_normal_mode_ As Integer
     Public normal_mode As Integer = 0
     Public normal_length_ As Integer
-
+    Public c_address, n_address, f_address, a_address, t_address, c_position As Integer
+    Public c_address2, n_address2, f_address2, a_address2, t_address2 As Integer
+    Public c_address3, n_address3, f_address3, a_address3, t_address3 As Integer
+    Public c_address4, n_address4, f_address4, a_address4, t_address4 As Integer
+    Public c_address5, n_address5, f_address5, a_address5, t_address5 As Integer
+    Public c_address6, n_address6, f_address6, a_address6, t_address6 As Integer
+    Public layer_1, layer_2, layer_3, layer_4, n_layer_1, n_layer_2, n_layer_3, n_layer_4 As Integer
+    Public used_layers, col_address, row_address, tile_w, main_texture, is_bumped, is_multi_textured, colormap2, gamma, gamma_2 As Integer
+    Public gamma_3, gamma_4, gamma_5, gamma_6, c_position3, c_position4, c_position5, is_bumped3, is_bumped4, is_bumped5 As Integer
+    Public layer0U, layer1U, layer2U, layer3U As Integer
+    Public layer0V, layer1V, layer2V, layer3V As Integer
+    Public gray_level_1, gray_level_2, gray_level_3, gray_level_6, gray_level_4, gray_level_5 As Integer
+    Public is_GAmap, alphaRef, alphaTestEnable, tangent, binormal As Integer
+    Public matrix_1 As Integer
+    Public u_mat1, u_mat2, u_mat3 As Integer
+    Public mixtexture, dominateTex As Integer
+    Public sun_lock As Boolean = False
+    Public leaf_c_map, leaf_n_map, leaf_level, leaf_contrast, leaf_camPos, leaf_matrix, leaf_gray_level, leaf_fog_enable As Integer
+    Public leaf_ambient, branch_ambient, decal_ambient, model_ambient As Integer
+    Public decal_u_wrap, decal_v_wrap As Integer
+    Public phong_cam_pos As Integer
+    Public bump_out_ As Integer
+    Public vismap_address As Integer
+    Public noise_map_address As Integer
     Public Sub make_shaders()
         'I'm tired of all the work every time I add a shader.
         'So... Im going to automate the process.. Hey.. its a computer for fucks sake!
@@ -279,6 +302,117 @@ Module shader_loader
         s.Replace("0(", vbCrLf + "(")
         frmShaderError.Show()
         frmShaderError.er_tb.Text += s
+    End Sub
+    Public Sub set_shader_variables()
+        'I moved this out side of the main rendering loop.
+        'Im hoping to speed up rendering as much as I can.
+        c_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "colorMap")
+        n_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "normalMap")
+        f_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "enable_fog")
+        a_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "l_ambient")
+        t_address2 = Gl.glGetUniformLocation(shader_list.ss_shader, "l_texture")
+        gray_level_2 = Gl.glGetUniformLocation(shader_list.ss_shader, "gray_level")
+        gamma_2 = Gl.glGetUniformLocation(shader_list.ss_shader, "gamma")
+        '--------------------------------------------------------------------------
+        c_address6 = Gl.glGetUniformLocation(shader_list.clip_shader, "colorMap")
+        'n_address6 = Gl.glGetUniformLocation(clip_shader, "normalMap")
+        'f_address6 = Gl.glGetUniformLocation(clip_shader, "enable_fog")
+        'a_address6 = Gl.glGetUniformLocation(clip_shader, "l_ambient")
+        't_address6 = Gl.glGetUniformLocation(clip_shader, "l_texture")
+        'gray_level_6 = Gl.glGetUniformLocation(clip_shader, "gray_level")
+        'gamma_6 = Gl.glGetUniformLocation(clip_shader, "gamma")
+        'clip_distance = Gl.glGetUniformLocation(clip_shader, "clip_distance")
+        '--------------------------------------------------------------------------
+        main_texture = Gl.glGetUniformLocation(shader_list.render_shader, "main_texture")
+        n_address = Gl.glGetUniformLocation(shader_list.render_shader, "normalMap")
+        c_position = Gl.glGetUniformLocation(shader_list.render_shader, "cam_position")
+        f_address = Gl.glGetUniformLocation(shader_list.render_shader, "enable_fog")
+        a_address = Gl.glGetUniformLocation(shader_list.render_shader, "l_ambient")
+        t_address = Gl.glGetUniformLocation(shader_list.render_shader, "l_texture")
+        gray_level_1 = Gl.glGetUniformLocation(shader_list.render_shader, "gray_level")
+        gamma = Gl.glGetUniformLocation(shader_list.render_shader, "gamma")
+        '--------------------------------------------------------------------------
+        layer_1 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_1")
+        layer_2 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_2")
+        layer_3 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_3")
+        layer_4 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_4")
+        n_layer_1 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_1")
+        n_layer_2 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_2")
+        n_layer_3 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_3")
+        n_layer_4 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_4")
+        mixtexture = Gl.glGetUniformLocation(shader_list.render_shader, "mixtexture")
+        c_address = Gl.glGetUniformLocation(shader_list.render_shader, "colorMap")
+        row_address = Gl.glGetUniformLocation(shader_list.render_shader, "row")
+        col_address = Gl.glGetUniformLocation(shader_list.render_shader, "col")
+        tile_w = Gl.glGetUniformLocation(shader_list.render_shader, "tile_width")
+        used_layers = Gl.glGetUniformLocation(shader_list.render_shader, "used_layers")
+        dominateTex = Gl.glGetUniformLocation(shader_list.render_shader, "DominateMap")
+        layer0U = Gl.glGetUniformLocation(shader_list.render_shader, "layer0U")
+        layer1U = Gl.glGetUniformLocation(shader_list.render_shader, "layer1U")
+        layer2U = Gl.glGetUniformLocation(shader_list.render_shader, "layer2U")
+        layer3U = Gl.glGetUniformLocation(shader_list.render_shader, "layer3U")
+        layer0V = Gl.glGetUniformLocation(shader_list.render_shader, "layer0V")
+        layer1V = Gl.glGetUniformLocation(shader_list.render_shader, "layer1V")
+        layer2V = Gl.glGetUniformLocation(shader_list.render_shader, "layer2V")
+        layer3V = Gl.glGetUniformLocation(shader_list.render_shader, "layer3V")
+        '--------------------------------------------------------------------------
+        c_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "colorMap")
+        colormap2 = Gl.glGetUniformLocation(shader_list.bump_shader, "colorMap_2")
+        n_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "normalMap")
+        f_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "enable_fog")
+        'c_position3 = Gl.glGetUniformLocation(bump_shader, "camPos")
+        t_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "l_texture")
+        gray_level_3 = Gl.glGetUniformLocation(shader_list.bump_shader, "gray_level")
+        is_bumped3 = Gl.glGetUniformLocation(shader_list.bump_shader, "is_bumped")
+        is_GAmap = Gl.glGetUniformLocation(shader_list.bump_shader, "is_GAmap")
+        is_multi_textured = Gl.glGetUniformLocation(shader_list.bump_shader, "is_multi_textured")
+        gamma_3 = Gl.glGetUniformLocation(shader_list.bump_shader, "gamma")
+        alphaRef = Gl.glGetUniformLocation(shader_list.bump_shader, "alphaRef")
+        alphaTestEnable = Gl.glGetUniformLocation(shader_list.bump_shader, "alphaTestEnable")
+        u_mat3 = Gl.glGetUniformLocation(shader_list.bump_shader, "ModelMatrix1")
+        model_ambient = Gl.glGetUniformLocation(shader_list.bump_shader, "ambient")
+        '--------------------------------------------------------------------------
+        c_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "colorMap")
+        n_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "normalMap")
+        f_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "enable_fog")
+        c_position4 = Gl.glGetUniformLocation(shader_list.trees_shader, "cam_position")
+        t_address4 = Gl.glGetUniformLocation(shader_list.trees_shader, "l_texture")
+        gray_level_4 = Gl.glGetUniformLocation(shader_list.trees_shader, "gray_level")
+        is_bumped4 = Gl.glGetUniformLocation(shader_list.trees_shader, "is_bumped")
+        gamma_4 = Gl.glGetUniformLocation(shader_list.trees_shader, "gamma")
+        branch_ambient = Gl.glGetUniformLocation(shader_list.trees_shader, "ambient")
+        '--------------------------------------------------------------------------
+        c_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "colorMap")
+        n_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "normalMap")
+        f_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "enable_fog")
+        c_position5 = Gl.glGetUniformLocation(shader_list.decals_shader, "cam_position")
+        t_address5 = Gl.glGetUniformLocation(shader_list.decals_shader, "l_texture")
+        gray_level_5 = Gl.glGetUniformLocation(shader_list.decals_shader, "gray_level")
+        gamma_5 = Gl.glGetUniformLocation(shader_list.decals_shader, "gamma")
+        matrix_1 = Gl.glGetUniformLocation(shader_list.decals_shader, "ModelMatrix1")
+        decal_ambient = Gl.glGetUniformLocation(shader_list.decals_shader, "ambient")
+        decal_u_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "u_wrap")
+        decal_v_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "v_wrap")
+
+        '-----------------------------------------------------------------
+        leaf_c_map = Gl.glGetUniformLocation(shader_list.leaf_shader, "colorMap")
+        leaf_camPos = Gl.glGetUniformLocation(shader_list.leaf_shader, "camPos")
+        leaf_matrix = Gl.glGetUniformLocation(shader_list.leaf_shader, "matrix")
+        leaf_fog_enable = Gl.glGetUniformLocation(shader_list.leaf_shader, "enable_fog")
+        leaf_camPos = Gl.glGetUniformLocation(shader_list.leaf_shader, "cam_position")
+        leaf_level = Gl.glGetUniformLocation(shader_list.leaf_shader, "l_texture")
+        leaf_gray_level = Gl.glGetUniformLocation(shader_list.leaf_shader, "gray_level")
+        leaf_contrast = Gl.glGetUniformLocation(shader_list.leaf_shader, "gamma")
+        leaf_ambient = Gl.glGetUniformLocation(shader_list.leaf_shader, "ambient")
+        '-----------------
+        phong_cam_pos = Gl.glGetUniformLocation(shader_list.comp_shader, "cam_pos")
+        bump_out_ = Gl.glGetUniformLocation(shader_list.comp_shader, "amount")
+        '-----------------
+        vismap_address = Gl.glGetUniformLocation(shader_list.fog_shader, "map")
+        noise_map_address = Gl.glGetUniformLocation(shader_list.fog_shader, "noise_map")
+        '-----------------
+        view_normal_mode_ = Gl.glGetUniformLocation(shader_list.normal_shader, "mode")
+        normal_length_ = Gl.glGetUniformLocation(shader_list.normal_shader, "l_length")
     End Sub
 
 End Module

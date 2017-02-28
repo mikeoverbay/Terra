@@ -9,7 +9,7 @@ Public Class frmBiasing
     End Sub
     Private Sub terrain_clip_Scroll(sender As Object, e As EventArgs) Handles terrain_clip.Scroll
         If Not maploaded Then Return
-        TERRAIN_BIAS = CSng(terrain_clip.Value / 1000) * 10.0
+        TERRAIN_BIAS = CSng(terrain_clip.Value / 1000.0) * 15.0
         decal_matrix_list(frmMain.d_counter).t_bias = TERRAIN_BIAS
         update_includer_string()
         If decal_matrix_list(frmMain.d_counter).good Then
@@ -24,7 +24,7 @@ Public Class frmBiasing
 
     Private Sub decal_clip_Scroll(sender As Object, e As EventArgs) Handles decal_clip.Scroll
         If Not maploaded Then Return
-        DECAL_BIAS = CSng(decal_clip.Value / 1000.0) * 10.0
+        DECAL_BIAS = CSng(decal_clip.Value / 1000.0) * 15.0
         decal_matrix_list(frmMain.d_counter).d_bias = DECAL_BIAS
         update_includer_string()
         If decal_matrix_list(frmMain.d_counter).good Then
@@ -95,9 +95,6 @@ Public Class frmBiasing
                 DECAL_BIAS = .d_bias
                 TERRAIN_BIAS = .t_bias
                 EXCLUDED = .exclude
-                If Me.Visible Then
-                    'terrain_clip.Value = (DECAL_BIAS / 5.0) * 100
-                End If
                 s = "-" + index.ToString("0000") + ":" + .t_bias.ToString("0.00") + ":" + .d_bias.ToString("0.00") + ":" + .exclude.ToString
                 newlist.Insert(cnt, s)
                 results_tb.Lines = newlist.ToArray
@@ -153,10 +150,10 @@ Public Class frmBiasing
                     EXCLUDED = .exclude
                     Application.DoEvents()
 
-                    decal_clip.Value = CInt((DECAL_BIAS / 10.0) * 1000.0)
+                    decal_clip.Value = CInt((DECAL_BIAS / 15.0) * 1000.0)
                     terrain_clip.PerformLayout()
                     terrain_clip.Invalidate()
-                    terrain_clip.Value = CInt((TERRAIN_BIAS / 10.0) * 1000.0)
+                    terrain_clip.Value = CInt((TERRAIN_BIAS / 15.0) * 1000.0)
                     terrain_clip.PerformLayout()
                     terrain_clip.Invalidate()
                     exclude_chk_box.Checked = EXCLUDED
