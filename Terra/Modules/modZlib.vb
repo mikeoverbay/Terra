@@ -161,13 +161,13 @@ Module modZlib
 
         'This function reads the data and creates the map, models, trees and everything else.
 
-        Dim decal_maker As New Thread(AddressOf make_decals) ' build the meshes in the back ground
-        Try
-            decal_maker.Name = "decal_maker"
-            decal_maker.Priority = ThreadPriority.Highest
-        Catch ex As Exception
+        'Dim decal_maker As New Thread(AddressOf make_decals) ' build the meshes in the back ground
+        'Try
+        '    decal_maker.Name = "decal_maker"
+        '    decal_maker.Priority = ThreadPriority.Highest
+        'Catch ex As Exception
 
-        End Try
+        'End Try
         normal_mode = 0
         frmMain.d_counter = 0
         has_high_rez_map = False
@@ -647,7 +647,7 @@ dont_grab_this:
         'lets seam the World (creates map seam in between the chunks)
         seam_map()
         '**********************************************
-        decal_maker.Start() ' fire off back ground worker. Its grabbing decal data and making meshes and transforms.
+        'decal_maker.Start() ' fire off back ground worker. This causes issues with memory for some unknown reason.
         '**********************************************
 
         ' this is where we will make the blend texture and slice the huge color_tex in to its chuck areas.
@@ -816,7 +816,6 @@ dont_grab_this:
         bw_strings.Clear()
         'make all the models.
         For m = 0 To Model_Matrix_list.Length - 2
-            'If Model_Matrix_list(m).primitive_name.ToLower.Contains("mil_") Then
             If True Then
                 'stuff we dont want on the map.
                 If Model_Matrix_list(m).primitive_name.ToLower.Contains("wgl_banner") _
@@ -838,7 +837,6 @@ dont_grab_this:
                 'some of the matrix has to be inverted because of Opengl/DirectX issues
                 Models.matrix(m).matrix(1) *= -1.0
                 Models.matrix(m).matrix(2) *= -1.0
-                'Models.matrix(m).matrix(3) *= -1.0
                 Models.matrix(m).matrix(4) *= -1.0
                 Models.matrix(m).matrix(8) *= -1.0
                 Models.matrix(m).matrix(12) *= -1.0
@@ -868,7 +866,6 @@ skip_this:
             'same as with models.. we must invert some of the matrix.
             speedtree_matrix_list(tree).matrix(1) *= -1.0
             speedtree_matrix_list(tree).matrix(2) *= -1.0
-            'speedtree_matrix_list(tree).matrix(3) *= -1.0
             speedtree_matrix_list(tree).matrix(4) *= -1.0
             speedtree_matrix_list(tree).matrix(8) *= -1.0
             speedtree_matrix_list(tree).matrix(12) *= -1.0
@@ -882,11 +879,12 @@ skip_this:
             Application.DoEvents()
         Next
         'GoTo fuck_this
-        While decal_maker.IsAlive
-            frmMain.tb1.Text = "Waiting on Decal Thread to finish..."
-            Application.DoEvents()
-            Thread.Sleep(10)
-        End While
+        'While decal_maker.IsAlive
+        '    frmMain.tb1.Text = "Waiting on Decal Thread to finish..."
+        '    Application.DoEvents()
+        '    Thread.Sleep(10)
+        'End While
+        make_decals() ' this wont run ok in background thread for some reason.
         GC.Collect()
         GC.WaitForFullGCComplete()
         build_decals() ' finish making the decals.. this involves projecting them on to the terrain and grabbing textures.

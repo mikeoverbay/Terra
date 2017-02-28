@@ -3188,7 +3188,7 @@ nope:
                 With decal_matrix_list(d_counter)
                     Dim scale = pb1.Height / pb1.Width
                     'Gl.glOrtho(-lr, lr, (-lr) * Scale(), (lr) * Scale(), -5, 40) 'Select Ortho Mode
-                    Gl.glOrtho(br.x / scale, tl.x / scale, bl.y, tr.y, -Abs(get_length_vect3(near) * .d_bias), Abs(get_length_vect3(far) * .d_bias)) 'Select Ortho Mode
+                    Gl.glOrtho(br.x / scale, tl.x / scale, bl.y, tr.y, -Abs(get_length_vect3(near) * .t_bias), Abs(get_length_vect3(far) * .t_bias)) 'Select Ortho Mode
                 End With
                 Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
                 Gl.glLoadIdentity() 'Reset The Matrix

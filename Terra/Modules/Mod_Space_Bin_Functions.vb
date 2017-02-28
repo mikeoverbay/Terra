@@ -672,7 +672,7 @@ Module Mod_Space_Bin_Functions
 
         'have to sort these by priority.
         Dim cnt As Integer = 0
-        Dim level As Integer = 300
+        Dim level As Integer = 0
         For k = 0 To 300
             For i = 0 To temp.Length - 1
                 Dim t = decal_matrix_list(i)
@@ -681,7 +681,7 @@ Module Mod_Space_Bin_Functions
                     cnt += 1
                 End If
             Next
-            level -= 1
+            level += 1
         Next
 
         'Console.WriteLine("------------------------------")

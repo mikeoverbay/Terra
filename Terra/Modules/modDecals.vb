@@ -141,7 +141,7 @@ Module modDecals
         Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         'Gl.glColorMask(Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE)
         Gl.glDepthFunc(Gl.GL_LEQUAL)
         Gl.glFrontFace(Gl.GL_CW)
@@ -152,7 +152,7 @@ Module modDecals
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glColor4f(0.0, 0.0, 0.0, 0.0)
         Gl.glDisable(Gl.GL_CULL_FACE)
-
+        Gl.glDisable(Gl.GL_BLEND)
 
         Gl.glUseProgram(shader_list.depth_shader)
 
@@ -160,7 +160,7 @@ Module modDecals
         lightTransform(decal, True)
         'first render both in solid black for masking
         'Pass one.. render models in red
-        mask_makers(decal)
+        'mask_makers(decal)
         Gl.glColor3f(1.0, 0.0, 0.0) 'very important to shader!
         draw_terrain(decal)
         Dim ar1((decal_depth_size ^ 2) * 3) As Single
@@ -183,8 +183,9 @@ Module modDecals
         Gl.glUseProgram(0)
 
         For k = 0 To ar1.Length - 1
-            If ar1(k) > 0.0 And ar2(k) > 0.0 Then
-                Dim vv = 1.0
+            If ar1(k) <> 0.0 And ar2(k) <> 0.0 Then
+                'Dim vv = 1.0
+                ar1(k) = ar2(k)
             Else
                 ar1(k) += ar2(k)
             End If
@@ -245,6 +246,8 @@ Module modDecals
                                     c = j
                                 End With
                             Next j
+                        Else
+                            Dim kkk = 1.0
                         End If
                     Next i
                 End With

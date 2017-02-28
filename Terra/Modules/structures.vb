@@ -318,7 +318,7 @@ Module structures
 
     End Structure
     Public Function get_length_vertex(v As vertex_data)
-        Dim s As Single = Sqrt((v.x ^ 2) + (v.y ^ 2) + (v.z ^ 2))
+        Dim s As Single = v.x + v.y + v.z
         Return s
     End Function
     Public Function get_length_vect3(v As vect3)

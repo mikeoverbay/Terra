@@ -484,7 +484,7 @@ set_mask:
             newWidth = size.Width
             newHeight = size.Height
         End If
-        Dim newImage As Image = New Bitmap(newWidth, newHeight, image.PixelFormat)
+        Dim newImage As Bitmap = New Bitmap(newWidth, newHeight, image.PixelFormat)
         Using graphicsHandle As Graphics = Graphics.FromImage(newImage)
             graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic
             graphicsHandle.DrawImage(image, 0, 0, newWidth, newHeight)
