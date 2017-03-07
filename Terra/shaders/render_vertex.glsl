@@ -14,7 +14,6 @@ varying vec3 lightDirection;
 
 varying vec3 norm;
 varying float ln;
-varying float ln_b;
 varying vec4 Vposition;
 varying vec3 Vertex;
 varying vec4 mask;
@@ -74,7 +73,6 @@ norm.xz *= -1.0;
 
 // This is the cut off distance for bumpping the surface.
 ln = distance(point.xyz,cam_position.xyz);
-ln_b = ln;
 if (ln<400.0)
 {
     ln = 1.0 - ln/400.0;
@@ -82,13 +80,5 @@ if (ln<400.0)
     else
     {
     ln = 0.0;
-}
-if (ln_b<300.0)
-{
-    ln_b = 1.0 - ln_b/300.0;
-    }
-    else
-    {
-    ln_b = 0.0;
 }
 }

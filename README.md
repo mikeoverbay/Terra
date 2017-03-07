@@ -6,6 +6,20 @@ World of Tanks map off line viewer and battle design tool.
 
 Writen in VB.net using Visual Studio 13.
 
+Update: 3/7/17
+I have cleaned a lot of the code and also fixed some rendering issues.
+Render time is faster now.
+In this folder is the MSI installer for the latest version.
+Any issues need to be emailed to me so I can fix them.
+SOME MAPS WONT LOAD! There are issues with Paris I can't fix.
+Paris is the only map that is not square.. Its a odd size 10x12 or something.
+Don't remember but my code can't handle non-square maps.
+It was my understanding that the bigworld engine only worked in square maps.
+This is proven now to be wrong.
+Any missing maps can be added to the map_list.txt file.. Instructions are inside.
+They may or may not load. Some maps use so much memory, I'm not sure how BigWorld loads them.
+I added code all over the place to recover memory after its use but still some maps are too big!
+
 The code is rough and needs cleaned up and well commented.
 There are many unused functions and subs that are lingering
 in the code. Entire Modules containing code I started on like

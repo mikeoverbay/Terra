@@ -256,10 +256,13 @@ Module vis_main
         fn = fn.Replace("lod1", "lod0")
         fn = fn.Replace("lod2", "lod0")
         fn = fn.Replace("lod3", "lod0")
-        If fn.Contains("mle040") And peice = 1 Then
+        If fn.Contains("mle040_") And peice = 1 Then
             Return False
         End If
-        If fn.Contains("env040") And peice = 1 Then
+        If fn.Contains("mle008_") And peice = 2 Then
+            Return False
+        End If
+        If fn.Contains("env053_") And peice = 0 Then
             Return False
         End If
         'If fn.Contains("bldAM_008") Then

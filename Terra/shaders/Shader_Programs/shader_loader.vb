@@ -69,7 +69,7 @@ Module shader_loader
     Public sun_lock As Boolean = False
     Public leaf_c_map, leaf_n_map, leaf_level, leaf_contrast, leaf_camPos, leaf_matrix, leaf_gray_level, leaf_fog_enable As Integer
     Public leaf_ambient, branch_ambient, decal_ambient, model_ambient As Integer
-    Public decal_u_wrap, decal_v_wrap As Integer
+    Public decal_u_wrap, decal_v_wrap, decal_influence As Integer
     Public phong_cam_pos As Integer
     Public bump_out_ As Integer
     Public vismap_address As Integer
@@ -393,7 +393,7 @@ Module shader_loader
         decal_ambient = Gl.glGetUniformLocation(shader_list.decals_shader, "ambient")
         decal_u_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "u_wrap")
         decal_v_wrap = Gl.glGetUniformLocation(shader_list.decals_shader, "v_wrap")
-
+        decal_influence = Gl.glGetUniformLocation(shader_list.decals_shader, "influence")
         '-----------------------------------------------------------------
         leaf_c_map = Gl.glGetUniformLocation(shader_list.leaf_shader, "colorMap")
         leaf_camPos = Gl.glGetUniformLocation(shader_list.leaf_shader, "camPos")

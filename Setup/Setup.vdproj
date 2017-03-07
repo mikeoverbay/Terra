@@ -399,12 +399,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_415116BC9C274CD986841D3602BC9ECB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4152A262B6E04B6C80229E808784B47D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2831,26 +2825,6 @@
             {
             "SourcePath" = "8:..\\Terra\\tanks\\J12_Chi_Nu_Kai.japan"
             "TargetName" = "8:J12_Chi_Nu_Kai.japan"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_415116BC9C274CD986841D3602BC9ECB"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\G98_Waffentrager_E100.german"
-            "TargetName" = "8:G98_Waffentrager_E100.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"

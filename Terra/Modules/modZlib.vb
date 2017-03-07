@@ -616,8 +616,11 @@ dont_grab_this:
 
                 Dim texture As Ionic.Zip.ZipEntry = ck("terrain2/lodTexture.dds")
                 texture.Extract(tms)
-                maplist(map).bmap = build_textures(map, tms).Clone
-
+                Using btm As New Bitmap(build_textures(map, tms).Clone, 64, 64)
+                    maplist(map).bmap = btm.Clone 'used only for grid listing utility
+                End Using
+                'maplist(map).bmap = build_textures(map, tms).Clone
+                GC.Collect()
                 Dim normals As Ionic.Zip.ZipEntry = ck("terrain2/lodNormals")
                 normals.Extract(norms)
 

@@ -13,7 +13,10 @@ uniform int is_multi_textured;
 uniform float gamma;
 uniform int alphaRef;
 uniform int alphaTestEnable;
-uniform float ambient; in vec3 T; in vec3 BN; in vec3 g_vertexnormal;
+uniform float ambient;
+in vec3 T;
+in vec3 BN;
+in vec3 g_vertexnormal;
 
 in vec2 TC1; in vec2 TC2; in vec3 vVertex; in vec3 lightDirection; in vec4 rgb;
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,10 +75,10 @@ void main(void) {
   //color*=0.3;
   float NdotL = max(dot(PN, L), 0.0);
   color.rgb += (color.rgb * pow(NdotL, 3.0));
-  vec4 final_color;
-  final_color = color + (color * vec4(ambient, ambient, ambient, 1.0));
+  vec4 final_color = color;
+  final_color.rgb = (color.rgb * ambient*5.0);
 
-  gl_FragColor = final_color ;
+  gl_FragColor = final_color;
   vec3 vG = vec3(harshness, harshness, harshness);
   gl_FragColor.rgb = pow(gl_FragColor.rgb, vG / gamma);
 

@@ -301,7 +301,7 @@ Module modTextures
         End If
         ms.Close()
         ms.Dispose()
-       
+        GC.Collect()
         Return bmap
     End Function
     Public Function get_tex_id_from_bmp(b As Bitmap)
@@ -320,7 +320,8 @@ Module modTextures
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         b.UnlockBits(bitmapData) ' Unlock The Pixel Data From Memory
         b.Dispose()
-        Application.DoEvents()
+        GC.Collect()
+        'Application.DoEvents()
         Return tex_id
     End Function
     Public Function make_dummy_texture() As Integer
@@ -340,6 +341,7 @@ Module modTextures
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         b.Dispose()
         g.Dispose()
+        GC.Collect()
         Return dummy
     End Function
     Public Sub make_mix_texture_id(map As Integer, b As Bitmap)
@@ -354,7 +356,7 @@ Module modTextures
         Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 4, b.Width, b.Height, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, bitmapData.Scan0)
         b.UnlockBits(bitmapData) ' Unlock The Pixel Data From Memory
         b.Dispose()
-
+        GC.Collect()
         Return
     End Sub
 
@@ -427,6 +429,7 @@ Module modTextures
         ilu.iludeleteimage(texID)
         ms.Close()
         ms.Dispose()
+        GC.Collect()
         Return image_id
     End Function
     Public Function get_tree_texture(ByRef ms As MemoryStream, ByVal shrink As Boolean) As Integer
@@ -492,6 +495,7 @@ Module modTextures
         ilu.iludeleteimage(texID)
         ms.Close()
         ms.Dispose()
+        GC.Collect()
         Return image_id
     End Function
     Public Function get_normal_texture(ByRef ms As MemoryStream, ByVal shrink As Boolean) As Integer
@@ -543,6 +547,7 @@ Module modTextures
         ilu.iludeleteimage(texID)
         ms.Close()
         ms.Dispose()
+        GC.Collect()
         Return image_id
     End Function
     Public Function get_texture_no_alpha(ByRef ms As MemoryStream, ByVal shrink As Boolean) As Integer
@@ -601,6 +606,7 @@ Module modTextures
         ilu.iludeleteimage(texID)
         ms.Close()
         ms.Dispose()
+        GC.Collect()
         Return image_id
     End Function
     Public Function Load_DDS_File(path As String) As Integer
@@ -647,6 +653,7 @@ Module modTextures
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
         Ilu.iluDeleteImage(texID)
+        GC.Collect()
         Return image_id
     End Function
 
@@ -708,7 +715,8 @@ Module modTextures
 
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
+            Ilu.iluDeleteImage(texID)
+            GC.Collect()
             Return Bitmapi
         Else
             Stop
@@ -824,7 +832,7 @@ Module modTextures
         'br.Close()
         ms.Close()
         ms.Dispose()
-        'Marshal.FreeHGlobal(pnt)
+        GC.Collect()
     End Sub
 
 End Module

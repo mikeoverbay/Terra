@@ -43,6 +43,7 @@ Partial Class frmMain
         Me.m_developer = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_edit_biasing = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_post_effect_viewer = New System.Windows.Forms.ToolStripMenuItem()
+        Me.m_render_stats = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_settings = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_lighting = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem13 = New System.Windows.Forms.ToolStripSeparator()
@@ -113,7 +114,6 @@ Partial Class frmMain
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.m_render_stats = New System.Windows.Forms.ToolStripMenuItem()
         Me.pb1.SuspendLayout()
         Me.mainMenu.SuspendLayout()
         Me.SuspendLayout()
@@ -226,6 +226,11 @@ Partial Class frmMain
         '
         Me.m_post_effect_viewer.Name = "m_post_effect_viewer"
         resources.ApplyResources(Me.m_post_effect_viewer, "m_post_effect_viewer")
+        '
+        'm_render_stats
+        '
+        Me.m_render_stats.Name = "m_render_stats"
+        resources.ApplyResources(Me.m_render_stats, "m_render_stats")
         '
         'm_settings
         '
@@ -668,11 +673,6 @@ Partial Class frmMain
         '
         resources.ApplyResources(Me.SaveFileDialog1, "SaveFileDialog1")
         Me.SaveFileDialog1.InitialDirectory = Global.Terra.My.MySettings.Default.game_path
-        '
-        'm_render_stats
-        '
-        Me.m_render_stats.Name = "m_render_stats"
-        resources.ApplyResources(Me.m_render_stats, "m_render_stats")
         '
         'frmMain
         '

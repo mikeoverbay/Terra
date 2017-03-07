@@ -37,6 +37,7 @@ Module Mod_Space_Bin_Functions
         Public good As Boolean
         Public offset As vect4
         Public priority As Integer
+        Public influence As Single
         Public cam_pos As vect3
         Public look_at As vect3
         Public far_clip As vect3
@@ -666,8 +667,12 @@ Module Mod_Space_Bin_Functions
                 WGSD.Table_Entries(k).normalMap = "Stone06_NM.dds"
             End If
             decal_matrix_list(k).decal_normal = WGSD.Table_Entries(k).normalMap
-
+            decal_matrix_list(k).influence = CSng(WGSD.Table_Entries(k).flags And &HFF00) / 256.0
             decal_matrix_list(k).priority = (WGSD.Table_Entries(k).flags And &HFF)
+            Debug.WriteLine("ID:" + k.ToString)
+            Debug.WriteLine(decal_matrix_list(k).decal_texture)
+            Debug.WriteLine(decal_matrix_list(k).influence.ToString)
+            Debug.WriteLine(CStr(WGSD.Table_Entries(k).flags And &HFF0000) / 65536)
         Next
 
         'have to sort these by priority.

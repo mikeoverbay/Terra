@@ -10,7 +10,7 @@ uniform float gamma;
 uniform float ambient;
 uniform float u_wrap;
 uniform float v_wrap;
-
+uniform float influence;
 varying vec2 texCoord;
 
 varying float ln;
@@ -44,6 +44,12 @@ return normalize( tbn * bump );
 //////////////////////////////////////////////////////////////
 void main (void)
 {
+    
+    float a_table[40];
+    a_table[2]=0.7;
+    a_table[16] = 1.5;
+    a_table[18] = 1.5;
+    a_table[30] = 1.5;
 if (ln == 0.0) { discard; } // no point in rendering if it's invisible.
     
     vec2 wrap = vec2(u_wrap, v_wrap);
@@ -56,7 +62,7 @@ float NdotL;
    
 vec4 color = texture2D(colorMap,  texCoord*wrap);
 a = color.a;
-if ( a <0.1 ) { discard; }
+if ( a <0.3 ) { discard; }
 color.xyz *= l_texture;
 a *= ln;
 //color.rgb = (color.rgb *0.001) + vec3(0.5,0.5,0.5);
@@ -80,14 +86,14 @@ color.rgb += ((color.rgb * NdotL));
 vec4 final_color = color * Ambient;
 
 
-   gl_FragColor = final_color *8.2 ;
+   gl_FragColor = final_color *10.2 ;
    
    
 // gamma correction
 const float vGv = 1.0;
 vec3 vG = vec3(vGv , vGv , vGv);
 gl_FragColor.rgb *= 1.3;
-gl_FragColor.rgb = pow(gl_FragColor.rgb, vG/gamma);
+gl_FragColor.rgb = pow(gl_FragColor.rgb, vG/(gamma*.8));
 
 //gray level
 vec3 luma = vec3(0.299, 0.587, 0.114);
@@ -114,6 +120,7 @@ gl_FragColor.rgb = mix(gl_Fog.color.rgb, gl_FragColor.rgb, fogFactor );
 else
 {
 }
-gl_FragColor.a = a;
+gl_FragColor.a = a* a_table[int(influence)];
+
 
 }

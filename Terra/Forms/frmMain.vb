@@ -193,7 +193,7 @@ fail_path:
         Application.DoEvents()
         Application.DoEvents()
 
-        'get_tank_list() ' get the tanks and add them to the GUI
+        get_tank_list() ' get the tanks and add them to the GUI
 
         tb1.Text = "Getting Map Images"
         Application.DoEvents()
@@ -621,7 +621,7 @@ fail_path:
         npb.Update()
         Application.DoEvents()
         If _STARTED Then
-            make_post_FBO_and_Textures()
+            'make_post_FBO_and_Textures()
         End If
         If Not SHOW_MAPS Then
             draw_scene()
@@ -1316,6 +1316,8 @@ dontaddthis:
                 tank(tank_number) = New tank_
 
                 Dim ar = fn.Name.Split(".")
+                tb1.Text = "Getting Tank Data: " + ar(0) ' let the user know whats going on
+                Application.DoEvents()
                 Dim ar2 = ar(0).Split("_")
                 Dim tankNnum As String = ar2(0).ToLower
                 Dim s As String = ""
@@ -1338,7 +1340,10 @@ dontaddthis:
                         s = s.Replace(vbLf, "")
                     End If
                 Next
-                Dim t As DataTable = xmldataset.Tables(s)
+                Dim t As DataTable = xmldataset.Tables(ar(0))
+                If t Is Nothing Then
+                    t = xmldataset.Tables(ar(0) + "_IGR")
+                End If
                 Dim qq = From row In t Select _
                      un = row.Field(Of String)("userString"), _
                      tags = row.Field(Of String)("tags") _
@@ -1713,8 +1718,6 @@ nope:
 
     Public Function GetOGLPos_Decals(ByVal x As Integer, ByVal y As Integer) As Integer
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
-        Gl.glClear(&HFFFF)
-        'Gl.glPushMatrix()
         Gl.glDisable(Gl.GL_FOG)
         seek_scene_decals()
         If m_show_fog.Checked Then
@@ -1722,9 +1725,6 @@ nope:
         End If
         Dim viewport(4) As Integer
         Dim pixel() As Byte = {0, 0, 0, 0}
-        '_SELECTED_map = 0
-        '_SELECTED_tree = 0
-        '_SELECTED_model = 0
         Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
         Gl.glReadPixels(x, viewport(3) - y, 1, 1, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixel)
         Dim type = pixel(3)
@@ -1974,6 +1974,9 @@ nope:
                         decal_includers_string = decal_includers_string.Replace(vbCrLf + vbCrLf, vbCrLf)
                         frmBiasing.results_tb.Text = decal_includers_string
                         check_decal_include_strings()
+                    Else
+                        tb1.Text = index.ToString("0000") + " : " + Model_Matrix_list(index).primitive_name
+
                     End If
                     Application.DoEvents()
                 End If
@@ -2677,6 +2680,7 @@ nope:
     End Sub
     Private Sub draw_models()
         ' draw the models
+        Gl.glEnable(Gl.GL_CULL_FACE)
         If maploaded And m_wire_models.Checked And m_show_models.Checked Then
             Gl.glUseProgram(shader_list.comp_shader)
             Gl.glUniform3f(phong_cam_pos, eyeX, eyeY, eyeZ)
@@ -2687,9 +2691,7 @@ nope:
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            'Gl.glPolygonOffset(1.0, 1.0)
-            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
+            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
 
             For model As UInt32 = 0 To Models.matrix.Length - 1
                 For k = 0 To Models.models(model)._count - 1
@@ -2735,7 +2737,7 @@ nope:
                     And Not m_hell_mode.Checked _
                     And Not m_wire_models.Checked _
                     Then ' cant let this try and draw shit that isnt there yet!!!
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
             ' Gl.glColor3f(lighting_model_level, lighting_model_level, lighting_model_level)
             If m_bump_map_models.Checked And model_bump_loaded Then
                 'Gl.glDisable(Gl.GL_LIGHTING)
@@ -3392,7 +3394,7 @@ nope:
                 If decal_matrix_list(k).good Then
                     Gl.glUniform1f(decal_u_wrap, decal_matrix_list(k).u_wrap)
                     Gl.glUniform1f(decal_v_wrap, decal_matrix_list(k).v_wrap)
-
+                    Gl.glUniform1f(decal_influence, decal_matrix_list(k).influence)
                     Gl.glActiveTexture(Gl.GL_TEXTURE0)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
@@ -3707,7 +3709,8 @@ nope:
         'draw_post_test()
         '==========================
         Gl.glDisable(Gl.GL_DEPTH_TEST)
-
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Gl.glTranslatef(0.0, 0.0F, -0.01F)
         If maploaded And EDIT_INCULDERS Then
             For k = 0 To decal_matrix_list.Length - 1
@@ -5285,7 +5288,7 @@ no_move_xz:
         Next
 
         Try
-            For i = 4 To 3000
+            For i = 3 To 3000
                 Gl.glDeleteTextures(1, i)
                 Il.ilBindImage(i)
                 Ilu.iluDeleteImage(i)
@@ -6303,14 +6306,15 @@ no_move_xz:
             Return
         End If
         If m_developer.Checked Then
-
             m_edit_shaders.Visible = True
             m_find_Item_menu.Visible = True
             m_edit_biasing.Visible = True
+            m_post_effect_viewer.Visible = True
         Else
             m_edit_shaders.Visible = False
             m_find_Item_menu.Visible = False
             m_edit_biasing.Visible = False
+            m_post_effect_viewer.Visible = False
 
         End If
     End Sub
@@ -6434,5 +6438,7 @@ no_move_xz:
     Private Sub m_render_stats_Click(sender As Object, e As EventArgs) Handles m_render_stats.Click
         frmStats.Show()
     End Sub
+
+
 End Class
 

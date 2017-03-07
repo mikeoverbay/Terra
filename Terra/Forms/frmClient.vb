@@ -224,82 +224,82 @@ Public Class frmClient
 					Case NetIncomingMessageType.StatusChanged
 
 						Dim s = client.ReadMessage()
-						write_diagnostics(s.ReadString + vbCrLf)
-						If inc.SenderConnection.Status = NetConnectionStatus.Connected Then
-							'CanStart = True
-							write_diagnostics("Connect Respond time: " + _
-								CStr(time_n.ElapsedMilliseconds / 1000) + "ms" + vbCrLf)
-							Thread.Sleep(500)
-						End If
-						Try
-							write_diagnostics(s.ReadString + vbCrLf)
+                        Try
+                            write_diagnostics(s.ReadString + vbCrLf)
+                            If inc.SenderConnection.Status = NetConnectionStatus.Connected Then
+                                'CanStart = True
+                                write_diagnostics("Connect Respond time: " + _
+                                    CStr(time_n.ElapsedMilliseconds / 1000) + "ms" + vbCrLf)
+                                Thread.Sleep(500)
+                            End If
+                            write_diagnostics(s.ReadString + vbCrLf)
 
-						Catch ex As Exception
+                        Catch ex As Exception
 
-						End Try
-					Case NetIncomingMessageType.Data
-						If inc.ReadByte = packetType.login_ack Then
-							write_diagnostics("Received connection response" + vbCrLf)
-							'get client count
-							Dim c = inc.ReadByte
-							For i = 0 To c - 1
-								Dim cl = New client_
-								cl.client_type = inc.ReadByte
-								cl.Name = inc.ReadString
-								If cl.client_type = clientType.host Then
-									If cl.Name = client_name_tb.Text Then
-										cl.host = True
-										ImHost = True
-									End If
-								Else
-									cl.host = False
-									ImHost = False
-								End If
-								'test if we get back our name..
-								'means the server is aware of us
-								If cl.Name = client_name_tb.Text Then
-									chat_message_buffer.Clear()
-									echo_window_tb.AppendText("Welcome to Terra! " + cl.Name + vbCrLf)
-								End If
-								clients.Add(cl)
-							Next
-							'read chat_buffer length
-							c = inc.ReadByte
-							Dim ts As String = ""
-							Dim tss As String = ""
-							For i = 0 To c - 1
-								tss = inc.ReadString
-								'remove any login mssages.
-								If Not tss.Contains("Connected") Then
-									ts += tss
-									chat_message_buffer.Add(tss)
-								End If
-							Next
-							echo_window_tb.AppendText(ts)
-							update_client_panel()
-							'need to update display
-							CanStart = True
-							Return True
-							Exit Select
-						End If
-					Case NetIncomingMessageType.DebugMessage
-						Dim s = inc.ReadString
-						Debug.Write(s + vbCrLf)
-					Case NetIncomingMessageType.WarningMessage
-					Case NetIncomingMessageType.Error
-					Case NetIncomingMessageType.ErrorMessage
-					Case NetIncomingMessageType.DebugMessage
-					Case NetIncomingMessageType.VerboseDebugMessage
-						Dim s = inc.ReadString
-						If Not s.Contains("Found ") Then
-							write_diagnostics(DateTime.Now.ToLongTimeString + " : " + s + vbCrLf)
-						End If
+                        End Try
+                    Case NetIncomingMessageType.Data
+                        If inc.ReadByte = packetType.login_ack Then
+                            write_diagnostics("Received connection response" + vbCrLf)
+                            'get client count
+                            Dim c = inc.ReadByte
+                            For i = 0 To c - 1
+                                Dim cl = New client_
+                                cl.client_type = inc.ReadByte
+                                cl.Name = inc.ReadString
+                                If cl.client_type = clientType.host Then
+                                    If cl.Name = client_name_tb.Text Then
+                                        cl.host = True
+                                        ImHost = True
+                                    End If
+                                Else
+                                    cl.host = False
+                                    ImHost = False
+                                End If
+                                'test if we get back our name..
+                                'means the server is aware of us
+                                If cl.Name = client_name_tb.Text Then
+                                    chat_message_buffer.Clear()
+                                    echo_window_tb.AppendText("Welcome to Terra! " + cl.Name + vbCrLf)
+                                End If
+                                clients.Add(cl)
+                            Next
+                            'read chat_buffer length
+                            c = inc.ReadByte
+                            Dim ts As String = ""
+                            Dim tss As String = ""
+                            For i = 0 To c - 1
+                                tss = inc.ReadString
+                                'remove any login mssages.
+                                If Not tss.Contains("Connected") Then
+                                    ts += tss
+                                    chat_message_buffer.Add(tss)
+                                End If
+                            Next
+                            echo_window_tb.AppendText(ts)
+                            update_client_panel()
+                            'need to update display
+                            CanStart = True
+                            Return True
+                            Exit Select
+                        End If
+                    Case NetIncomingMessageType.DebugMessage
+                        Dim s = inc.ReadString
+                        Debug.Write(s + vbCrLf)
+                    Case NetIncomingMessageType.WarningMessage
+                    Case NetIncomingMessageType.Error
+                    Case NetIncomingMessageType.ErrorMessage
+                    Case NetIncomingMessageType.DebugMessage
+                    Case NetIncomingMessageType.VerboseDebugMessage
+                        Dim s = inc.ReadString
+                        If Not s.Contains("Found ") Then
+                            write_diagnostics(DateTime.Now.ToLongTimeString + " : " + s + vbCrLf)
+                        End If
 
-					Case Else
-						Dim s = inc.ReadString
-						Debug.Write(s + vbCrLf)
+                    Case Else
+                        Dim s = inc.ReadString
+                        Debug.Write(s + vbCrLf)
 
-				End Select
+                End Select
 			End If
 			Application.DoEvents()
 			Thread.Sleep(50)

@@ -44,7 +44,6 @@ varying vec3 norm;
 varying vec4 Vposition;
 varying vec3 Vertex;
 varying float ln;
-varying float ln_b;
 varying vec4 mask;
 varying vec4 mask_2;
 ////////////////////////////////////////////////////////////////
@@ -189,21 +188,15 @@ void main(void)
 
   vec4 vAmbient = vec4(l_ambient, l_ambient, l_ambient, 1.0);
 
-  n1 = normalize(2.0 * n1 - 1.0);
+  n1.rgb = normalize(2.0 * n1.rgb - 1.0) * MixLevel.r;
   n1.y *= -1.0;
-  n2 = normalize(2.0 * n2 - 1.0);
+  n2.rgb = normalize(2.0 * n2.rgb - 1.0) * MixLevel.g;
   n2.y *= -1.0;
-  n3 = normalize(2.0 * n3 - 1.0);
+  n3.rgb = normalize(2.0 * n3.rgb - 1.0) * MixLevel.b;
   n3.y *= -1.0;
-  n4 = normalize(2.0 * n4 - 1.0);
+  n4.rgb = normalize(2.0 * n4.rgb - 1.0) * MixLevel.a;
   n4.y *= -1.0;
   
-  float spec_scale; // normalmap alpha channel contains speculer level 
-  spec_scale += (n4.w * MixLevel.a);
-  spec_scale += (n3.w * MixLevel.b);
-  spec_scale += (n2.w * MixLevel.g);
-  spec_scale += (n1.w * MixLevel.r);
-  spec_scale *= ln;
   //-------------------------------------------------------------
   //There is no good way to add normals together and not destroy them.
   // We have to do the math on each one THAN mix them together.
@@ -216,16 +209,17 @@ void main(void)
   vec3 PN3;
   vec3 PN4;
   
-  PN4 = get_preturp(n4.rgb, N, -g_viewvector, tv4 + .5);
-  PN3 = get_preturp(n3.rgb, N, -g_viewvector, tv3 + .5);
-  PN2 = get_preturp(n2.rgb, N, -g_viewvector, tv2 + .5);
-  PN1 = get_preturp(n1.rgb, N, -g_viewvector, tv1 + .5);
+  float bump_level = 0.3;
+  PN4 = get_preturp(n4.rgb, N, -g_viewvector, tv4 + .5) * MixLevel.a * bump_level;
+  PN3 = get_preturp(n3.rgb, N, -g_viewvector, tv3 + .5) * MixLevel.b * bump_level;
+  PN2 = get_preturp(n2.rgb, N, -g_viewvector, tv2 + .5) * MixLevel.g * bump_level;
+  PN1 = get_preturp(n1.rgb, N, -g_viewvector, tv1 + .5) * MixLevel.r * bump_level;
   
-  float spec = 1.0 + (2.0 * spec_scale);
-  diffuse = diffuse + max(pow(dot(PN4, L),spec) * mk4, 0.0) * Nmix1.a;
-  diffuse = diffuse + max(pow(dot(PN3, L),spec) * mk3, 0.0) * Nmix1.b;
-  diffuse = diffuse + max(pow(dot(PN2, L),spec) * mk2, 0.0) * Nmix1.g;
-  diffuse = diffuse + max(pow(dot(PN1, L),spec) * mk1, 0.0) * Nmix1.r;
+  float spec = 1.0;
+  diffuse = diffuse + max(dot(PN4, L) * mk4, 0.0) * MixLevel.a ;
+  diffuse = diffuse + max(dot(PN3, L) * mk3, 0.0) * MixLevel.b ;
+  diffuse = diffuse + max(dot(PN2, L) * mk2, 0.0) * MixLevel.g ;
+  diffuse = diffuse + max(dot(PN1, L) * mk1, 0.0) * MixLevel.r ;
 
   diffuse += ((Coutmix-diffuse) *.1);
 

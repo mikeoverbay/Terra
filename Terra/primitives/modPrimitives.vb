@@ -1393,7 +1393,7 @@ jump_normal:
         Gl.glBegin(Gl.GL_TRIANGLE_STRIP)
         Dim tbuf(tree_data.b_indices.Length) As Integer
         Dim c As Integer = 0
-        For i = tree_data.b_indices.Length - 1 To 0 Step -1
+        For i = tree_data.b_indices.Length - 2 To 0 Step -1
             tbuf(i) = tree_data.b_indices(c)
             c += 1
         Next

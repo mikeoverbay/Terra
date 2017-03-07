@@ -1491,8 +1491,8 @@ set_mask:
                     GoTo endx
                 End If
                 u_start = 0
-                Debug.WriteLine(mapBoard(mmx, mmy))
-                Debug.WriteLine(mapBoard(mmx + 1, mmy))
+                'Debug.WriteLine(mapBoard(mmx, mmy))
+                'Debug.WriteLine(mapBoard(mmx + 1, mmy))
                 For x = maplist(mapBoard(mboardX, mboardy)).location.x - 50 To _
                                             maplist(mapBoard(mboardX, mboardy)).location.x + 50 - (scale * 2) Step 1 * scale
                     tl = maplist(mapBoard(mboardX, mboardy + 1)).heights(x_pos, 0)

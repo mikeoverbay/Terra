@@ -117,63 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;ProgressBar1.Name" xml:space="preserve">
-    <value>ProgressBar1</value>
-  </data>
-  <data name="&gt;&gt;ProgressBar1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ProgressBar1.Parent" xml:space="preserve">
-    <value>pb1</value>
-  </data>
-  <data name="&gt;&gt;ProgressBar1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;font_holder.Name" xml:space="preserve">
-    <value>font_holder</value>
-  </data>
-  <data name="&gt;&gt;font_holder.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;font_holder.Parent" xml:space="preserve">
-    <value>pb1</value>
-  </data>
-  <data name="&gt;&gt;font_holder.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pb1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 25</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="pb1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="pb1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>990, 570</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="pb1.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
-  </data>
-  <data name="&gt;&gt;pb1.Name" xml:space="preserve">
-    <value>pb1</value>
-  </data>
-  <data name="&gt;&gt;pb1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pb1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pb1.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="ProgressBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>
   <data name="ProgressBar1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ProgressBar1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
@@ -183,6 +134,7 @@
   <data name="ProgressBar1.Size" type="System.Drawing.Size, System.Drawing">
     <value>990, 23</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="ProgressBar1.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>
   </data>
@@ -237,6 +189,30 @@
   <data name="&gt;&gt;font_holder.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="pb1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 25</value>
+  </data>
+  <data name="pb1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="pb1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>990, 570</value>
+  </data>
+  <data name="pb1.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
+  </data>
+  <data name="&gt;&gt;pb1.Name" xml:space="preserve">
+    <value>pb1</value>
+  </data>
+  <data name="&gt;&gt;pb1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pb1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pb1.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="tb1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>
   </data>
@@ -279,126 +255,6 @@
   <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>698, 17</value>
   </metadata>
-  <data name="m_file.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 23</value>
-  </data>
-  <data name="m_file.Text" xml:space="preserve">
-    <value>&amp;File</value>
-  </data>
-  <data name="m_settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 23</value>
-  </data>
-  <data name="m_settings.Text" xml:space="preserve">
-    <value>&amp;Settings</value>
-  </data>
-  <data name="m_session.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 23</value>
-  </data>
-  <data name="m_session.Text" xml:space="preserve">
-    <value>Sess&amp;ion</value>
-  </data>
-  <data name="m_layout_mode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 23</value>
-  </data>
-  <data name="m_layout_mode.Text" xml:space="preserve">
-    <value>Team Layout</value>
-  </data>
-  <data name="m_reset_tanks.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 23</value>
-  </data>
-  <data name="m_reset_tanks.Text" xml:space="preserve">
-    <value>Reset Layout</value>
-  </data>
-  <data name="m_reset_tanks.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="m_show_chat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 23</value>
-  </data>
-  <data name="m_show_chat.Text" xml:space="preserve">
-    <value>Hide Chat</value>
-  </data>
-  <data name="m_show_chat.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="m_render_to_bitmap.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 23</value>
-  </data>
-  <data name="m_render_to_bitmap.Text" xml:space="preserve">
-    <value>Render to Bitmap</value>
-  </data>
-  <data name="m_comment.AutoSize" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="m_comment.MaxLength" type="System.Int32, mscorlib">
-    <value>64</value>
-  </data>
-  <data name="m_comment.Size" type="System.Drawing.Size, System.Drawing">
-    <value>150, 23</value>
-  </data>
-  <data name="m_comment.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="m_clear_tank_comments.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 23</value>
-  </data>
-  <data name="m_clear_tank_comments.Text" xml:space="preserve">
-    <value>Clear Tank Comments</value>
-  </data>
-  <data name="m_clear_tank_comments.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="m_minizoom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 23</value>
-  </data>
-  <data name="m_minizoom.Text" xml:space="preserve">
-    <value>Mini-Map</value>
-  </data>
-  <data name="m_mini_down.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 23</value>
-  </data>
-  <data name="m_find_Item_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 23</value>
-  </data>
-  <data name="m_find_Item_menu.Text" xml:space="preserve">
-    <value>Dev Tools</value>
-  </data>
-  <data name="m_edit_shaders.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 23</value>
-  </data>
-  <data name="m_edit_shaders.Text" xml:space="preserve">
-    <value>Edit Shader</value>
-  </data>
-  <data name="HelpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 23</value>
-  </data>
-  <data name="HelpToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Help</value>
-  </data>
-  <data name="m_mini_up.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 23</value>
-  </data>
-  <data name="mainMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 1</value>
-  </data>
-  <data name="mainMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>990, 24</value>
-  </data>
-  <data name="mainMenu.TabIndex" type="System.Int32, mscorlib">
-    <value>41</value>
-  </data>
-  <data name="&gt;&gt;mainMenu.Name" xml:space="preserve">
-    <value>mainMenu</value>
-  </data>
-  <data name="&gt;&gt;mainMenu.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mainMenu.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;mainMenu.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="m_load_map.Size" type="System.Drawing.Size, System.Drawing">
     <value>168, 22</value>
   </data>
@@ -462,6 +318,21 @@
   <data name="m_post_effect_viewer.Text" xml:space="preserve">
     <value>Post Effect Viewer</value>
   </data>
+  <data name="m_post_effect_viewer.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="m_render_stats.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 22</value>
+  </data>
+  <data name="m_render_stats.Text" xml:space="preserve">
+    <value>Render Statistics</value>
+  </data>
+  <data name="m_file.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 23</value>
+  </data>
+  <data name="m_file.Text" xml:space="preserve">
+    <value>&amp;File</value>
+  </data>
   <data name="m_lighting.Size" type="System.Drawing.Size, System.Drawing">
     <value>214, 22</value>
   </data>
@@ -470,12 +341,6 @@
   </data>
   <data name="ToolStripMenuItem13.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 6</value>
-  </data>
-  <data name="m_g_settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
-  </data>
-  <data name="m_g_settings.Text" xml:space="preserve">
-    <value>&amp;Graphics</value>
   </data>
   <data name="m_show_tank_names.Size" type="System.Drawing.Size, System.Drawing">
     <value>197, 22</value>
@@ -531,12 +396,6 @@
   <data name="ToolStripMenuItem8.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 6</value>
   </data>
-  <data name="ViewDistanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>197, 22</value>
-  </data>
-  <data name="ViewDistanceToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;View Distance</value>
-  </data>
   <data name="m_200.Size" type="System.Drawing.Size, System.Drawing">
     <value>137, 22</value>
   </data>
@@ -560,6 +419,12 @@
   </data>
   <data name="m_1000.Text" xml:space="preserve">
     <value>1200 Meters</value>
+  </data>
+  <data name="ViewDistanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 22</value>
+  </data>
+  <data name="ViewDistanceToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;View Distance</value>
   </data>
   <data name="m_map_border.Size" type="System.Drawing.Size, System.Drawing">
     <value>197, 22</value>
@@ -660,6 +525,12 @@
   <data name="m_wire_terrain.Text" xml:space="preserve">
     <value>Wire Mesh Terrain</value>
   </data>
+  <data name="m_g_settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>214, 22</value>
+  </data>
+  <data name="m_g_settings.Text" xml:space="preserve">
+    <value>&amp;Graphics</value>
+  </data>
   <data name="ToolStripMenuItem14.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 6</value>
   </data>
@@ -702,6 +573,12 @@
   <data name="m_hell_mode.Text" xml:space="preserve">
     <value>Hell Mode</value>
   </data>
+  <data name="m_settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 23</value>
+  </data>
+  <data name="m_settings.Text" xml:space="preserve">
+    <value>&amp;Settings</value>
+  </data>
   <data name="m_host_session.Size" type="System.Drawing.Size, System.Drawing">
     <value>181, 22</value>
   </data>
@@ -731,6 +608,114 @@
   </data>
   <data name="m_join_server_as_host.Text" xml:space="preserve">
     <value>Join &amp;Remote as Host</value>
+  </data>
+  <data name="m_session.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 23</value>
+  </data>
+  <data name="m_session.Text" xml:space="preserve">
+    <value>Sess&amp;ion</value>
+  </data>
+  <data name="m_layout_mode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 23</value>
+  </data>
+  <data name="m_layout_mode.Text" xml:space="preserve">
+    <value>Team Layout</value>
+  </data>
+  <data name="m_reset_tanks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 23</value>
+  </data>
+  <data name="m_reset_tanks.Text" xml:space="preserve">
+    <value>Reset Layout</value>
+  </data>
+  <data name="m_reset_tanks.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="m_show_chat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 23</value>
+  </data>
+  <data name="m_show_chat.Text" xml:space="preserve">
+    <value>Hide Chat</value>
+  </data>
+  <data name="m_show_chat.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="m_render_to_bitmap.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 23</value>
+  </data>
+  <data name="m_render_to_bitmap.Text" xml:space="preserve">
+    <value>Render to Bitmap</value>
+  </data>
+  <data name="m_comment.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="m_comment.MaxLength" type="System.Int32, mscorlib">
+    <value>64</value>
+  </data>
+  <data name="m_comment.Size" type="System.Drawing.Size, System.Drawing">
+    <value>150, 23</value>
+  </data>
+  <data name="m_comment.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="m_clear_tank_comments.Size" type="System.Drawing.Size, System.Drawing">
+    <value>137, 23</value>
+  </data>
+  <data name="m_clear_tank_comments.Text" xml:space="preserve">
+    <value>Clear Tank Comments</value>
+  </data>
+  <data name="m_clear_tank_comments.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="m_minizoom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 23</value>
+  </data>
+  <data name="m_minizoom.Text" xml:space="preserve">
+    <value>Mini-Map</value>
+  </data>
+  <data name="m_mini_down.Size" type="System.Drawing.Size, System.Drawing">
+    <value>28, 23</value>
+  </data>
+  <data name="m_find_Item_menu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 23</value>
+  </data>
+  <data name="m_find_Item_menu.Text" xml:space="preserve">
+    <value>Dev Tools</value>
+  </data>
+  <data name="m_edit_shaders.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 23</value>
+  </data>
+  <data name="m_edit_shaders.Text" xml:space="preserve">
+    <value>Edit Shader</value>
+  </data>
+  <data name="HelpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 23</value>
+  </data>
+  <data name="HelpToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="m_mini_up.Size" type="System.Drawing.Size, System.Drawing">
+    <value>28, 23</value>
+  </data>
+  <data name="mainMenu.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 1</value>
+  </data>
+  <data name="mainMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>990, 27</value>
+  </data>
+  <data name="mainMenu.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="&gt;&gt;mainMenu.Name" xml:space="preserve">
+    <value>mainMenu</value>
+  </data>
+  <data name="&gt;&gt;mainMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mainMenu.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;mainMenu.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <metadata name="FolderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>159, 17</value>
@@ -770,12 +755,6 @@
   </metadata>
   <data name="SaveFileDialog1.Filter" xml:space="preserve">
     <value>Terra! Files (*.tra)|*tra</value>
-  </data>
-  <data name="m_render_stats.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 22</value>
-  </data>
-  <data name="m_render_stats.Text" xml:space="preserve">
-    <value>Render Statistics</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2198,6 +2177,12 @@
   <data name="&gt;&gt;m_post_effect_viewer.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;m_render_stats.Name" xml:space="preserve">
+    <value>m_render_stats</value>
+  </data>
+  <data name="&gt;&gt;m_render_stats.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;m_settings.Name" xml:space="preserve">
     <value>m_settings</value>
   </data>
@@ -2611,12 +2596,6 @@
   </data>
   <data name="&gt;&gt;SaveFileDialog1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_render_stats.Name" xml:space="preserve">
-    <value>m_render_stats</value>
-  </data>
-  <data name="&gt;&gt;m_render_stats.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmMain</value>

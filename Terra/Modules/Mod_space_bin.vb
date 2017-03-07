@@ -36,7 +36,7 @@ Module Mod_space_bin
             old_pos = br.BaseStream.Position
             br.BaseStream.Position = space_table_rows(t_cnt).section_Start
             space_table_rows(t_cnt).data = br.ReadBytes(space_table_rows(t_cnt).section_length)
-            ' save data to drive (only for debuging)
+            ' save data to drive (only for hacking the files)
             'If True Then
             '    File.WriteAllBytes("C:\!_bin_data\" + space_table_rows(t_cnt).header + ".bin", _
             '                        space_table_rows(t_cnt).data)
