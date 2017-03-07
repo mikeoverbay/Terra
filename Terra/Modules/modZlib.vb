@@ -467,7 +467,6 @@ dont_grab_this:
         'Get the speedTree composite maps. The tree textures.
         '================================================
         'diffuse
-
         Dim timge As Ionic.Zip.ZipEntry = active_pkg(speedtree_map)
         Dim sptimg As New MemoryStream
         If timge IsNot Nothing Then
@@ -483,7 +482,6 @@ dont_grab_this:
             End If
         End If
         sptimg.Dispose()
-        GC.Collect()
         'normalMap
         Dim ntimge As Ionic.Zip.ZipEntry = active_pkg(speedtree_normalmap)
         Dim nsptimg As New MemoryStream
