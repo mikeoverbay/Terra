@@ -12,7 +12,7 @@
     <AssemblyName>Terra</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>Off</OptionStrict>
@@ -55,6 +55,7 @@
     <DocumentationFile>Terra.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -65,6 +66,7 @@
     <DocumentationFile>Terra.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,6 +81,7 @@
     <CodeAnalysisRuleSet>BasicDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DefineTrace>true</DefineTrace>
@@ -89,6 +92,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FastColoredTextBox">
@@ -400,7 +404,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="light_settings\00_tank_tutorial.pkg.light" />
+    <None Include="light_settings\00_tank_tutorial.pkg.light">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="light_settings\01_karelia.pkg.light" />
     <None Include="light_settings\02_malinovka.pkg.light" />
     <None Include="light_settings\04_himmelsdorf.pkg.light" />
@@ -458,9 +464,9 @@
     <Folder Include="shaders\old_shaders\" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0,KB2468871">
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.1">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29 and Update for .NET Framework 4 %28KB2468871%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.5.1 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -488,9 +494,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
       <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
+      <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
@@ -931,7 +937,9 @@
     <None Include="shaders\fog_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="decal_includer_files\00_tank_tutorial_decal_includers.txt" />
+    <Content Include="decal_includer_files\00_tank_tutorial_decal_includers.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="decal_includer_files\01_karelia_decal_includers.txt" />
     <Content Include="decal_includer_files\02_malinovka_decal_includers.txt" />
     <Content Include="decal_includer_files\04_himmelsdorf_decal_includers.txt" />
@@ -980,16 +988,6 @@
     <None Include="Resources\control.png" />
     <None Include="Resources\control_180.png" />
     <None Include="Resources\open_slot.png" />
-    <None Include="Resources\2_tank_type_spg.png" />
-    <None Include="Resources\1_tank_type_atspg.png" />
-    <None Include="Resources\1_tank_type_heavy.png" />
-    <None Include="Resources\1_tank_type_light.png" />
-    <None Include="Resources\1_tank_type_medium.png" />
-    <None Include="Resources\1_tank_type_spg.png" />
-    <None Include="Resources\2_tank_type_atspg.png" />
-    <None Include="Resources\2_tank_type_heavy.png" />
-    <None Include="Resources\2_tank_type_light.png" />
-    <None Include="Resources\2_tank_type_medium.png" />
     <None Include="Tao.DevIl.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -457,7 +457,7 @@ skipthis:
         name_e.Extract(ms)
         decal_matrix_list(k).texture_id = get_texture(ms, False)
         ms.Dispose()
-        GC.Collect()
+        'GC.Collect()
         '--------------------------------------------------------------
         norm = decal_matrix_list(k).decal_normal
         If norm.Contains("Stone06_") Then
@@ -475,8 +475,8 @@ skipthis:
         norm_e.Extract(ms2)
         decal_matrix_list(k).normal_id = get_texture(ms2, False)
         ms2.Dispose()
-        GC.Collect()
 saveit:
+        GC.Collect()
         Dim d = decal_cache.Length - 1
         ReDim Preserve decal_cache(d + 1)
         decal_cache(d).name = name

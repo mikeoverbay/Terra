@@ -386,6 +386,7 @@ dont_grab_this:
         mmentry.Extract(mmp)
         minimap_textureid = get_texture(mmp, False)
         mmp.Dispose()
+        GC.Collect()
         '----------------- 
         frmMain.tb1.Text = "Getting minimap tank Icons..."
         ' get the little tank icons for the minimap
@@ -422,7 +423,7 @@ dont_grab_this:
         minimsp_frameT_TextureId = get_tank_icon_image(icon_ms)
         icon_ms.Dispose()
         gui.Dispose()
-
+        GC.Collect()
         minimap_size = My.Settings.minimap_size
         '	frmMain.draw_minimap()
         frmMain.draw_scene()
@@ -482,6 +483,7 @@ dont_grab_this:
             End If
         End If
         sptimg.Dispose()
+        GC.Collect()
         'normalMap
         Dim ntimge As Ionic.Zip.ZipEntry = active_pkg(speedtree_normalmap)
         Dim nsptimg As New MemoryStream
@@ -498,6 +500,7 @@ dont_grab_this:
             End If
         End If
         sptimg.Dispose()
+        GC.Collect()
         '====================================================
         'let the user know whats going on
         frmMain.tb1.Text = "Extracting Data from .pkg files..."
@@ -515,6 +518,7 @@ dont_grab_this:
         Next
 
         contents.Clear()
+        GC.Collect()
 
         '******************************************************************************
         test_count = maplist.Length - 2
@@ -677,6 +681,7 @@ dont_grab_this:
             main_map.Extract(main_map_ms)
             main_layer_tex = get_main_tex_bmp(main_map_ms)
             main_map_ms.Dispose()
+            GC.Collect()
             For map = map_start To test2
                 frmMain.tb1.Text = "Getting the Terrain Textures names (" + map.ToString + ")"
                 Application.DoEvents()
@@ -747,6 +752,7 @@ dont_grab_this:
                             map_layers(cnt).main_texture = layer
                             'have to mod the mask to exclude the main texture 
                             ' Exit For
+                            GC.Collect()
                         End If
                         Dim mask = map_layers(cnt).used_layers
                     Next
@@ -903,6 +909,7 @@ fuck_this:
             water.IsWater = True
             build_water()
             water.textureID = Load_DDS_File(Application.StartupPath + "\Resources\water2.dds")
+            GC.Collect()
         End If
         'these packatges are HUGE!.. I need to find a way to read as needed.
         active_pkg.Dispose()    ' VERY IMPORTANT !!!

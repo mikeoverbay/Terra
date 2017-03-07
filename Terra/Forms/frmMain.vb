@@ -1300,97 +1300,107 @@ dontaddthis:
 
 
     Private Sub build_tank_data(ByRef tank() As tank_, ByVal xml_name As String, ByVal nation As String, nat_short As String)
-        Dim script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\scripts.pkg")
-        Dim script As Ionic.Zip.ZipEntry = script_pkg("scripts\item_defs\vehicles\" & xml_name)
-        Dim ms As New MemoryStream
-        script.Extract(ms)
-
-        openXml_stream(ms, "list")
-        ms.Dispose()
-        Dim tl(50) As String
-        Dim fi As New System.IO.DirectoryInfo(Application.StartupPath & "\tanks\")
-        Dim di = fi.GetFiles
         Dim tank_number As Integer = 0
-        For Each fn In di
-            If fn.Extension = nation Then
-                tank(tank_number) = New tank_
+        Try
+            Dim script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\scripts.pkg")
+            Dim script As Ionic.Zip.ZipEntry = script_pkg("scripts\item_defs\vehicles\" & xml_name)
+            Dim ms As New MemoryStream
+            script.Extract(ms)
 
-                Dim ar = fn.Name.Split(".")
-                tb1.Text = "Getting Tank Data: " + ar(0) ' let the user know whats going on
-                Application.DoEvents()
-                Dim ar2 = ar(0).Split("_")
-                Dim tankNnum As String = ar2(0).ToLower
-                Dim s As String = ""
-                For i = 1 To ar2.Length - 1
-                    If i > 1 Then
-                        s += "_" + ar2(i)
-                    Else
-                        s += ar2(i)
-                    End If
-                Next
-                Dim da_real_name = s
+            openXml_stream(ms, "list")
+            ms.Dispose()
+            Dim tl(50) As String
+            Dim fi As New System.IO.DirectoryInfo(Application.StartupPath & "\tanks\")
+            Dim di = fi.GetFiles
+            Using z As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
+                Dim ens = z.Entries
+                For Each fn In di
+                    If fn.Extension = nation Then
+                        tank(tank_number) = New tank_
 
-                If nation = ".british" Then s = ar(0)
-                If nation = ".chinese" Then s = ar(0)
-                For Each n In real_names_list
-                    If n.Contains(s) Then
-                        Dim n_s = n.Split(",")
-                        s = n_s(0)
-                        da_real_name = n_s(1)
-                        s = s.Replace(vbLf, "")
-                    End If
-                Next
-                Dim t As DataTable = xmldataset.Tables(ar(0))
-                If t Is Nothing Then
-                    t = xmldataset.Tables(ar(0) + "_IGR")
-                End If
-                Dim qq = From row In t Select _
-                     un = row.Field(Of String)("userString"), _
-                     tags = row.Field(Of String)("tags") _
-                     Order By tags Descending
-                Dim weight = ""
-                Dim u_name = ""
+                        Dim ar = fn.Name.Split(".")
+                        tb1.Text = "Getting Tank Data: " + ar(0) ' let the user know whats going on
+                        Application.DoEvents()
+                        Dim ar2 = ar(0).Split("_")
+                        Dim tankNnum As String = ar2(0).ToLower
+                        Dim s As String = ""
+                        For i = 1 To ar2.Length - 1
+                            If i > 1 Then
+                                s += "_" + ar2(i)
+                            Else
+                                s += ar2(i)
+                            End If
+                        Next
+                        Dim da_real_name = s
 
-                For Each rr In qq
-                    u_name = rr.un
-                    weight = rr.tags
-                Next
-                If u_name = "" Then
-                    Stop
-                End If
-                ar2 = t.TableName.Split("_")
+                        If nation = ".british" Then s = ar(0)
+                        If nation = ".chinese" Then s = ar(0)
+                        For Each n In real_names_list
+                            If n.Contains(s) Then
+                                Dim n_s = n.Split(",")
+                                s = n_s(0)
+                                da_real_name = n_s(1)
+                                s = s.Replace(vbLf, "")
+                            End If
+                        Next
+                        Dim t As DataTable = xmldataset.Tables(ar(0))
+                        If t Is Nothing Then
+                            t = xmldataset.Tables(ar(0) + "_IGR")
+                            If t Is Nothing Then
+                                MsgBox("Cant find tank in gui.pkg", MsgBoxStyle.Exclamation, "Opps")
+                                Return
+                            End If
+                        End If
+                        Dim qq = From row In t Select _
+                             un = row.Field(Of String)("userString"), _
+                             tags = row.Field(Of String)("tags") _
+                             Order By tags Descending
+                        Dim weight = ""
+                        Dim u_name = ""
 
-                ar = weight.Split(" ")
-                For ix = 0 To tank_weights.Length - 1
-                    If InStr(ar(0), tank_weights(ix)) > 0 Then
-                        tank(tank_number).weight = tank_types(ix)
-                        tank(tank_number).sortorder = tank_sortorder(ix)
-                        tank(tank_number).gui_string = da_real_name
-                        tank(tank_number).file_name = fn.Name
-                        Using z As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
-                            Dim ens = z.Entries
-                            For Each ze In ens
-                                If ze.FileName.Contains(ar2(0)) And Not ze.FileName.Contains("small") _
-                                    And Not ze.FileName.Contains("fallout") _
-                                    And ze.FileName.Contains(nat_short) _
-                                And InStr(ze.FileName, "contour") = 0 And InStr(ze.FileName, "unique") = 0 Then
-                                    Dim bms As New MemoryStream
-                                    ze.Extract(bms)
-                                    tank(tank_number).image = get_tank_image(bms, 0, False).Clone
-                                    bms.Dispose()
-                                End If
+                        For Each rr In qq
+                            u_name = rr.un
+                            weight = rr.tags
+                        Next
+                        If u_name = "" Then
+                            Stop
+                        End If
+                        ar2 = t.TableName.Split("_")
+
+                        ar = weight.Split(" ")
+                        For ix = 0 To tank_weights.Length - 1
+                            If InStr(ar(0), tank_weights(ix)) > 0 Then
+                                tank(tank_number).weight = tank_types(ix)
+                                tank(tank_number).sortorder = tank_sortorder(ix)
+                                tank(tank_number).gui_string = da_real_name
+                                tank(tank_number).file_name = fn.Name
+                                For Each ze In ens
+                                    If ze.FileName.Contains(ar2(0)) And Not ze.FileName.Contains("small") _
+                                        And Not ze.FileName.Contains("fallout") _
+                                        And ze.FileName.Contains(nat_short) _
+                                    And InStr(ze.FileName, "contour") = 0 And InStr(ze.FileName, "unique") = 0 Then
+                                        Dim bms As New MemoryStream
+                                        ze.Extract(bms)
+                                        tank(tank_number).image = get_tank_image(bms, 0, False).Clone
+                                        bms.Dispose()
+                                        GC.Collect()
+                                    End If
 nope:
-                            Next
+                                Next
 
-                        End Using
+                            End If
+                        Next
+
+                        tank_number += 1
+                        ReDim Preserve tank(tank_number)
+                        t.Dispose()
                     End If
                 Next
-
-                tank_number += 1
-                ReDim Preserve tank(tank_number)
-                t.Dispose()
-            End If
-        Next
+            End Using
+        Catch ex As Exception
+            frmSplash.TopMost = False
+            MsgBox(ex.Message, MsgBoxStyle.Exclamation, "Opps")
+        End Try
         ReDim Preserve tank(tank_number - 1)
         Array.Sort(tank)
     End Sub
@@ -5280,18 +5290,18 @@ no_move_xz:
             Gl.glFinish()
         Next
         er = Gl.glGetError
-        For i = 0 To 12
-            Dim t_id As Integer
-            Gl.glActiveTexture(Gl.GL_TEXTURE0 + i)
-            Gl.glGetIntegerv(Gl.GL_TEXTURE_BINDING_2D, t_id)
-            Console.WriteLine("bound id" + t_id.ToString)
-        Next
+        'For i = 0 To 12
+        '    Dim t_id As Integer
+        '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + i)
+        '    Gl.glGetIntegerv(Gl.GL_TEXTURE_BINDING_2D, t_id)
+        '    'Console.WriteLine("bound id" + t_id.ToString)
+        'Next
 
         Try
             For i = 3 To 3000
                 Gl.glDeleteTextures(1, i)
-                Il.ilBindImage(i)
-                Ilu.iluDeleteImage(i)
+                'Il.ilBindImage(i)
+                'Ilu.iluDeleteImage(i)
                 Gl.glFinish()
             Next
         Catch ex As Exception
@@ -5342,9 +5352,10 @@ no_move_xz:
         decal_matrix_list(0) = New decal_matrix_list_
         speedtree_matrix_list(0) = New speedtree_matrix_list_
         Try
+            frmTanks.make_btns()
 
         Catch ex As Exception
-            frmTanks.make_btns()
+            'MsgBox(ex.Message, MsgBoxStyle.Exclamation, "Oops")
         End Try
         'Catch ex As Exception
 

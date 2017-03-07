@@ -669,10 +669,10 @@ Module Mod_Space_Bin_Functions
             decal_matrix_list(k).decal_normal = WGSD.Table_Entries(k).normalMap
             decal_matrix_list(k).influence = CSng(WGSD.Table_Entries(k).flags And &HFF00) / 256.0
             decal_matrix_list(k).priority = (WGSD.Table_Entries(k).flags And &HFF)
-            Debug.WriteLine("ID:" + k.ToString)
-            Debug.WriteLine(decal_matrix_list(k).decal_texture)
-            Debug.WriteLine(decal_matrix_list(k).influence.ToString)
-            Debug.WriteLine(CStr(WGSD.Table_Entries(k).flags And &HFF0000) / 65536)
+            'Debug.WriteLine("ID:" + k.ToString)
+            'Debug.WriteLine(decal_matrix_list(k).decal_texture)
+            'Debug.WriteLine(decal_matrix_list(k).influence.ToString)
+            'Debug.WriteLine(CStr(WGSD.Table_Entries(k).flags And &HFF0000) / 65536)
         Next
 
         'have to sort these by priority.

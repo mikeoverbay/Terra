@@ -117,7 +117,7 @@ Module modOpenGL
         End If
         'make_post_FBO_and_Textures()
         create_decal_FBO()
-        noise_map_id = Load_DDS_File(Application.StartupPath + "\Resources\noise.dds")
+        'noise_map_id = Load_DDS_File(Application.StartupPath + "\Resources\noise.dds")
         Gl.glGetFloatv(Gl.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
         '-----------------------------------
 		'next line creates the FBOs and Textures needed to shadow map. Still under development.
