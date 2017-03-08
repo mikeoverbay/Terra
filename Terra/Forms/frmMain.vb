@@ -82,7 +82,7 @@ Public Class frmMain
     Private _appCuKey As Microsoft.Win32.RegistryKey
     Public pfc As New PrivateFontCollection
     Public update_thread As New Thread(AddressOf update_mouse)
-
+    Public M_FLY As Boolean = False
     Public Shared d_counter As Integer = 0
     Dim clip_distance As Integer
     Public view_mode As Boolean = False
@@ -3228,7 +3228,7 @@ nope:
         End If
 
         Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
-        'gl_busy = True
+        gl_busy = True
         If stopGL Then Return
 
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
@@ -3796,9 +3796,6 @@ nope:
             Gl.glEnd()
             Gl.glDisable(Gl.GL_BLEND)
             Gl.glEnable(Gl.GL_LIGHTING)
-            If frmStats.Visible = True Then
-                frmStats.rt_total.Text = swat1.ElapsedMilliseconds.ToString
-            End If
 
             If maploaded Then
                 Gl.glDisable(Gl.GL_DEPTH_TEST)
@@ -3813,10 +3810,14 @@ nope:
                 glutPrint(10, 8 - pb1.Height, str.ToString, 0.0, 1.0, 0.0, 1.0)
             End If
         End If
+        If frmStats.Visible = True Then
+            frmStats.rt_total.Text = swat1.ElapsedMilliseconds.ToString
+        End If
         Gdi.SwapBuffers(pb1_hDC)
         If frmTestView.Visible Then
             frmTestView.update_screen()
         End If
+        gl_busy = False
     End Sub
 
     Public Sub draw_minimap()
@@ -5867,7 +5868,10 @@ no_move_xz:
         '	End If
         'End If
         If m_fly_map.Checked Then
+            M_FLY = True
             fly()
+        Else
+            M_FLY = False
         End If
     End Sub
 
@@ -6129,7 +6133,7 @@ no_move_xz:
         'Its in a closed loop
         Dim swat As New Stopwatch
         While _STARTED
-            If Not m_fly_map.Checked And maploaded Then
+            If Not M_FLY And maploaded Then
                 angle_offset = 0
                 If need_update() Then
                     'If we need to update the screen, lets caclulate draw times and update the timer.
@@ -6201,6 +6205,7 @@ no_move_xz:
     Public Sub fly()
         Dim scale As Single = MAP_BB_UR.x - 50.0
         Dim lx, ly, lz As Single
+        Dim swat As New Stopwatch
         While m_fly_map.Checked Or m_Orbit_Light.Checked
 
             'scale = 700.0
@@ -6229,9 +6234,9 @@ no_move_xz:
                 End If
                 If need_update() Then
                     'swat1.Reset()
-                    'swat1.Start()
+                    swat.Restart()
                     draw_scene()
-                    Screen_draw_time = CInt(swat1.ElapsedMilliseconds)
+                    Screen_draw_time = CInt(swat.ElapsedMilliseconds)
                 End If
                 If view_rot > 2 * PI Then
                     view_rot -= (2 * PI)
@@ -6267,12 +6272,12 @@ no_move_xz:
                         screen_avg_draw_time += (Screen_draw_time)
                     End If
                     'swat2.Reset()
-                    'swat2.Start()
+                    swat.Restart()
                     need_update()
 
                     update_screen()
 
-                    Screen_draw_time = CInt(swat1.ElapsedMilliseconds)
+                    Screen_draw_time = CInt(swat.ElapsedMilliseconds)
                 End If
                 If light_rot > 2 * PI Then
                     light_rot -= (2 * PI)

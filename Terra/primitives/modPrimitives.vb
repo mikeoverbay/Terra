@@ -1452,6 +1452,11 @@ jump_normal:
         If tree_data.l_vert.Length = 1 Then
             Return
         End If
+        Dim type = tree_data.l_vert(15) ' corner index
+        If type = 4 Then ' 4 means its a mesh and not a card
+            build_leaf_mesh(tree, tree_data)
+            Return
+        End If
         Dim m = Trees.matrix(tree).matrix
         Dim sx = Sqrt((m(0) ^ 2) + (m(1) ^ 2) + (m(3) ^ 2))
         Dim sy = Sqrt((m(4) ^ 2) + (m(5) ^ 2) + (m(6) ^ 2))
@@ -1468,17 +1473,16 @@ jump_normal:
             Stop ' cant make list?
         End If
         Trees.flora(tree).leaf_displayID = id
-        Dim PI_ As Single = 3.1415928
         Dim tangent As vect3
         Dim vn, vn2 As Integer
-        Dim ran As New Random
         Dim sizex, sizey As Single
         Dim pivot As vect2
         Dim p, pp As New vect3
         Dim cnt As Integer = 0
         Dim idx, rot As vect2
         Gl.glNewList(id, Gl.GL_COMPILE)
-        Gl.glBegin(Gl.GL_TRIANGLES)
+        'Gl.glBegin(Gl.GL_TRIANGLES)
+        Gl.glBegin(Gl.GL_QUADS)
         Dim sb As New StringBuilder
         For i = 0 To tree_data.l_indices.Length - 3
             'struct LeafVertex
@@ -1492,7 +1496,12 @@ jump_normal:
             '56	14 FLOAT   extraInfo_[3];
             '68	17 FLOAT   pivotInfo_[2];
             '76	19 Vector3 Tangent;
-
+            If cnt = 6 Then
+                cnt = 0
+            End If
+            If cnt = 2 Or cnt = 3 Then
+                GoTo skip_this_vert
+            End If
             p.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 0)
             p.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 1)
             p.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 2)
@@ -1524,56 +1533,101 @@ jump_normal:
             tangent.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 21)
 
             'debug string
-            sb.Append(rot.x.ToString("0.000000") + "  " + rot.y.ToString("0.000000") + vbCrLf)
+            sb.Append(vn.ToString("00") + vbCrLf)
+            'If vn = 4 Then
+            '    sb.Append("mesh" + vbCrLf)
+            'End If
+            idx.x = vx(vn)
+            idx.y = vy(vn)
+            Dim corner As vect3
+            corner.x = vx(vn) '- pivot.x
+            corner.y = vy(vn) '+ pivot.y
+            corner.x *= tree_scale
+            corner.y *= tree_scale
+            corner.x *= sizex
+            corner.y *= sizex
+            Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
+            Gl.glMultiTexCoord3f(1, corner.x, corner.y, 0.0)
+            Gl.glMultiTexCoord3f(2, tangent.x, tangent.y, tangent.z)
+            Gl.glNormal3f(norm.x, norm.y, norm.z)
+            Gl.glVertex3f(p.x, p.y, p.z)
 
-            If vn < 4 Then  'less than 4 means this is the special case
-                If cnt > 5 Then
-                    cnt = 0
-                    'Stop
-                End If
-                If cnt = 0 Then
+skip_this_vert:
+            cnt += 1
+        Next
+        Gl.glEnd()
+        Gl.glEndList()
+    End Sub
+    Public Sub build_leaf_mesh(ByVal tree As Integer, ByVal tree_data As tree_)
+        'creates a mesh and not leaf cards.
+        If tree_data.l_indices.Length = 1 Then
+            Return
+        End If
+        If tree_data.l_vert.Length = 1 Then
+            Return
+        End If
 
-                    'Debug.Write("-----------------------" + vbCrLf)
+        Dim uv As vect2
+        Dim norm As vect3
+        Dim id As Integer = Gl.glGenLists(1)
+        Trees.flora(tree).leaf_displayID = id
+        Dim tangent As vect3
+        'Dim vn, vn2 As Integer
+        'Dim sizex, sizey As Single
+        'Dim pivot As vect2
+        Dim p, pp As New vect3
+        Dim cnt As Integer = 0
+        'Dim rot As vect2
+        Gl.glNewList(id, Gl.GL_COMPILE)
+        Gl.glBegin(Gl.GL_TRIANGLES)
+        'Dim sb As New StringBuilder
+        For i = 0 To tree_data.l_indices.Length - 3
+            'struct LeafVertex
+            '
+            '00	00 Vector3 position_;
+            '12	03 Vector3 normal_;
+            '24	06 FLOAT   texCoords_[2];
+            '32	08 FLOAT   windInfo_[2];
+            '40	10 FLOAT   rotInfo_[2];
+            '48	12 FLOAT   geomInfo_[2]; 
+            '56	14 FLOAT   extraInfo_[3];
+            '68	17 FLOAT   pivotInfo_[2];
+            '76	19 Vector3 Tangent;
 
-                End If
-                idx.x = vx(vn)
-                idx.y = vy(vn)
-                Dim corner As vect3
-                corner.x = vx(vn) '- pivot.x
-                corner.y = vy(vn) '+ pivot.y
-                corner.x *= tree_scale
-                corner.y *= tree_scale
-                corner.x *= sizex
-                corner.y *= sizex
-                Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
-                Gl.glMultiTexCoord3f(1, corner.x, corner.y, 0.0)
-                Gl.glMultiTexCoord3f(2, tangent.x, tangent.y, tangent.z)
-                Gl.glNormal3f(norm.x, norm.y, norm.z)
-                Gl.glVertex3f(p.x, p.y, p.z)
+            p.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 0)
+            p.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 1)
+            p.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 2)
 
-                'Debug.Write(vn.ToString("000") + "  X" + p.x.ToString("00.00000") + " Y" + p.y.ToString("00.00000") + " Z" + p.z.ToString("00.00000") + vbCrLf)
+            norm.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 3)
+            norm.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 4)
+            norm.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 5)
 
-                'lx = (sizez * Cos(beta + PiTablex(vn))) + p.x
-                'ly = (sizez * scaley(vn)) + p.y + (sizez * 0.2!)
-                'lz = (sizex * Sin(beta + PiTablex(vn))) + p.z
-                'vert.x = ((scalex(vn) * sizex) + p.x) ' * Cos(PI * rot.x)) + p.x
-                'vert.z = p.z '((scaley(vn) * sizez) + p.z)  * Sin(PI * rot.x)) + p.z
-                'Debug.Write(vn.ToString("000") + "  X" + p.x.ToString("00.00000") + " Y" + p.y.ToString("00.00000") + " Z" + p.z.ToString("00.00000") _
-                '            + " SX" + sizex.ToString("00.00000") + " SZ" + sizey.ToString("00.00000") _
-                '            + " U" + uv.x.ToString("00.00000") + " V" + uv.y.ToString("00.00000") _
-                '            + " NX" + norm.x.ToString("00.00000") + " NY" + norm.z.ToString("00.00000") + " NZ" + norm.z.ToString("00.00000") _
-                '            + " pvx" + pivot.x.ToString("00.00000") + " pvy" + pivot.y.ToString("00.00000") _
-                '            + vbCrLf)
-                'Debug.Write(vn.ToString("000") + "  " + uv.x.ToString + " " + uv.y.ToString + vbCrLf)
-                cnt += 1
-            Else
-                ' just use these directly.
-                Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
-                Gl.glMultiTexCoord3f(1, 0.0, 0.0, 0.0)
-                Gl.glMultiTexCoord3f(2, tangent.x, tangent.y, tangent.z)
-                Gl.glNormal3f(norm.x, norm.y, norm.z)
-                Gl.glVertex3f(p.x, p.y, p.z)
-            End If
+            uv.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 6)
+            uv.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 7)
+
+            'rot.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 17)
+            'rot.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 18)
+
+            'vn = tree_data.l_vert((tree_data.l_indices(i) * 22) + 15) ' corner index
+            'vn2 = tree_data.l_vert((tree_data.l_indices(i) * 22) + 16)
+            'sizey = tree_data.l_vert((tree_data.l_indices(i) * 22) + 12)
+            'sizex = tree_data.l_vert((tree_data.l_indices(i) * 22) + 13)
+
+            'pivot.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 10)
+            'pivot.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 11)
+
+            'not sure 100% sure.. This might also be the BiNormal
+            tangent.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 19)
+            tangent.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 20)
+            tangent.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 21)
+
+
+            ' just use these directly.
+            Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
+            Gl.glMultiTexCoord3f(1, 0.0, 0.0, 0.0)
+            Gl.glMultiTexCoord3f(2, tangent.x, tangent.y, tangent.z)
+            Gl.glNormal3f(norm.x, norm.y, norm.z)
+            Gl.glVertex3f(p.x, p.y, p.z)
         Next
         Gl.glEnd()
         Gl.glEndList()
