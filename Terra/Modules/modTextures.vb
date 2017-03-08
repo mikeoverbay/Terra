@@ -485,7 +485,7 @@ Module modTextures
             Il.ilGetData()) '  Texture specification 
             Gl.glFinish()
         Else
-            Stop
+            MsgBox("failed to create Texture", MsgBoxStyle.Exclamation, "Damn..")
         End If
         ReDim textIn(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
@@ -537,7 +537,7 @@ Module modTextures
 
             Gl.glFinish()
         Else
-            Stop
+            MsgBox("failed to create normalMap Texture", MsgBoxStyle.Exclamation, "Damn..")
         End If
         ReDim textIn(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
@@ -595,7 +595,7 @@ Module modTextures
 
             Gl.glFinish()
         Else
-            Stop
+            MsgBox("failed to create no_Alpha Texture", MsgBoxStyle.Exclamation, "Damn..")
         End If
         ReDim textIn(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)

@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0042677FB29443479E52119904F7372F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_019BB5F6544348DA81FBACE279A46985"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -34,12 +28,6 @@
         "Entry"
         {
         "MsmKey" = "8:_01F0E0C1F44E4972B79B9ACD925C7ACE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0292E138030D4A1BA9787D54635EC652"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -825,12 +813,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9BD4C4DE06B64DAD8FB56684516D85F6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9C806200213144A1B318EAFE92CE70C4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1564,26 +1546,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0042677FB29443479E52119904F7372F"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\leaf_geo.glsl"
-            "TargetName" = "8:leaf_geo.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_019BB5F6544348DA81FBACE279A46985"
             {
             "SourcePath" = "8:..\\Terra\\decal_includer_files\\36_fishing_bay_decal_includers.txt"
@@ -1630,26 +1592,6 @@
             "TargetName" = "8:G92_VK7201.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0292E138030D4A1BA9787D54635EC652"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\leaf_colored_vertex.glsl"
-            "TargetName" = "8:leaf_colored_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4288,26 +4230,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BD4C4DE06B64DAD8FB56684516D85F6"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\leaf_colored_fragment.glsl"
-            "TargetName" = "8:leaf_colored_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C806200213144A1B318EAFE92CE70C4"
             {
             "SourcePath" = "8:..\\Terra\\decal_includer_files\\33_fjord_decal_includers.txt"
@@ -6326,7 +6248,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
         "ProductCode" = "8:{E360FD25-CBED-467A-AD3B-D07DAB7C5D26}"
-        "PackageCode" = "8:{79A51E84-D31A-4A5D-8DD9-843A338A190D}"
+        "PackageCode" = "8:{40166ABF-17D5-460F-BBE2-D447D91F772F}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

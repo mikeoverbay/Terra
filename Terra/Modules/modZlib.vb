@@ -290,23 +290,23 @@ Module modZlib
         'find all the chunk pieces.. and full paths of important items.
         For pos = 0 To contents.Count - 1
             If contents(pos).Contains("flora.xml") Then
-                floraXML_Name = contents(pos)
+                floraXML_Name = contents(pos).ToString
             End If
             If contents(pos).Contains("mmap.dds") Then
-                minimap_name = contents(pos)
+                minimap_name = contents(pos).ToString
             End If
             If contents(pos).Contains(".vlo") Then
-                vlo_name = contents(pos)
+                vlo_name = contents(pos).ToString
             End If
             'Some texture names have capital letters.. deal with it!
             If contents(pos).ToLower.Contains("compositemap_diffuse.dds") Then
-                speedtree_map = contents(pos)
+                speedtree_map = contents(pos).ToString
             End If
             If contents(pos).ToLower.Contains("compositemap_normal.dds") Then
-                speedtree_normalmap = contents(pos)
+                speedtree_normalmap = contents(pos).ToString
             End If
             If contents(pos).ToLower.Contains("compositemap.txt") Then
-                speedtree_name = contents(pos)
+                speedtree_name = contents(pos).ToString
             End If
             If contents(pos).Contains(".cdata") Then
 
@@ -464,41 +464,6 @@ dont_grab_this:
         speedtree_text = coder.GetString(buf)
         tmp.Dispose()
         cnt = 0
-        'Get the speedTree composite maps. The tree textures.
-        '================================================
-        'diffuse
-        Dim timge As Ionic.Zip.ZipEntry = active_pkg(speedtree_map)
-        Dim sptimg As New MemoryStream
-        If timge IsNot Nothing Then
-            timge.Extract(sptimg)
-            speedtree_imageID = get_tree_texture(sptimg, False)
-        Else
-            timge = get_shared(speedtree_map)
-            If timge Is Nothing Then
-                'Stop
-            Else
-                timge.Extract(sptimg)
-                speedtree_imageID = get_tree_texture(sptimg, False)
-            End If
-        End If
-        sptimg.Dispose()
-        'normalMap
-        Dim ntimge As Ionic.Zip.ZipEntry = active_pkg(speedtree_normalmap)
-        Dim nsptimg As New MemoryStream
-        If ntimge IsNot Nothing Then
-            ntimge.Extract(nsptimg)
-            speedtree_NormalMapID = get_normal_texture(nsptimg, False)
-        Else
-            ntimge = get_shared(speedtree_normalmap)
-            If ntimge Is Nothing Then
-                'Stop
-            Else
-                ntimge.Extract(nsptimg)
-                speedtree_NormalMapID = get_normal_texture(nsptimg, False)
-            End If
-        End If
-        sptimg.Dispose()
-        GC.Collect()
         '====================================================
         'let the user know whats going on
         frmMain.tb1.Text = "Extracting Data from .pkg files..."
@@ -854,10 +819,45 @@ dont_grab_this:
 skip_this:
             Application.DoEvents()
         Next
+
+        'Get the speedTree composite maps. The tree textures.
+        '================================================
+        'diffuse
+        Dim timge As Ionic.Zip.ZipEntry = active_pkg(speedtree_map)
+        Dim sptimg As New MemoryStream
+        If timge IsNot Nothing Then
+            timge.Extract(sptimg)
+            speedtree_imageID = get_tree_texture(sptimg, False)
+        Else
+            timge = get_shared(speedtree_map)
+            If timge Is Nothing Then
+                MsgBox("Can't find speed tree diffuse map.", MsgBoxStyle.Exclamation, "Opps")
+            Else
+                timge.Extract(sptimg)
+                speedtree_imageID = get_tree_texture(sptimg, False)
+            End If
+        End If
+        sptimg.Dispose()
+        'normalMap
+        Dim ntimge As Ionic.Zip.ZipEntry = active_pkg(speedtree_normalmap)
+        Dim nsptimg As New MemoryStream
+        If ntimge IsNot Nothing Then
+            ntimge.Extract(nsptimg)
+            speedtree_NormalMapID = get_normal_texture(nsptimg, False)
+        Else
+            ntimge = get_shared(speedtree_normalmap)
+            If ntimge Is Nothing Then
+                MsgBox("Can't find speed tree normal map.", MsgBoxStyle.Exclamation, "Opps")
+            Else
+                ntimge.Extract(nsptimg)
+                speedtree_NormalMapID = get_normal_texture(nsptimg, False)
+            End If
+        End If
+        nsptimg.Dispose()
         bw_strings.Clear()
         GC.Collect()
         GC.WaitForFullGCComplete()
-
+        '================================================
         frmMain.ProgressBar1.Value = 0
         frmMain.ProgressBar1.Maximum = speedtree_matrix_list.Length
 
@@ -900,7 +900,7 @@ skip_this:
 
 fuck_this:
 
-        frmMain.tb1.Text = "Sorting the Texture Id list up..."
+        'frmMain.tb1.Text = "Sorting the Texture Id list up..."
         'We are going to create the water now.. before closing the PKGs.. may want to get
         'textures from them?? This app does not refresh nonstop. no point in animated textures for the water
         If BWWa.bwwa_t1(0).width > 0 Then
@@ -938,7 +938,8 @@ fuck_this:
         frmMain.draw_scene()
         Dim tm = sw.Elapsed
         Dim t = Format(tm.Seconds, "00")
-        frmMain.tb1.Text = "Load time 00:" + t + vbCrLf
+        Dim mt = Format(tm.Minutes, "00")
+        frmMain.tb1.Text = "Load time " + mt + ":" + t + vbCrLf
         frmMain.tb1.Text += "Reused Textures: " + saved_texture_loads.ToString + vbCrLf
         frmMain.tb1.Text += "Reused Models: " + saved_model_loads.ToString + vbCrLf
         frmMain.tb1.Text += "lod2 used: " + lod2_swap.ToString + _
