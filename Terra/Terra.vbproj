@@ -598,9 +598,6 @@
     <None Include="tanks\A14_T30.american">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="tanks\A35_Pershing.american">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="tanks\A37_M40M43.american">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -641,9 +638,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\A90_T69.american">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="tanks\A92_M60.american">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\Ch01_Type59.chinese">
@@ -775,9 +769,6 @@
     <None Include="tanks\GB32_Tortoise.british">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="tanks\GB39_Universal_CarrierQF2.british">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="tanks\GB48_FV215b_183.british">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -838,12 +829,6 @@
     <None Include="tanks\R54_KV-5.russian">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="tanks\R60_Object416.russian">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="tanks\R61_Object252.russian">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="tanks\R81_IS8.russian">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -851,9 +836,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\R88_Object268.russian">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="tanks\R89_SU122_44.russian">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\R90_IS_4M.russian">
