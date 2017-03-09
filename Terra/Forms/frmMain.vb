@@ -86,6 +86,7 @@ Public Class frmMain
     Public Shared d_counter As Integer = 0
     Dim clip_distance As Integer
     Public view_mode As Boolean = False
+    Dim M_current As New vect2
 #End Region
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -4683,7 +4684,8 @@ nope:
 
 
     Private Sub pb1_MouseMove(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles pb1.MouseMove
-
+        M_current.x = e.X
+        M_current.y = e.Y
         If SHOW_MAPS Then
             mouse.X = e.X
             mouse.Y = e.Y
@@ -4691,286 +4693,287 @@ nope:
             Application.DoEvents()
             Return
         End If
+        Return
+        'moved to its own sub for better response from update thread.
+        '        Dim dead As Integer = 5
+        '        Dim t As Double
+        '        Dim M_Speed As Double = 0.8
+        '        Dim tempX, tempZ As Single
+        '        tempZ = look_point_Z
+        '        tempX = look_point_X
+        '        Dim ms As Double = 1.0F * View_Radius ' distance away changes speed. THIS WORKS WELL!
+        '        Dim ms2 As Double = 0.25 * View_Radius  ' distance away changes speed. THIS WORKS WELL!
+        '        If M_DOWN Then
+        '            If e.X > (mouse.X + dead) Then
+        '                If e.X - mouse.X > 100 Then t = (1.0F * M_Speed)
+        '            Else : t = CSng(Sin((e.X - mouse.X) / 100)) * M_Speed
+        '                If Not ROTATE_TANK Then
+        '                Else
+        '                    If ROTATE_TANK Then
+        '                        Dim tr As Single
+        '                        If tankID > -1 Then
+        '                            If tankID >= 100 Then
+        '                                tr = locations.team_2(tankID - 100).rot_y
+        '                                tr -= t
+        '                                If tr < 0 Then tr += (2 * PI)
+        '                                locations.team_2(tankID - 100).rot_y = tr
+        '                                Packet_out.Tr = tr
+        '                            Else
+        '                                tr = locations.team_1(tankID).rot_y
+        '                                tr -= t
+        '                                If tr < 0 Then tr += (2 * PI)
+        '                                locations.team_1(tankID).rot_y = tr
+        '                                Packet_out.Tr = tr
+        '                            End If
+        '                            mouse.X = e.X
+        '                            'draw_scene()
+        '                        End If
+        '                    End If
+        '                End If
+        '            End If
+        '            If M_DOWN Then
+        '                If e.X < (mouse.X - dead) Then
+        '                    If mouse.X - e.X > 100 Then t = (M_Speed)
+        '                Else : t = CSng(Sin((mouse.X - e.X) / 100)) * M_Speed
+        '                    If Not ROTATE_TANK Then
+        '                    Else
+        '                        If ROTATE_TANK Then
+        '                            Dim tr As Single
+        '                            If tankID > -1 Then
+        '                                If tankID >= 100 Then
+        '                                    tr = locations.team_2(tankID - 100).rot_y
+        '                                    tr += t
+        '                                    If tr > (2 * PI) Then tr -= (2 * PI)
+        '                                    locations.team_2(tankID - 100).rot_y = tr
+        '                                    Packet_out.Tr = tr
+        '                                Else
+        '                                    tr = locations.team_1(tankID).rot_y
+        '                                    tr += t
+        '                                    If tr > (2 * PI) Then tr -= (2 * PI)
+        '                                    locations.team_1(tankID).rot_y = tr
+        '                                    Packet_out.Tr = tr
+        '                                End If
+        '                            End If
+        '                        End If
+        '                        mouse.X = e.X
+        '                    End If
+        '                End If
+        '            End If
+        '        End If
+        '        If M_DOWN Then
+        '            If e.X > (mouse.X + dead) Then
+        '                If e.X - mouse.X > 100 Then t = (1.0F * M_Speed)
+        '            Else : t = CSng(Sin((e.X - mouse.X) / 100)) * M_Speed
+        '                If Not z_move Then
+        '                    If move_mod Then ' check for modifying flag
+        '                        tempX -= ((t * ms) * (Cos(Cam_X_angle)))
+        '                        tempZ -= ((t * ms) * (-Sin(Cam_X_angle)))
+        '                        If tempX < MAP_BB_BL.x Then
+        '                            tempX = MAP_BB_BL.x
+        '                        End If
+        '                        If tempX > MAP_BB_UR.x Then
+        '                            tempX = MAP_BB_UR.x
+        '                        End If
+        '                        If tempZ < MAP_BB_BL.y Then
+        '                            tempZ = MAP_BB_BL.y
+        '                        End If
+        '                        If tempZ > MAP_BB_UR.y Then
+        '                            tempZ = MAP_BB_UR.y
+        '                        End If
+        '                        If Not check_zoom_collision() Then
+        '                            look_point_X = tempX : look_point_Z = tempZ
+        '                        End If
 
-        Dim dead As Integer = 5
-        Dim t As Double
-        Dim M_Speed As Double = 0.8
-        Dim tempX, tempZ As Single
-        tempZ = look_point_Z
-        tempX = look_point_X
-        Dim ms As Double = 1.0F * View_Radius ' distance away changes speed. THIS WORKS WELL!
-        Dim ms2 As Double = 0.25 * View_Radius  ' distance away changes speed. THIS WORKS WELL!
-        If M_DOWN Then
-            If e.X > (mouse.X + dead) Then
-                If e.X - mouse.X > 100 Then t = (1.0F * M_Speed)
-            Else : t = CSng(Sin((e.X - mouse.X) / 100)) * M_Speed
-                If Not ROTATE_TANK Then
-                Else
-                    If ROTATE_TANK Then
-                        Dim tr As Single
-                        If tankID > -1 Then
-                            If tankID >= 100 Then
-                                tr = locations.team_2(tankID - 100).rot_y
-                                tr -= t
-                                If tr < 0 Then tr += (2 * PI)
-                                locations.team_2(tankID - 100).rot_y = tr
-                                Packet_out.Tr = tr
-                            Else
-                                tr = locations.team_1(tankID).rot_y
-                                tr -= t
-                                If tr < 0 Then tr += (2 * PI)
-                                locations.team_1(tankID).rot_y = tr
-                                Packet_out.Tr = tr
-                            End If
-                            mouse.X = e.X
-                            'draw_scene()
-                        End If
-                    End If
-                End If
-            End If
-            If M_DOWN Then
-                If e.X < (mouse.X - dead) Then
-                    If mouse.X - e.X > 100 Then t = (M_Speed)
-                Else : t = CSng(Sin((mouse.X - e.X) / 100)) * M_Speed
-                    If Not ROTATE_TANK Then
-                    Else
-                        If ROTATE_TANK Then
-                            Dim tr As Single
-                            If tankID > -1 Then
-                                If tankID >= 100 Then
-                                    tr = locations.team_2(tankID - 100).rot_y
-                                    tr += t
-                                    If tr > (2 * PI) Then tr -= (2 * PI)
-                                    locations.team_2(tankID - 100).rot_y = tr
-                                    Packet_out.Tr = tr
-                                Else
-                                    tr = locations.team_1(tankID).rot_y
-                                    tr += t
-                                    If tr > (2 * PI) Then tr -= (2 * PI)
-                                    locations.team_1(tankID).rot_y = tr
-                                    Packet_out.Tr = tr
-                                End If
-                            End If
-                        End If
-                        mouse.X = e.X
-                    End If
-                End If
-            End If
-        End If
-        If M_DOWN Then
-            If e.X > (mouse.X + dead) Then
-                If e.X - mouse.X > 100 Then t = (1.0F * M_Speed)
-            Else : t = CSng(Sin((e.X - mouse.X) / 100)) * M_Speed
-                If Not z_move Then
-                    If move_mod Then ' check for modifying flag
-                        tempX -= ((t * ms) * (Cos(Cam_X_angle)))
-                        tempZ -= ((t * ms) * (-Sin(Cam_X_angle)))
-                        If tempX < MAP_BB_BL.x Then
-                            tempX = MAP_BB_BL.x
-                        End If
-                        If tempX > MAP_BB_UR.x Then
-                            tempX = MAP_BB_UR.x
-                        End If
-                        If tempZ < MAP_BB_BL.y Then
-                            tempZ = MAP_BB_BL.y
-                        End If
-                        If tempZ > MAP_BB_UR.y Then
-                            tempZ = MAP_BB_UR.y
-                        End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+        '                    Else
+        '                        ' If Not ROTATE_TANK Then
+        '                        Cam_X_angle = check_border_collision_y_rot(-t)
+        '                        'Cam_X_angle -= t
+        '                        If Cam_X_angle > (2 * PI) Then Cam_X_angle -= (2 * PI)
+        '                    End If
+        '                    'End If
+        '                    mouse.X = e.X
+        'no_move_xz:
+        '                End If
+        '            End If
+        '            If e.X < (mouse.X - dead) Then
+        '                If mouse.X - e.X > 100 Then t = (M_Speed)
+        '            Else : t = CSng(Sin((mouse.X - e.X) / 100)) * M_Speed
+        '                If Not z_move Then
+        '                    If move_mod Then ' check for modifying flag
+        '                        tempX += ((t * ms) * (Cos(Cam_X_angle)))
+        '                        tempZ += ((t * ms) * (-Sin(Cam_X_angle)))
+        '                        If tempX < MAP_BB_BL.x Then
+        '                            tempX = MAP_BB_BL.x
+        '                        End If
+        '                        If tempX > MAP_BB_UR.x Then
+        '                            tempX = MAP_BB_UR.x
+        '                        End If
+        '                        If tempZ < MAP_BB_BL.y Then
+        '                            tempZ = MAP_BB_BL.y
+        '                        End If
+        '                        If tempZ > MAP_BB_UR.y Then
+        '                            tempZ = MAP_BB_UR.y
+        '                        End If
+        '                        If Not check_zoom_collision() Then
+        '                            look_point_X = tempX : look_point_Z = tempZ
+        '                        End If
+        '                    Else
+        '                        '     If Not ROTATE_TANK And Not MOVE_TANK Then
 
-                    Else
-                        ' If Not ROTATE_TANK Then
-                        Cam_X_angle = check_border_collision_y_rot(-t)
-                        'Cam_X_angle -= t
-                        If Cam_X_angle > (2 * PI) Then Cam_X_angle -= (2 * PI)
-                    End If
-                    'End If
-                    mouse.X = e.X
-no_move_xz:
-                End If
-            End If
-            If e.X < (mouse.X - dead) Then
-                If mouse.X - e.X > 100 Then t = (M_Speed)
-            Else : t = CSng(Sin((mouse.X - e.X) / 100)) * M_Speed
-                If Not z_move Then
-                    If move_mod Then ' check for modifying flag
-                        tempX += ((t * ms) * (Cos(Cam_X_angle)))
-                        tempZ += ((t * ms) * (-Sin(Cam_X_angle)))
-                        If tempX < MAP_BB_BL.x Then
-                            tempX = MAP_BB_BL.x
-                        End If
-                        If tempX > MAP_BB_UR.x Then
-                            tempX = MAP_BB_UR.x
-                        End If
-                        If tempZ < MAP_BB_BL.y Then
-                            tempZ = MAP_BB_BL.y
-                        End If
-                        If tempZ > MAP_BB_UR.y Then
-                            tempZ = MAP_BB_UR.y
-                        End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
-                    Else
-                        '     If Not ROTATE_TANK And Not MOVE_TANK Then
+        '                        Cam_X_angle = check_border_collision_y_rot(t)
+        '                        'Cam_X_angle += t
+        '                        If Cam_X_angle < 0 Then Cam_X_angle += (2 * PI)
+        '                    End If
+        '                    '  End If
+        '                    mouse.X = e.X
 
-                        Cam_X_angle = check_border_collision_y_rot(t)
-                        'Cam_X_angle += t
-                        If Cam_X_angle < 0 Then Cam_X_angle += (2 * PI)
-                    End If
-                    '  End If
-                    mouse.X = e.X
+        '                    Try
+        '                        'This has to remain "INLINE" as it kills the mouse's reaction time.
+        '                        If maploaded Then
 
-                    Try
-                        'This has to remain "INLINE" as it kills the mouse's reaction time.
-                        If maploaded Then
+        '                            'Dim xvp As Integer = ((look_point_X - 50) / 100) + (MAP_SIDE_LENGTH / 2)
+        '                            'Dim yvp As Integer = ((look_point_Z + 50) / 100) + (MAP_SIDE_LENGTH / 2)
+        '                            'Dim rxp As Integer = (((Floor(look_point_X) / 100)) - Floor((Floor(look_point_X) / 100))) * 65
+        '                            'Dim ryp As Integer = (((Floor(look_point_Z) / 100)) - Floor((Floor(look_point_Z) / 100))) * 65
+        '                            'Dim map = mapBoard(xvp, yvp)
+        '                            Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
+        '                            look_point_Y = Z_Cursor ' + 5
+        '                        End If
+        '                    Catch ex As Exception
 
-                            'Dim xvp As Integer = ((look_point_X - 50) / 100) + (MAP_SIDE_LENGTH / 2)
-                            'Dim yvp As Integer = ((look_point_Z + 50) / 100) + (MAP_SIDE_LENGTH / 2)
-                            'Dim rxp As Integer = (((Floor(look_point_X) / 100)) - Floor((Floor(look_point_X) / 100))) * 65
-                            'Dim ryp As Integer = (((Floor(look_point_Z) / 100)) - Floor((Floor(look_point_Z) / 100))) * 65
-                            'Dim map = mapBoard(xvp, yvp)
-                            Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
-                            look_point_Y = Z_Cursor ' + 5
-                        End If
-                    Catch ex As Exception
+        '                    End Try
+        '                End If
+        '            End If
+        '            If e.Y > (mouse.Y + dead) Then
+        '                If e.Y - mouse.Y > 100 Then t = (M_Speed)
+        '            Else : t = CSng(Sin((e.Y - mouse.Y) / 100)) * M_Speed
+        '                If z_move Then
+        '                    y_offset -= (t * ms)
 
-                    End Try
-                End If
-            End If
-            If e.Y > (mouse.Y + dead) Then
-                If e.Y - mouse.Y > 100 Then t = (M_Speed)
-            Else : t = CSng(Sin((e.Y - mouse.Y) / 100)) * M_Speed
-                If z_move Then
-                    y_offset -= (t * ms)
+        '                Else
+        '                    If move_mod Then ' check for modifying flag
+        '                        tempZ -= ((t * ms) * (Cos(Cam_X_angle)))
+        '                        tempX -= ((t * ms) * (Sin(Cam_X_angle)))
+        '                        If tempX < MAP_BB_BL.x Then
+        '                            tempX = MAP_BB_BL.x
+        '                        End If
+        '                        If tempX > MAP_BB_UR.x Then
+        '                            tempX = MAP_BB_UR.x
+        '                        End If
+        '                        If tempZ < MAP_BB_BL.y Then
+        '                            tempZ = MAP_BB_BL.y
+        '                        End If
+        '                        If tempZ > MAP_BB_UR.y Then
+        '                            tempZ = MAP_BB_UR.y
+        '                        End If
+        '                        If Not check_zoom_collision() Then
+        '                            look_point_X = tempX : look_point_Z = tempZ
+        '                        End If
 
-                Else
-                    If move_mod Then ' check for modifying flag
-                        tempZ -= ((t * ms) * (Cos(Cam_X_angle)))
-                        tempX -= ((t * ms) * (Sin(Cam_X_angle)))
-                        If tempX < MAP_BB_BL.x Then
-                            tempX = MAP_BB_BL.x
-                        End If
-                        If tempX > MAP_BB_UR.x Then
-                            tempX = MAP_BB_UR.x
-                        End If
-                        If tempZ < MAP_BB_BL.y Then
-                            tempZ = MAP_BB_BL.y
-                        End If
-                        If tempZ > MAP_BB_UR.y Then
-                            tempZ = MAP_BB_UR.y
-                        End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+        '                    Else
+        '                        If Not ROTATE_TANK And Not MOVE_TANK Then
+        '                            Cam_Y_angle = check_border_collision_x_rot(-t)
+        '                        End If
+        '                    End If
+        '                End If
+        '                'If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
+        '                mouse.Y = e.Y
+        '            End If
+        '            If e.Y < (mouse.Y - dead) Then
+        '                If mouse.Y - e.Y > 100 Then t = (M_Speed)
+        '            Else : t = CSng(Sin((mouse.Y - e.Y) / 100)) * M_Speed
+        '                If z_move Then
+        '                    y_offset += (t * ms)
+        '                Else
+        '                    If move_mod Then ' check for modifying flag
+        '                        tempZ += ((t * ms) * (Cos(Cam_X_angle)))
+        '                        tempX += ((t * ms) * (Sin(Cam_X_angle)))
+        '                        If tempX < MAP_BB_BL.x Then
+        '                            tempX = MAP_BB_BL.x
+        '                        End If
+        '                        If tempX > MAP_BB_UR.x Then
+        '                            tempX = MAP_BB_UR.x
+        '                        End If
+        '                        If tempZ < MAP_BB_BL.y Then
+        '                            tempZ = MAP_BB_BL.y
+        '                        End If
+        '                        If tempZ > MAP_BB_UR.y Then
+        '                            tempZ = MAP_BB_UR.y
+        '                        End If
+        '                        If Not check_zoom_collision() Then
+        '                            look_point_X = tempX : look_point_Z = tempZ
+        '                        End If
 
-                    Else
-                        If Not ROTATE_TANK And Not MOVE_TANK Then
-                            Cam_Y_angle = check_border_collision_x_rot(-t)
-                        End If
-                    End If
-                End If
-                'If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
-                mouse.Y = e.Y
-            End If
-            If e.Y < (mouse.Y - dead) Then
-                If mouse.Y - e.Y > 100 Then t = (M_Speed)
-            Else : t = CSng(Sin((mouse.Y - e.Y) / 100)) * M_Speed
-                If z_move Then
-                    y_offset += (t * ms)
-                Else
-                    If move_mod Then ' check for modifying flag
-                        tempZ += ((t * ms) * (Cos(Cam_X_angle)))
-                        tempX += ((t * ms) * (Sin(Cam_X_angle)))
-                        If tempX < MAP_BB_BL.x Then
-                            tempX = MAP_BB_BL.x
-                        End If
-                        If tempX > MAP_BB_UR.x Then
-                            tempX = MAP_BB_UR.x
-                        End If
-                        If tempZ < MAP_BB_BL.y Then
-                            tempZ = MAP_BB_BL.y
-                        End If
-                        If tempZ > MAP_BB_UR.y Then
-                            tempZ = MAP_BB_UR.y
-                        End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+        '                    Else
+        '                        If Not ROTATE_TANK And Not MOVE_TANK Then
+        '                            Cam_Y_angle = check_border_collision_x_rot(t)
+        '                        End If
+        '                    End If
+        '                End If
+        '                mouse.Y = e.Y
+        '            End If
+        '            If Cam_Y_angle > -0.0 Then Cam_Y_angle = -0.0
+        '            If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
+        '            If Not ROTATE_TANK Then
+        '                If MOVE_TANK Then
+        '                    If tankID > -1 Then
+        '                        If tankID > -1 Then
+        '                            If tankID >= 100 Then
+        '                                locations.team_2(tankID - 100).loc_x = look_point_X
+        '                                locations.team_2(tankID - 100).loc_z = look_point_Z
+        '                                Packet_out.Tx = look_point_X
+        '                                Packet_out.Tz = look_point_Z
+        '                            Else
+        '                                locations.team_1(tankID).loc_x = look_point_X
+        '                                locations.team_1(tankID).loc_z = look_point_Z
+        '                                Packet_out.Tx = look_point_X
+        '                                Packet_out.Tz = look_point_Z
+        '                            End If
+        '                        End If
+        '                    End If
+        '                End If
+        '            End If
+        '            Packet_out.Ex = look_point_X
+        '            Packet_out.Ez = look_point_Z
+        '            Packet_out.Ey = look_point_Y
+        '            Packet_out.Rx = Cam_X_angle
+        '            Packet_out.Ry = Cam_Y_angle
+        '            Packet_out.Lr = View_Radius
 
-                    Else
-                        If Not ROTATE_TANK And Not MOVE_TANK Then
-                            Cam_Y_angle = check_border_collision_x_rot(t)
-                        End If
-                    End If
-                End If
-                mouse.Y = e.Y
-            End If
-            If Cam_Y_angle > -0.0 Then Cam_Y_angle = -0.0
-            If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
-            If Not ROTATE_TANK Then
-                If MOVE_TANK Then
-                    If tankID > -1 Then
-                        If tankID > -1 Then
-                            If tankID >= 100 Then
-                                locations.team_2(tankID - 100).loc_x = look_point_X
-                                locations.team_2(tankID - 100).loc_z = look_point_Z
-                                Packet_out.Tx = look_point_X
-                                Packet_out.Tz = look_point_Z
-                            Else
-                                locations.team_1(tankID).loc_x = look_point_X
-                                locations.team_1(tankID).loc_z = look_point_Z
-                                Packet_out.Tx = look_point_X
-                                Packet_out.Tz = look_point_Z
-                            End If
-                        End If
-                    End If
-                End If
-            End If
-            Packet_out.Ex = look_point_X
-            Packet_out.Ez = look_point_Z
-            Packet_out.Ey = look_point_Y
-            Packet_out.Rx = Cam_X_angle
-            Packet_out.Ry = Cam_Y_angle
-            Packet_out.Lr = View_Radius
+        '        End If
+        '        If move_cam_z Then
+        '            If e.Y > (mouse.Y + dead) Then
+        '                If e.Y - mouse.Y > 100 Then t = (10)
+        '            Else : t = CSng(Sin((e.Y - mouse.Y) / 100)) * 12
+        '                Dim tl = View_Radius
+        '                View_Radius += (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
+        '                If check_zoom_collision() Then
+        '                    View_Radius = tl
+        '                End If
+        '                mouse.Y = e.Y
+        '            End If
+        '            If e.Y < (mouse.Y - dead) Then
+        '                If mouse.Y - e.Y > 100 Then t = (10)
+        '            Else : t = CSng(Sin((mouse.Y - e.Y) / 100)) * 12
+        '                Dim tl = View_Radius
+        '                View_Radius -= (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
+        '                If check_zoom_collision() Then
+        '                    View_Radius = tl
+        '                End If
+        '                If View_Radius > -5.0 Then View_Radius = -5.0
+        '                mouse.Y = e.Y
+        '            End If
+        '            If View_Radius > -1.0 Then View_Radius = -1.0
+        '            'If View_Radius < -550 Then View_Radius = -550
+        '            If View_Radius < -1550 Then View_Radius = -1550
+        '            Packet_out.Ex = look_point_X
+        '            Packet_out.Ez = look_point_Z
+        '            Packet_out.Ey = look_point_Y
+        '            Packet_out.Rx = Cam_X_angle
+        '            Packet_out.Ry = Cam_Y_angle
+        '            Packet_out.Lr = View_Radius
 
-        End If
-        If move_cam_z Then
-            If e.Y > (mouse.Y + dead) Then
-                If e.Y - mouse.Y > 100 Then t = (10)
-            Else : t = CSng(Sin((e.Y - mouse.Y) / 100)) * 12
-                Dim tl = View_Radius
-                View_Radius += (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
-                If check_zoom_collision() Then
-                    View_Radius = tl
-                End If
-                mouse.Y = e.Y
-            End If
-            If e.Y < (mouse.Y - dead) Then
-                If mouse.Y - e.Y > 100 Then t = (10)
-            Else : t = CSng(Sin((mouse.Y - e.Y) / 100)) * 12
-                Dim tl = View_Radius
-                View_Radius -= (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
-                If check_zoom_collision() Then
-                    View_Radius = tl
-                End If
-                If View_Radius > -5.0 Then View_Radius = -5.0
-                mouse.Y = e.Y
-            End If
-            If View_Radius > -1.0 Then View_Radius = -1.0
-            'If View_Radius < -550 Then View_Radius = -550
-            If View_Radius < -1550 Then View_Radius = -1550
-            Packet_out.Ex = look_point_X
-            Packet_out.Ez = look_point_Z
-            Packet_out.Ey = look_point_Y
-            Packet_out.Rx = Cam_X_angle
-            Packet_out.Ry = Cam_Y_angle
-            Packet_out.Lr = View_Radius
-
-        End If
+        '        End If
 
     End Sub
     Private Sub pb1_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles pb1.MouseUp
@@ -6128,11 +6131,294 @@ no_move_xz:
         End If
         Return update
     End Function
+    Private Sub check_mouse()
+        Dim dead As Integer = 5
+        Dim t As Double
+        Dim M_Speed As Double = 0.8
+        Dim tempX, tempZ As Single
+        tempZ = look_point_Z
+        tempX = look_point_X
+        Dim ms As Double = 1.0F * View_Radius ' distance away changes speed. THIS WORKS WELL!
+        Dim ms2 As Double = 0.25 * View_Radius  ' distance away changes speed. THIS WORKS WELL!
+        If M_DOWN Then
+            If M_current.x > (mouse.X + dead) Then
+                If M_current.x - mouse.X > 100 Then t = (1.0F * M_Speed)
+            Else : t = CSng(Sin((M_current.x - mouse.X) / 100)) * M_Speed
+                If Not ROTATE_TANK Then
+                Else
+                    If ROTATE_TANK Then
+                        Dim tr As Single
+                        If tankID > -1 Then
+                            If tankID >= 100 Then
+                                tr = locations.team_2(tankID - 100).rot_y
+                                tr -= t
+                                If tr < 0 Then tr += (2 * PI)
+                                locations.team_2(tankID - 100).rot_y = tr
+                                Packet_out.Tr = tr
+                            Else
+                                tr = locations.team_1(tankID).rot_y
+                                tr -= t
+                                If tr < 0 Then tr += (2 * PI)
+                                locations.team_1(tankID).rot_y = tr
+                                Packet_out.Tr = tr
+                            End If
+                            mouse.X = M_current.x
+                            'draw_scene()
+                        End If
+                    End If
+                End If
+            End If
+            If M_DOWN Then
+                If M_current.x < (mouse.X - dead) Then
+                    If mouse.X - M_current.x > 100 Then t = (M_Speed)
+                Else : t = CSng(Sin((mouse.X - M_current.x) / 100)) * M_Speed
+                    If Not ROTATE_TANK Then
+                    Else
+                        If ROTATE_TANK Then
+                            Dim tr As Single
+                            If tankID > -1 Then
+                                If tankID >= 100 Then
+                                    tr = locations.team_2(tankID - 100).rot_y
+                                    tr += t
+                                    If tr > (2 * PI) Then tr -= (2 * PI)
+                                    locations.team_2(tankID - 100).rot_y = tr
+                                    Packet_out.Tr = tr
+                                Else
+                                    tr = locations.team_1(tankID).rot_y
+                                    tr += t
+                                    If tr > (2 * PI) Then tr -= (2 * PI)
+                                    locations.team_1(tankID).rot_y = tr
+                                    Packet_out.Tr = tr
+                                End If
+                            End If
+                        End If
+                        mouse.X = M_current.x
+                    End If
+                End If
+            End If
+        End If
+        If M_DOWN Then
+            If M_current.x > (mouse.X + dead) Then
+                If M_current.x - mouse.X > 100 Then t = (1.0F * M_Speed)
+            Else : t = CSng(Sin((M_current.x - mouse.X) / 100)) * M_Speed
+                If Not z_move Then
+                    If move_mod Then ' check for modifying flag
+                        tempX -= ((t * ms) * (Cos(Cam_X_angle)))
+                        tempZ -= ((t * ms) * (-Sin(Cam_X_angle)))
+                        If tempX < MAP_BB_BL.x Then
+                            tempX = MAP_BB_BL.x
+                        End If
+                        If tempX > MAP_BB_UR.x Then
+                            tempX = MAP_BB_UR.x
+                        End If
+                        If tempZ < MAP_BB_BL.y Then
+                            tempZ = MAP_BB_BL.y
+                        End If
+                        If tempZ > MAP_BB_UR.y Then
+                            tempZ = MAP_BB_UR.y
+                        End If
+                        If Not check_zoom_collision() Then
+                            look_point_X = tempX : look_point_Z = tempZ
+                        End If
+
+                    Else
+                        ' If Not ROTATE_TANK Then
+                        Cam_X_angle = check_border_collision_y_rot(-t)
+                        'Cam_X_angle -= t
+                        If Cam_X_angle > (2 * PI) Then Cam_X_angle -= (2 * PI)
+                    End If
+                    'End If
+                    mouse.X = M_current.x
+no_move_xz:
+                End If
+            End If
+            If M_current.x < (mouse.X - dead) Then
+                If mouse.X - M_current.x > 100 Then t = (M_Speed)
+            Else : t = CSng(Sin((mouse.X - M_current.x) / 100)) * M_Speed
+                If Not z_move Then
+                    If move_mod Then ' check for modifying flag
+                        tempX += ((t * ms) * (Cos(Cam_X_angle)))
+                        tempZ += ((t * ms) * (-Sin(Cam_X_angle)))
+                        If tempX < MAP_BB_BL.x Then
+                            tempX = MAP_BB_BL.x
+                        End If
+                        If tempX > MAP_BB_UR.x Then
+                            tempX = MAP_BB_UR.x
+                        End If
+                        If tempZ < MAP_BB_BL.y Then
+                            tempZ = MAP_BB_BL.y
+                        End If
+                        If tempZ > MAP_BB_UR.y Then
+                            tempZ = MAP_BB_UR.y
+                        End If
+                        If Not check_zoom_collision() Then
+                            look_point_X = tempX : look_point_Z = tempZ
+                        End If
+                    Else
+                        '     If Not ROTATE_TANK And Not MOVE_TANK Then
+
+                        Cam_X_angle = check_border_collision_y_rot(t)
+                        'Cam_X_angle += t
+                        If Cam_X_angle < 0 Then Cam_X_angle += (2 * PI)
+                    End If
+                    '  End If
+                    mouse.X = M_current.x
+
+                    Try
+                        'This has to remain "INLINE" as it kills the mouse's reaction time.
+                        If maploaded Then
+
+                            'Dim xvp As Integer = ((look_point_X - 50) / 100) + (MAP_SIDE_LENGTH / 2)
+                            'Dim yvp As Integer = ((look_point_Z + 50) / 100) + (MAP_SIDE_LENGTH / 2)
+                            'Dim rxp As Integer = (((Floor(look_point_X) / 100)) - Floor((Floor(look_point_X) / 100))) * 65
+                            'Dim ryp As Integer = (((Floor(look_point_Z) / 100)) - Floor((Floor(look_point_Z) / 100))) * 65
+                            'Dim map = mapBoard(xvp, yvp)
+                            Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
+                            look_point_Y = Z_Cursor ' + 5
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+                End If
+            End If
+            If M_current.y > (mouse.Y + dead) Then
+                If M_current.y - mouse.Y > 100 Then t = (M_Speed)
+            Else : t = CSng(Sin((M_current.y - mouse.Y) / 100)) * M_Speed
+                If z_move Then
+                    y_offset -= (t * ms)
+
+                Else
+                    If move_mod Then ' check for modifying flag
+                        tempZ -= ((t * ms) * (Cos(Cam_X_angle)))
+                        tempX -= ((t * ms) * (Sin(Cam_X_angle)))
+                        If tempX < MAP_BB_BL.x Then
+                            tempX = MAP_BB_BL.x
+                        End If
+                        If tempX > MAP_BB_UR.x Then
+                            tempX = MAP_BB_UR.x
+                        End If
+                        If tempZ < MAP_BB_BL.y Then
+                            tempZ = MAP_BB_BL.y
+                        End If
+                        If tempZ > MAP_BB_UR.y Then
+                            tempZ = MAP_BB_UR.y
+                        End If
+                        If Not check_zoom_collision() Then
+                            look_point_X = tempX : look_point_Z = tempZ
+                        End If
+
+                    Else
+                        If Not ROTATE_TANK And Not MOVE_TANK Then
+                            Cam_Y_angle = check_border_collision_x_rot(-t)
+                        End If
+                    End If
+                End If
+                'If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
+                mouse.Y = M_current.y
+            End If
+            If M_current.y < (mouse.Y - dead) Then
+                If mouse.Y - M_current.y > 100 Then t = (M_Speed)
+            Else : t = CSng(Sin((mouse.Y - M_current.y) / 100)) * M_Speed
+                If z_move Then
+                    y_offset += (t * ms)
+                Else
+                    If move_mod Then ' check for modifying flag
+                        tempZ += ((t * ms) * (Cos(Cam_X_angle)))
+                        tempX += ((t * ms) * (Sin(Cam_X_angle)))
+                        If tempX < MAP_BB_BL.x Then
+                            tempX = MAP_BB_BL.x
+                        End If
+                        If tempX > MAP_BB_UR.x Then
+                            tempX = MAP_BB_UR.x
+                        End If
+                        If tempZ < MAP_BB_BL.y Then
+                            tempZ = MAP_BB_BL.y
+                        End If
+                        If tempZ > MAP_BB_UR.y Then
+                            tempZ = MAP_BB_UR.y
+                        End If
+                        If Not check_zoom_collision() Then
+                            look_point_X = tempX : look_point_Z = tempZ
+                        End If
+
+                    Else
+                        If Not ROTATE_TANK And Not MOVE_TANK Then
+                            Cam_Y_angle = check_border_collision_x_rot(t)
+                        End If
+                    End If
+                End If
+                mouse.Y = M_current.y
+            End If
+            If Cam_Y_angle > -0.0 Then Cam_Y_angle = -0.0
+            If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
+            If Not ROTATE_TANK Then
+                If MOVE_TANK Then
+                    If tankID > -1 Then
+                        If tankID > -1 Then
+                            If tankID >= 100 Then
+                                locations.team_2(tankID - 100).loc_x = look_point_X
+                                locations.team_2(tankID - 100).loc_z = look_point_Z
+                                Packet_out.Tx = look_point_X
+                                Packet_out.Tz = look_point_Z
+                            Else
+                                locations.team_1(tankID).loc_x = look_point_X
+                                locations.team_1(tankID).loc_z = look_point_Z
+                                Packet_out.Tx = look_point_X
+                                Packet_out.Tz = look_point_Z
+                            End If
+                        End If
+                    End If
+                End If
+            End If
+            Packet_out.Ex = look_point_X
+            Packet_out.Ez = look_point_Z
+            Packet_out.Ey = look_point_Y
+            Packet_out.Rx = Cam_X_angle
+            Packet_out.Ry = Cam_Y_angle
+            Packet_out.Lr = View_Radius
+
+        End If
+        If move_cam_z Then
+            If M_current.y > (mouse.Y + dead) Then
+                If M_current.y - mouse.Y > 100 Then t = (10)
+            Else : t = CSng(Sin((M_current.y - mouse.Y) / 100)) * 12
+                Dim tl = View_Radius
+                View_Radius += (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
+                If check_zoom_collision() Then
+                    View_Radius = tl
+                End If
+                mouse.Y = M_current.y
+            End If
+            If M_current.y < (mouse.Y - dead) Then
+                If mouse.Y - M_current.y > 100 Then t = (10)
+            Else : t = CSng(Sin((mouse.Y - M_current.y) / 100)) * 12
+                Dim tl = View_Radius
+                View_Radius -= (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
+                If check_zoom_collision() Then
+                    View_Radius = tl
+                End If
+                If View_Radius > -5.0 Then View_Radius = -5.0
+                mouse.Y = M_current.y
+            End If
+            If View_Radius > -1.0 Then View_Radius = -1.0
+            'If View_Radius < -550 Then View_Radius = -550
+            If View_Radius < -1550 Then View_Radius = -1550
+            Packet_out.Ex = look_point_X
+            Packet_out.Ez = look_point_Z
+            Packet_out.Ey = look_point_Y
+            Packet_out.Rx = Cam_X_angle
+            Packet_out.Ry = Cam_Y_angle
+            Packet_out.Lr = View_Radius
+
+        End If
+
+    End Sub
     Private Sub update_mouse()
         'This will run for the duration that Terra! is open.
         'Its in a closed loop
         Dim swat As New Stopwatch
         While _STARTED
+            check_mouse()
             If Not M_FLY And maploaded Then
                 angle_offset = 0
                 If need_update() Then
