@@ -62,7 +62,6 @@ float NdotL;
    
 vec4 color = texture2D(colorMap,  texCoord*wrap);
 a = color.a;
-if ( a <0.3 ) { discard; }
 color.xyz *= l_texture;
 a *= ln;
 //color.rgb = (color.rgb *0.001) + vec3(0.5,0.5,0.5);

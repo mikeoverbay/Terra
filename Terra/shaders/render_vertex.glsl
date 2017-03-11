@@ -2,9 +2,12 @@
 // used to render blended hirez terrain
 
 uniform sampler2D normalMap;
+
 uniform int main_texture;
 uniform vec3 cam_position;
+
 uniform float tile_width;
+
 
 varying vec3 lightVec; 
 varying vec3 eyeVec;
@@ -19,8 +22,14 @@ varying vec3 Vertex;
 varying vec4 mask;
 varying vec4 mask_2;
 
+varying vec2 hUV;
+
 void main(void)
 { 
+    
+    hUV = -gl_MultiTexCoord0 /10.0 ;
+
+
     lightDirection = gl_LightSource[0].position.xyz - gl_Vertex.xyz;
     lightDirection.z*= -1.0;
 

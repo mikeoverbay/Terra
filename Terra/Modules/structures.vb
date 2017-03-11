@@ -275,6 +275,7 @@ Module structures
         Public colorMapId As Int32
         Public HZ_colorMapID As Int32
         Public DominateId As Int32
+        Public HolesId As Int32
         Public location As vect3
         Public col, row As Single
         Public name As String
@@ -288,6 +289,7 @@ Module structures
         Public heights(,) As Single
         Public heights_avg As Single
         Public seamCallId As Integer
+        Public has_holes As Integer
     End Structure
 
     Public Structure transformStruct

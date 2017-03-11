@@ -575,6 +575,7 @@ dont_grab_this:
             Dim tms As New MemoryStream
             Dim norms As New MemoryStream
             Dim dom As New MemoryStream
+            Dim holes_ms As New MemoryStream
             Using ck As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(cms)
                 ReDim maplist(map).scr_coords(3) ' used with unproject
                 Dim heights As Ionic.Zip.ZipEntry = ck("terrain2/heights")
@@ -590,11 +591,19 @@ dont_grab_this:
                 GC.Collect()
                 Dim normals As Ionic.Zip.ZipEntry = ck("terrain2/lodNormals")
                 normals.Extract(norms)
+                Dim holes As Ionic.Zip.ZipEntry = ck("terrain2/holes")
 
+                If holes IsNot Nothing Then
+                    maplist(map).has_holes = 1
+                    holes.Extract(holes_ms)
+                    open_hole_info(map, holes_ms)
+                Else
+                    maplist(map).has_holes = 0
+                End If
                 ' dont know how to use it :(
                 'Dim dominate As Ionic.Zip.ZipEntry = ck("terrain2/dominantTextures")
                 'dominate.Extract(dom)
-                'open_dominate(map, dom)
+                'open_dominate(map, dom)' renamed this to open_hole_info(map,dom)
 
                 get_surface_normals(norms, map) 'gets the normal map
                 get_location(map)   'finds location in the world
@@ -610,6 +619,7 @@ dont_grab_this:
             tms.Dispose()
             norms.Dispose()
             dom.Dispose()
+            holes_ms.Dispose()
             GC.Collect() ' try to force release of memory.
         Next
         GC.WaitForFullGCComplete() ' wait until memory is released. We need it.

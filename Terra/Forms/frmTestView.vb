@@ -32,10 +32,10 @@
     End Sub
 
     Public Sub update_screen()
-        If Not maploaded Then Return
+        'If Not maploaded Then Return
         If Not (Wgl.wglMakeCurrent(pb3_hDC, pb3_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
-            End
+            Return
         End If
         Dim width, height As Integer
         Gl.glViewport(0, 0, pb3.Width, pb3.Height)
@@ -70,8 +70,8 @@
         Gl.glGetTexLevelParameteriv(Gl.GL_TEXTURE_2D, 0, Gl.GL_TEXTURE_HEIGHT, height)
         h_label.Text = "Height:" + height.ToString("0000")
         w_label.Text = "Width:" + width.ToString("0000")
-        width *= image_scale
-        height *= image_scale
+        width *= image_scale * 4.0
+        height *= image_scale * 4.0
         Gl.glBegin(Gl.GL_QUADS)
 
         Gl.glTexCoord2f(0.0, 1.0)

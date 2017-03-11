@@ -2544,6 +2544,7 @@ nope:
                     Gl.glUniform3f(c_position, eyeX, eyeY, eyeZ)
                     Gl.glUniform1i(n_address, 1)
                     Gl.glUniform1f(gamma, gamma_level * 0.75)
+                    Gl.glUniform1i(render_has_holes, maplist(i).has_holes)
                     If m_show_fog.Checked Then
                         Gl.glUniform1i(f_address, 1)
                     Else
@@ -2552,9 +2553,6 @@ nope:
                     'er = Gl.glGetError
                     'bind the lowrez normal map
                     Gl.glUniform1i(n_address, 0)
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).normMapID)
-                    ' bind all the textures
                     Gl.glUniform1i(layer_1, 1)
                     Gl.glUniform1i(layer_2, 2)
                     Gl.glUniform1i(layer_3, 3)
@@ -2565,7 +2563,11 @@ nope:
                     Gl.glUniform1i(n_layer_4, 8)
                     Gl.glUniform1i(mixtexture, 9)
                     Gl.glUniform1i(c_address, 10)
-                    Gl.glUniform1i(dominateTex, 11)
+                    Gl.glUniform1i(render_hole_texture, 11)
+
+                    Gl.glActiveTexture(Gl.GL_TEXTURE0)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).normMapID)
+                    ' bind all the textures
                     If Gl.glIsTexture(map_layers(i).layers(1).text_id) Then
                         Gl.glActiveTexture(Gl.GL_TEXTURE1)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).text_id)
@@ -2606,9 +2608,9 @@ nope:
                     'bind lowrez colormap
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 10)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
-                    'bind ShadowMap ** not used. yet
+                    'bind holes_texture
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 11)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).DominateId)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).HolesId)
 
                     'er = Gl.glGetError
                     'sr = Glu.gluErrorString(er)
@@ -4999,103 +5001,10 @@ nope:
         End If
     End Sub
 
-    Public Function check_border_collision_y_rot(ByVal t As Single) As Single
-        If m_fly_map.Checked Then
-            Cam_X_angle += t
-            Return Cam_X_angle
-        End If
-        Dim tx = Cam_X_angle
-        Dim ty = Cam_Y_angle
-        Cam_X_angle += t
-        sin_x = Sin(Cam_X_angle + angle_offset)
-        cos_x = Cos(Cam_X_angle + angle_offset)
-        cos_y = Cos(Cam_Y_angle)
-        sin_y = Sin(Cam_Y_angle)
-        cam_y = Sin(Cam_Y_angle) * View_Radius
-        cam_x = (sin_x - (1 - cos_y) * sin_x) * View_Radius
-        cam_z = (cos_x - (1 - cos_y) * cos_x) * View_Radius
-        'Look_at_X = cam_x + Sin(Cam_X_angle) - ((1 - Cos(Cam_Y_angle)) * Sin(Cam_X_angle))
-        'Look_at_Y = cam_y + Sin(Cam_Y_angle)
-        'Look_at_Z = cam_z + Cos(Cam_X_angle) - ((1 - Cos(Cam_Y_angle)) * Cos(Cam_X_angle))
-        'Glu.gluLookAt(cam_x + look_point_X, cam_y + look_point_Y, cam_z + look_point_Z, look_point_X, look_point_Y, look_point_Z, 0.0F, 1.0F, 0.0F)
-        'Glu.gluLookAt(0, 0, 30, look_point_X, look_point_Y, look_point_Z, 0.0F, 1.0F, 0.0F)
-        'Dim X = cam_x + look_point_X
-        'Dim Z = cam_z + look_point_Z
-        'If X < MAP_BB_BL.x Then
-        '	Return tx
-        'End If
-        'If X > MAP_BB_UR.x Then
-        '	Return tx
-        'End If
-        'If Z < MAP_BB_BL.y Then
-        '	Return tx
-        'End If
-        'If Z > MAP_BB_UR.y Then
-        '	Return tx
-        'End If
-        Return Cam_X_angle
-    End Function
-    Public Function check_border_collision_x_rot(ByVal t As Single) As Single
-        If m_fly_map.Checked Then
-            Cam_Y_angle += t
-            Return Cam_Y_angle
-        End If
-        Dim tx = Cam_X_angle
-        Dim ty = Cam_Y_angle
-        Cam_Y_angle += t
-        sin_x = Sin(Cam_X_angle + angle_offset)
-        cos_x = Cos(Cam_X_angle + angle_offset)
-        cos_y = Cos(Cam_Y_angle)
-        sin_y = Sin(Cam_Y_angle)
-        cam_y = Sin(Cam_Y_angle) * View_Radius
-        cam_x = (sin_x - (1 - cos_y) * sin_x) * View_Radius
-        cam_z = (cos_x - (1 - cos_y) * cos_x) * View_Radius
-        'Dim X = cam_x + look_point_X
-        'Dim Y = cam_z + look_point_Z
-        'If X < MAP_BB_BL.x Then
-        '	Return ty
-        'End If
-        'If X > MAP_BB_UR.x Then
-        '	Return ty
-        'End If
-        'If Y < MAP_BB_BL.y Then
-        '	Return ty
-        'End If
-        'If Y > MAP_BB_UR.y Then
-        '	Return ty
-        'End If
-        Return Cam_Y_angle
-    End Function
-    Public Function check_zoom_collision() As Boolean
-        If m_fly_map.Checked Then
-            Return False
-        End If
-        'sin_x = Sin(Cam_X_angle + angle_offset)
-        'cos_x = Cos(Cam_X_angle + angle_offset)
-        'cos_y = Cos(Cam_Y_angle)
-        'sin_y = Sin(Cam_Y_angle)
-        'cam_x = (sin_x - (1 - cos_y) * sin_x) * View_Radius
-        'cam_z = (cos_x - (1 - cos_y) * cos_x) * View_Radius
-        'Dim X = cam_x + look_point_X
-        'Dim Y = cam_z + look_point_Z
-        'If X < MAP_BB_BL.x Then
-        '	Return True
-        'End If
-        'If X > MAP_BB_UR.x Then
-        '	Return True
-        'End If
-        'If Y < MAP_BB_BL.y Then
-        '	Return True
-        'End If
-        'If Y > MAP_BB_UR.y Then
-        '	Return True
-        'End If
-        Return False
-    End Function
 
 
     Public Sub position_camera()
-        Dim dead As Integer = 5
+        Dim dead As Integer = 0
         Dim t As Double
         Dim M_Speed As Double = 0.8
         Dim tempX, tempZ As Single
@@ -5124,13 +5033,9 @@ nope:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
-
+                        look_point_X = tempX : look_point_Z = tempZ
                     Else
-                        Cam_X_angle = check_border_collision_y_rot(-t)
-                        'Cam_X_angle -= t
+                        Cam_X_angle -= t
                         If Cam_X_angle > (2 * PI) Then Cam_X_angle -= (2 * PI)
                     End If
                     mouse.X = e.X
@@ -5156,25 +5061,17 @@ no_move_xz:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+                        look_point_X = tempX : look_point_Z = tempZ
                     Else
-                        Cam_X_angle = check_border_collision_y_rot(t)
-                        'Cam_X_angle += t
+                        Cam_X_angle += t
                     End If
                     If Cam_X_angle < 0 Then Cam_X_angle += (2 * PI)
                     mouse.X = e.X
 
                     Try
-                        'This has to remain "INLINE" as it kills the mouse's reaction time.
                         If maploaded Then
-
-                            'Dim xvp As Integer = ((look_point_X - 50) / 100) + (MAP_SIDE_LENGTH / 2)
-                            'Dim yvp As Integer = ((look_point_Z + 50) / 100) + (MAP_SIDE_LENGTH / 2)
-                            'Dim rxp As Integer = (((Floor(look_point_X) / 100)) - Floor((Floor(look_point_X) / 100))) * 65
-                            'Dim ryp As Integer = (((Floor(look_point_Z) / 100)) - Floor((Floor(look_point_Z) / 100))) * 65
-                            'Dim map = mapBoard(xvp, yvp)
+                            Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
+                            look_point_Y = Z_Cursor ' + 5
                         End If
                     Catch ex As Exception
 
@@ -5191,6 +5088,9 @@ no_move_xz:
                     If move_mod Then ' check for modifying flag
                         tempZ -= ((t * ms) * (Cos(Cam_X_angle)))
                         tempX -= ((t * ms) * (Sin(Cam_X_angle)))
+                        If tempX < MAP_BB_BL.x Then
+                            tempX = MAP_BB_BL.x
+                        End If
                         If tempX > MAP_BB_UR.x Then
                             tempX = MAP_BB_UR.x
                         End If
@@ -5200,12 +5100,9 @@ no_move_xz:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
-
+                        look_point_X = tempX : look_point_Z = tempZ
                     Else
-                        Cam_Y_angle = check_border_collision_x_rot(-t)
+                        Cam_Y_angle -= t
                     End If
                 End If
                 If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
@@ -5232,12 +5129,10 @@ no_move_xz:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+                        look_point_X = tempX : look_point_Z = tempZ
 
                     Else
-                        Cam_Y_angle = check_border_collision_x_rot(t)
+                        Cam_Y_angle += t
                     End If
                 End If
                 mouse.Y = e.Y
@@ -5254,9 +5149,6 @@ no_move_xz:
             Else : t = CSng(Sin((e.Y - mouse.Y) / 100)) * 12
                 Dim tl = View_Radius
                 View_Radius += (t * (View_Radius * 0.2)) ' zoom is factored in to look radius
-                If check_zoom_collision() Then
-                    View_Radius = tl
-                End If
                 mouse.Y = e.Y
             End If
             If e.Y < (mouse.Y - dead) Then
@@ -5264,9 +5156,6 @@ no_move_xz:
             Else : t = CSng(Sin((mouse.Y - e.Y) / 100)) * 12
                 Dim tl = View_Radius
                 View_Radius -= (t * (View_Radius * 0.2)) ' zoom is factored in to look radius
-                If check_zoom_collision() Then
-                    View_Radius = tl
-                End If
                 If View_Radius > -0.5 Then View_Radius = -0.5
                 mouse.Y = e.Y
             End If
@@ -6132,7 +6021,7 @@ no_move_xz:
         Return update
     End Function
     Private Sub check_mouse()
-        Dim dead As Integer = 5
+        Dim dead As Integer = 0
         Dim t As Double
         Dim M_Speed As Double = 0.8
         Dim tempX, tempZ As Single
@@ -6163,7 +6052,6 @@ no_move_xz:
                                 Packet_out.Tr = tr
                             End If
                             mouse.X = M_current.x
-                            'draw_scene()
                         End If
                     End If
                 End If
@@ -6217,17 +6105,11 @@ no_move_xz:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
-
+                        look_point_X = tempX : look_point_Z = tempZ
                     Else
-                        ' If Not ROTATE_TANK Then
-                        Cam_X_angle = check_border_collision_y_rot(-t)
-                        'Cam_X_angle -= t
+                        Cam_X_angle -= t
                         If Cam_X_angle > (2 * PI) Then Cam_X_angle -= (2 * PI)
                     End If
-                    'End If
                     mouse.X = M_current.x
 no_move_xz:
                 End If
@@ -6251,28 +6133,16 @@ no_move_xz:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+                        look_point_X = tempX : look_point_Z = tempZ
                     Else
-                        '     If Not ROTATE_TANK And Not MOVE_TANK Then
 
-                        Cam_X_angle = check_border_collision_y_rot(t)
-                        'Cam_X_angle += t
+                        Cam_X_angle += t
                         If Cam_X_angle < 0 Then Cam_X_angle += (2 * PI)
                     End If
-                    '  End If
                     mouse.X = M_current.x
 
                     Try
-                        'This has to remain "INLINE" as it kills the mouse's reaction time.
                         If maploaded Then
-
-                            'Dim xvp As Integer = ((look_point_X - 50) / 100) + (MAP_SIDE_LENGTH / 2)
-                            'Dim yvp As Integer = ((look_point_Z + 50) / 100) + (MAP_SIDE_LENGTH / 2)
-                            'Dim rxp As Integer = (((Floor(look_point_X) / 100)) - Floor((Floor(look_point_X) / 100))) * 65
-                            'Dim ryp As Integer = (((Floor(look_point_Z) / 100)) - Floor((Floor(look_point_Z) / 100))) * 65
-                            'Dim map = mapBoard(xvp, yvp)
                             Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
                             look_point_Y = Z_Cursor ' + 5
                         End If
@@ -6303,17 +6173,14 @@ no_move_xz:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+                        look_point_X = tempX : look_point_Z = tempZ
 
                     Else
                         If Not ROTATE_TANK And Not MOVE_TANK Then
-                            Cam_Y_angle = check_border_collision_x_rot(-t)
+                            Cam_Y_angle -= t
                         End If
                     End If
                 End If
-                'If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
                 mouse.Y = M_current.y
             End If
             If M_current.y < (mouse.Y - dead) Then
@@ -6337,13 +6204,11 @@ no_move_xz:
                         If tempZ > MAP_BB_UR.y Then
                             tempZ = MAP_BB_UR.y
                         End If
-                        If Not check_zoom_collision() Then
-                            look_point_X = tempX : look_point_Z = tempZ
-                        End If
+                        look_point_X = tempX : look_point_Z = tempZ
 
                     Else
                         If Not ROTATE_TANK And Not MOVE_TANK Then
-                            Cam_Y_angle = check_border_collision_x_rot(t)
+                            Cam_Y_angle += t
                         End If
                     End If
                 End If
@@ -6384,9 +6249,6 @@ no_move_xz:
             Else : t = CSng(Sin((M_current.y - mouse.Y) / 100)) * 12
                 Dim tl = View_Radius
                 View_Radius += (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
-                If check_zoom_collision() Then
-                    View_Radius = tl
-                End If
                 mouse.Y = M_current.y
             End If
             If M_current.y < (mouse.Y - dead) Then
@@ -6394,9 +6256,6 @@ no_move_xz:
             Else : t = CSng(Sin((mouse.Y - M_current.y) / 100)) * 12
                 Dim tl = View_Radius
                 View_Radius -= (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
-                If check_zoom_collision() Then
-                    View_Radius = tl
-                End If
                 If View_Radius > -5.0 Then View_Radius = -5.0
                 mouse.Y = M_current.y
             End If
@@ -6423,21 +6282,21 @@ no_move_xz:
                 angle_offset = 0
                 If need_update() Then
                     'If we need to update the screen, lets caclulate draw times and update the timer.
-                    If screen_avg_counter > 5 Then
+                    If screen_avg_counter > 5.0! Then
                         screen_totaled_draw_time = screen_avg_draw_time / screen_avg_counter
-                        screen_avg_counter = 0
-                        screen_avg_draw_time = 0
+                        screen_avg_counter = 0.0!
+                        screen_avg_draw_time = 0.0!
                     Else
-                        If Screen_draw_time < 15 Then
-                            Screen_draw_time = 30
+                        If Screen_draw_time < 2.0! Then
+                            Screen_draw_time = 2.0!
                         End If
-                        screen_avg_counter += 1
+                        screen_avg_counter += 1.0!
                         screen_avg_draw_time += Screen_draw_time
                     End If
                     swat.Reset()
                     swat.Start()
                     update_screen()
-                    Screen_draw_time = CInt(swat.ElapsedMilliseconds)
+                    Screen_draw_time = swat.ElapsedMilliseconds
                     ' Thread.Sleep(5)
                 End If
             End If
@@ -6446,7 +6305,7 @@ no_move_xz:
                 'Thread.Sleep(30)
             End If
             'Application.DoEvents()
-            Thread.Sleep(5)
+            Thread.Sleep(1)
         End While
         'Thread.CurrentThread.Abort()
     End Sub
@@ -6507,22 +6366,22 @@ no_move_xz:
                 look_point_Y = cam_y
                 angle_offset = -view_rot - (PI * 0.1)
 
-                If screen_avg_counter > 10 Then
+                If screen_avg_counter > 5.0! Then
                     screen_totaled_draw_time = screen_avg_draw_time / screen_avg_counter
-                    screen_avg_counter = 1
+                    screen_avg_counter = 1.0!
                     screen_avg_draw_time = Screen_draw_time
                 Else
-                    If Screen_draw_time < 5 Then
-                        Screen_draw_time = 30
+                    If Screen_draw_time < 2.0! Then
+                        Screen_draw_time = 2.0!
                     End If
-                    screen_avg_counter += 1
-                    screen_avg_draw_time += (Screen_draw_time)
+                    screen_avg_counter += 1.0!
+                    screen_avg_draw_time += Screen_draw_time
                 End If
                 If need_update() Then
                     'swat1.Reset()
                     swat.Restart()
                     draw_scene()
-                    Screen_draw_time = CInt(swat.ElapsedMilliseconds)
+                    Screen_draw_time = swat.ElapsedMilliseconds
                 End If
                 If view_rot > 2 * PI Then
                     view_rot -= (2 * PI)
@@ -6546,16 +6405,16 @@ no_move_xz:
 
                 'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
                 If Not m_fly_map.Checked Then
-                    If screen_avg_counter > 10 Then
+                    If screen_avg_counter > 5.0! Then
                         screen_totaled_draw_time = screen_avg_draw_time / screen_avg_counter
-                        screen_avg_counter = 1
+                        screen_avg_counter = 1.0!
                         screen_avg_draw_time = Screen_draw_time
                     Else
-                        If Screen_draw_time < 5 Then
-                            Screen_draw_time = 30
+                        If Screen_draw_time < 2.0! Then
+                            Screen_draw_time = 2.0!
                         End If
-                        screen_avg_counter += 1
-                        screen_avg_draw_time += (Screen_draw_time)
+                        screen_avg_counter += 1.0!
+                        screen_avg_draw_time += Screen_draw_time
                     End If
                     'swat2.Reset()
                     swat.Restart()
@@ -6563,7 +6422,7 @@ no_move_xz:
 
                     update_screen()
 
-                    Screen_draw_time = CInt(swat.ElapsedMilliseconds)
+                    Screen_draw_time = swat.ElapsedMilliseconds
                 End If
                 If light_rot > 2 * PI Then
                     light_rot -= (2 * PI)

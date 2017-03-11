@@ -265,10 +265,10 @@ Module Globals
     Public u_tank_r As Single
     Public u_tank_x As Single
     Public u_tank_z As Single
-    Public Screen_draw_time As Integer
-    Public screen_avg_draw_time As Integer
-    Public screen_avg_counter As Integer
-    Public screen_totaled_draw_time As Integer
+    Public Screen_draw_time As Single
+    Public screen_avg_draw_time As Single
+    Public screen_avg_counter As Single
+    Public screen_totaled_draw_time As Single
     Public old_light_position As vect3
     Public old_look_point As vect3
     Public face_count As Integer = 0

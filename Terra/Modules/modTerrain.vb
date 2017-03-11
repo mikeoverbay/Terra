@@ -21,77 +21,70 @@ Module modTerrain
     Public get_main_texture As Boolean = False
 
 
-    Public Sub open_dominate(ByVal map As Integer, ByVal dom As MemoryStream)
-        Dim magic, version As UInt32
+    Public Sub open_hole_info(ByVal map As Integer, ByVal dom As MemoryStream)
 
-        Dim texture_count As Integer = 0
 
-        Dim mapX, mapY As UInt32
-        Dim str1_len As UInt32
-        Dim strings(4) As String
         dom.Position = 0
-
         Dim br As New BinaryReader(dom)
-        magic = br.ReadUInt32
-        version = br.ReadUInt32
-
-        texture_count = br.ReadUInt32
-        str1_len = br.ReadUInt32
-        mapX = br.ReadUInt32
-        mapY = br.ReadUInt32
-        br.ReadUInt64() ' wasted space
-
-        Dim ds(str1_len) As Byte
-        For k = 0 To texture_count - 1
-
-            For i = 0 To str1_len - 1
-                ds(i) = br.ReadByte
-            Next
-
-            strings(k) = System.Text.Encoding.UTF8.GetString(ds, 0, str1_len)
-
-        Next
 
         Dim magic1 = br.ReadInt32
         Dim magic2 = br.ReadInt32
         Dim uncompressedsize = br.ReadInt32
-        'Dim b(s.Length - 12) As Byte
-        's.Read(b, 0, s.Length - 12)
         Dim buff(uncompressedsize) As Byte
         Dim ps As New MemoryStream(buff)
-
+        Dim count As UInteger = 0
+        Dim total_read As Integer = 0
 
         Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(dom, Zlib.CompressionMode.Decompress, False)
-            ' Copy the compressed file into the decompression stream. 
-            Dim buffer As Byte() = New Byte(4096) {}
+            Dim buffer(16384) As Byte
             Dim numRead As Integer
             numRead = Decompress.Read(buffer, 0, buffer.Length)
+            total_read += numRead 'debug
             Do While numRead <> 0
                 ps.Write(buffer, 0, numRead)
-                numRead = Decompress.Read(buffer, 0, buffer.Length)
+                numRead = Decompress.Read(buffer, total_read, buffer.Length)
+                total_read += numRead 'debug
             Loop
-
         End Using
 
-        '
-        Dim dbuff(mapX * mapY * 4) As Byte
-        'save the data to convert it
-        For i = 0 To uncompressedsize - 1
-            dbuff((i * 4) + 0) = buff(i)
-            dbuff((i * 4) + 1) = buff(i)
-            dbuff((i * 4) + 2) = buff(i)
-            dbuff((i * 4) + 3) = buff(i)
+        Dim p_rd As New BinaryReader(ps)
+        ps.Position = 0
+        magic1 = p_rd.ReadUInt32
+        Dim w As UInt32 = p_rd.ReadUInt32 / 4
+        Dim h As UInt32 = p_rd.ReadUInt32 / 2
+        Dim version As UInt32 = p_rd.ReadUInt32
+        Dim data(w * h) As Byte
+
+        p_rd.Read(data, 0, w * h)
+        p_rd.Close()
+        ps.Dispose()
+
+        stride = (w / 2)
+        Dim dbuff((stride * 8) * (h * 2) * 4) As Byte
+        count = 0
+        For z = 0 To (h * 2) - 1
+            For x = 0 To (stride) - 1
+                Dim val = data((z * stride) + x)
+                For q = 0 To 7
+                    Dim b = (1 And (val >> q))
+                    If b > 0 Then b = 1
+                    dbuff((((z * 256) + (x * 8) + q) * 4)) = CByte(b) * 255 'r only care about X/red in shader
+                    'dbuff((((z * stride) + (x * 8) + q + 1) * 4)) = CByte(b) * 255 'g
+                    'dbuff((((z * stride) + (x * 8) + q + 2) * 4)) = CByte(b) * 255 'b
+                    'dbuff((((z * stride) + (x * 8) + q + 3) * 4)) = CByte(b) * 255 'a
+                    count = (((z * 256) + (x * 8) + q) * 4) 'debug
+                Next
+            Next
         Next
-
-
         '------------------------------------------------------------------
+        w = 256 : h = 256
         Dim bufPtr As IntPtr = Marshal.AllocHGlobal(dbuff.Length - 1)
         Marshal.Copy(dbuff, 0, bufPtr, dbuff.Length - 1)
         Dim texID = Ilu.iluGenImage() ' Generation of one image name
         Il.ilBindImage(texID) ' Binding of image name 
         Dim success = Il.ilGetError
 
-        Il.ilTexImage(mapX, mapY, 1, 4, Il.IL_RGBA, Il.IL_UNSIGNED_BYTE, bufPtr) ' should have a new image here
+        Il.ilTexImage(w, h, 1, 4, Il.IL_RGBA, Il.IL_UNSIGNED_BYTE, bufPtr) ' should have a new image here
         success = Il.ilGetError
         Marshal.FreeHGlobal(bufPtr) ' free this up
         If success = Il.IL_NO_ERROR Then
@@ -99,25 +92,22 @@ Module modTerrain
             Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
             Dim f = Il.IL_FALSE
             Dim t = Il.IL_TRUE
-            'success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE)    ' Convert every colour component into unsigned bytes
-            'Ilu.iluFlipImage()
             Ilu.iluMirror()
 
-            'If your image contains alpha channel you can replace IL_RGB with IL_RGBA 
-            Gl.glGenTextures(1, maplist(map).DominateId)
+            Gl.glGenTextures(1, maplist(map).HolesId) ' make texture id
             Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(map).DominateId)
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(map).HolesId) ' bind the texture
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST) ' no filtering
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
 
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
-            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
-            Il.ilGetData()) '  Texture specification 
-            'Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
+            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, Il.ilGetData()) '  Texture specification 
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
+            Ilu.iluDeleteImage(texID)
+            'post_depth_image_id = maplist(map).HolesId
+            'frmTestView.update_screen()
+            'Stop
         End If
         br.Close()
         br.Dispose()
@@ -1202,12 +1192,10 @@ set_mask:
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt2.u, vt2.v)
         Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
-        'Gl.glNormal3b(vt2.nx, vt2.ny, vt2.nz)
 
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt3.u, vt3.v)
         Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
-        'Gl.glNormal3b(vt3.nx, vt3.ny, vt3.nz)
 
 
     End Sub
@@ -1230,7 +1218,7 @@ set_mask:
         n.x /= len
         n.y /= len
         n.z /= len
-        'Dim delta = 0.0
+
         vt1.u *= -10.0
         vt1.v *= -10.0
         vt2.u *= -10.0
@@ -1240,15 +1228,15 @@ set_mask:
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt1.u, vt1.v)
         Gl.glVertex3f(vt1.x, vt1.z, vt1.y)
-        'Gl.glNormal3b(vt1.nx, vt1.ny, vt1.nz)
+
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt2.u, vt2.v)
         Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
-        'Gl.glNormal3b(vt2.nx, vt2.ny, vt2.nz)
+
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt3.u, vt3.v)
         Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
-        'Gl.glNormal3b(vt3.nx, vt3.ny, vt3.nz)
+
         check_bounds(vt1)
         check_bounds(vt2)
         check_bounds(vt3)

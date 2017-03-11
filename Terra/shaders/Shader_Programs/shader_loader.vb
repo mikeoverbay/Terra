@@ -50,6 +50,7 @@ Module shader_loader
     Public view_normal_mode_ As Integer
     Public normal_mode As Integer = 0
     Public normal_length_ As Integer
+    Public render_has_holes, render_hole_texture As Integer
     Public c_address, n_address, f_address, a_address, t_address, c_position As Integer
     Public c_address2, n_address2, f_address2, a_address2, t_address2 As Integer
     Public c_address3, n_address3, f_address3, a_address3, t_address3 As Integer
@@ -331,6 +332,8 @@ Module shader_loader
         t_address = Gl.glGetUniformLocation(shader_list.render_shader, "l_texture")
         gray_level_1 = Gl.glGetUniformLocation(shader_list.render_shader, "gray_level")
         gamma = Gl.glGetUniformLocation(shader_list.render_shader, "gamma")
+        render_has_holes = Gl.glGetUniformLocation(shader_list.render_shader, "has_holes")
+
         '--------------------------------------------------------------------------
         layer_1 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_1")
         layer_2 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_2")
@@ -355,6 +358,7 @@ Module shader_loader
         layer1V = Gl.glGetUniformLocation(shader_list.render_shader, "layer1V")
         layer2V = Gl.glGetUniformLocation(shader_list.render_shader, "layer2V")
         layer3V = Gl.glGetUniformLocation(shader_list.render_shader, "layer3V")
+        render_hole_texture = Gl.glGetUniformLocation(shader_list.render_shader, "hole_texture")
         '--------------------------------------------------------------------------
         c_address3 = Gl.glGetUniformLocation(shader_list.bump_shader, "colorMap")
         colormap2 = Gl.glGetUniformLocation(shader_list.bump_shader, "colorMap_2")

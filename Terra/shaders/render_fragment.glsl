@@ -2,6 +2,7 @@
 // used to render blended hirez terrain
 //
 //
+#extension GL_EXT_gpu_shader4 : enable
 uniform sampler2D layer_1;
 uniform sampler2D layer_2;
 uniform sampler2D layer_3;
@@ -12,8 +13,9 @@ uniform sampler2D n_layer_3;
 uniform sampler2D n_layer_4;
 uniform sampler2D colorMap;
 uniform sampler2D mixtexture;
-//uniform sampler2D DominateMap;
+uniform sampler2D hole_texture;
 
+uniform int has_holes;
 uniform float col;
 uniform float row;
 uniform float tile_width;
@@ -46,6 +48,7 @@ varying vec3 Vertex;
 varying float ln;
 varying vec4 mask;
 varying vec4 mask_2;
+varying vec2 hUV;
 ////////////////////////////////////////////////////////////////
 mat3 cotangent_frame(vec3 nn, vec3 p, vec2 uv) {
   // get edge vectors of the pixel triangle
@@ -71,8 +74,13 @@ vec3 get_preturp(vec3 bump, vec3 nn, vec3 p, vec2 uv) {
   }
   //////////////////////////////////////////////////////////////
 void main(void)
-
 {
+  // lets check for a hole before doing any math.. It saves time
+  float hole = texture2D(hole_texture,hUV).x;
+  if (has_holes == 1)
+      {
+         if ( hole >0.0) {discard;}
+      }
   vec4 t1;
   vec4 t2;
   vec4 t3;
@@ -91,7 +99,7 @@ void main(void)
   float mk1, mk2, mk3, mk4; // our use layer masks
   float uv_scale = 10.0;
   vec2 texUV = -gl_TexCoord[0].xy;
-
+  
   float adj_scale = uv_scale / tile_width;
   float cell_scale = (256.0 / 272.0);
   float pad = (8.0 / (272.0 * tile_width));
@@ -231,7 +239,7 @@ void main(void)
 
   // final color mix
 
-  gl_FragColor.rgb = clamp(clamp((diffuse_2 * diffuse * 1.0), 0.0, 0.1) * base * 8.0 * ln, 0.0, 0.4);
+  gl_FragColor.rgb = clamp(clamp((diffuse_2 * diffuse * 1.0), 0.0, 0.1) * base.rgb * 8.0 * ln, 0.0, 0.4);
 
   // This adds brightnees shift from zooming out to cancel the bump brightness effect;
   gl_FragColor.rgb += clamp((1.0 - ln) * base.xyz * (diffuse_2), 0.0, 0.3);
@@ -247,7 +255,8 @@ void main(void)
   vec3 co = vec3(dot(luma, gl_FragColor.rgb));
   vec3 c = mix(co, gl_FragColor.rgb, gray_level);
   gl_FragColor.rgb = c;
-
+  //gl_FragColor.r   += r_hole;
+  //gl_FragColor.b   += b_hole;
   //----------------------------------------------------------------------
   // debug crap
   //gl_FragColor.r *= spec_scale;
