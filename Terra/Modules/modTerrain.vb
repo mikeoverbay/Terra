@@ -36,13 +36,14 @@ Module modTerrain
         Dim total_read As Integer = 0
 
         Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(dom, Zlib.CompressionMode.Decompress, False)
-            Dim buffer(16384) As Byte
+            Decompress.BufferSize = 65536
+            Dim buffer(65536) As Byte
             Dim numRead As Integer
             numRead = Decompress.Read(buffer, 0, buffer.Length)
             total_read += numRead 'debug
             Do While numRead <> 0
                 ps.Write(buffer, 0, numRead)
-                numRead = Decompress.Read(buffer, total_read, buffer.Length)
+                numRead = Decompress.Read(buffer, 0, buffer.Length)
                 total_read += numRead 'debug
             Loop
         End Using
@@ -68,16 +69,16 @@ Module modTerrain
                 For q = 0 To 7
                     Dim b = (1 And (val >> q))
                     If b > 0 Then b = 1
-                    dbuff((((z * 256) + (x * 8) + q) * 4)) = CByte(b) * 255 'r only care about X/red in shader
+                    dbuff((((z * stride * 8) + (x * 8) + q) * 4)) = CByte(b) * 255 'r only care about X/red in shader
                     'dbuff((((z * stride) + (x * 8) + q + 1) * 4)) = CByte(b) * 255 'g
                     'dbuff((((z * stride) + (x * 8) + q + 2) * 4)) = CByte(b) * 255 'b
                     'dbuff((((z * stride) + (x * 8) + q + 3) * 4)) = CByte(b) * 255 'a
-                    count = (((z * 256) + (x * 8) + q) * 4) 'debug
+                    count = (((z * stride * 8) + (x * 8) + q) * 4) 'debug
                 Next
             Next
         Next
         '------------------------------------------------------------------
-        w = 256 : h = 256
+        w = stride * 8 : h = h * 2
         Dim bufPtr As IntPtr = Marshal.AllocHGlobal(dbuff.Length - 1)
         Marshal.Copy(dbuff, 0, bufPtr, dbuff.Length - 1)
         Dim texID = Ilu.iluGenImage() ' Generation of one image name
