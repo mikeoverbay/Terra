@@ -32,7 +32,7 @@
     End Sub
 
     Public Sub update_screen()
-        'If Not maploaded Then Return
+        If Not maploaded Then Return
         If Not (Wgl.wglMakeCurrent(pb3_hDC, pb3_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
             Return
