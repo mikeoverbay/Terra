@@ -1727,6 +1727,93 @@ nope:
     End Sub
 
 
+    Public Function GetOGLPos_trees(ByVal x As Integer, ByVal y As Integer) As Integer
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
+        Gl.glDisable(Gl.GL_FOG)
+        seek_scene_trees()
+        If m_show_fog.Checked Then
+            Gl.glEnable(Gl.GL_FOG)
+        End If
+        Dim viewport(4) As Integer
+        Dim pixel() As Byte = {0, 0, 0, 0}
+        Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
+        Gl.glReadPixels(x, viewport(3) - y, 1, 1, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixel)
+        Dim type = pixel(3)
+        Dim index As UInt32 = (CUInt(pixel(1) * 256) + pixel(2))
+        If type = 0 Then
+            If index > 0 Then
+                index = index - 1
+                tb1.Text = speedtree_matrix_list(index).tree_name
+                Return True
+            End If
+        End If
+        Application.DoEvents()
+        tb1.Text = "Nothing...."
+        Application.DoEvents()
+        Return False
+    End Function
+    Public Sub seek_scene_trees()
+
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glDisable(Gl.GL_BLEND)
+
+        Gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        ResizeGL()
+        ViewPerspective()   ' set 3d view mode
+        'set_eyes()
+
+        Gl.glEnable(Gl.GL_TEXTURE_2D)
+        Gl.glActiveTexture(Gl.GL_TEXTURE1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Dim red, blue, green As Byte
+        '        '---------------------------------
+        '        ' draw the decal boxes with its own color
+        '        '---------------------------------
+        '        'if we are in team edit mode.we dont display any models
+        If maploaded Then   ' cant let this try and draw shit that isnt there yet!!!
+            If m_show_trees.Checked Then
+                For mode = 0 To 1
+                    If mode = 0 Then
+                    Else
+                        Gl.glUseProgram(shader_list.leafcolored_shader)
+                    End If
+
+                    For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
+                        red = 0
+                        green = CByte((i + 1 And &HFF00) >> 8)
+                        blue = CByte(i + 1 And &HFF)
+                        Gl.glColor4ub(CByte(red), CByte(green), CByte(blue), CByte(0))
+                        Gl.glPushMatrix()
+                        Gl.glMultMatrixf(Trees.matrix(i).matrix)
+                        If Trees.flora(i).branch_displayID > 0 And mode = 0 Then
+                            Gl.glCallList(Trees.flora(i).branch_displayID)
+                        End If
+                        If Trees.flora(i).frond_displayID > 0 And mode = 0 Then
+                            Gl.glCallList(Trees.flora(i).frond_displayID)
+                        End If
+                        If Trees.flora(i).leaf_displayID > 0 And mode = 1 Then
+                            Gl.glCallList(Trees.flora(i).leaf_displayID)
+                        End If
+                        Gl.glPopMatrix()
+                    Next
+                    Gl.glUseProgram(0)
+                Next
+             
+            End If
+
+
+        End If
+        '        '--------------------------------------------------------------------------
+        Gl.glFinish()
+        Application.DoEvents()
+    End Sub
     Public Function GetOGLPos_Decals(ByVal x As Integer, ByVal y As Integer) As Integer
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
         Gl.glDisable(Gl.GL_FOG)
@@ -1882,7 +1969,13 @@ nope:
             'draw_scene()
             Return
         End If
-
+        Gl.glPopMatrix()
+        Gl.glPushMatrix()
+        If GetOGLPos_trees(x, y) Then
+            Gl.glPopMatrix()
+            draw_scene()
+            Return
+        End If
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         'Gl.glPushMatrix()
         Gl.glDisable(Gl.GL_FOG)
@@ -2883,18 +2976,20 @@ nope:
 
     End Sub
     Private Sub draw_trees()
-        'draw trees wire
         If maploaded And m_wire_trees.Checked And m_show_trees.Checked And Not m_hell_mode.Checked Then
             Gl.glEnable(Gl.GL_LIGHTING)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
             Gl.glPolygonOffset(1.0, 1.0)
             Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
             Gl.glDisable(Gl.GL_CULL_FACE)
             Gl.glColor3f(0.0, 0.2, 0.0)
+            'draw as soild
             For mode = 0 To 1
                 If mode = 0 Then
                 Else
                     Gl.glUseProgram(shader_list.leafcolored_shader)
+                    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+                    Gl.glDisable(Gl.GL_CULL_FACE)
                 End If
 
                 For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
@@ -2917,27 +3012,8 @@ nope:
             Gl.glPolygonOffset(0.0, 0.0)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(0.0, 0.0, 0.0)
-            'For mode = 0 To 1
-            '    If mode = 0 Then
-            '    Else
-            '    End If
-
-            '    For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
-            '        Gl.glPushMatrix()
-            '        Gl.glMultMatrixf(Trees.matrix(i).matrix)
-            '        If Trees.flora(i).branch_displayID > 0 And mode = 0 Then
-            '            Gl.glCallList(Trees.flora(i).branch_displayID)
-            '        Else
-            '        End If
-            '        If Trees.flora(i).frond_displayID > 0 And mode = 0 Then
-            '            Gl.glCallList(Trees.flora(i).frond_displayID)
-            '        End If
-            '        If Trees.flora(i).leaf_displayID > 0 And mode = 1 Then
-            '            Gl.glCallList(Trees.flora(i).leaf_displayID)
-            '        End If
-            '        Gl.glPopMatrix()
-            '    Next
-            'Next
+            'draw as wire
+            'Gl.glDisable(Gl.GL_CULL_FACE)
             For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
                 Gl.glPushMatrix()
                 Gl.glMultMatrixf(Trees.matrix(i).matrix)
@@ -3083,6 +3159,306 @@ nope:
 
     End Sub
     Private Sub draw_decals()
+        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+        Gl.glEnable(Gl.GL_CULL_FACE)
+        Gl.glFrontFace(Gl.GL_CCW)
+        Gl.glDisable(Gl.GL_ALPHA_TEST)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        Gl.glDepthMask(Gl.GL_FALSE)
+        'draw decals
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        '-------- decals
+        If maploaded And m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
+            If Not view_mode Then
+                ViewPerspective_d()
+            End If
+
+            Gl.glUseProgram(shader_list.comp_shader)
+            Gl.glUniform3f(phong_cam_pos, eyeX, eyeY, eyeZ)
+            Gl.glUniform1f(bump_out_, -0.005)
+            Gl.glDisable(Gl.GL_BLEND)
+            Gl.glColor3f(0.2, 0.05, 0.0)
+            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+            For k = 0 To decal_matrix_list.Length - 1
+                If decal_matrix_list(k).good Then
+                    Gl.glCallList(decal_matrix_list(k).display_id)
+                End If
+            Next
+
+            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
+            Gl.glColor3f(0.0, 0.0, 0.0)
+            Gl.glUniform1f(bump_out_, -0.015)
+
+            For k = 0 To decal_matrix_list.Length - 1
+                If decal_matrix_list(k).good Then
+                    Gl.glCallList(decal_matrix_list(k).display_id)
+                End If
+            Next
+            Gl.glUseProgram(0)
+            Gl.glDisable(Gl.GL_STENCIL_TEST)
+            If normal_mode > 0 Then
+                Gl.glColor3f(0.5, 0.5, 0.5)
+                Gl.glUseProgram(shader_list.normal_shader)
+                Gl.glUniform1i(view_normal_mode_, normal_mode)
+                Gl.glUniform1f(normal_length_, 0.1)
+                For k = 0 To decal_matrix_list.Length - 1
+                    If decal_matrix_list(k).good Then
+                        Gl.glCallList(decal_matrix_list(k).display_id)
+                    End If
+                Next
+                Gl.glUseProgram(0)
+            End If
+        End If
+        If maploaded And Not m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
+            If Not view_mode Then
+                ViewPerspective_d()
+            End If
+            Gl.glEnable(Gl.GL_CULL_FACE)
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            Gl.glColor3f(0.5, 0.5, 0.5)
+            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+            Gl.glUseProgram(shader_list.decals_shader)
+            If m_show_fog.Checked Then
+                Gl.glUniform1i(f_address5, 1)
+            Else
+                Gl.glUniform1i(f_address5, 0)
+            End If
+            Gl.glUniform1i(c_address5, 0)
+            Gl.glUniform1i(n_address5, 1)
+            Gl.glUniform3f(c_position5, eyeX, eyeY, eyeZ)
+            Gl.glUniform1f(t_address5, lighting_model_level)
+            Gl.glUniform1f(gray_level_5, gray_level)
+            Gl.glUniform1f(gamma_5, gamma_level)
+            Gl.glUniform1f(decal_ambient, lighting_ambient)
+
+            Dim E = Gl.glGetError
+            Gl.glEnable(Gl.GL_BLEND)
+            Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
+            Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE)
+            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+            E = Gl.glGetError
+            ''''''''''''''''''''''''''''''''''''''''''''''''''
+            For k = 0 To decal_matrix_list.Length - 1
+                If decal_matrix_list(k).good Then
+                    Gl.glUniform1f(decal_u_wrap, decal_matrix_list(k).u_wrap)
+                    Gl.glUniform1f(decal_v_wrap, decal_matrix_list(k).v_wrap)
+                    Gl.glUniform1f(decal_influence, decal_matrix_list(k).influence)
+                    Gl.glActiveTexture(Gl.GL_TEXTURE0)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
+                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
+
+                    Gl.glCallList(decal_matrix_list(k).display_id)
+                End If
+            Next
+            Gl.glUseProgram(0)
+            Gl.glEnable(Gl.GL_DEPTH_TEST)
+            Gl.glDisable(Gl.GL_BLEND)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        End If
+        If Not view_mode Then
+            ViewPerspective()
+
+        End If
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Gl.glDepthMask(Gl.GL_TRUE)
+        '---------------------------------------------------------------------------------
+        'decal editing junk
+        If maploaded And EDIT_INCULDERS Then
+            If Not view_mode Then
+                ViewPerspective_d()
+            End If
+            Gl.glDisable(Gl.GL_LIGHTING)
+            Gl.glLineWidth(2.0)
+
+            For k = 0 To decal_matrix_list.Length - 1
+                Dim m = decal_matrix_list(k).matrix
+                If decal_matrix_list(k).good Then
+                    With decal_matrix_list(k)
+                        If k = d_counter Then
+                            If frmBiasing.SHOW_SELECT_MESH Then
+
+                                Gl.glUseProgram(shader_list.comp_shader)
+                                Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
+                                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
+                                Gl.glUniform1f(bump_out_, -0.01)
+                                Gl.glCallList(decal_matrix_list(d_counter).display_id)
+                                Gl.glUseProgram(0)
+                            End If
+                            Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
+
+                            Gl.glPushMatrix()
+                            Gl.glMultMatrixf(decal_matrix_list(k).matrix)
+                            glutWireCube(1.0)
+                            Gl.glPopMatrix()
+
+                            Gl.glBegin(Gl.GL_LINES)
+                            Gl.glVertex3f(.near_clip.x + m(12), .near_clip.y + m(13), .near_clip.z + m(14))
+                            Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
+                            Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
+                            Gl.glEnd()
+                        Else
+                            Gl.glColor4f(0.0, 1.0, 0.0, 1.0)
+
+                            Gl.glPushMatrix()
+                            Gl.glMultMatrixf(decal_matrix_list(k).matrix)
+                            glutWireCube(1.0)
+                            Gl.glPopMatrix()
+                            Gl.glBegin(Gl.GL_LINE_STRIP)
+                            Gl.glVertex3f(.top_left.x, .top_left.y, .top_left.z)
+                            Gl.glVertex3f(.top_right.x, .top_right.y, .top_right.z)
+                            Gl.glVertex3f(.bot_right.x, .bot_right.y, .bot_right.z)
+                            Gl.glVertex3f(.bot_left.x, .bot_left.y, .bot_left.z)
+                            Gl.glVertex3f(.top_left.x, .top_left.y, .top_left.z)
+                            Gl.glEnd()
+
+                            Gl.glBegin(Gl.GL_LINES)
+                            Gl.glVertex3f(.near_clip.x + m(12), .near_clip.y + m(13), .near_clip.z + m(14))
+                            Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
+                            Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
+                            Gl.glEnd()
+                        End If
+                    End With
+                End If
+            Next
+            Gl.glEnable(Gl.GL_LIGHTING)
+            Gl.glLineWidth(1.0)
+        End If
+        Gl.glFrontFace(Gl.GL_CW)
+
+    End Sub
+    Private Sub draw_tanks(ByRef cp() As Single, ByVal model_view() As Double, ByVal projection() As Double, ByVal viewport() As Integer, ByVal sx As Single, ByVal sy As Single, ByVal sz As Single)
+        Dim tdl As Integer = 0
+        If maploaded And Not m_hell_mode.Checked Then
+            If tankID > -1 And m_show_tank_comments.Checked Then
+                m_comment.Visible = True
+                m_clear_tank_comments.Visible = True
+                m_comment.AllowDrop = True
+            Else
+                m_comment.Visible = False
+                m_clear_tank_comments.Visible = False
+            End If
+            Dim cv = 57.2957795
+            For i = 0 To 14
+                Gl.glUseProgram(shader_list.tank_shader)
+                If locations.team_1(i).track_displaylist > -1 Then
+                    Gl.glPushMatrix()
+                    ReDim locations.team_1(i).scrn_coords(3)
+                    Dim y_ = get_Z_at_XY(locations.team_1(i).loc_x, locations.team_1(i).loc_z)
+                    Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
+                    cp(0) = locations.team_1(i).loc_x
+                    cp(1) = y_ + 3
+                    cp(2) = locations.team_1(i).loc_z
+
+                    Glu.gluProject(cp(0), cp(1), cp(2), model_view, projection, viewport, sx, sy, sz)
+
+                    locations.team_1(i).scrn_coords(0) = sx
+                    locations.team_1(i).scrn_coords(1) = sy
+                    locations.team_1(i).scrn_coords(2) = sz
+                    Dim rot = locations.team_1(i).rot_y
+                    Dim rx = (cv * surface_normal.y * Cos(rot)) + (cv * surface_normal.x * Sin(rot))
+                    Dim rz = (cv * surface_normal.x * Cos(rot)) + (cv * -surface_normal.y * Sin(rot))
+                    Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                    Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                    Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+                    tdl = locations.team_1(i).track_displaylist
+                    Gl.glColor3f(0.4!, 0.0!, 0.0!)
+                    If tankID = i Then
+                        Gl.glColor3f(0.4!, 0.0!, 0.0!)
+                        Gl.glClearStencil(0)
+                        Gl.glClear(Gl.GL_STENCIL_BUFFER_BIT)
+
+                        ' Render the mesh into the stencil buffer.
+
+                        Gl.glEnable(Gl.GL_STENCIL_TEST)
+
+                        Gl.glStencilFunc(Gl.GL_ALWAYS, 1, -1)
+                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
+
+                        Gl.glCallList(tdl)
+
+                        ' Render the thick wireframe version.
+
+                        Gl.glStencilFunc(Gl.GL_NOTEQUAL, 1, -1)
+                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
+
+                        Gl.glLineWidth(10)
+                        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
+                        Gl.glColor3f(1.0!, 1.0!, 0.0!)
+
+                        Gl.glCallList(tdl)
+                        Gl.glDisable(Gl.GL_STENCIL_TEST)
+
+                    Else
+                        Gl.glCallList(tdl)
+                    End If
+                    Gl.glPopMatrix()
+                End If
+                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+            Next
+            For i = 0 To 14
+                If locations.team_2(i).track_displaylist > -1 Then
+                    Gl.glPushMatrix()
+                    Gl.glColor3f(0.0, 0.3, 0.0)
+                    ReDim locations.team_2(i).scrn_coords(3)
+                    Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
+                    Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
+                    cp(0) = locations.team_2(i).loc_x
+                    cp(1) = y_ + 3
+                    cp(2) = locations.team_2(i).loc_z
+                    Glu.gluProject(cp(0), cp(1), cp(2), model_view, projection, viewport, sx, sy, sz)
+
+                    locations.team_2(i).scrn_coords(0) = sx
+                    locations.team_2(i).scrn_coords(1) = sy
+                    locations.team_2(i).scrn_coords(2) = sz
+
+                    Dim rot = locations.team_2(i).rot_y
+                    Dim rx = (cv * surface_normal.y * Cos(rot)) + (cv * surface_normal.x * Sin(rot))
+                    Dim rz = (cv * surface_normal.x * Cos(rot)) + (cv * -surface_normal.y * Sin(rot))
+                    Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
+                    Gl.glRotatef(rz, 0.0, 0.0, 1.0)
+                    Gl.glRotatef(rx, -1.0, 0.0, 0.0)
+                    tdl = locations.team_2(i).track_displaylist
+                    If tankID - 100 = i Then
+                        Gl.glClearStencil(0)
+                        Gl.glClear(Gl.GL_STENCIL_BUFFER_BIT)
+
+                        ' Render the mesh into the stencil buffer.
+
+                        Gl.glEnable(Gl.GL_STENCIL_TEST)
+
+                        Gl.glStencilFunc(Gl.GL_ALWAYS, 1, -1)
+                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
+
+                        Gl.glCallList(tdl)
+
+                        ' Render the thick wireframe version.
+
+                        Gl.glStencilFunc(Gl.GL_NOTEQUAL, 1, -1)
+                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
+
+                        Gl.glLineWidth(6)
+                        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
+                        Gl.glColor3f(1.0!, 1.0!, 0.0!)
+
+                        Gl.glCallList(tdl)
+                        Gl.glDisable(Gl.GL_STENCIL_TEST)
+
+                    Else
+                        Gl.glCallList(tdl)
+                    End If
+                    Gl.glPopMatrix()
+                End If
+                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+            Next
+        End If
+        Gl.glUseProgram(0)
 
     End Sub
     Private Sub draw_dome()
@@ -3220,6 +3596,7 @@ nope:
     End Sub
 
     Public Sub draw_scene()
+        If stopGL Then Return
         If Not _STARTED Then Return
         If Not maploaded Then
             Return
@@ -3229,10 +3606,14 @@ nope:
             MessageBox.Show("Unable to make rendering context current")
             End
         End If
+        Dim model_view(16) As Double
+        Dim projection(16) As Double
+        Dim viewport(4) As Integer
+        Dim cp(2) As Single
+        Dim sx, sy, sz As Single
 
-        Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
+        Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT) 'improves colors
         gl_busy = True
-        If stopGL Then Return
 
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
 
@@ -3253,27 +3634,22 @@ nope:
         '----------------------------------------------------
         Gl.glDisable(Gl.GL_SMOOTH)
         '----------------------------------------------------
-        Dim ambientn As Single = 0.8 'm_Ambient_level.TrackBar.Value / 100
-        Dim ambient() As Single = {ambientn, ambientn, ambientn}
         Dim diffusen As Single = 0.9!
         Dim diffuse() As Single = {diffusen, diffusen, diffusen}
+        Dim global_ambient() As Single = {0.99F, 0.99F, 0.99F, 1.0F}
+        '---------------------------------
+        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
 
         Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, diffuse)
         Gl.glMateriali(Gl.GL_FRONT, Gl.GL_SHININESS, 95)
-        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, ambient)
         '----------------------------------------------------
         setup_view()
         '---------------------------------
         ' this gets the point on the screen for chunkIDs
         '---------------------------------
-        Dim model_view(16) As Double
-        Dim projection(16) As Double
-        Dim viewport(4) As Integer
         Gl.glGetDoublev(Gl.GL_MODELVIEW_MATRIX, model_view)
         Gl.glGetDoublev(Gl.GL_PROJECTION_MATRIX, projection)
         Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
-        Dim cp(2) As Single
-        Dim sx, sy, sz As Single
         If m_show_chuckIds.Checked Then
             For i = 0 To maplist.Length - 1
                 ReDim maplist(i).scr_coords(3)
@@ -3290,210 +3666,36 @@ nope:
         'Draw SkyDome
         draw_dome()
         '---------------------------------
-        'draw the lights location
+        'Draw the lights location
         draw_light_sphear()
         '---------------------------------
-        'fog!
+        'Fog
         setup_fog()
-        '---------------------------------
-        Dim global_ambient() As Single = {0.99F, 0.99F, 0.99F, 1.0F}
-        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
         '---------------------------------------------------------------------------------
-        'draw the map sections and seams SOLID
+        'Terrain
         swat2.Restart()
         draw_terrain()
         If frmStats.Visible = True Then
             frmStats.rt_terrian.Text = swat2.ElapsedMilliseconds.ToString
         End If
-
         '---------------------------------------------------------------------------------
+        'Models
         swat2.Restart()
         draw_models()
         If frmStats.Visible = True Then
             frmStats.rt_models.Text = swat2.ElapsedMilliseconds.ToString
         End If
         '---------------------------------------------------------------------------------
+        'Trees
         swat2.Restart()
         draw_trees()
         If frmStats.Visible = True Then
             frmStats.rt_trees.Text = swat2.ElapsedMilliseconds.ToString
         End If
         '---------------------------------------------------------------------------------
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        Gl.glDisable(Gl.GL_CULL_FACE)
-        Gl.glDisable(Gl.GL_ALPHA_TEST)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glDepthMask(Gl.GL_FALSE)
-        'draw decals
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        '-------- decals
+        'Decals
         swat2.Restart()
-        If maploaded And m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
-            If Not view_mode Then
-                ViewPerspective_d()
-            End If
-
-            Gl.glDisable(Gl.GL_CULL_FACE)
-            Gl.glUseProgram(shader_list.comp_shader)
-            Gl.glUniform3f(phong_cam_pos, eyeX, eyeY, eyeZ)
-            Gl.glUniform1f(bump_out_, -0.005)
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glColor3f(0.2, 0.05, 0.0)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            For k = 0 To decal_matrix_list.Length - 1
-                If decal_matrix_list(k).good Then
-                    Gl.glCallList(decal_matrix_list(k).display_id)
-                End If
-            Next
-
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-            Gl.glColor3f(0.0, 0.0, 0.0)
-            Gl.glUniform1f(bump_out_, -0.015)
-
-            For k = 0 To decal_matrix_list.Length - 1
-                If decal_matrix_list(k).good Then
-                    Gl.glCallList(decal_matrix_list(k).display_id)
-                End If
-            Next
-            Gl.glUseProgram(0)
-            Gl.glDisable(Gl.GL_STENCIL_TEST)
-            If normal_mode > 0 Then
-                Gl.glColor3f(0.5, 0.5, 0.5)
-                Gl.glUseProgram(shader_list.normal_shader)
-                Gl.glUniform1i(view_normal_mode_, normal_mode)
-                Gl.glUniform1f(normal_length_, 0.1)
-                For k = 0 To decal_matrix_list.Length - 1
-                    If decal_matrix_list(k).good Then
-                        Gl.glCallList(decal_matrix_list(k).display_id)
-                    End If
-                Next
-                Gl.glUseProgram(0)
-            End If
-        End If
-        If maploaded And Not m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
-            If Not view_mode Then
-                ViewPerspective_d()
-            End If
-            Gl.glDisable(Gl.GL_CULL_FACE)
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glColor3f(0.5, 0.5, 0.5)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            Gl.glUseProgram(shader_list.decals_shader)
-            If m_show_fog.Checked Then
-                Gl.glUniform1i(f_address5, 1)
-            Else
-                Gl.glUniform1i(f_address5, 0)
-            End If
-            Gl.glUniform1i(c_address5, 0)
-            Gl.glUniform1i(n_address5, 1)
-            Gl.glUniform3f(c_position5, eyeX, eyeY, eyeZ)
-            Gl.glUniform1f(t_address5, lighting_model_level)
-            Gl.glUniform1f(gray_level_5, gray_level)
-            Gl.glUniform1f(gamma_5, gamma_level)
-            Gl.glUniform1f(decal_ambient, lighting_ambient)
-
-            Dim E = Gl.glGetError
-            Gl.glEnable(Gl.GL_BLEND)
-            Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
-            Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE)
-            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-            E = Gl.glGetError
-            ''''''''''''''''''''''''''''''''''''''''''''''''''
-            For k = 0 To decal_matrix_list.Length - 1
-                If decal_matrix_list(k).good Then
-                    Gl.glUniform1f(decal_u_wrap, decal_matrix_list(k).u_wrap)
-                    Gl.glUniform1f(decal_v_wrap, decal_matrix_list(k).v_wrap)
-                    Gl.glUniform1f(decal_influence, decal_matrix_list(k).influence)
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
-
-                    Gl.glCallList(decal_matrix_list(k).display_id)
-                End If
-            Next
-            Gl.glUseProgram(0)
-            Gl.glEnable(Gl.GL_DEPTH_TEST)
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        End If
-        If Not view_mode Then
-            ViewPerspective()
-
-        End If
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glDepthMask(Gl.GL_TRUE)
-        '---------------------------------------------------------------------------------
-        'decal editing junk
-        If maploaded And EDIT_INCULDERS Then
-            If Not view_mode Then
-                ViewPerspective_d()
-            End If
-            Gl.glDisable(Gl.GL_LIGHTING)
-
-            For k = 0 To decal_matrix_list.Length - 1
-                Dim m = decal_matrix_list(k).matrix
-                If decal_matrix_list(k).good Then
-                    With decal_matrix_list(k)
-                        If k = d_counter Then
-                            If frmBiasing.SHOW_SELECT_MESH Then
-
-                                Gl.glLineWidth(1.0)
-                                Gl.glUseProgram(shader_list.comp_shader)
-                                Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
-                                Gl.glLineWidth(1.0)
-                                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-                                Gl.glUniform1f(bump_out_, -0.01)
-                                Gl.glCallList(decal_matrix_list(d_counter).display_id)
-                                Gl.glUseProgram(0)
-                            End If
-                            Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
-
-                            Gl.glPushMatrix()
-                            Gl.glMultMatrixf(decal_matrix_list(k).matrix)
-                            glutWireCube(1.0)
-                            Gl.glPopMatrix()
-
-                            Gl.glBegin(Gl.GL_LINES)
-                            Gl.glVertex3f(.near_clip.x + m(12), .near_clip.y + m(13), .near_clip.z + m(14))
-                            Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
-                            Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
-                            Gl.glEnd()
-                            Gl.glLineWidth(2.0)
-                        Else
-                            Gl.glLineWidth(2.0)
-                            Gl.glColor4f(0.0, 1.0, 0.0, 1.0)
-
-                            Gl.glPushMatrix()
-                            Gl.glMultMatrixf(decal_matrix_list(k).matrix)
-                            glutWireCube(1.0)
-                            Gl.glPopMatrix()
-                            Gl.glBegin(Gl.GL_LINE_STRIP)
-                            Gl.glVertex3f(.top_left.x, .top_left.y, .top_left.z)
-                            Gl.glVertex3f(.top_right.x, .top_right.y, .top_right.z)
-                            Gl.glVertex3f(.bot_right.x, .bot_right.y, .bot_right.z)
-                            Gl.glVertex3f(.bot_left.x, .bot_left.y, .bot_left.z)
-                            Gl.glVertex3f(.top_left.x, .top_left.y, .top_left.z)
-                            Gl.glEnd()
-
-                            Gl.glBegin(Gl.GL_LINES)
-                            Gl.glVertex3f(.near_clip.x + m(12), .near_clip.y + m(13), .near_clip.z + m(14))
-                            Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
-                            Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
-                            Gl.glEnd()
-                        End If
-                    End With
-                End If
-            Next
-            Gl.glEnable(Gl.GL_LIGHTING)
-            Gl.glLineWidth(1.0)
-        End If
+        draw_decals()
         If frmStats.Visible = True Then
             frmStats.rt_decals.Text = swat2.ElapsedMilliseconds.ToString
         End If
@@ -3501,8 +3703,13 @@ nope:
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         ViewPerspective()
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-
-        '---------------------------------
+        '---------------------------------------------------------------------------------
+        'Tanks
+        draw_tanks(cp, model_view, projection, viewport, sx, sy, sz)
+        '---------------------------------------------------------------------------------
+        'Base locations
+        draw_base_rings()
+        '---------------------------------------------------------------------------------
         If m_show_cursor.Checked And Not m_hell_mode.Checked Then
             Gl.glDisable(Gl.GL_LIGHTING)
             Gl.glColor3f(1.0, 1.0, 0.0)
@@ -3513,142 +3720,10 @@ nope:
             End If
         End If
         Gl.glEnable(Gl.GL_LIGHTING)
-        '------------------------------
-        ' Display tanks.. if there are some
-        Dim tdl As Integer = 0
-        If maploaded And Not m_hell_mode.Checked Then
-            If tankID > -1 And m_show_tank_comments.Checked Then
-                m_comment.Visible = True
-                m_clear_tank_comments.Visible = True
-                m_comment.AllowDrop = True
-            Else
-                m_comment.Visible = False
-                m_clear_tank_comments.Visible = False
-            End If
-            Dim cv = 57.2957795
-            For i = 0 To 14
-                Gl.glUseProgram(shader_list.tank_shader)
-                If locations.team_1(i).track_displaylist > -1 Then
-                    Gl.glPushMatrix()
-                    ReDim locations.team_1(i).scrn_coords(3)
-                    Dim y_ = get_Z_at_XY(locations.team_1(i).loc_x, locations.team_1(i).loc_z)
-                    Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
-                    cp(0) = locations.team_1(i).loc_x
-                    cp(1) = y_ + 3
-                    cp(2) = locations.team_1(i).loc_z
-
-                    Glu.gluProject(cp(0), cp(1), cp(2), model_view, projection, viewport, sx, sy, sz)
-
-                    locations.team_1(i).scrn_coords(0) = sx
-                    locations.team_1(i).scrn_coords(1) = sy
-                    locations.team_1(i).scrn_coords(2) = sz
-                    Dim rot = locations.team_1(i).rot_y
-                    Dim rx = (cv * surface_normal.y * Cos(rot)) + (cv * surface_normal.x * Sin(rot))
-                    Dim rz = (cv * surface_normal.x * Cos(rot)) + (cv * -surface_normal.y * Sin(rot))
-                    Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
-                    Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
-                    Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
-                    tdl = locations.team_1(i).track_displaylist
-                    Gl.glColor3f(0.4!, 0.0!, 0.0!)
-                    If tankID = i Then
-                        Gl.glColor3f(0.4!, 0.0!, 0.0!)
-                        Gl.glClearStencil(0)
-                        Gl.glClear(Gl.GL_STENCIL_BUFFER_BIT)
-
-                        ' Render the mesh into the stencil buffer.
-
-                        Gl.glEnable(Gl.GL_STENCIL_TEST)
-
-                        Gl.glStencilFunc(Gl.GL_ALWAYS, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glCallList(tdl)
-
-                        ' Render the thick wireframe version.
-
-                        Gl.glStencilFunc(Gl.GL_NOTEQUAL, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glLineWidth(10)
-                        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
-                        Gl.glColor3f(1.0!, 1.0!, 0.0!)
-
-                        Gl.glCallList(tdl)
-                        Gl.glDisable(Gl.GL_STENCIL_TEST)
-
-                    Else
-                        Gl.glCallList(tdl)
-                    End If
-                    Gl.glPopMatrix()
-                End If
-                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-            Next
-            For i = 0 To 14
-                If locations.team_2(i).track_displaylist > -1 Then
-                    Gl.glPushMatrix()
-                    Gl.glColor3f(0.0, 0.3, 0.0)
-                    ReDim locations.team_2(i).scrn_coords(3)
-                    Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
-                    Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
-                    cp(0) = locations.team_2(i).loc_x
-                    cp(1) = y_ + 3
-                    cp(2) = locations.team_2(i).loc_z
-                    Glu.gluProject(cp(0), cp(1), cp(2), model_view, projection, viewport, sx, sy, sz)
-
-                    locations.team_2(i).scrn_coords(0) = sx
-                    locations.team_2(i).scrn_coords(1) = sy
-                    locations.team_2(i).scrn_coords(2) = sz
-
-                    Dim rot = locations.team_2(i).rot_y
-                    Dim rx = (cv * surface_normal.y * Cos(rot)) + (cv * surface_normal.x * Sin(rot))
-                    Dim rz = (cv * surface_normal.x * Cos(rot)) + (cv * -surface_normal.y * Sin(rot))
-                    Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
-                    Gl.glRotatef(rz, 0.0, 0.0, 1.0)
-                    Gl.glRotatef(rx, -1.0, 0.0, 0.0)
-                    tdl = locations.team_2(i).track_displaylist
-                    If tankID - 100 = i Then
-                        Gl.glClearStencil(0)
-                        Gl.glClear(Gl.GL_STENCIL_BUFFER_BIT)
-
-                        ' Render the mesh into the stencil buffer.
-
-                        Gl.glEnable(Gl.GL_STENCIL_TEST)
-
-                        Gl.glStencilFunc(Gl.GL_ALWAYS, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glCallList(tdl)
-
-                        ' Render the thick wireframe version.
-
-                        Gl.glStencilFunc(Gl.GL_NOTEQUAL, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glLineWidth(6)
-                        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
-                        Gl.glColor3f(1.0!, 1.0!, 0.0!)
-
-                        Gl.glCallList(tdl)
-                        Gl.glDisable(Gl.GL_STENCIL_TEST)
-
-                    Else
-                        Gl.glCallList(tdl)
-                    End If
-                    Gl.glPopMatrix()
-                End If
-                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-            Next
-        End If
-        Gl.glUseProgram(0)
-        '---------------------------------
-        ' base locations
-        draw_base_rings()
-
-        '---------------------------------
         '------------------------------------
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
 
-        'draw the water. IF there is water?
+        'Draw the water. IF there is water....
         If water.IsWater And maploaded And m_show_water.Checked And Not m_hell_mode.Checked Then
             Gl.glEnable(Gl.GL_LIGHTING)
             Gl.glEnable(Gl.GL_DEPTH_TEST)
@@ -3945,7 +4020,7 @@ nope:
         'draw the grid
         Gl.glColor3f(0.5!, 0.5!, 0.5!)
         Gl.glLineWidth(1.0!)
-        If xy = 0 Then Return ' no data lodaed and the 'step xy' causes an infinite loop
+        If xy = 0 Then Return ' no data loaded and the 'step xy' causes an infinite loop
         Gl.glBegin(Gl.GL_LINES)
         For y As Single = xy - xy To (xy * 11.0!) Step xy
             Gl.glVertex3f(x1 + uc.x, -y + uc.y, -0.2!)
@@ -6278,7 +6353,7 @@ no_move_xz:
         Dim swat As New Stopwatch
         While _STARTED
             check_mouse()
-            If Not M_FLY And maploaded Then
+            If Not M_FLY And Not m_Orbit_Light.Checked And maploaded Then
                 angle_offset = 0
                 If need_update() Then
                     'If we need to update the screen, lets caclulate draw times and update the timer.

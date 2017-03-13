@@ -30,7 +30,7 @@ Module Globals
     Public selected_map_hit As Integer = 0
 
 
-    Public decal_depth_size As Integer = 32
+    Public decal_grid_size As Integer = 32
     Public decal_count As Integer = 0
     Public decal_data() As vertex_data
     Public largestAnsio As Single

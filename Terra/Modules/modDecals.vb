@@ -18,6 +18,8 @@ Module modDecals
     End Structure
 
     Public Sub lightTransform(decal As Integer, depth_flag As Boolean)
+        'special projection for decals.
+        'this projection is aligined to the decals face.
         Dim c_ As vect3 = decal_matrix_list(decal).cam_pos
         Dim l_ As vect3 = decal_matrix_list(decal).look_at
         Dim tl = decal_matrix_list(decal).top_left
@@ -28,7 +30,7 @@ Module modDecals
         Dim c_pos = decal_matrix_list(decal).cam_location
         Dim near = decal_matrix_list(decal).near_clip
         Dim far = decal_matrix_list(decal).far_clip
-        Gl.glViewport(0, 0, decal_depth_size, decal_depth_size)     'Gl.glLoadIdentity() 'Reset The Matrix
+        Gl.glViewport(0, 0, decal_grid_size, decal_grid_size)     'Gl.glLoadIdentity() 'Reset The Matrix
         Gl.glDisable(Gl.GL_LIGHTING)
         Dim scale As Single = 1.0 'pb1.Height / pb1.Width
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
@@ -62,7 +64,7 @@ Module modDecals
     Public Sub mask_makers(ByVal decal As Integer)
         Gl.glColor3f(0.0, 0.0, 0.0)
         model_too = False
-        If frmMain.m_show_models.Checked And Not decal_matrix_list(decal).exclude Then
+        If frmMain.m_show_models.Checked And Not decal_matrix_list(decal).exclude Then 'If excluded, we dont want models affecting the decals geo.
             Gl.glColor3f(0, 0.0, 0.0)
             For model As UInt32 = 0 To Models.matrix.Length - 1
                 For k = 0 To Models.models(model)._count - 1
@@ -97,7 +99,7 @@ Module modDecals
     End Sub
     Public Sub draw_models(ByVal decal As Integer)
         If frmMain.m_show_models.Checked Then
-            If Not decal_matrix_list(decal).exclude Then
+            If Not decal_matrix_list(decal).exclude Then 'if excluded, we dont want models affecting the decals geo.
                 For model As UInt32 = 0 To Models.matrix.Length - 1
                     For k = 0 To Models.models(model)._count - 1
                         If Model_Matrix_list(model).mask Then
@@ -112,6 +114,7 @@ Module modDecals
         End If
     End Sub
     Public Sub remake_Decal(decal As Integer)
+        'used to update a decal in realtime using the bias tool.
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, fboID)
         Gl.glPushMatrix()
         make_decal_depthMap(decal)
@@ -121,6 +124,7 @@ Module modDecals
 
     End Sub
     Public Sub attach_texture_to_FBO(ByVal textureID As Integer)
+        'attaches the texture we render to.
         Gl.glActiveTexture(Gl.GL_TEXTURE0) 'ensure we are using texture 0
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureID)
         Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, textureID, 0)
@@ -128,12 +132,11 @@ Module modDecals
     End Sub
 
     Public Sub make_decal_depthMap(decal)
-
-        'Gl.glDrawBuffers(2, drawbuffer0(0))
-        'frmMain.attache_texture(coMapID)
+        'This makes projects the decal over the models and terrain and fits the conture to them.
+        'If the decal is excluded, Models are not rendered and wont effect the decals geo.
         attach_texture_to_FBO(coMapID)
         'check status
-        Dim er = Gl.glGetError
+        'Dim er = Gl.glGetError
         'ResizeGL()
         Gl.glPushMatrix()
         'lightTransform_preview()
@@ -163,8 +166,8 @@ Module modDecals
         'mask_makers(decal)
         Gl.glColor3f(1.0, 0.0, 0.0) 'very important to shader!
         draw_terrain(decal)
-        Dim ar1((decal_depth_size ^ 2) * 3) As Single
-        Gl.glReadPixels(0, 0, decal_depth_size, decal_depth_size, Gl.GL_RGB, Gl.GL_FLOAT, ar1)
+        Dim ar1((decal_grid_size ^ 2) * 3) As Single
+        Gl.glReadPixels(0, 0, decal_grid_size, decal_grid_size, Gl.GL_RGB, Gl.GL_FLOAT, ar1)
 
 
         '===============================================================================
@@ -177,8 +180,8 @@ Module modDecals
         mask_makers(decal)
         Gl.glColor3f(1.0, 1.0, 0.0) 'very important to shader!
         draw_models(decal)
-        Dim ar2((decal_depth_size ^ 2) * 3) As Single
-        Gl.glReadPixels(0, 0, decal_depth_size, decal_depth_size, Gl.GL_RGB, Gl.GL_FLOAT, ar2)
+        Dim ar2((decal_grid_size ^ 2) * 3) As Single
+        Gl.glReadPixels(0, 0, decal_grid_size, decal_grid_size, Gl.GL_RGB, Gl.GL_FLOAT, ar2)
         '===============================================================================
         Gl.glUseProgram(0)
 
@@ -193,42 +196,38 @@ Module modDecals
 
         attach_texture_to_FBO(0)
 
-        Dim c As Integer = decal_depth_size / 2
+        Dim c As Integer = (decal_grid_size / 2) - 1.0
 
         make_decal_mesh(decal)
 
-        Dim w As Integer = decal_depth_size
-        For i = 0 To decal_matrix_list(decal).decal_count
-            Dim x As Integer = decal_matrix_list(decal).decal_data(i).x + c
-            Dim y As Integer = (decal_matrix_list(decal).decal_data(i).y + c) * w
+        Dim w As Integer = decal_grid_size
+        For i = 0 To decal_matrix_list(decal).decal_count - 1
+            Dim x As Integer = decal_matrix_list(decal).decal_data(i).x
+            Dim y As Integer = (decal_matrix_list(decal).decal_data(i).y) * w
             Dim p = (x + y) * 3
             Dim v As vect3
             v.x = ar1(p + 0)
             v.y = ar1(p + 1)
             v.z = ar1(p + 2)
-            If decal_matrix_list(decal).flags = &H10000 Then
-                decal_matrix_list(decal).decal_data(i).x = v.x
-                decal_matrix_list(decal).decal_data(i).y = v.y
-                decal_matrix_list(decal).decal_data(i).z = v.z
-            Else
 
-                decal_matrix_list(decal).decal_data(i).x = v.x
-                decal_matrix_list(decal).decal_data(i).y = v.y
-                decal_matrix_list(decal).decal_data(i).z = v.z
-            End If
-
+            decal_matrix_list(decal).decal_data(i).x = v.x
+            decal_matrix_list(decal).decal_data(i).y = v.y
+            decal_matrix_list(decal).decal_data(i).z = v.z
         Next
-        If True Then
-            If decal_matrix_list(decal).decal_data.Length > 1 Then
+        'need to find a way to reduce the decals poly count. Its a waste drawing 2048 polys on a flat surface
+
+        If decal_matrix_list(decal).decal_data.Length > 1 Then
+            Try
                 normalize_decal(decal)
                 agv_mesh_norms(decal_matrix_list(decal))
-                If Gl.glIsList(decal_matrix_list(decal).display_id) Then
+                reduce_polys(decal, ar1)
+                If decal_matrix_list(decal).display_id > 0 Then
                     Gl.glDeleteLists(decal_matrix_list(decal).display_id, 1)
                     Gl.glFinish()
                 End If
                 decal_matrix_list(decal).display_id = Gl.glGenLists(1)
                 Gl.glNewList(decal_matrix_list(decal).display_id, Gl.GL_COMPILE)
-                'Gl.glColor3f(0.5, 0.5, 0.5)
+
                 Gl.glBegin(Gl.GL_TRIANGLES)
                 Dim cc As Integer = 0
                 With decal_matrix_list(decal)
@@ -262,20 +261,125 @@ Module modDecals
                 Gl.glEnd()
                 Gl.glEndList()
 
-            End If
+            Catch ex As Exception
+
+            End Try
         End If
-        er = Gl.glGetError
+        'er = Gl.glGetError
         Gl.glUseProgram(0)
-        'blur_shadow(decal)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        'attache_texture(0)
-        ' switch back to window-system-provided framebuffer
-        'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        'Gl.glDrawBuffer(Gl.GL_BACK)
-        'Gl.glPopMatrix()
+    End Sub
+    Private Sub reduce_polys(ByVal decal As Integer, ar1() As Single)
+        'I'm thinking the best way to do this is find the variance of the decals Y across X and Z.
+        'I found it works better to sample less of the decals points.
+        'I average the Y normal and use that to determine the variance.
+        '
+
+        Dim Variance As Single
+        Dim running As Double
+        Dim count As Integer = (decal_grid_size) * 3
+        Dim check As Double = 0
+
+        'loop thru and average the  normal;
+        For i = 0 To (decal_matrix_list(decal).decal_count / 6) - (decal_grid_size - 1) Step ((decal_grid_size - 1)) * 6.0
+            For j = 0 To ((decal_grid_size - 1) * 6) - 1 Step 23.125
+                running += 1.0 - decal_matrix_list(decal).decal_data(CInt(i * 6) + CInt(j)).ny
+                check += 1
+                Dim p = CInt(i * 6) + CInt(j)
+                'Debug.WriteLine("I:" + i.ToString("0000") + " J:" + j.ToString("0000") + " P:" + p.ToString("0000"))
+            Next
+        Next
+        Variance = running / check ' get average variance
+        Dim reduction As Integer = 4
+        If frmBiasing.Visible Then
+            frmMain.tb1.Text += " Variance:" + Variance.ToString("00.000000")
+        End If
+        If Variance > 0.02 Then Return
+        If Variance > 0.005 Then
+            reduction = 8.0
+        End If
+        If Variance <= 0.005 Then
+            reduction = 4.0
+        End If
+        '==================================================================================================
+        Dim decal_count As Integer = 0
+        'for now im going to use the bias editor so i can look at these 2 variance values.
+        ReDim decal_matrix_list(decal).decal_data((decal_grid_size ^ 2) * 6)
+        decal_matrix_list(decal).decal_count = 0
+
+        Dim uvScale = 1.0# / CSng(decal_grid_size - 2.0)
+        Dim scale = 1.0 / CSng(decal_grid_size)
+        Dim w = (decal_grid_size - 1) / reduction
+        With decal_matrix_list(decal)
+            Dim fixshift As Boolean = False
+
+            For j As Single = 0 To decal_grid_size - w Step w
+                For i As Single = 0 To decal_grid_size - w Step w
+
+                    topleft.x = Int(i)
+                    topleft.y = Int(j)
+                    topleft.z = -0.5
+                    topleft.u = Int(i - 1) * uvScale
+                    topleft.v = Int(j - 1) * uvScale
+
+
+                    topRight.x = Int(i + w)
+                    topRight.y = Int(j)
+                    topRight.z = -0.5
+                    topRight.u = Int((i - 1) + w) * uvScale
+                    topRight.v = Int(j - 1) * uvScale
+
+                    bottomRight.x = Int(i + w)
+                    bottomRight.y = Int(j + w)
+                    bottomRight.z = -0.5
+                    bottomRight.u = Int((i - 1) + w) * uvScale
+                    bottomRight.v = Int((j - 1) + w) * uvScale
+
+                    bottomleft.x = Int(i)
+                    bottomleft.y = Int(j + w)
+                    bottomleft.z = -0.5
+                    bottomleft.u = Int((i - 1)) * uvScale
+                    bottomleft.v = Int((j - 1) + w) * uvScale
+
+                    save_vertex(topRight, decal, ar1, decal_count, reduction)
+                    decal_count += 1
+                    save_vertex(bottomRight, decal, ar1, decal_count, reduction)
+                    decal_count += 1
+                    save_vertex(topleft, decal, ar1, decal_count, reduction)
+                    decal_count += 1
+
+                    save_vertex(topleft, decal, ar1, decal_count, reduction)
+                    decal_count += 1
+                    save_vertex(bottomRight, decal, ar1, decal_count, reduction)
+                    decal_count += 1
+                    save_vertex(bottomleft, decal, ar1, decal_count, reduction)
+                    decal_count += 1
+
+                Next
+            Next
+        End With
+        decal_matrix_list(decal).decal_count = decal_count
+        ReDim Preserve decal_matrix_list(decal).decal_data(decal_matrix_list(decal).decal_count)
+        'sucks but the normals have to be recalculated.
+        normalize_decal(decal)
+        agv_mesh_norms(decal_matrix_list(decal))
 
     End Sub
+    Private Sub save_vertex(ByVal vt As vertex_data, ByVal decal As Integer, ar1() As Single, ByVal i As Integer, ByVal reduction As Single)
+        Dim x As Integer = vt.x
+        Dim y As Integer = (vt.y) * (decal_grid_size)
+        Dim p = (x + y) * 3
+        Dim v As vect3
+        v.x = ar1(p + 0)
+        v.y = ar1(p + 1)
+        v.z = ar1(p + 2)
+        decal_matrix_list(decal).decal_data(i).x = v.x
+        decal_matrix_list(decal).decal_data(i).y = v.y
+        decal_matrix_list(decal).decal_data(i).z = v.z
+        decal_matrix_list(decal).decal_data(i).u = vt.u
+        decal_matrix_list(decal).decal_data(i).v = vt.v
 
+    End Sub
     'Private Sub transpose_matrix(ByRef Ms() As Single, ByRef Md() As Single)
     '    ReDim Md(16)
     '    Md(0) = Ms(0)
@@ -435,7 +539,7 @@ skipthis:
         If Not decal_matrix_list(k).good Then Return False
 
         Dim name, norm As String
-        'decal_matrix_list(k).depth_map_id = frmMain.Make_Depth_texture(decal_depth_size)
+        'decal_matrix_list(k).depth_map_id = frmMain.Make_Depth_texture(decal_grid_size)
         make_decal_depthMap(k)
         name = decal_matrix_list(k).decal_texture
         For i = 0 To decal_cache.Length - 1
@@ -588,72 +692,42 @@ saveit:
             .cam_location.y = .matrix(13)
             .cam_location.z = .matrix(14)
 
-            'Dim ln As Single = Sqrt((.cam_pos.x ^ 2) + (.cam_pos.y ^ 2) + (.cam_pos.z ^ 2))
-            '.cam_pos /= ln
-            '.cam_pos += .look_at
         End With
 
-        'Dim m = decal_matrix_list(map).matrix
-        'Dim sx = Sqrt((m(0) ^ 2) + (m(1) ^ 2) + (m(3) ^ 2))
-        'Dim sy = Sqrt((m(4) ^ 2) + (m(5) ^ 2) + (m(6) ^ 2))
-        'Dim sz = Sqrt((m(8) ^ 2) + (m(9) ^ 2) + (m(10) ^ 2))
-
-        'Dim r1 = sx + sy + sz
-        ' r1 = r1 / 2
-
-
         Dim mesh_size As Integer
-        'If r1 >= 20 Then
-        '    mesh_size = 64
-        'End If
-        'If r1 >= 15 And r1 < 20 Then
-        '    mesh_size = 48
-        'End If
-        'If r1 >= 10 And r1 < 15 Then
-        '    mesh_size = 32
-        'End If
-        'If r1 >= 5 And r1 < 10 Then
-        '    mesh_size = 16
-        'End If
-        'If r1 < 5 Then
-        '    mesh_size = 8
-        'End If
-        'mesh_size = 8
-        mesh_size = decal_depth_size
-        ' Gl.glColor3f(0.6, 0.6, 0.6)
+        mesh_size = decal_grid_size
         ReDim decal_matrix_list(map).decal_data((mesh_size ^ 2) * 6)
         decal_matrix_list(map).decal_count = 0
 
-        Dim uvScale = 1.0# / CSng(mesh_size)
+        Dim uvScale = 1.0# / CSng(mesh_size - 1)
         Dim w_ = mesh_size / 2.0#
         Dim h_ = mesh_size / 2.0#
         Dim scale = 1.0 / CSng(mesh_size)
-        Gl.glBegin(Gl.GL_TRIANGLES)
         For j As Single = 0 To mesh_size - 2
             For i As Single = 0 To mesh_size - 2
 
 
-                topleft.x = (i) - w_
-                topleft.y = (j) - h_
+                topleft.x = (i)
+                topleft.y = (j)
                 topleft.z = -0.5
                 topleft.u = (i) * uvScale
                 topleft.v = (j) * uvScale
 
 
-                topRight.x = (i + 1) - w_
-                topRight.y = (j) - h_
+                topRight.x = (i + 1)
+                topRight.y = (j)
                 topRight.z = -0.5
                 topRight.u = (i + 1) * uvScale
                 topRight.v = (j) * uvScale
 
-                bottomRight.x = (i + 1) - w_
-                bottomRight.y = (j + 1) - h_
+                bottomRight.x = (i + 1)
+                bottomRight.y = (j + 1)
                 bottomRight.z = -0.5
                 bottomRight.u = (i + 1) * uvScale
                 bottomRight.v = (j + 1) * uvScale
 
-                bottomleft.x = (i) - w_
-                bottomleft.y = (j + 1) - h_
+                bottomleft.x = (i)
+                bottomleft.y = (j + 1)
                 bottomleft.z = -0.5
                 bottomleft.u = (i) * uvScale
                 bottomleft.v = (j + 1) * uvScale
@@ -667,24 +741,28 @@ saveit:
         Next
         ReDim Preserve decal_matrix_list(map).decal_data(decal_matrix_list(map).decal_count)
 
-        Gl.glEnd()
-
     End Sub
-    Public Sub store_decal_triangle(ByVal vt1 As vertex_data, ByVal vt2 As vertex_data, ByVal vt3 As vertex_data, ByRef scale As Single, ByVal map As Int32)
+    Public Sub store_decal_triangle(ByVal vt1 As vertex_data, ByVal vt2 As vertex_data, ByVal vt3 As vertex_data, ByRef scale As Single, ByVal decal As Int32)
         tri_count += 1
         'add offsets
-        'vt1 = transform(decal_matrix_list(map).matrix, vt1, scale, map)
-        'vt2 = transform(decal_matrix_list(map).matrix, vt2, scale, map)
-        'vt3 = transform(decal_matrix_list(map).matrix, vt3, scale, map)
+        'vt1 = transform(decal_matrix_list(decal).matrix, vt1, scale, decal)
+        'vt2 = transform(decal_matrix_list(decal).matrix, vt2, scale, decal)
+        'vt3 = transform(decal_matrix_list(decal).matrix, vt3, scale, decal)
         'vt1.y = get_Z_at_XY(vt1.x, vt1.z) + 0.02
         'vt2.y = get_Z_at_XY(vt2.x, vt2.z) + 0.02
         'vt3.y = get_Z_at_XY(vt3.x, vt3.z) + 0.02
+        'Dim shift = (decal_grid_size / 2) - 1
+        'vt1.x -= shift
+        'vt2.x -= shift
+        'vt3.x -= shift
+        'vt1.y -= shift
+        'vt2.y -= shift
+        'vt3.y -= shift
 
-
-        decal_matrix_list(map).decal_data(decal_matrix_list(map).decal_count) = vt1
-        decal_matrix_list(map).decal_data(decal_matrix_list(map).decal_count + 1) = vt2
-        decal_matrix_list(map).decal_data(decal_matrix_list(map).decal_count + 2) = vt3
-        decal_matrix_list(map).decal_count += 3
+        decal_matrix_list(decal).decal_data(decal_matrix_list(decal).decal_count) = vt1
+        decal_matrix_list(decal).decal_data(decal_matrix_list(decal).decal_count + 1) = vt2
+        decal_matrix_list(decal).decal_data(decal_matrix_list(decal).decal_count + 2) = vt3
+        decal_matrix_list(decal).decal_count += 3
 
 
     End Sub
@@ -985,9 +1063,9 @@ saveit:
         Gl.glGetFloatv(Gl.GL_MAX_TEXTURE_SIZE, max_size)
 
         'Dim drawbuffs() = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_NONE}
-        coMapID = Make_Depth_texture(decal_depth_size)
-        coMapID2 = Make_Depth_texture(decal_depth_size)
-        ' utility_texture = Make_Depth_texture(decal_depth_size)
+        coMapID = Make_Depth_texture(decal_grid_size)
+        coMapID2 = Make_Depth_texture(decal_grid_size)
+        ' utility_texture = Make_Depth_texture(decal_grid_size)
         Dim er = Gl.glGetError
         ' create a framebuffer object
         '-------------------------------------------------------------------------------
@@ -1001,7 +1079,7 @@ saveit:
         Gl.glGenRenderbuffersEXT(1, depthID)
         'er = Gl.glGetError
         Gl.glBindRenderbufferEXT(Gl.GL_RENDERBUFFER_EXT, depthID)
-        Gl.glRenderbufferStorageEXT(Gl.GL_RENDERBUFFER_EXT, Gl.GL_DEPTH_COMPONENT, decal_depth_size, decal_depth_size)
+        Gl.glRenderbufferStorageEXT(Gl.GL_RENDERBUFFER_EXT, Gl.GL_DEPTH_COMPONENT, decal_grid_size, decal_grid_size)
         'er = Gl.glGetError
         Gl.glFramebufferRenderbufferEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_DEPTH_ATTACHMENT_EXT, Gl.GL_RENDERBUFFER_EXT, depthID)
         er = Gl.glGetError

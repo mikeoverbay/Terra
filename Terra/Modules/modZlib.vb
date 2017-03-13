@@ -695,22 +695,32 @@ dont_grab_this:
                 m_s = main_layer_tex.Width / tile_width
                 ms_i = m_s
             End If
+            If ms_i = 293 And main_layer_tex.Width = 4096 Then
+                main_layer_tex = ResizeImage(main_layer_tex, New Size(4116, 4116))
+                m_s = main_layer_tex.Width / tile_width
+                ms_i = m_s
+            End If
+
             Dim text_w = main_layer_tex.Width
             cnt = 0
+            'Debug.WriteLine("========================")
             Dim map_pnt As Integer = 0
             For row = 0 To w - 1
                 For col = 0 To w - 1
+                    'If map_pnt = 57 Then Stop
+
                     maplist(cnt).col = col
                     maplist(cnt).row = row
                     frmMain.tb1.Text = "Getting the Tarrain Textures (" + cnt.ToString + ")"
                     Application.DoEvents()
                     Dim x1 As Integer = (main_layer_tex.Width / 2) - (((maplist(cnt).location.x + 50) / 100) * m_s)
                     Dim y1 As Integer = (main_layer_tex.Width / 2) - (((maplist(cnt).location.y - 50) / 100) * m_s) - m_s
-
+                    'Dim x = x1 / m_s
+                    'Dim y = y1 / m_s
+                    'Debug.WriteLine("X:" + x.ToString("0000") + " | Y:" + y.ToString("0000"))
 
                     Dim rec As New Rectangle(x1, y1, m_s, m_s)
-                    Dim s As Integer = m_s
-                    map_layers(cnt).color_tex = New Bitmap(s, s, System.Drawing.Imaging.PixelFormat.Format24bppRgb)
+                    map_layers(cnt).color_tex = New Bitmap(CInt(m_s), CInt(m_s), System.Drawing.Imaging.PixelFormat.Format24bppRgb)
                     Dim g As Graphics = Graphics.FromImage(map_layers(cnt).color_tex)
                     g.DrawImage(main_layer_tex, 0, 0, rec, GraphicsUnit.Pixel)
 
@@ -723,8 +733,6 @@ dont_grab_this:
                         If map_layers(cnt).layers(layer).l_name.ToLower.Contains("color_tex") Then
                             map_layers(cnt).layers(layer).text_id = t_id
                             map_layers(cnt).main_texture = layer
-                            'have to mod the mask to exclude the main texture 
-                            ' Exit For
                             GC.Collect()
                         End If
                         Dim mask = map_layers(cnt).used_layers
@@ -737,6 +745,7 @@ dont_grab_this:
                 Next
 
             Next
+            'Debug.WriteLine("========================")
             tile_width -= mod_
             frmMain.pb2.Visible = False
             frmMain.pb2.SendToBack()

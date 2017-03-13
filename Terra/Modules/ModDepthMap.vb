@@ -333,7 +333,7 @@ f_this:
             Gl.glFinish()
         End If
         'Dim drawbuffs() = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_NONE}
-        ' utility_texture = Make_Depth_texture(decal_depth_size)
+        ' utility_texture = Make_Depth_texture(decal_grid_size)
         Dim er = Gl.glGetError
         ' create a framebuffer object
         '-------------------------------------------------------------------------------
