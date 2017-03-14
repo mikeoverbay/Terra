@@ -218,7 +218,7 @@ Module modDecals
 
         If decal_matrix_list(decal).decal_data.Length > 1 Then
             Try
-                normalize_decal(decal)
+                make_decal_normals(decal)
                 agv_mesh_norms(decal_matrix_list(decal))
                 reduce_polys(decal, ar1)
                 If decal_matrix_list(decal).display_id > 0 Then
@@ -283,7 +283,7 @@ Module modDecals
         'loop thru and average the  normal;
         For i = 0 To (decal_matrix_list(decal).decal_count / 6) - (decal_grid_size - 1) Step ((decal_grid_size - 1)) * 6.0
             For j = 0 To ((decal_grid_size - 1) * 6) - 1 Step 23.125
-                running += 1.0 - decal_matrix_list(decal).decal_data(CInt(i * 6) + CInt(j)).ny
+                running += 1.0 - Abs(decal_matrix_list(decal).decal_data(CInt(i * 6) + CInt(j)).ny)
                 check += 1
                 Dim p = CInt(i * 6) + CInt(j)
                 'Debug.WriteLine("I:" + i.ToString("0000") + " J:" + j.ToString("0000") + " P:" + p.ToString("0000"))
@@ -302,8 +302,8 @@ Module modDecals
             reduction = 4.0
         End If
         '==================================================================================================
+        'rebuild the decal to the new size
         Dim decal_count As Integer = 0
-        'for now im going to use the bias editor so i can look at these 2 variance values.
         ReDim decal_matrix_list(decal).decal_data((decal_grid_size ^ 2) * 6)
         decal_matrix_list(decal).decal_count = 0
 
@@ -361,7 +361,7 @@ Module modDecals
         decal_matrix_list(decal).decal_count = decal_count
         ReDim Preserve decal_matrix_list(decal).decal_data(decal_matrix_list(decal).decal_count)
         'sucks but the normals have to be recalculated.
-        normalize_decal(decal)
+        make_decal_normals(decal)
         agv_mesh_norms(decal_matrix_list(decal))
 
     End Sub
@@ -694,17 +694,15 @@ saveit:
 
         End With
 
-        Dim mesh_size As Integer
-        mesh_size = decal_grid_size
-        ReDim decal_matrix_list(map).decal_data((mesh_size ^ 2) * 6)
+        ReDim decal_matrix_list(map).decal_data((decal_grid_size ^ 2) * 6)
         decal_matrix_list(map).decal_count = 0
 
-        Dim uvScale = 1.0# / CSng(mesh_size - 1)
-        Dim w_ = mesh_size / 2.0#
-        Dim h_ = mesh_size / 2.0#
-        Dim scale = 1.0 / CSng(mesh_size)
-        For j As Single = 0 To mesh_size - 2
-            For i As Single = 0 To mesh_size - 2
+        Dim uvScale = 1.0# / CSng(decal_grid_size - 1)
+        Dim w_ = decal_grid_size / 2.0#
+        Dim h_ = decal_grid_size / 2.0#
+        Dim scale = 1.0 / CSng(decal_grid_size)
+        For j As Single = 0 To decal_grid_size - 2
+            For i As Single = 0 To decal_grid_size - 2
 
 
                 topleft.x = (i)
@@ -766,17 +764,16 @@ saveit:
 
 
     End Sub
-    Public Sub normalize_decal(ByVal decal As Integer)
+    Public Sub make_decal_normals(ByVal decal As Integer)
         Dim vt1, vt2, vt3 As vertex_data
-        Dim c As Integer
+        Dim a, b, n As vect3
+        Dim ln As Single
         For i = 0 To decal_matrix_list(decal).decal_count - 1 Step 3
             With decal_matrix_list(decal)
 
-                vt1 = .decal_data(i)
+                vt1 = .decal_data(i + 0)
                 vt2 = .decal_data(i + 1)
                 vt3 = .decal_data(i + 2)
-
-                Dim a, b, n As vect3
 
                 a.x = vt1.x - vt2.x
                 a.y = vt1.y - vt2.y
@@ -787,11 +784,12 @@ saveit:
                 n.x = (a.y * b.z) - (a.z * b.y)
                 n.y = (a.z * b.x) - (a.x * b.z)
                 n.z = (a.x * b.y) - (a.y * b.x)
-                Dim len As Single = Sqrt((n.x * n.x) + (n.y * n.y) + (n.z * n.z))
-                If len = 0 Then len = 1.0 ' no divide by zero
-                n.x /= len
-                n.y /= len
-                n.z /= len
+                ln = Sqrt((n.x * n.x) + (n.y * n.y) + (n.z * n.z))
+                If ln = 0 Then ln = 1.0 ' no divide by zero
+                'normalize length
+                n.x /= ln
+                n.y /= ln
+                n.z /= ln
 
                 vt1.v *= -1.0
                 vt2.v *= -1.0
@@ -810,10 +808,9 @@ saveit:
                 vt3.ny = n.y
                 vt3.nz = n.z
 
-                .decal_data(i) = vt1
+                .decal_data(i + 0) = vt1
                 .decal_data(i + 1) = vt2
                 .decal_data(i + 2) = vt3
-                c = i + 2
             End With
         Next
 

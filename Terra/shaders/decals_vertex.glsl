@@ -17,7 +17,7 @@ void main(void)
     vec3 n = gl_Normal;
     // some decals are upside down
      if (n.y < 0.0) {
-         //n *= -1.0;
+         n *= -1.0;
     }   
     g_vertexnormal = n;
     lightDirection = gl_LightSource[0].position.xyz - gl_Vertex;
@@ -25,7 +25,6 @@ void main(void)
     g_viewvector   = cam_position - gl_Vertex.xyz;
     //g_viewvector.x *= -1.0;
     //////////////////////////////////////////////
-    // bumb z out a little so the underlaying terrain dont peek thru.
     vec4 v = gl_ModelViewProjectionMatrix * gl_Vertex;
     
     texCoord    = gl_MultiTexCoord0.xy;
@@ -45,8 +44,10 @@ void main(void)
     {
         ln = 0.0;
     }
+    // bumb z out a little so the underlaying terrain dont peek thru.
     //comp offset by distance
     v.z -= .01;
+    v.y += .01;
     gl_Position = v;
 
 }

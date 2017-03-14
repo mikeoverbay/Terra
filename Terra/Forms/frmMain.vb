@@ -3159,9 +3159,8 @@ nope:
 
     End Sub
     Private Sub draw_decals()
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-        Gl.glEnable(Gl.GL_CULL_FACE)
-        Gl.glFrontFace(Gl.GL_CCW)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glDisable(Gl.GL_CULL_FACE)
         Gl.glDisable(Gl.GL_ALPHA_TEST)
         Gl.glDisable(Gl.GL_TEXTURE_2D)
         Gl.glDepthMask(Gl.GL_FALSE)
@@ -3176,19 +3175,20 @@ nope:
                 ViewPerspective_d()
             End If
 
+            Gl.glDisable(Gl.GL_CULL_FACE)
             Gl.glUseProgram(shader_list.comp_shader)
             Gl.glUniform3f(phong_cam_pos, eyeX, eyeY, eyeZ)
             Gl.glUniform1f(bump_out_, -0.005)
             Gl.glDisable(Gl.GL_BLEND)
             Gl.glColor3f(0.2, 0.05, 0.0)
-            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
             For k = 0 To decal_matrix_list.Length - 1
                 If decal_matrix_list(k).good Then
                     Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
             Next
 
-            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(0.0, 0.0, 0.0)
             Gl.glUniform1f(bump_out_, -0.015)
 
@@ -3216,11 +3216,11 @@ nope:
             If Not view_mode Then
                 ViewPerspective_d()
             End If
-            Gl.glEnable(Gl.GL_CULL_FACE)
+            Gl.glDisable(Gl.GL_CULL_FACE)
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
             Gl.glColor3f(0.5, 0.5, 0.5)
-            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
             Gl.glUseProgram(shader_list.decals_shader)
             If m_show_fog.Checked Then
                 Gl.glUniform1i(f_address5, 1)
@@ -3275,7 +3275,6 @@ nope:
                 ViewPerspective_d()
             End If
             Gl.glDisable(Gl.GL_LIGHTING)
-            Gl.glLineWidth(2.0)
 
             For k = 0 To decal_matrix_list.Length - 1
                 Dim m = decal_matrix_list(k).matrix
@@ -3284,9 +3283,11 @@ nope:
                         If k = d_counter Then
                             If frmBiasing.SHOW_SELECT_MESH Then
 
+                                Gl.glLineWidth(1.0)
                                 Gl.glUseProgram(shader_list.comp_shader)
                                 Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
-                                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
+                                Gl.glLineWidth(1.0)
+                                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
                                 Gl.glUniform1f(bump_out_, -0.01)
                                 Gl.glCallList(decal_matrix_list(d_counter).display_id)
                                 Gl.glUseProgram(0)
@@ -3303,7 +3304,9 @@ nope:
                             Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
                             Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
                             Gl.glEnd()
+                            Gl.glLineWidth(2.0)
                         Else
+                            Gl.glLineWidth(2.0)
                             Gl.glColor4f(0.0, 1.0, 0.0, 1.0)
 
                             Gl.glPushMatrix()
@@ -3330,7 +3333,6 @@ nope:
             Gl.glEnable(Gl.GL_LIGHTING)
             Gl.glLineWidth(1.0)
         End If
-        Gl.glFrontFace(Gl.GL_CW)
 
     End Sub
     Private Sub draw_tanks(ByRef cp() As Single, ByVal model_view() As Double, ByVal projection() As Double, ByVal viewport() As Integer, ByVal sx As Single, ByVal sy As Single, ByVal sz As Single)

@@ -363,12 +363,12 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity()
 
-        If frmMain.m_Orbit_Light.Checked Then
-            Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.01F, 5000)
-        Else
-            Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.01F, 5000)
-        End If
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        ' If frmMain.m_Orbit_Light.Checked Then
+        Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.02F, 3000)
+        ' Else
+        ' Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.01F, 4000)
+        ' End If
+        'Gl.glEnable(Gl.GL_DEPTH_TEST)
         'Gl.glDepthMask(Gl.GL_TRUE)
         Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
