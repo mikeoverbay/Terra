@@ -203,7 +203,7 @@ Module ModDepthMap
                             'draw = False
                             Gl.glEnable(Gl.GL_CULL_FACE)
                             Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_imageID)
+                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
                             Gl.glCallList(Trees.flora(i).billboard_displayID)
                         Else
                             Gl.glDisable(Gl.GL_CULL_FACE)
@@ -214,13 +214,13 @@ Module ModDepthMap
                                 Else
                                 End If
                                 If Trees.flora(i).frond_displayID > 0 Then
-                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_imageID)
+                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
                                     Gl.glCallList(Trees.flora(i).frond_displayID)
                                 End If
                             Else
                                 If rad <= t_cut_off Then
                                     If Trees.flora(i).leaf_displayID > 0 Then
-                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_imageID)
+                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
                                         Gl.glCallList(Trees.flora(i).leaf_displayID)
                                     End If
                                 End If

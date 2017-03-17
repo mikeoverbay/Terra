@@ -1,56 +1,73 @@
 ﻿Imports System.Runtime.InteropServices
-
+Imports System.Math
 Public Class frmShowImage
 	Dim old_width, old_heigth As Integer
 	Dim old_location As Point
     Public t_bmp As Bitmap
-    Private value As Integer = -1
-	<DllImport("user32.dll")> _
- Private Shared Function SendMessage( _
-	ByVal hWnd As IntPtr, _
-	ByVal wMsg As Int32, _
-	ByVal wParam As IntPtr, _
-	ByVal lParam As IntPtr) _
-	As Int32
-	End Function
+    Public ready_to_render As Boolean = False
+    Public current_image As Integer = 0
+    Private me_w, me_h As Integer
+    Public rect_location As New Point(0, 0)
+    Public rect_size As New Point(512, 512)
+    Public mouse_delta As New Point(0, 0)
+    Public _zm As Single = 1.0
+    'Public noise_id As Integer
+    <DllImport("user32.dll")> _
+    Private Shared Function SendMessage( _
+    ByVal hWnd As IntPtr, _
+    ByVal wMsg As Int32, _
+    ByVal wParam As IntPtr, _
+    ByVal lParam As IntPtr) _
+    As Int32
+    End Function
 	Private Const LB_SETTABSTOPS As Int32 = &H192
 	Private Sub frmShowImage_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
 			MessageBox.Show("Unable to make rendering context current")
-			End
-		End If
-		Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-		frmMain.pb2.Parent = frmMain
-		frmMain.pb2.Dock = DockStyle.None
+            Return
+        End If
+        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
+        t_bmp = Nothing
+        GC.Collect()
+        frmMain.pb2.Visible = False
+        frmMain.pb2.Parent = frmMain
+        frmMain.pb2.Dock = DockStyle.None
+        frmMain.pb2.Anchor = AnchorStyles.None
 		frmMain.pb2.Location = old_location
 		frmMain.pb2.Width = old_width
 		frmMain.pb2.Height = old_heigth
-		frmMain.pb2.Visible = False
-
-	End Sub
+        ready_to_render = False ' used by other forms as flag
+    End Sub
 
 	Private Sub frmShowImage_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		Dim headerHeight As Integer = TabControl1.Height - TabPage1.Height
-		TabControl1.Width = 300
-		'TabControl1.Height = 512 - headerHeight
-		TabControl1.Dock = DockStyle.Right
-		TextBox1.Height = 25
-		TextBox1.Width = 512
-		TextBox1.Location = New Point(0, 513)
+        'TabControl1.Height = 512 - headerHeight
+        Me.Show()
+        Application.DoEvents()
+        Application.DoEvents()
+        Application.DoEvents()
+        Application.DoEvents()
+        Me.ClientSize = New Size(512 + TabControl1.Width + 4, 512 + TextBox1.Height)
+        SPC.SplitterDistance = 512
+        'SPC.Panel2.Width = 300
+        SPC.IsSplitterFixed = True
 
 		old_heigth = frmMain.pb2.Height
 		old_width = frmMain.pb2.Width
 		old_location = frmMain.pb2.Location
-		frmMain.pb2.Parent = Me
+        frmMain.pb2.Parent = SPC.Panel1
 		frmMain.pb2.Visible = True
-		Me.ClientSize = New Size(512 + TabControl1.Width, 512 + TextBox1.Height)
-		frmMain.pb2.Width = 512
-		frmMain.pb2.Height = 512
-        frmMain.pb2.Dock = DockStyle.Left
-		draw_(0)
-		populate_list()
+        frmMain.pb2.Width = SPC.Panel1.Width
+        frmMain.pb2.Height = SPC.Panel1.Height - 25
+        frmMain.pb2.Location = New Point(0, 0)
+        frmMain.pb2.Anchor = AnchorStyles.Left Or AnchorStyles.Right Or AnchorStyles.Top Or AnchorStyles.Bottom
+        'noise_id = Load_DDS_File(Application.StartupPath + "\Resources\Noise.dds")
+        'current_image = noise_id
+        ready_to_render = True
+        draw_(current_image)
+        populate_list()
 
-	End Sub
+    End Sub
 	Private Sub populate_list()
 		Dim m_layers As Boolean = frmMain.m_high_rez_Terrain.Checked
 
@@ -157,133 +174,274 @@ Public Class frmShowImage
         'Next
         TextBox1.Text = cnt.ToString + " Textures in list."
 	End Sub
+    Public Sub draw_texture(ByVal id As Integer)
+        current_image = id
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, id)
+        Dim w, h As Single
+        Gl.glGetTexLevelParameterfv(Gl.GL_TEXTURE_2D, 0, Gl.GL_TEXTURE_WIDTH, w)
+        Gl.glGetTexLevelParameterfv(Gl.GL_TEXTURE_2D, 0, Gl.GL_TEXTURE_HEIGHT, h)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        rect_size = New Point(CInt(w), CInt(h))
+        rect_location = New Point(0, 0)
+        _zm = 1.0
+        draw_(id)
+    End Sub
 
-	Private Sub draw_(ByVal id As Integer)
-		If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
-			MessageBox.Show("Unable to make rendering context current")
-			End
-		End If
-		Dim uc As vect2
-		Dim lc As vect2
-		Dim psize As Integer = 512
-		lc.x = frmMain.pb2.Width
-		lc.y = -frmMain.pb2.Height	' top to bottom is negitive
-		uc.x = 0.0
-		uc.y = 0.0
-		Gl.glClearColor(0.8F, 0.8F, 0.8F, 1.0F)
-		Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-		ResizeGL_2()
-		ViewPerspective_2()
-		ViewOrtho_2()
-		Gl.glPushMatrix()
-		Gl.glTranslatef(0.0, 0.0F, -0.1F)
+
+    Public Sub draw_(ByVal id As Integer)
+        If Not ready_to_render Then Return
+        If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            Return
+        End If
+        ResizeGL_2(SPC.Panel1.Width, SPC.Panel1.Height - 25)
+        'ViewPerspective_2()
+        ViewOrtho_2()
+        Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glEnable(Gl.GL_TEXTURE_2D)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, id)
+        Dim e = Gl.glGetError
+        Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+
+        If alpha_cb.Checked Then
+            Gl.glClearColor(0.5F, 0.5F, 0.5F, 1.0F)
+            Gl.glEnable(Gl.GL_BLEND)
+        Else
+            Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
+            Gl.glDisable(Gl.GL_BLEND)
+        End If
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+
+        Dim u1() As Single = {1.0, 0.0}
+        Dim u2() As Single = {0.0, 0.0}
+        Dim u3() As Single = {0.0, 1.0}
+        Dim u4() As Single = {1.0, 1.0}
+
+        Dim p1, p2, p3, p4 As Point
+        Dim L, S As New Point
+        L = rect_location
+        S = rect_size
+        L.Y *= -1
+        S.Y *= -1
+
+        p1 = L
+        p2 = L
+        p2.X += rect_size.X
+        p3 = L + S
+        p4 = L
+        p4.Y += S.Y
+
+
+        Gl.glBegin(Gl.GL_QUADS)
+        '---
+        Gl.glTexCoord2fv(u1)
+        Gl.glVertex2f(p1.X, p1.Y)
+        Gl.glTexCoord2fv(u2)
+        Gl.glVertex2f(p2.X, p2.Y)
+        Gl.glTexCoord2fv(u3)
+        Gl.glVertex2f(p3.X, p3.Y)
+        Gl.glTexCoord2fv(u4)
+        Gl.glVertex2f(p4.X, p4.Y)
+        '--
+        Gl.glEnd()
+
+        Gl.glFinish()
+        Gdi.SwapBuffers(pb2_hDC)
+
+        'We have to draw this again so its in the other buffer so we can read the pixel data.
+        Gl.glBegin(Gl.GL_QUADS)
+        '---
+        Gl.glTexCoord2fv(u1)
+        Gl.glVertex2f(p1.X, p1.Y)
+        Gl.glTexCoord2fv(u2)
+        Gl.glVertex2f(p2.X, p2.Y)
+        Gl.glTexCoord2fv(u3)
+        Gl.glVertex2f(p3.X, p3.Y)
+        Gl.glTexCoord2fv(u4)
+        Gl.glVertex2f(p4.X, p4.Y)
+        Gl.glEnd()
+
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
         Gl.glDisable(Gl.GL_BLEND)
-		Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
-		Gl.glDisable(Gl.GL_LIGHTING)
+        e = Gl.glGetError
 
-		Gl.glActiveTexture(Gl.GL_TEXTURE0)
-		Gl.glEnable(Gl.GL_TEXTURE_2D)
-		Gl.glBindTexture(Gl.GL_TEXTURE_2D, id)
-		Dim e = Gl.glGetError
-		Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
+        Gl.glFinish()
+        Gl.glFlush()
+        'Gdi.SwapBuffers(pb2_hDC)
+        Dim pb2s As New Point(frmMain.pb2.Width, frmMain.pb2.Height)
+        Try
+            t_bmp.Dispose()
+        Catch ex As Exception
 
+        End Try
+        GC.Collect()
+        t_bmp = New Bitmap(pb2s.X, pb2s.Y, PixelFormat.Format32bppArgb)
+        Dim rect As New System.Drawing.Rectangle(0, 0, pb2s.X, pb2s.Y)
+        Dim data As BitmapData = t_bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb)
+        Gl.glReadPixels(0, 0, pb2s.X, pb2s.Y, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, data.Scan0)
+        t_bmp.UnlockBits(data)
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            'End
+        End If
 
-		'Gl.glActiveTexture(Gl.GL_TEXTURE0)
-		'Gl.glUseProgram(0)
+        t_bmp.RotateFlip(RotateFlipType.RotateNoneFlipY)
 
-
-		Gl.glBegin(Gl.GL_TRIANGLES)
-		'---
-        Gl.glTexCoord2f(0.0, 1.0)
-		Gl.glVertex3f(uc.x, lc.y, -1.0!)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-		Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-		Gl.glVertex3f(lc.x, lc.y, -1.0!)
-		'---
-        Gl.glTexCoord2f(0.0, 0.0)
-		Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-		Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-		Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-		Gl.glEnd()
-		Gl.glFinish()
-		Gdi.SwapBuffers(pb2_hDC)
-		'We have to draw this again so its in the other buffer so we can read the pixel data.
-		Gl.glBegin(Gl.GL_TRIANGLES)
-		'---
-		Gl.glTexCoord2f(0.0, 0.0)
-		Gl.glVertex3f(uc.x, lc.y, -1.0!)
-
-		Gl.glTexCoord2f(0.0, 1.0)
-		Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-		Gl.glTexCoord2f(1.0, 0.0)
-		Gl.glVertex3f(lc.x, lc.y, -1.0!)
-		'---
-		Gl.glTexCoord2f(0.0, 1.0)
-		Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-		Gl.glTexCoord2f(1.0, 1.0)
-		Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-		Gl.glTexCoord2f(1.0, 0.0)
-		Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-		Gl.glEnd()
-		Gl.glDisable(Gl.GL_TEXTURE_2D)
-		Gl.glDisable(Gl.GL_BLEND)
-		e = Gl.glGetError
-		Gl.glPopMatrix()
-		Gl.glFinish()
-		Gl.glFlush()
-		'Gdi.SwapBuffers(pb2_hDC)
-		t_bmp = New Bitmap(psize, psize, PixelFormat.Format32bppArgb)
-		Dim rect As New System.Drawing.Rectangle(0, 0, psize, psize)
-		Dim data As BitmapData = t_bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb)
-		Gl.glReadPixels(0, 0, psize, psize, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, data.Scan0)
-		t_bmp.UnlockBits(data)
-		If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-			MessageBox.Show("Unable to make rendering context current")
-			End
-		End If
-
-		t_bmp.RotateFlip(RotateFlipType.RotateNoneFlipY)
-
-	End Sub
+    End Sub
 
 	Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
-		Dim select_text = ListBox1.SelectedItem.ToString()
+        If Not ready_to_render Then Return
+        Dim select_text = ListBox1.SelectedItem.ToString()
 		Dim ar = select_text.Split(vbTab)
-        value = ar(0)
-		draw_(value)
+        current_image = ar(0)
+        draw_texture(current_image)
 		Dim index = ListBox1.SelectedIndex
 		TextBox1.Text = n_list1.Item(index)
 	End Sub
 
 	Private Sub ListBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox2.SelectedIndexChanged
-		Dim select_text = ListBox2.SelectedItem.ToString()
+        If Not ready_to_render Then Return
+        Dim select_text = ListBox2.SelectedItem.ToString()
 		Dim ar = select_text.Split(vbTab)
-        value = ar(1)
-		draw_(value)
+        current_image = ar(1)
+        draw_texture(current_image)
 		Dim index = ListBox2.SelectedIndex
 		TextBox1.Text = n_list2.Item(index)
 
 	End Sub
 
     Private Sub frmShowImage_Resize(sender As Object, e As EventArgs) Handles Me.Resize
-        'If value < 0 Then Return
-        draw_(value)
+        If Not ready_to_render Then Return
+
+        'draw_(current_image)
     End Sub
 
     Private Sub frmShowImage_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
-        If value < 0 Then Return
-        ' draw_(value)
+        If Not ready_to_render Then Return
+        draw_(current_image)
+    End Sub
+    Public Sub img_scale_up_Click()
+        If Not ready_to_render Then Return
+        If _zm >= 4 Then Return 'to big and the t_bmp creation will hammer memory and render time. 2048 max at 4x setting
+        Dim xc, yc As Single
+        _zm *= 2
+        'this bit of math zooms the texture around the mouses center during the resize.
+        If rect_location.X >= 0 Then
+            xc = (frmMain.pb2.Width / 2) - (rect_location.X)
+        Else
+            xc = (frmMain.pb2.Width / 2) + (-rect_location.X)
+        End If
+        If rect_location.Y >= 0.0 Then
+            yc = (frmMain.pb2.Height / 2) - (rect_location.Y)
+        Else
+            yc = (frmMain.pb2.Height / 2) + (-rect_location.Y)
+        End If
+        Dim offset As New Point
+        offset = rect_location - mouse_delta
+
+        rect_size.X *= 2
+        rect_size.Y *= 2
+
+        TextBox1.Text = String.Format("Zoom:" + vbCrLf + "{0}%", Round((_zm / 1) * 100))
+        xc = (rect_size.X / 2) - (xc * 2)    '* _zm
+        yc = (rect_size.Y / 2) - (yc * 2) '* -_zm
+        'rect_location = New Point(((frmMain.pb2.Width - rect_size.X) / 2) + xc, ((frmMain.pb2.Height - rect_size.Y) / 2) + yc)
+        rect_location += offset
+        draw_(current_image)
+    End Sub
+
+    Public Sub img_scale_down_Click()
+        If Not ready_to_render Then Return
+        If _zm <= 0.5 Then Return ' no point in going to small
+        Dim xc, yc As Single
+        _zm *= 0.5
+        'this bit of math zooms the texture around the mouses center during the resize.
+        If rect_location.X >= 0 Then
+            xc = (frmMain.pb2.Width / 2) - (rect_location.X)
+        Else
+            xc = (frmMain.pb2.Width / 2) + (-rect_location.X)
+        End If
+        If rect_location.Y >= 0.0 Then
+            yc = (frmMain.pb2.Height / 2) - (rect_location.Y)
+        Else
+            yc = (frmMain.pb2.Height / 2) + (-rect_location.Y)
+        End If
+        xc += (frmMain.pb2.Width / 2) - mouse_delta.X
+        yc += (frmMain.pb2.Height / 2) - mouse_delta.Y
+
+        Dim offset As New Point
+        offset = rect_location - mouse_delta
+        offset.X *= 0.5
+        offset.Y *= 0.5
+        rect_size.X /= 2
+        rect_size.Y /= 2
+        TextBox1.Text = String.Format("Zoom:" + vbCrLf + "{0}%", Round((_zm / 1) * 100))
+        xc = (rect_size.X / 2) - (xc * 0.5)  '* _zm
+        yc = (rect_size.Y / 2) - (yc * 0.5) '* -_zm
+        ' rect_location = New Point(((frmMain.pb2.Width - rect_size.X) / 2) + xc, ((frmMain.pb2.Height - rect_size.Y) / 2) + yc)
+        rect_location -= offset
+        draw_(current_image)
+    End Sub
+
+    Public Sub btn_scale_up_Click(sender As Object, e As EventArgs) Handles btn_scale_up.Click
+        If Not ready_to_render Then Return
+        If _zm >= 4 Then Return 'to big and the t_bmp creation will hammer memory and render time. 2048 max at 4x setting
+        Dim xc, yc As Single
+        _zm *= 2
+        'this bit of math zooms the texture around the mouses center during the resize.
+        If rect_location.X >= 0 Then
+            xc = (frmMain.pb2.Width / 2) - (rect_location.X)
+        Else
+            xc = (frmMain.pb2.Width / 2) + (-rect_location.X)
+        End If
+        If rect_location.Y >= 0.0 Then
+            yc = (frmMain.pb2.Height / 2) - (rect_location.Y)
+        Else
+            yc = (frmMain.pb2.Height / 2) + (-rect_location.Y)
+        End If
+
+        rect_size.X *= 2
+        rect_size.Y *= 2
+        TextBox1.Text = String.Format("Zoom:" + vbCrLf + "{0}%", Round((_zm / 1) * 100))
+        xc = (rect_size.X / 2) - (xc * 2)    '* _zm
+        yc = (rect_size.Y / 2) - (yc * 2) '* -_zm
+        rect_location = New Point(((frmMain.pb2.Width - rect_size.X) / 2) + xc, ((frmMain.pb2.Height - rect_size.Y) / 2) + yc)
+        draw_(current_image)
+    End Sub
+
+    Public Sub btn_scale_down_Click(sender As Object, e As EventArgs) Handles btn_scale_down.Click
+        If Not ready_to_render Then Return
+        If _zm <= 0.5 Then Return ' no point in going to small
+        Dim xc, yc As Single
+        _zm *= 0.5
+        'this bit of math zooms the texture around the mouses center during the resize.
+        If rect_location.X >= 0 Then
+            xc = (frmMain.pb2.Width / 2) - (rect_location.X)
+        Else
+            xc = (frmMain.pb2.Width / 2) + (-rect_location.X)
+        End If
+        If rect_location.Y >= 0.0 Then
+            yc = (frmMain.pb2.Height / 2) - (rect_location.Y)
+        Else
+            yc = (frmMain.pb2.Height / 2) + (-rect_location.Y)
+        End If
+        rect_size.X /= 2
+        rect_size.Y /= 2
+        TextBox1.Text = String.Format("Zoom:" + vbCrLf + "{0}%", Round((_zm / 1) * 100))
+        xc = (rect_size.X / 2) - (xc * 0.5)  '* _zm
+        yc = (rect_size.Y / 2) - (yc * 0.5) '* -_zm
+        rect_location = New Point(((frmMain.pb2.Width - rect_size.X) / 2) + xc, ((frmMain.pb2.Height - rect_size.Y) / 2) + yc)
+        draw_(current_image)
+    End Sub
+
+    Private Sub alpha_cb_CheckedChanged(sender As Object, e As EventArgs) Handles alpha_cb.CheckedChanged
+        If Not ready_to_render Then Return
+        draw_(current_image)
     End Sub
 End Class

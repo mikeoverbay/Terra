@@ -20,6 +20,7 @@ in vec3 lightDirection;
 
 void main (void)
 {
+//discard;
 // create TBN
     float invmax = inversesqrt( max( dot(tangent,tangent), dot(bitangent,bitangent) ));
     mat3 TBN = mat3( tangent * invmax, bitangent * invmax, -g_vertexnormal );

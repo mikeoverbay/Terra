@@ -175,6 +175,12 @@ Module structures
         Public billboard_displayID As Integer
         Public branch_textureID As Integer
         Public branch_normalID As Integer
+        'Public frond_textureID As Integer
+        'Public frond_normalID As Integer
+        'Public leaf_textureID As Integer
+        'Public leaf_normalID As Integer
+        Public billboard_textureID As Integer
+        Public billboard_normalID As Integer
 
         Public branch_displayID As Integer
         Public frond_displayID As Integer

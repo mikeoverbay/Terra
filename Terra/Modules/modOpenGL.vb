@@ -245,7 +245,9 @@ Module modOpenGL
         'Gl.glLoadIdentity() ' Reset The Modelview Matrix
 
 	End Sub
-	Public Sub ResizeGL_2()
+    Public Sub ResizeGL_2(ByVal size_x As Single, ByVal size_y As Single)
+        frmMain.pb2.Width = size_x
+        frmMain.pb2.Height = size_y
         Gl.glViewport(0, 0, frmMain.pb2.Width, frmMain.pb2.Height)
     End Sub
 	Public Sub ResizeGL_mini()
@@ -352,9 +354,9 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
         Gl.glLoadIdentity()
 
         Glu.gluPerspective(60.0F, CSng((frmMain.pb2.Width) / (frmMain.pb2.Height)), 1.0F, 2500)
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glDepthMask(Gl.GL_TRUE)
-        Gl.glDepthRange(0.0, 1.0)
+        ' Gl.glEnable(Gl.GL_DEPTH_TEST)
+        ' Gl.glDepthMask(Gl.GL_TRUE)
+        ' Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
         Gl.glLoadIdentity() 'Reset The Matrix
     End Sub

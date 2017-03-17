@@ -1158,11 +1158,12 @@ Good_image:
             If InStr(Models.Model_list(mod_id), "border_") > 0 Then
                 .color_id = get_texture_no_alpha(ms, True)
             Else
-                .color_id = get_texture(ms, True)
+                .color_id = get_texture(ms, frmMain.m_low_quality_textures.Checked)
             End If
 
             ms.Close()
             ms.Dispose()
+            frmMapInfo.I__Model_Textures_tb.Text += "Color: " + .color_name + vbCrLf
             cnt = texture_cache.Length
             ReDim Preserve texture_cache(cnt)
             texture_cache(cnt - 1) = New tree_textures_
@@ -1196,9 +1197,10 @@ jump_color:
                 Else
                     entry1.Extract(ms)
                 End If
-                .color2_Id = get_texture(ms, False)
+                .color2_Id = get_texture(ms, frmMain.m_low_quality_textures.Checked)
                 ms.Close()
                 ms.Dispose()
+                frmMapInfo.I__Model_Textures_tb.Text += "Color2: " + .color2_name + vbCrLf
                 cnt = texture_cache.Length
                 ReDim Preserve texture_cache(cnt)
                 texture_cache(cnt - 1) = New tree_textures_
@@ -1213,7 +1215,7 @@ check_normal:
                 cnt = texture_cache.Length
                 '	'Check if we have this texture generated already.....
                 For i = 0 To cnt - 1
-                    If .normal_name = texture_cache(i).name Then
+                    If .normal_name = texture_cache(i).normalname Then
                         .normal_Id = texture_cache(i).textureNormID
                         saved_texture_loads += 1
                         If .normal_name.Contains("_ANM") Then
@@ -1241,11 +1243,12 @@ check_normal:
                 Else
                     entry1.Extract(ms)
                 End If
-                .normal_Id = get_normal_texture(ms, True)
+                .normal_Id = get_normal_texture(ms, frmMain.m_low_quality_textures.Checked)
+                frmMapInfo.I__Model_Textures_tb.Text += "Normal: " + .normal_name + vbCrLf
                 cnt = texture_cache.Length
                 ReDim Preserve texture_cache(cnt)
                 texture_cache(cnt - 1) = New tree_textures_
-                texture_cache(cnt - 1).name = .normal_name
+                texture_cache(cnt - 1).normalname = .normal_name
                 texture_cache(cnt - 1).textureNormID = .normal_Id
             End If
 jump_normal:
@@ -1305,11 +1308,7 @@ jump_normal:
     End Sub
 
     Public Sub get_tree_branch_texture(ByVal diffuse As String, ByVal tree As Integer)
-
-        If diffuse = speedtree_name Then
-            Trees.flora(tree).branch_displayID = speedtree_imageID
-            Return
-        End If
+      
         With Trees
             'see if this texture is created
             For i = 0 To tree_textures.Length - 1
@@ -1335,6 +1334,7 @@ jump_normal:
             Catch ex As Exception
                 Stop
             End Try
+            frmMapInfo.I__Tree_Textures_tb.Text += "Branch Texture: " + diffuse + vbCrLf
             .flora(tree).branch_textureID = get_tree_texture(ms, False)
             Dim len = tree_textures.Length
             ReDim Preserve tree_textures(len)
@@ -1344,10 +1344,7 @@ jump_normal:
     End Sub
     Public Sub get_tree_branch_normalmap(ByVal normal As String, ByVal tree As Integer)
 
-        If normal = speedtree_normalmap Then
-            Trees.flora(tree).branch_normalID = speedtree_NormalMapID
-            Return
-        End If
+       
         With Trees
             'see if this texture is created
             For i = 0 To tree_textures.Length - 1
@@ -1373,6 +1370,7 @@ jump_normal:
             Catch ex As Exception
                 Stop
             End Try
+            frmMapInfo.I__Tree_Textures_tb.Text += "Branch norm: " + normal + vbCrLf
             .flora(tree).branch_normalID = get_normal_texture(ms, False)
             Dim len = tree_textures.Length
             ReDim Preserve tree_textures(len)
@@ -1380,8 +1378,323 @@ jump_normal:
             tree_textures(len - 1).textureNormID = .flora(tree).branch_normalID
         End With
     End Sub
+
+    Public Sub get_tree_billboard_texture(ByVal diffuse As String, ByVal tree As Integer)
+        'If diffuse = speedtree_name Then
+        '    Trees.flora(tree).branch_textureID = speedtree_imageID
+        '    Return
+        'End If
+        With Trees
+            'see if this texture is created
+            For i = 0 To tree_textures.Length - 1
+                If diffuse = tree_textures(i).name Then
+                    .flora(tree).billboard_textureID = tree_textures(i).textureID
+                    saved_texture_loads += 1
+                    Return
+                End If
+            Next
+            Dim ms As New MemoryStream
+            Try
+                Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(diffuse)
+                If entry1 Is Nothing Then
+                    entry1 = get_shared(diffuse)
+                    If entry1 Is Nothing Then
+                        Debug.Write("cant find: " & diffuse & vbCrLf)
+                        frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
+                    End If
+                    entry1.Extract(ms)
+                Else
+                    entry1.Extract(ms)
+                End If
+            Catch ex As Exception
+                Stop
+            End Try
+            frmMapInfo.I__Tree_Textures_tb.Text += "Billboard Texture: " + diffuse + vbCrLf
+            .flora(tree).billboard_textureID = get_tree_texture(ms, False)
+            Dim len = tree_textures.Length
+            ReDim Preserve tree_textures(len)
+            tree_textures(len - 1).name = diffuse
+            tree_textures(len - 1).textureID = .flora(tree).billboard_textureID
+        End With
+    End Sub
+    Public Sub get_tree_billboard_normalmap(ByVal normal As String, ByVal tree As Integer)
+
+        'If normal = speedtree_normalmap Then
+        '    Trees.flora(tree).branch_normalID = speedtree_NormalMapID
+        '    Return
+        'End If
+        With Trees
+            'see if this texture is created
+            For i = 0 To tree_textures.Length - 1
+                If normal = tree_textures(i).normalname Then
+                    .flora(tree).billboard_normalID = tree_textures(i).textureNormID
+                    saved_texture_loads += 1
+                    Return
+                End If
+            Next
+            Dim ms As New MemoryStream
+            Try
+                Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(normal)
+                If entry1 Is Nothing Then
+                    entry1 = get_shared(normal)
+                    If entry1 Is Nothing Then
+                        Debug.Write("cant find: " & normal & vbCrLf)
+                        frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
+                    End If
+                    entry1.Extract(ms)
+                Else
+                    entry1.Extract(ms)
+                End If
+            Catch ex As Exception
+                Stop
+            End Try
+            frmMapInfo.I__Tree_Textures_tb.Text += "Billboard norm: " + normal + vbCrLf
+            .flora(tree).billboard_normalID = get_normal_texture(ms, False)
+            Dim len = tree_textures.Length
+            ReDim Preserve tree_textures(len)
+            tree_textures(len - 1).normalname = normal
+            tree_textures(len - 1).textureNormID = .flora(tree).billboard_normalID
+        End With
+    End Sub
+
+    'Public Sub get_tree_frond_texture(ByVal diffuse As String, ByVal tree As Integer)
+
+    '    If diffuse = speedtree_name Then
+    '        Trees.flora(tree).frond_textureID = speedtree_imageID
+    '        Return
+    '    End If
+    '    With Trees
+    '        'see if this texture is created
+    '        For i = 0 To tree_textures.Length - 1
+    '            If diffuse = tree_textures(i).name Then
+    '                .flora(tree).frond_textureID = tree_textures(i).textureID
+    '                saved_texture_loads += 1
+    '                Return
+    '            End If
+    '        Next
+    '        Dim ms As New MemoryStream
+    '        Try
+    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(diffuse)
+    '            If entry1 Is Nothing Then
+    '                entry1 = get_shared(diffuse)
+    '                If entry1 Is Nothing Then
+    '                    Debug.Write("cant find: " & diffuse & vbCrLf)
+    '                    frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
+    '                End If
+    '                entry1.Extract(ms)
+    '            Else
+    '                entry1.Extract(ms)
+    '            End If
+    '        Catch ex As Exception
+    '            Stop
+    '        End Try
+    '        frmMapInfo.I__Tree_Textures_tb.Text += "Frond Texture: " + diffuse + vbCrLf
+    '        .flora(tree).frond_textureID = get_tree_texture(ms, False)
+    '        Dim len = tree_textures.Length
+    '        ReDim Preserve tree_textures(len)
+    '        tree_textures(len - 1).name = diffuse
+    '        tree_textures(len - 1).textureID = .flora(tree).frond_textureID
+    '    End With
+    'End Sub
+    'Public Sub get_tree_frond_normalmap(ByVal normal As String, ByVal tree As Integer)
+
+    '    If normal = speedtree_normalmap Then
+    '        Trees.flora(tree).frond_normalID = speedtree_NormalMapID
+    '        Return
+    '    End If
+    '    With Trees
+    '        'see if this texture is created
+    '        For i = 0 To tree_textures.Length - 1
+    '            If normal = tree_textures(i).normalname Then
+    '                .flora(tree).frond_normalID = tree_textures(i).textureNormID
+    '                saved_texture_loads += 1
+    '                Return
+    '            End If
+    '        Next
+    '        Dim ms As New MemoryStream
+    '        Try
+    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(normal)
+    '            If entry1 Is Nothing Then
+    '                entry1 = get_shared(normal)
+    '                If entry1 Is Nothing Then
+    '                    Debug.Write("cant find: " & normal & vbCrLf)
+    '                    frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
+    '                End If
+    '                entry1.Extract(ms)
+    '            Else
+    '                entry1.Extract(ms)
+    '            End If
+    '        Catch ex As Exception
+    '            Stop
+    '        End Try
+    '        frmMapInfo.I__Tree_Textures_tb.Text += "Frond Texture: " + normal + vbCrLf
+    '        .flora(tree).frond_normalID = get_normal_texture(ms, False)
+    '        Dim len = tree_textures.Length
+    '        ReDim Preserve tree_textures(len)
+    '        tree_textures(len - 1).normalname = normal
+    '        tree_textures(len - 1).textureNormID = .flora(tree).frond_normalID
+    '    End With
+    'End Sub
+
+    'Public Sub get_tree_leaf_texture(ByVal diffuse As String, ByVal tree As Integer)
+    '    'If diffuse = speedtree_name Then
+    '    '    Trees.flora(tree).leaf_textureID = speedtree_imageID
+    '    '    Return
+    '    'End If
+    '    With Trees
+    '        'see if this texture is created
+    '        For i = 0 To tree_textures.Length - 1
+    '            If diffuse = tree_textures(i).name Then
+    '                .flora(tree).leaf_textureID = tree_textures(i).textureID
+    '                saved_texture_loads += 1
+    '                Return
+    '            End If
+    '        Next
+    '        Dim ms As New MemoryStream
+    '        Try
+    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(diffuse)
+    '            If entry1 Is Nothing Then
+    '                entry1 = get_shared(diffuse)
+    '                If entry1 Is Nothing Then
+    '                    Debug.Write("cant find: " & diffuse & vbCrLf)
+    '                    frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
+    '                End If
+    '                entry1.Extract(ms)
+    '            Else
+    '                entry1.Extract(ms)
+    '            End If
+    '        Catch ex As Exception
+    '            Stop
+    '        End Try
+    '        frmMapInfo.I__Tree_Textures_tb.Text += "leaf Texture: " + diffuse + vbCrLf
+    '        .flora(tree).leaf_textureID = get_tree_texture(ms, False)
+    '        Dim len = tree_textures.Length
+    '        ReDim Preserve tree_textures(len)
+    '        tree_textures(len - 1).name = diffuse
+    '        tree_textures(len - 1).textureID = .flora(tree).leaf_textureID
+    '    End With
+    'End Sub
+    'Public Sub get_tree_leaf_normalmap(ByVal normal As String, ByVal tree As Integer)
+
+    '    'If normal = speedtree_normalmap Then
+    '    '    Trees.flora(tree).leaf_normalID = speedtree_NormalMapID
+    '    '    Return
+    '    'End If
+    '    With Trees
+    '        'see if this texture is created
+    '        For i = 0 To tree_textures.Length - 1
+    '            If normal = tree_textures(i).normalname Then
+    '                .flora(tree).leaf_normalID = tree_textures(i).textureNormID
+    '                saved_texture_loads += 1
+    '                Return
+    '            End If
+    '        Next
+    '        Dim ms As New MemoryStream
+    '        Try
+    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(normal)
+    '            If entry1 Is Nothing Then
+    '                entry1 = get_shared(normal)
+    '                If entry1 Is Nothing Then
+    '                    Debug.Write("cant find: " & normal & vbCrLf)
+    '                    frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
+    '                End If
+    '                entry1.Extract(ms)
+    '            Else
+    '                entry1.Extract(ms)
+    '            End If
+    '        Catch ex As Exception
+    '            Stop
+    '        End Try
+    '        frmMapInfo.I__Tree_Textures_tb.Text += "Leaf norm: " + normal + vbCrLf
+    '        .flora(tree).leaf_normalID = get_normal_texture(ms, False)
+    '        Dim len = tree_textures.Length
+    '        ReDim Preserve tree_textures(len)
+    '        tree_textures(len - 1).normalname = normal
+    '        tree_textures(len - 1).textureNormID = .flora(tree).leaf_normalID
+    '    End With
+    'End Sub
+
+    'Public Sub get_tree_billboard_texture(ByVal diffuse As String, ByVal tree As Integer)
+
+    '    'If diffuse = speedtree_name Then
+    '    '    Trees.flora(tree).billboard_textureID = speedtree_imageID
+    '    '    Return
+    '    'End If
+    '    With Trees
+    '        'see if this texture is created
+    '        For i = 0 To tree_textures.Length - 1
+    '            If diffuse = tree_textures(i).name Then
+    '                .flora(tree).billboard_textureID = tree_textures(i).textureID
+    '                saved_texture_loads += 1
+    '                Return
+    '            End If
+    '        Next
+    '        Dim ms As New MemoryStream
+    '        Try
+    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(diffuse)
+    '            If entry1 Is Nothing Then
+    '                entry1 = get_shared(diffuse)
+    '                If entry1 Is Nothing Then
+    '                    Debug.Write("cant find: " & diffuse & vbCrLf)
+    '                    frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
+    '                End If
+    '                entry1.Extract(ms)
+    '            Else
+    '                entry1.Extract(ms)
+    '            End If
+    '        Catch ex As Exception
+    '            Stop
+    '        End Try
+    '        frmMapInfo.I__Tree_Textures_tb.Text += "Biilboard Texture: " + diffuse + vbCrLf
+    '        .flora(tree).billboard_textureID = get_tree_texture(ms, False)
+    '        Dim len = tree_textures.Length
+    '        ReDim Preserve tree_textures(len)
+    '        tree_textures(len - 1).name = diffuse
+    '        tree_textures(len - 1).textureID = .flora(tree).billboard_textureID
+    '    End With
+    'End Sub
+    'Public Sub get_tree_billboard_normalmap(ByVal normal As String, ByVal tree As Integer)
+
+    '    'If normal = speedtree_normalmap Then
+    '    '    Trees.flora(tree).billboard_normalID = speedtree_NormalMapID
+    '    '    Return
+    '    'End If
+    '    With Trees
+    '        'see if this texture is created
+    '        For i = 0 To tree_textures.Length - 1
+    '            If normal = tree_textures(i).normalname Then
+    '                .flora(tree).billboard_normalID = tree_textures(i).textureNormID
+    '                saved_texture_loads += 1
+    '                Return
+    '            End If
+    '        Next
+    '        Dim ms As New MemoryStream
+    '        Try
+    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(normal)
+    '            If entry1 Is Nothing Then
+    '                entry1 = get_shared(normal)
+    '                If entry1 Is Nothing Then
+    '                    Debug.Write("cant find: " & normal & vbCrLf)
+    '                    frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
+    '                End If
+    '                entry1.Extract(ms)
+    '            Else
+    '                entry1.Extract(ms)
+    '            End If
+    '        Catch ex As Exception
+    '            Stop
+    '        End Try
+    '        frmMapInfo.I__Tree_Textures_tb.Text += "Billboard norm: " + normal + vbCrLf
+    '        .flora(tree).billboard_normalID = get_normal_texture(ms, False)
+    '        Dim len = tree_textures.Length
+    '        ReDim Preserve tree_textures(len)
+    '        tree_textures(len - 1).normalname = normal
+    '        tree_textures(len - 1).textureNormID = .flora(tree).billboard_normalID
+    '    End With
+    'End Sub
+    ''========================================================================================
     Public Sub build_branch_model(ByVal tree As Integer, ByVal tree_data As tree_)
-        Dim vert As vect3
+        Dim vert, t As vect3
         Dim uv As vect2
         Dim norm As vect3
         Dim id As Integer = Gl.glGenLists(1)
@@ -1401,12 +1714,17 @@ jump_normal:
             vert.x = -tree_data.b_vert((tbuf(i)) * 13 + 0)
             vert.y = tree_data.b_vert((tbuf(i)) * 13 + 1)
             vert.z = tree_data.b_vert((tbuf(i)) * 13 + 2)
-            norm.x = tree_data.b_vert((tbuf(i)) * 13 + 3)
+            norm.x = -tree_data.b_vert((tbuf(i)) * 13 + 3)
             norm.y = tree_data.b_vert((tbuf(i)) * 13 + 4)
             norm.z = tree_data.b_vert((tbuf(i)) * 13 + 5)
             uv.x = tree_data.b_vert((tbuf(i)) * 13 + 6)
             uv.y = tree_data.b_vert((tbuf(i)) * 13 + 7)
+            t.x = -tree_data.b_vert((tbuf(i)) * 13 + 10)
+            t.y = tree_data.b_vert((tbuf(i)) * 13 + 11)
+            t.z = tree_data.b_vert((tbuf(i)) * 13 + 12)
+
             Gl.glTexCoord2f(-uv.x, uv.y)
+            Gl.glMultiTexCoord3f(1, t.x, t.y, t.z)
             Gl.glNormal3f(-norm.x, norm.y, norm.z)
             Gl.glVertex3f(vert.x, vert.y, vert.z)
 
@@ -1415,7 +1733,7 @@ jump_normal:
         Gl.glEndList()
     End Sub
     Public Sub build_frond_model(ByVal tree As Integer, ByVal tree_data As tree_)
-        Dim vert As vect3
+        Dim vert, t As vect3
         Dim uv As vect2
         Dim norm As vect3
         Dim id As Integer = Gl.glGenLists(1)
@@ -1425,7 +1743,7 @@ jump_normal:
         Trees.flora(tree).frond_displayID = id
         Gl.glNewList(id, Gl.GL_COMPILE)
         Gl.glBegin(Gl.GL_TRIANGLE_STRIP)
-        For k = 0 To 0  'tree_data.strip_count - 1
+        For k = 0 To tree_data.strip_count - 1
 
             For i = 0 To tree_data.strip_inds(k).indices.Length - 2
                 vert.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 0)
@@ -1436,7 +1754,11 @@ jump_normal:
                 norm.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 5)
                 uv.x = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 6)
                 uv.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 7)
+                t.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 10)
+                t.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 11)
+                t.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 12)
                 Gl.glTexCoord2f(-uv.x, uv.y)
+                Gl.glMultiTexCoord3f(1, t.x, t.y, t.z)
                 Gl.glNormal3f(norm.x, norm.y, norm.z)
                 Gl.glVertex3f(vert.x, vert.y, vert.z)
 
@@ -1632,7 +1954,7 @@ skip_this_vert:
         Gl.glEnd()
         Gl.glEndList()
     End Sub
-
+    '========================================================================================
     Public Sub build_tree(ByVal tree As UInt32, ByVal map_name As String)
 
         'This took days of looking at hex to figure out.. 
@@ -1671,6 +1993,8 @@ skip_this_vert:
                 Trees.flora(tree).frond_displayID = treeCache(i).frond_displayID
                 Trees.flora(tree).leaf_displayID = treeCache(i).leaf_displayID
                 Trees.flora(tree).billboard_displayID = treeCache(i).billboard_displayID
+                Trees.flora(tree).billboard_textureID = treeCache(i).billboard_textureID
+                Trees.flora(tree).billboard_normalID = treeCache(i).billboard_normalID
                 saved_model_loads += 1
                 Return ' no need to do anything else.. this tree is copied now
             End If
@@ -2002,7 +2326,8 @@ get_billboard_data:
         Trees.flora(tree).billboard_displayID = Gl.glGenLists(1)
         Gl.glNewList(Trees.flora(tree).billboard_displayID, Gl.GL_COMPILE)
 
-
+        'Grrrrrr
+        ind_cnt = 42
         Gl.glBegin(Gl.GL_TRIANGLES)
         For i = 0 To (ind_cnt) - 7
             '   For k = 0 To 2
@@ -2043,7 +2368,47 @@ get_billboard_data:
         Gl.glEnd()
         Gl.glEndList()
         Gl.glFinish()
+        If ctree.Contains("Linden") Then
+            'Stop
+        End If
+        Try
+           
+            'tried all kinds a shit to find where the texture info starts.. Its wildly different between the different trees
+            'So.. Im' going to search for it.
+            Dim cp = treems.Position
+            While 1
+                cp = treems.Position
+                s = br.ReadByte
+                p = br.ReadByte
+                e = br.ReadByte
+                If s = 115 And p = 112 And e = 101 Then
+                    treems.Position = cp - 4 'point at lengh info
 
+                    Exit While
+                End If
+                treems.Position = cp + 1
+            End While
+
+
+            diff_len = br.ReadInt32
+            ReDim buff(diff_len)
+            buff = br.ReadBytes(diff_len)
+            diffuse_map = enc.GetString(buff)
+            norm_len = br.ReadInt32
+            ReDim buff(norm_len)
+            buff = br.ReadBytes(norm_len)
+            diffuse_normmap = enc.GetString(buff)
+            leafs_only = True
+            If diffuse_map <> "" Then
+                get_tree_billboard_texture(diffuse_map, tree)
+            End If
+            If diffuse_normmap <> "" Then
+                get_tree_billboard_normalmap(diffuse_normmap, tree)
+            End If
+        Catch ex As Exception
+            frmMapInfo.I__General_Info_tb.Text += "Data After BillBoard + : " + ctree + vbCrLf 'for debug
+
+        End Try
         br.Close()
         treems.Close()
         treems.Dispose()
@@ -2063,6 +2428,8 @@ get_billboard_data:
         treeCache(cnt2).frond_displayID = Trees.flora(tree).frond_displayID
         treeCache(cnt2).leaf_displayID = Trees.flora(tree).leaf_displayID
         treeCache(cnt2).billboard_displayID = Trees.flora(tree).billboard_displayID
+        treeCache(cnt2).billboard_textureID = Trees.flora(tree).billboard_textureID
+        treeCache(cnt2).billboard_normalID = Trees.flora(tree).billboard_normalID
         Return
         '----------------------------------------
 
@@ -2141,6 +2508,8 @@ get_billboard_data:
         Dim gxstep As Double = gx / 100.0
         Dim gy As Double = v / 10.0
         Dim gystep As Double = gy / 100.0
+        'save the size of each play area cell
+        frmMapInfo.I__General_Info_tb.Text += "Player Area Grid Size: " + gx.ToString + " x " + gy.ToString + vbCrLf + vbCrLf
         Dim yup As Double = 0.5
         Gl.glBegin(Gl.GL_QUADS)
         Dim ur As Double = -0.5

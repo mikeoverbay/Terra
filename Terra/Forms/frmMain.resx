@@ -297,6 +297,18 @@
   <data name="ToolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
     <value>165, 6</value>
   </data>
+  <data name="m_map_info.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 22</value>
+  </data>
+  <data name="m_map_info.Text" xml:space="preserve">
+    <value>Map Info</value>
+  </data>
+  <data name="m_render_stats.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 22</value>
+  </data>
+  <data name="m_render_stats.Text" xml:space="preserve">
+    <value>Render Statistics</value>
+  </data>
   <data name="m_developer.Size" type="System.Drawing.Size, System.Drawing">
     <value>168, 22</value>
   </data>
@@ -320,12 +332,6 @@
   </data>
   <data name="m_post_effect_viewer.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
-  </data>
-  <data name="m_render_stats.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 22</value>
-  </data>
-  <data name="m_render_stats.Text" xml:space="preserve">
-    <value>Render Statistics</value>
   </data>
   <data name="m_file.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 23</value>
@@ -2159,6 +2165,18 @@
   <data name="&gt;&gt;ToolStripSeparator6.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;m_map_info.Name" xml:space="preserve">
+    <value>m_map_info</value>
+  </data>
+  <data name="&gt;&gt;m_map_info.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_render_stats.Name" xml:space="preserve">
+    <value>m_render_stats</value>
+  </data>
+  <data name="&gt;&gt;m_render_stats.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;m_developer.Name" xml:space="preserve">
     <value>m_developer</value>
   </data>
@@ -2175,12 +2193,6 @@
     <value>m_post_effect_viewer</value>
   </data>
   <data name="&gt;&gt;m_post_effect_viewer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_render_stats.Name" xml:space="preserve">
-    <value>m_render_stats</value>
-  </data>
-  <data name="&gt;&gt;m_render_stats.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_settings.Name" xml:space="preserve">

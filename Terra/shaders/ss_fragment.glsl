@@ -15,13 +15,12 @@ varying vec3 Vertex;
 void main (void)
 {
 
-float invRadius = 1.5;
 vec3 L = vec3(normalize(gl_LightSource[0].position.xyz - Vertex.xyz));
 L.z *= -1.0;
 float texture_level = (l_texture *.5) ;
 
  
-vec2 texC = -vec2(texCoord*.1);
+vec2 texC = -vec2(texCoord*0.1);
 vec4 base = vec4(texture2D(colorMap, texC +.001)  * texture_level);
    
  

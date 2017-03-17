@@ -1,4 +1,5 @@
 //comp_vertex.glsl
+//used for shading untextured models, trees, terrain and decals
 //phong shader.. no texture
 varying vec3 N;
 varying vec3 v;

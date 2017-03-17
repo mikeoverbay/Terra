@@ -32,12 +32,12 @@ void main(void) {
   // get normal map based on type
 
   if (is_GAmap == int(1)) {
-    bumpMap.xy = (2.0 * texture2D(normalMap, TC1.st).ag - 1.0);;
+      bumpMap.xy = (2.0 * texture2D(normalMap, TC1.st).ag - 1.0);;
     bumpMap.z = sqrt(1.0 - dot(bumpMap.xy, bumpMap.xy));
-    bumpMap.x *= -1.0;
-    bumpMap = normalize(bumpMap);
-    harshness = 1.4;
-    a = textureLod(normalMap, TC1.st, 0).r;
+    bumpMap.xz *= -1.0;
+    bumpMap   = normalize(bumpMap);
+    harshness = 0.8;
+    a         = textureLod(normalMap, TC1.st, 0).r;
     if (alphaTestEnable != 0) {
       alpha = 1.0 - float(alphaRef / 255);
       if (a < alpha) {

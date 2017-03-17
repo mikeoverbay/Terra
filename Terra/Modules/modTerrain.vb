@@ -23,7 +23,6 @@ Module modTerrain
 
     Public Sub open_hole_info(ByVal map As Integer, ByVal dom As MemoryStream)
 
-
         dom.Position = 0
         Dim br As New BinaryReader(dom)
 
@@ -34,7 +33,7 @@ Module modTerrain
         Dim ps As New MemoryStream(buff)
         Dim count As UInteger = 0
         Dim total_read As Integer = 0
-
+        'unzip the data
         Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(dom, Zlib.CompressionMode.Decompress, False)
             Decompress.BufferSize = 65536
             Dim buffer(65536) As Byte
@@ -61,8 +60,9 @@ Module modTerrain
         ps.Dispose()
 
         stride = (w / 2)
-        Dim dbuff((stride * 8) * (h * 2) * 4) As Byte
+        Dim dbuff((stride * 8) * (h * 2) * 4) As Byte ' make room
         count = 0
+        'convert to 4 color data.
         For z = 0 To (h * 2) - 1
             For x = 0 To (stride) - 1
                 Dim val = data((z * stride) + x)
@@ -79,13 +79,14 @@ Module modTerrain
         Next
         '------------------------------------------------------------------
         w = stride * 8 : h = h * 2
+        'need point in to dbuff color buffer array
         Dim bufPtr As IntPtr = Marshal.AllocHGlobal(dbuff.Length - 1)
-        Marshal.Copy(dbuff, 0, bufPtr, dbuff.Length - 1)
+        Marshal.Copy(dbuff, 0, bufPtr, dbuff.Length - 1) ' copy dbuff to pufPtr's memory
         Dim texID = Ilu.iluGenImage() ' Generation of one image name
         Il.ilBindImage(texID) ' Binding of image name 
         Dim success = Il.ilGetError
 
-        Il.ilTexImage(w, h, 1, 4, Il.IL_RGBA, Il.IL_UNSIGNED_BYTE, bufPtr) ' should have a new image here
+        Il.ilTexImage(w, h, 1, 4, Il.IL_RGBA, Il.IL_UNSIGNED_BYTE, bufPtr) ' Create new image from pufPtr's data
         success = Il.ilGetError
         Marshal.FreeHGlobal(bufPtr) ' free this up
         If success = Il.IL_NO_ERROR Then
@@ -109,12 +110,15 @@ Module modTerrain
             'post_depth_image_id = maplist(map).HolesId
             'frmTestView.update_screen()
             'Stop
+        Else
+            MsgBox("Error creating map hole texture! Il Error" + success.ToString, MsgBoxStyle.Exclamation, "Well Shit...")
         End If
         br.Close()
         br.Dispose()
         dom.Dispose()
     End Sub
     Public Sub get_horizonShadowMap(map As Integer, e As Ionic.Zip.ZipEntry)
+        'unused function
         Dim data(e.UncompressedSize) As Byte
         Dim s As New MemoryStream
         e.Extract(s)
@@ -189,18 +193,18 @@ Module modTerrain
             'Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
+            Ilu.iluDeleteImage(texID)
         End If
         br.Close()
         s.Dispose()
 
     End Sub
 
-    Public Function get_layer_count(ByVal ck As Ionic.Zip.ZipFile, map As Integer) As Integer
+    Public Function get_layers(ByVal ck As Ionic.Zip.ZipFile, map As Integer) As Integer
         Dim layer_count As Integer = 0
         ReDim map_layers(map).layers(4)
         map_layers(map).used_layers = 0
-        map_layers(map).layers(1).text_id = dummy_texture
+        map_layers(map).layers(1).text_id = dummy_texture 'preset these to the dummys so they are not empty.
         map_layers(map).layers(2).text_id = dummy_texture
         map_layers(map).layers(3).text_id = dummy_texture
         map_layers(map).layers(4).text_id = dummy_texture
@@ -217,6 +221,7 @@ Module modTerrain
         layer_uv_list += "..........................................." + vbCrLf
         Dim sm = "map:" + map.ToString + vbCrLf
         layer_uv_list += sm
+        'Look for each layer file. If it exist, go get its data.
         Dim layer1 As Ionic.Zip.ZipEntry = ck("terrain2/layer 1")
         If layer1 IsNot Nothing Then
             map_layers(map).layers(1).ms = New MemoryStream
@@ -254,9 +259,10 @@ Module modTerrain
         '	set_layer_2(map)
         'End If
         If layer_count = 0 Then
-            'Stop
+            MsgBox("This chunk has no layers! Map:" + map.ToString("000"), MsgBoxStyle.Exclamation, "Well Shit....")
             Return layer_count
         End If
+        'make the mix map for this layer
         make_mix_texture_id(map, map_layers(map).mix_image)
 
         'frmMain.PictureBox1.Image = map_layers(map).mix_image.Clone
@@ -484,106 +490,130 @@ set_mask:
         Return newImage
 
     End Function
- 
 
-    Public Function get_layer_image(map As Integer, layer As Integer) As Boolean
+    Public Function get_layer_color_image(map As Integer, layer As Integer) As Boolean
         Dim cnt = map_layer_cache.Length
-        Dim color_update As Boolean = True
-        Dim normal_update As Boolean = True
-
         Dim map_name As String = map_layers(map).layers(layer).l_name + "dds"
-        Dim n_map_name As String = map_layers(map).layers(layer).n_name + "dds"
-        'check if this texture already exists
         For i = 0 To cnt - 1
             If map_layer_cache(i).name = map_name Then
                 map_layers(map).layers(layer).text_id = map_layer_cache(i).textureID
                 saved_texture_loads += 1
-                color_update = False
+                Return False
             End If
         Next
+        Dim dds As New MemoryStream
+        'map_layers(map).layers(layer).image = 
+        '================= get color map
+        'if get_main_texture is false, it wont read the huge main texture again!
+        If map_name.ToLower.Contains("color_tex") Then
+            cnt = map_layer_cache.Length
+            ReDim Preserve map_layer_cache(cnt)
+            map_layer_cache(cnt - 1) = New tree_textures_
+            map_layer_cache(cnt - 1).name = map_name
+        Else
+            Dim map_entry As Ionic.Zip.ZipEntry = active_pkg(map_name)
+            If map_entry Is Nothing Then
+                map_entry = shared_content1(map_name)
+                If map_entry Is Nothing Then
+                    map_entry = shared_content2(map_name)
+                    If map_entry Is Nothing Then
+                        frmMapInfo.I__Map_Textures_tb.Text += "MISSING TEXTURE: " + map_name + vbCrLf 'save info
+                        Return True
+                    End If
+                End If
+            End If
+            map_entry.Extract(dds)
+            build_layer_textures_no_bmp(map, dds, layer)        'We dont need the Bitmap. This saves some time
+            dds.Dispose()
+        End If
+
+        frmMapInfo.I__Map_Textures_tb.Text += "Color: " + map_name + vbCrLf 'save info
+
+        'update the cache
+        cnt = map_layer_cache.Length
+        ReDim Preserve map_layer_cache(cnt)
+        map_layer_cache(cnt - 1) = New tree_textures_
+        map_layer_cache(cnt - 1).name = map_name
+        map_layer_cache(cnt - 1).textureID = map_layers(map).layers(layer).text_id
+        Return False
+    End Function
+    Public Function get_layer_normal_image(map As Integer, layer As Integer) As Boolean
+        Dim cnt = map_layer_cache.Length
+        Dim normal_update As Boolean = True
+
+        Dim n_map_name As String = map_layers(map).layers(layer).n_name + "dds"
+        'check if this texture already exists
         If frmMain.m_high_rez_Terrain.Checked Then 'only if we are using bumps
             'check if this texture already exists
             cnt = normalMap_layer_cache.Length
             n_map_name = map_layers(map).layers(layer).n_name + "dds"
             For i = 0 To cnt - 1
-                If normalMap_layer_cache(i).name = n_map_name Then
+                If normalMap_layer_cache(i).normalname = n_map_name Then
                     map_layers(map).layers(layer).norm_id = normalMap_layer_cache(i).textureNormID
                     saved_texture_loads += 1
-                    normal_update = False
+                    Return False
                 End If
             Next
         End If
-        '================= get color map
-        If color_update Then
-
-            Dim dds As New MemoryStream
-            'map_layers(map).layers(layer).image = 
-            'if get_main_texture is false, it wont read the huge main texture again!
-            If map_name.ToLower.Contains("color_tex") Then
-                '    get_main_texture = False
-                '    main_layer_tex = build_layer_textures_bmp(map, dds, layer).Clone 'We want a Bitmap back
-                '    'update the cache
-                cnt = map_layer_cache.Length
-                ReDim Preserve map_layer_cache(cnt)
-                map_layer_cache(cnt - 1) = New tree_textures_
-                map_layer_cache(cnt - 1).name = map_name
-                'map_layer_cache(cnt - 1).textureID = map_layers(map).layers(layer).text_id
-                'Gl.glDeleteTextures(1, map_layers(map).layers(layer).text_id)
-                '    Return True
-            Else
-                Dim map_entry As Ionic.Zip.ZipEntry = active_pkg(map_name)
-                If map_entry Is Nothing Then
-                    map_entry = shared_content1(map_name)
-                    If map_entry Is Nothing Then
-                        map_entry = shared_content2(map_name)
-                        If map_entry Is Nothing Then
+        Dim retry As Boolean = False
+try_again:
+        '================= get norml map
+        Dim nmap_entry As Ionic.Zip.ZipEntry = active_pkg(n_map_name)
+        If nmap_entry Is Nothing Then
+            nmap_entry = shared_content1(n_map_name)
+            If nmap_entry Is Nothing Then
+                nmap_entry = shared_content2(n_map_name)
+                If nmap_entry Is Nothing Then
+                    If retry Then
+                        normal_update = False
+                        If Not n_map_name.ToLower.Contains("color_tex") Then ' stop spamming
+                            frmMapInfo.I__Map_Textures_tb.Text += "MISSING TEXTURE: " + n_map_name + vbCrLf 'save info
+                        End If
+                        Return True
+                    End If
+                    'see if we can find it by adding "_NM" to the diffuse map name.
+                    retry = True ' to stop endless looping
+                    n_map_name = map_layers(map).layers(layer).l_name.Replace(".", "") + "_NM.dds"
+                    For i = 0 To cnt - 1
+                        If normalMap_layer_cache(i).normalname = n_map_name Then
+                            map_layers(map).layers(layer).norm_id = normalMap_layer_cache(i).textureNormID
+                            saved_texture_loads += 1
                             Return False
                         End If
-                    End If
-                End If
-                map_entry.Extract(dds)
-                build_layer_textures_no_bmp(map, dds, layer)        'We dont need the Bitmap. This saves some time
-            End If
-        End If
-
-        '================= get norml map
-        If normal_update And frmMain.m_high_rez_Terrain.Checked Then
-            Dim nmap_entry As Ionic.Zip.ZipEntry = active_pkg(n_map_name)
-            If nmap_entry Is Nothing Then
-                nmap_entry = shared_content1(n_map_name)
-                If nmap_entry Is Nothing Then
-                    nmap_entry = shared_content2(n_map_name)
-                    If nmap_entry Is Nothing Then
-                        Return False
-                    End If
+                    Next
+                    GoTo try_again
                 End If
             End If
-            Dim mdds As New MemoryStream
-            nmap_entry.Extract(mdds)
-            build_normal_layer_textures(map, mdds, layer)
         End If
+        Dim mdds As New MemoryStream
+        nmap_entry.Extract(mdds)
+        build_normal_layer_textures(map, mdds, layer)
+        mdds.Dispose()
 
-        '---------------------------------------------------
+        frmMapInfo.I__Map_Textures_tb.Text += "Normal: " + n_map_name + vbCrLf 'save info
+
         'update the cache
-
-        If color_update Then
-            cnt = map_layer_cache.Length
-            ReDim Preserve map_layer_cache(cnt)
-            map_layer_cache(cnt - 1) = New tree_textures_
-            map_layer_cache(cnt - 1).name = map_name
-            map_layer_cache(cnt - 1).textureID = map_layers(map).layers(layer).text_id
-        End If
-        If normal_update And frmMain.m_high_rez_Terrain.Checked Then
-            'update the cache
-            cnt = normalMap_layer_cache.Length
-            ReDim Preserve normalMap_layer_cache(cnt)
-            normalMap_layer_cache(cnt - 1) = New tree_textures_
-            normalMap_layer_cache(cnt - 1).name = n_map_name
-            normalMap_layer_cache(cnt - 1).textureNormID = map_layers(map).layers(layer).norm_id
-        End If
-
+        cnt = normalMap_layer_cache.Length
+        ReDim Preserve normalMap_layer_cache(cnt)
+        normalMap_layer_cache(cnt - 1) = New tree_textures_
+        normalMap_layer_cache(cnt - 1).normalname = n_map_name
+        normalMap_layer_cache(cnt - 1).textureNormID = map_layers(map).layers(layer).norm_id
 
         Return False
+    End Function
+    Public Function get_layer_image(map As Integer, layer As Integer) As Boolean
+        're-writing this
+        If Not frmMain.m_high_rez_Terrain.Checked Then Return False 'no hires terrain textures
+        '---------------------------------------------------
+        Dim color_status = get_layer_color_image(map, layer)
+        Dim norm_status = get_layer_normal_image(map, layer)
+        '---------------------------------------------------
+        If color_status Or norm_status Then
+            Return False
+        Else
+            Return True
+        End If
+
     End Function
 
     Public Sub create_mix_atlas()
@@ -613,11 +643,9 @@ set_mask:
 
         'frmMain.pb2.BringToFront()
         'frmMain.pb2.Visible = True
-        ResizeGL_2()
+        ResizeGL_2(psize, psize)
         ViewPerspective_2()
         ViewOrtho_2()
-        Gl.glPushMatrix()
-        Gl.glTranslatef(0.0, 0.0F, -0.1F)
         Gl.glDisable(Gl.GL_LIGHTING)
         'Gl.glColor3f(0.8!, 0.0!, 0.0!)
         'Gl.glColor3f(1.0!, 1.0!, 1.0!)
@@ -869,7 +897,7 @@ set_mask:
         lc.y = -frmMain.pb2.Height  ' top to bottom is negitive
         uc.x = 0.0
         uc.y = 0.0
-        ResizeGL_2()
+        ResizeGL_2(lc.x, Abs(lc.y))
         'ViewPerspective_2()
         ViewOrtho_2()
         Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
@@ -1200,6 +1228,7 @@ set_mask:
 
 
     End Sub
+
     Private Sub make_strip_triangle(ByVal vt1 As vertex_data, ByVal vt2 As vertex_data, ByVal vt3 As vertex_data)
         tri_count += 1
         'add offsets
@@ -1246,6 +1275,7 @@ set_mask:
 
 
     End Sub
+
     Private Sub check_bounds(ByVal v As vertex_data)
         If v.x > x_max Then x_max = v.x
         If v.x < x_min Then x_min = v.x
@@ -1255,6 +1285,7 @@ set_mask:
         If v.z < y_min Then y_min = v.z
 
     End Sub
+
     Public Sub make_lists(ByVal map As UInt32)
         ' start list
 
@@ -1285,6 +1316,9 @@ set_mask:
             rdr.ChunkLoadBehaviour = ChunkLoadBehaviour.LOAD_CHUNK_ALWAYS
             x = rdr.ImgInfo.Cols
             y = rdr.ImgInfo.Rows
+            If x * y <> 4096 Then
+                MsgBox("Odd lodNormals file!!!", MsgBoxStyle.Exclamation, "Well Shit...")
+            End If
             ReDim data(rdr.ImgInfo.Cols * rdr.ImgInfo.Rows * 2)
             For i = 0 To rdr.ImgInfo.Cols - 1
                 Dim iline As ImageLine  ' create place to hold a scan line
@@ -1331,6 +1365,7 @@ set_mask:
 
         Return
     End Sub
+
     Public Sub read_heights(ByVal r As MemoryStream, ByVal map As Int32)
         r.Position = 0
 
@@ -1438,6 +1473,7 @@ set_mask:
         ms.Dispose()
         'End If
     End Sub
+
     Public Sub seam_map()
         Dim scale As Double = 100.0# / (64.0#)
         Dim uvinc As Double = 1.0# / 64.0#

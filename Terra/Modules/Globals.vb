@@ -189,9 +189,7 @@ Module Globals
     Public map_borderId As Integer
     Public team_1 As vect3
     Public team_2 As vect3
-    Public speedtree_text As String = ""
-    Public speedtree_imageID As Integer
-    Public speedtree_NormalMapID As Integer
+    
     Public saved_texture_loads As Integer = 0
     Public saved_model_loads As Integer = 0
     Public gl_busy As Boolean = False

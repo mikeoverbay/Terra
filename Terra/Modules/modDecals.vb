@@ -13,6 +13,7 @@ Module modDecals
     Public default_decal_bias As Single = 1.0
     Public Structure decal_
         Public name As String
+        Public normal_name As String
         Public texture_id As Integer
         Public normal_id As Integer
     End Structure
@@ -535,13 +536,20 @@ skipthis:
         Return False
     End Function
 
-    Private Function get_decal_textures(ByVal k As Integer) As Boolean
-        If Not decal_matrix_list(k).good Then Return False
-
-        Dim name, norm As String
-        'decal_matrix_list(k).depth_map_id = frmMain.Make_Depth_texture(decal_grid_size)
-        make_decal_depthMap(k)
-        name = decal_matrix_list(k).decal_texture
+    Private Sub get_decal_textures(ByVal k As Integer)
+        If Not decal_matrix_list(k).good Then Return
+        If get_decal_diffuse(k) Then
+            Return ' found this in cache or not at all
+        Else
+            'added a new diffuse so we need the normal map
+            get_decal_normal_texture(k)
+        End If
+        '--------------------------------------------------------------
+        GC.Collect()
+        Return
+    End Sub
+    Private Function get_decal_diffuse(ByVal k As Integer)
+        Dim name = decal_matrix_list(k).decal_texture
         For i = 0 To decal_cache.Length - 1
             If name = decal_cache(i).name Then
                 decal_matrix_list(k).texture_id = decal_cache(i).texture_id
@@ -549,21 +557,29 @@ skipthis:
                 Return True
             End If
         Next
-
         Dim ms As New MemoryStream
         Dim name_e As Ionic.Zip.ZipEntry = active_pkg(name)
         If name_e Is Nothing Then
             name_e = get_shared(name)
             If name_e Is Nothing Then
-                Return False
+                Return True
             End If
         End If
         name_e.Extract(ms)
-        decal_matrix_list(k).texture_id = get_texture(ms, False)
+        decal_matrix_list(k).texture_id = get_texture(ms, frmMain.m_low_quality_textures.Checked)
         ms.Dispose()
-        'GC.Collect()
-        '--------------------------------------------------------------
-        norm = decal_matrix_list(k).decal_normal
+
+        frmMapInfo.I__Decal_Textures_tb.Text += "Color: " + name + vbCrLf
+        'add to cache
+        Dim d = decal_cache.Length - 1
+        ReDim Preserve decal_cache(d + 1)
+        decal_cache(d).name = name
+        decal_cache(d).texture_id = decal_matrix_list(k).texture_id
+        Return False
+    End Function
+    Private Sub get_decal_normal_texture(ByVal k As Integer)
+        Dim norm = decal_matrix_list(k).decal_normal
+        Dim name = decal_matrix_list(k).decal_texture
         If norm.Contains("Stone06_") Then
             decal_matrix_list(k).normal_id = Load_DDS_File(Application.StartupPath + "\Resources\Stone06_NM.dds")
             GoTo saveit
@@ -573,21 +589,24 @@ skipthis:
         If norm_e Is Nothing Then
             norm_e = get_shared(norm)
             If norm_e Is Nothing Then
-                Return False
+                Return
             End If
         End If
         norm_e.Extract(ms2)
-        decal_matrix_list(k).normal_id = get_texture(ms2, False)
+        decal_matrix_list(k).normal_id = get_texture(ms2, frmMain.m_low_quality_textures.Checked)
         ms2.Dispose()
 saveit:
-        GC.Collect()
-        Dim d = decal_cache.Length - 1
-        ReDim Preserve decal_cache(d + 1)
-        decal_cache(d).name = name
-        decal_cache(d).texture_id = decal_matrix_list(k).texture_id
-        decal_cache(d).normal_id = decal_matrix_list(k).normal_id
-        Return True
-    End Function
+        frmMapInfo.I__Decal_Textures_tb.Text += "Normal: " + norm + vbCrLf
+        'find matching texture and save the gl texture normal_id
+        For i = 0 To decal_cache.Length - 1
+            If name = decal_cache(i).name Then
+                decal_cache(i).normal_id = decal_matrix_list(k).normal_id
+                decal_cache(i).normal_name = norm
+                Return
+            End If
+        Next
+
+    End Sub
 
     Public Function rotate_only(ByVal v As vect3, ByVal m() As Single) As vect3
         Dim vo As vect3
@@ -822,17 +841,15 @@ saveit:
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, fboID)
         For k = 0 To decal_matrix_list.Length - 1
             If decal_matrix_list(k).good Then
-                get_decal_textures(k)
-
-                'ReDim Preserve decal_matrix_list(k).decal_data(0)
+                make_decal_depthMap(k) 'create the projected texture
+                get_decal_textures(k) ' get the textures
                 frmMain.ProgressBar1.Value = k
-                frmMain.tb1.Text = "Populating the sections with decals ( " + k.ToString + " )"
+                frmMain.tb1.Text = "Populating the sections with decals ( " + k.ToString + " )" 'talk to user
                 Application.DoEvents()
             End If
         Next
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Gl.glDrawBuffer(Gl.GL_BACK)
-
     End Sub
     Public Sub agv_mesh_norms(ByRef d As decal_matrix_list_)
         Dim count = d.decal_count

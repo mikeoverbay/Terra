@@ -71,61 +71,6 @@ Module modTextures
         ms.Dispose()
         Return
     End Sub
-    Public Function build_layer_textures_bmp(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer) As Bitmap
-        Dim s As String = ""
-        s = Gl.glGetError
-        Dim texID As UInt32
-        ms.Position = 0
-        Dim textIn(ms.Length) As Byte
-        ms.Read(textIn, 0, ms.Length)
-        texID = Ilu.iluGenImage() ' Generation of one image name
-        Il.ilBindImage(texID) ' Binding of image name 
-        Dim success = Il.ilGetError
-        Il.ilLoadL(Il.IL_DDS, textIn, textIn.Length)
-        success = Il.ilGetError
-        If success = Il.IL_NO_ERROR Then
-            Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
-            Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
-
-            success = Il.ilConvertImage(Il.IL_RGB, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
-            Ilu.iluFlipImage()
-            Ilu.iluMirror()
-            'If your image contains alpha channel you can replace IL_RGB with IL_RGBA 
-            Gl.glGenTextures(1, map_layers(map).layers(layer).text_id)
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(map).layers(layer).text_id)
-            '**************************************************************************
-            If largestAnsio > 0 Then
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
-            End If
-
-            '		DO NOT CHANGE THESE IDIOT!!!
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
-
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
-            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
-            Il.ilGetData()) '  Texture specification 
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-
-            frmMain.pb2.Height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
-            frmMain.pb2.Width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
-            ' has to run on vertical and horz
-            map_layers(map).layers(layer).text_id = blur_image(map_layers(map).layers(layer).text_id, "vert", False)
-            map_layers(map).layers(layer).text_id = blur_image(map_layers(map).layers(layer).text_id, "horz", False)
-            bmap = New Bitmap(temp_bmp.Width, temp_bmp.Height, temp_bmp.PixelFormat)
-            bmap = temp_bmp.Clone
-        Else
-            Stop
-        End If
-        ms.Close()
-        ms.Dispose()
-        Return bmap
-    End Function
     Public Function get_main_tex_bmp(ByVal ms As MemoryStream) As Bitmap
         Dim s As String = ""
         s = Gl.glGetError
@@ -381,16 +326,9 @@ Module modTextures
 
             Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE)
             If shrink Then
-                If frmMain.m_low_quality_textures.Checked Then
-                    If width > 512 Then
-                        Dim delta = 512 / width
-                        Ilu.iluScale(width * delta, height * delta, 1)
-                    End If
-                Else
-                    If width > 256 Then
-                        Dim delta = 256 / width
-                        'Ilu.iluScale(width * delta, height * delta, 1)
-                    End If
+            If shrink Then
+                    Ilu.iluScale(width / 2.0, height / 2.0, 1)
+                    width *= 0.5 : height *= 0.5
                 End If
             End If
             Dim er As Integer = Gl.glGetError
@@ -516,7 +454,10 @@ Module modTextures
             Ilu.iluMirror()
             Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
             Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
-
+            If shrink Then
+                Ilu.iluScale(width / 2.0, height / 2.0, 1)
+                width *= 0.5 : height *= 0.5
+            End If
 
             success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
             'If your image contains alpha channel you can replace IL_RGB with IL_RGBA */
@@ -570,9 +511,9 @@ Module modTextures
 
             Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE)
             If shrink Then
-                If width > 512 Then
-                    Dim delta = 512 / width
-                    Ilu.iluScale(width * delta, height * delta, 1)
+                If shrink Then
+                    Ilu.iluScale(width / 2.0, height / 2.0, 1)
+                    width *= 0.5 : height *= 0.5
                 End If
             End If
             Dim er As Integer = Gl.glGetError

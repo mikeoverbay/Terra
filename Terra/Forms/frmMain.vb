@@ -87,6 +87,7 @@ Public Class frmMain
     Dim clip_distance As Integer
     Public view_mode As Boolean = False
     Dim M_current As New vect2
+    Public pb2_mouse_down As Boolean = False
 #End Region
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -3113,7 +3114,7 @@ nope:
                             'draw = False
                             Gl.glEnable(Gl.GL_CULL_FACE)
                             Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_imageID)
+                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
                             Gl.glCallList(Trees.flora(i).billboard_displayID)
                         Else
                             Gl.glDisable(Gl.GL_CULL_FACE)
@@ -3128,18 +3129,18 @@ nope:
                                 End If
                                 If Trees.flora(i).frond_displayID > 0 Then
                                     Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_imageID)
+                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
                                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_NormalMapID)
+                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_normalID) 'speedtree composite texture
                                     Gl.glCallList(Trees.flora(i).frond_displayID)
                                 End If
                             Else
                                 If rad <= t_cut_off Then
                                     If Trees.flora(i).leaf_displayID > 0 Then
                                         Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_imageID)
+                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
                                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, speedtree_NormalMapID)
+                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_normalID) 'speedtree composite texture
                                         Gl.glCallList(Trees.flora(i).leaf_displayID)
                                     End If
                                 End If
@@ -3945,7 +3946,8 @@ nope:
         Gl.glColor3f(1.0!, 1.0!, 1.0!)
         Gl.glEnable(Gl.GL_TEXTURE_2D)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, minimap_textureid)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, noise_map_id)
+        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(0).main_texture)
+
         Gl.glBegin(Gl.GL_TRIANGLES)
         '---
         Gl.glTexCoord2f(0.0, 0.0)
@@ -5935,6 +5937,32 @@ no_move_xz:
     <DllImport("gdi32.dll")> _
     Private Shared Function SetPixel(ByVal hDC As IntPtr, ByVal x As Integer, ByVal y As Integer, ByVal color As Integer) As Integer
     End Function
+#Region "pb2 functions"
+    Private Sub pb2_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles pb2.MouseDoubleClick
+        If pb2.Parent Is frmShowImage.SPC.Panel1 Then
+            frmShowImage.rect_location = New Point(0, 0)
+            frmShowImage.draw_(frmShowImage.current_image)
+        End If
+
+    End Sub
+
+    Private Sub pb2_MouseDown(sender As Object, e As MouseEventArgs) Handles pb2.MouseDown
+        pb2_mouse_down = True
+        frmShowImage.mouse_delta = e.Location
+    End Sub
+    Private Sub pb2_MouseUp(sender As Object, e As MouseEventArgs) Handles pb2.MouseUp
+        pb2_mouse_down = False
+    End Sub
+    Private Sub pb2_MouseWheel(sender As Object, e As MouseEventArgs) Handles pb2.MouseWheel
+        If pb2.Parent Is frmShowImage.SPC.Panel1 Then
+            frmShowImage.mouse_delta = e.Location
+            If e.Delta > 0 Then
+                frmShowImage.img_scale_up_Click()
+            Else
+                frmShowImage.img_scale_down_Click()
+            End If
+        End If
+    End Sub
 
     Private Sub pb2_MouseEnter(sender As Object, e As EventArgs) Handles pb2.MouseEnter
         pb2.Focus()
@@ -5943,14 +5971,30 @@ no_move_xz:
 
     End Sub
 
+    Private Sub pb2_Paint(sender As Object, e As PaintEventArgs) Handles pb2.Paint
+        If pb2.Parent Is frmShowImage.SPC.Panel1 Then
+            If frmShowImage.ready_to_render Then
+                frmShowImage.draw_(frmShowImage.current_image)
+            End If
+        End If
+    End Sub
+
     Private Sub pb2_MouseMove(sender As Object, e As MouseEventArgs) Handles pb2.MouseMove
-        If pb2.Parent Is frmShowImage Then
+        If pb2_mouse_down Then
+            Dim p As New Point
+            p = e.Location - frmShowImage.mouse_delta
+            frmShowImage.rect_location += p
+            frmShowImage.mouse_delta = e.Location
+            frmShowImage.draw_(frmShowImage.current_image)
+            Return
+        End If
+        If pb2.Parent Is frmShowImage.SPC.Panel1 Then
             Dim loc As New Point
             Dim Csize = Cursor.Size
             Dim HS As New Point(0, -16)
             loc = pb2.PointToClient(Cursor.Position)
-            loc.Y = loc.Y - (Csize.Height / 2) + 8
-            loc.Y = loc.Y - (Csize.Height / 2)
+            'loc.Y = loc.Y - (Csize.Height / 2) + 16
+            'loc.Y = loc.Y - (Csize.Height / 2)
             Dim g = GetDC(pb2.Handle)
             Dim c As Color
             Try
@@ -5971,6 +6015,7 @@ no_move_xz:
             Application.DoEvents()
         End If
     End Sub
+#End Region
 
 
     Private Sub ToolStripMenuItem15_Click(sender As Object, e As EventArgs) Handles m_edit_shaders.Click
@@ -6677,6 +6722,10 @@ no_move_xz:
         frmStats.Show()
     End Sub
 
+
+    Private Sub m_map_info_Click(sender As Object, e As EventArgs) Handles m_map_info.Click
+        frmMapInfo.Show()
+    End Sub
 
 End Class
 

@@ -162,6 +162,12 @@
     <Import Include="Tao.Platform.Windows" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\frmMapInfo.Designer.vb">
+      <DependentUpon>frmMapInfo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMapInfo.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmStats.Designer.vb">
       <DependentUpon>frmStats.vb</DependentUpon>
     </Compile>
@@ -360,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.ru-RU.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMapInfo.resx">
+      <DependentUpon>frmMapInfo.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmOutput.resx">
       <DependentUpon>frmOutput.vb</DependentUpon>

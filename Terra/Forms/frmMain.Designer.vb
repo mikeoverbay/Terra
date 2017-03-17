@@ -40,10 +40,11 @@ Partial Class frmMain
         Me.ToolStripMenuItem7 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_exit = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
+        Me.m_map_info = New System.Windows.Forms.ToolStripMenuItem()
+        Me.m_render_stats = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_developer = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_edit_biasing = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_post_effect_viewer = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_render_stats = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_settings = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_lighting = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem13 = New System.Windows.Forms.ToolStripSeparator()
@@ -161,7 +162,7 @@ Partial Class frmMain
         '
         'm_file
         '
-        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_developer, Me.m_edit_biasing, Me.m_post_effect_viewer, Me.m_render_stats})
+        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_map_info, Me.m_render_stats, Me.m_developer, Me.m_edit_biasing, Me.m_post_effect_viewer})
         Me.m_file.ForeColor = System.Drawing.Color.Black
         Me.m_file.Name = "m_file"
         resources.ApplyResources(Me.m_file, "m_file")
@@ -211,6 +212,16 @@ Partial Class frmMain
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
         resources.ApplyResources(Me.ToolStripSeparator6, "ToolStripSeparator6")
         '
+        'm_map_info
+        '
+        Me.m_map_info.Name = "m_map_info"
+        resources.ApplyResources(Me.m_map_info, "m_map_info")
+        '
+        'm_render_stats
+        '
+        Me.m_render_stats.Name = "m_render_stats"
+        resources.ApplyResources(Me.m_render_stats, "m_render_stats")
+        '
         'm_developer
         '
         Me.m_developer.CheckOnClick = True
@@ -226,11 +237,6 @@ Partial Class frmMain
         '
         Me.m_post_effect_viewer.Name = "m_post_effect_viewer"
         resources.ApplyResources(Me.m_post_effect_viewer, "m_post_effect_viewer")
-        '
-        'm_render_stats
-        '
-        Me.m_render_stats.Name = "m_render_stats"
-        resources.ApplyResources(Me.m_render_stats, "m_render_stats")
         '
         'm_settings
         '
@@ -786,5 +792,6 @@ Partial Class frmMain
     Friend WithEvents m_edit_biasing As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_post_effect_viewer As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_render_stats As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_map_info As System.Windows.Forms.ToolStripMenuItem
 
 End Class

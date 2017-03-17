@@ -1,4 +1,5 @@
 ﻿//comp_fragment.glsl
+//used for shading untextured models, trees, terrain and decals
 //phong shader.. no texture
 uniform vec3 cam_pos;
 varying vec3 N;
