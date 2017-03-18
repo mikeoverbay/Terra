@@ -197,6 +197,7 @@ Public Class frmShowImage
             MessageBox.Show("Unable to make rendering context current")
             Return
         End If
+        Dim red, green, blue, alpha As Byte
         ResizeGL_2(SPC.Panel1.Width, SPC.Panel1.Height - 25)
         'ViewPerspective_2()
         ViewOrtho_2()
@@ -216,7 +217,7 @@ Public Class frmShowImage
             Gl.glClearColor(0.9F, 0.9F, 0.9F, 1.0F)
             Gl.glEnable(Gl.GL_BLEND)
         Else
-            Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
+            Gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F)
             Gl.glDisable(Gl.GL_BLEND)
         End If
 
@@ -241,12 +242,8 @@ Public Class frmShowImage
         p4 = L
         p4.Y += S.Y
         Gl.glPushMatrix()
-        'Dim xo = rect_location.X - mouse_pos.X
-        'Dim yo = rect_location.Y - mouse_pos.Y
-        'Gl.glTranslatef(mouse_pos.X, -mouse_pos.Y, 0.0)
-        'Gl.glScalef(Zoom_Factor, Zoom_Factor, 1.0)
-        'Gl.glTranslatef(-mouse_pos.X, mouse_pos.Y, 0.0)
 
+        'draw and flip bufffers so the user can see the image
         Gl.glBegin(Gl.GL_QUADS)
         '---
         Gl.glTexCoord2fv(u1)
@@ -263,7 +260,7 @@ Public Class frmShowImage
         Gl.glFinish()
         Gdi.SwapBuffers(pb2_hDC)
 
-        'We have to draw this again so its in the other buffer so we can read the pixel data.
+        'We have to draw this again so its in the back buffer so we can read the pixel data.
         Gl.glBegin(Gl.GL_QUADS)
         '---
         Gl.glTexCoord2fv(u1)
@@ -278,7 +275,16 @@ Public Class frmShowImage
         Gl.glPopMatrix()
         Gl.glDisable(Gl.GL_TEXTURE_2D)
         Gl.glDisable(Gl.GL_BLEND)
-        e = Gl.glGetError
+
+        Dim viewport(4) As Integer
+        Dim pixel() As Byte = {0, 0, 0, 0}
+        Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
+        'read one pixel at the mouse_pos location
+        Gl.glReadPixels(mouse_pos.X, viewport(3) - mouse_pos.Y, 1, 1, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixel)
+        red = pixel(0)
+        green = pixel(1)
+        blue = pixel(2)
+        alpha = pixel(3)
 
         Gl.glFinish()
         Gl.glFlush()
@@ -288,7 +294,12 @@ Public Class frmShowImage
             MessageBox.Show("Unable to make rendering context current")
             'End
         End If
-
+        Dim precent_scaled = (Zoom_Factor / 1) * 100
+        TextBox1.Text = "Zoom:" + precent_scaled.ToString("000.00") + "%" +
+                    " R:" + red.ToString("000") + " G:" + green.ToString("000") + " B:" + blue.ToString("000") + " A:" + alpha.ToString("000")
+        Application.DoEvents()
+        Application.DoEvents()
+        Application.DoEvents()
 
     End Sub
 
@@ -395,56 +406,17 @@ Public Class frmShowImage
     End Sub
 
     Public Sub btn_scale_up_Click(sender As Object, e As EventArgs) Handles btn_scale_up.Click
-        If Not ready_to_render Then Return
-        If Zoom_Factor >= 4 Then Return 'to big and the t_bmp creation will hammer memory and render time. 2048 max at 4x setting
-        Dim xc, yc As Single
-        Dim factor As Single = 1.0625
-        Zoom_Factor *= factor
-        'this bit of math zooms the texture around the mouses center during the resize.
-        If rect_location.X >= 0 Then
-            xc = (frmMain.pb2.Width / 2) - (rect_location.X)
-        Else
-            xc = (frmMain.pb2.Width / 2) + (-rect_location.X)
-        End If
-        If rect_location.Y >= 0.0 Then
-            yc = (frmMain.pb2.Height / 2) - (rect_location.Y)
-        Else
-            yc = (frmMain.pb2.Height / 2) + (-rect_location.Y)
-        End If
-
-        rect_size.X *= factor
-        rect_size.Y *= factor
-        TextBox1.Text = String.Format("Zoom:" + "{0}%", Round((Zoom_Factor / 1) * 100))
-        xc = (rect_size.X / 2) - (xc * factor)    '* Zoom_Factor
-        yc = (rect_size.Y / 2) - (yc * factor) '* -Zoom_Factor
-        rect_location = New Point(((frmMain.pb2.Width - rect_size.X) / 2) + xc, ((frmMain.pb2.Height - rect_size.Y) / 2) + yc)
-        draw_(current_image)
+        mouse_pos.X = frmMain.pb2.Width / 2.0
+        mouse_pos.Y = frmMain.pb2.Height / 2.0
+        img_scale_up()
+        Application.DoEvents()
     End Sub
 
     Public Sub btn_scale_down_Click(sender As Object, e As EventArgs) Handles btn_scale_down.Click
-        If Not ready_to_render Then Return
-        If Zoom_Factor <= 0.25 Then Return ' no point in going to small
-        Dim xc, yc As Single
-        Dim factor As Single = 0.9375
-        Zoom_Factor *= factor
-        'this bit of math zooms the texture around the mouses center during the resize.
-        If rect_location.X >= 0 Then
-            xc = (frmMain.pb2.Width / 2) - (rect_location.X)
-        Else
-            xc = (frmMain.pb2.Width / 2) + (-rect_location.X)
-        End If
-        If rect_location.Y >= 0.0 Then
-            yc = (frmMain.pb2.Height / 2) - (rect_location.Y)
-        Else
-            yc = (frmMain.pb2.Height / 2) + (-rect_location.Y)
-        End If
-        rect_size.X *= factor
-        rect_size.Y *= factor
-        TextBox1.Text = String.Format("Zoom:" + "{0}%", Round((Zoom_Factor / 1) * 100))
-        xc = (rect_size.X / 2) - (xc * factor)  '* Zoom_Factor
-        yc = (rect_size.Y / 2) - (yc * factor) '* -Zoom_Factor
-        rect_location = New Point(((frmMain.pb2.Width - rect_size.X) / 2) + xc, ((frmMain.pb2.Height - rect_size.Y) / 2) + yc)
-        draw_(current_image)
+        mouse_pos.X = frmMain.pb2.Width / 2.0
+        mouse_pos.Y = frmMain.pb2.Height / 2.0
+        img_scale_down()
+        Application.DoEvents()
     End Sub
 
     Private Sub alpha_cb_CheckedChanged(sender As Object, e As EventArgs) Handles alpha_cb.CheckedChanged

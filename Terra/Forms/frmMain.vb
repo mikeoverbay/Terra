@@ -1727,6 +1727,7 @@ nope:
 
     End Sub
 
+#Region "Screen Pick methods"
 
     Public Function GetOGLPos_trees(ByVal x As Integer, ByVal y As Integer) As Integer
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
@@ -1815,6 +1816,7 @@ nope:
         Gl.glFinish()
         Application.DoEvents()
     End Sub
+
     Public Function GetOGLPos_Decals(ByVal x As Integer, ByVal y As Integer) As Integer
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
         Gl.glDisable(Gl.GL_FOG)
@@ -2205,6 +2207,7 @@ nope:
         frmDebug.tb.Text += "N:" + n.ToString + String.Format("X{0,12:F4} Y{0,12:F4} Z{0,12:F4} ", v.x, v.y, v.z) + vbCrLf
     End Sub
     Dim bias() As Single = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0}
+#End Region
 
 
     Public Sub draw_little_window(decal As Integer)
@@ -5950,9 +5953,11 @@ no_move_xz:
         pb2_mouse_down = True
         frmShowImage.mouse_delta = e.Location
     End Sub
+
     Private Sub pb2_MouseUp(sender As Object, e As MouseEventArgs) Handles pb2.MouseUp
         pb2_mouse_down = False
     End Sub
+
     Private Sub pb2_MouseWheel(sender As Object, e As MouseEventArgs) Handles pb2.MouseWheel
         If pb2.Parent Is frmShowImage.SPC.Panel1 Then
             frmShowImage.mouse_pos = e.Location
@@ -5962,7 +5967,6 @@ no_move_xz:
             Else
                 frmShowImage.img_scale_down()
             End If
-            frmShowImage.TextBox1.Text = String.Format("Zoom:" + "{000}%", Round((frmShowImage.Zoom_Factor / 1) * 100))
 
         End If
     End Sub
@@ -5970,6 +5974,7 @@ no_move_xz:
     Private Sub pb2_MouseEnter(sender As Object, e As EventArgs) Handles pb2.MouseEnter
         pb2.Focus()
     End Sub
+
     Private Sub pb2_MouseLeave(sender As Object, e As EventArgs) Handles pb2.MouseLeave
 
     End Sub
@@ -5992,8 +5997,8 @@ no_move_xz:
             Return
         End If
         If pb2.Parent Is frmShowImage.SPC.Panel1 Then
-
-            frmShowImage.TextBox1.Text = String.Format("Zoom:" + "{000}%", Round((frmShowImage.Zoom_Factor / 1) * 100))
+            frmShowImage.mouse_pos = e.Location
+            frmShowImage.draw_(frmShowImage.current_image)
             Application.DoEvents()
         End If
     End Sub

@@ -22,6 +22,7 @@ Partial Class frmMapInfo
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMapInfo))
         Me.info_tabcontrol = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.I__Map_Textures_tb = New System.Windows.Forms.TextBox()
@@ -188,8 +189,10 @@ Partial Class frmMapInfo
         Me.Controls.Add(Me.info_tabcontrol)
         Me.ForeColor = System.Drawing.Color.Silver
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.Name = "frmMapInfo"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Map Info   :   Click an Image name to view it..."
         Me.TopMost = True
         Me.info_tabcontrol.ResumeLayout(False)

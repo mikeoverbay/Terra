@@ -108,7 +108,6 @@ Module modOpenGL
 		gl_set_lights()
         Wgl.wglShareLists(pb1_hRC, pb2_hRC)
         Wgl.wglShareLists(pb1_hRC, pb3_hRC)
-        ' build_shaders()
         e = Gl.glGetError
         If e <> 0 Then
             Dim s = Glu.gluErrorString(e).ToString
@@ -130,13 +129,7 @@ Module modOpenGL
 
 	Public Sub gl_set_lights()
 		'lighting
-
-		'Debug.WriteLine("GL Error A:" + Gl.glGetError().ToString)
-		''Gl.glEnable(Gl.GL_SMOOTH)
-		''Gl.glShadeModel(Gl.GL_SMOOTH)
-		'Debug.WriteLine("GL Error B:" + Gl.glGetError().ToString)
-
-		Dim specReflection() As Single = {0.4F, 0.4F, 0.4F, 1.0F}
+        Dim specReflection() As Single = {0.4F, 0.4F, 0.4F, 1.0F}
 		Dim specular() As Single = {0.4F, 0.4F, 0.4F, 1.0F}
 		Dim emission() As Single = {0.0F, 0.0F, 0.0F, 1.0F}
 		Dim ambient() As Single = {0.8F, 0.8F, 0.8F, 1.0F}
@@ -144,15 +137,10 @@ Module modOpenGL
 		Dim diffuseLight() As Single = {0.99, 0.99, 0.99, 1.0F}
 
 		Dim mcolor() As Single = {0.9F, 0.9F, 0.9F, 1.0F}
-		'Gl.glEnable(Gl.GL_SMOOTH)
-		Gl.glShadeModel(Gl.GL_SMOOTH)
+        Gl.glShadeModel(Gl.GL_SMOOTH)
 
 		Gl.glEnable(Gl.GL_LIGHT0)
-		'Gl.glEnable(Gl.GL_LIGHT1)
-		'Gl.glEnable(Gl.GL_LIGHT2)
-		'Gl.glEnable(Gl.GL_LIGHT3)
-		'Gl.glEnable(Gl.GL_LIGHT4)
-		Gl.glEnable(Gl.GL_LIGHTING)
+        Gl.glEnable(Gl.GL_LIGHTING)
 
 		'light 0
 		Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
@@ -161,43 +149,6 @@ Module modOpenGL
 		Dim position2() As Single = {400.0F, 100.0F, -400.0F, 1.0F}
 		Dim position3() As Single = {-400.0F, 100.0F, -400.0F, 1.0F}
 		Dim position4() As Single = {-400.0F, 100.0F, 400.0F, 1.0F}
-
-		' light 1
-
-		'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position0)
-		'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, specular)
-		'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_EMISSION, emission)
-		'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_DIFFUSE, diffuseLight)
-		'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_AMBIENT, ambient)
-
-		'Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_POSITION, position1)
-		'Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_SPECULAR, specular)
-		'Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_EMISSION, emission)
-		'Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_DIFFUSE, diffuseLight)
-		'Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_AMBIENT, ambient)
-
-
-		'Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_POSITION, position2)
-		'Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_SPECULAR, specular)
-		'Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_EMISSION, emission)
-		'Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_DIFFUSE, diffuseLight)
-		'Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_AMBIENT, ambient)
-
-
-		'Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_POSITION, position3)
-		'Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_SPECULAR, specular)
-		'Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_EMISSION, emission)
-		'Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_DIFFUSE, diffuseLight)
-		'Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_AMBIENT, ambient)
-
-
-		'Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_POSITION, position4)
-		'Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_SPECULAR, specular)
-		'Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_EMISSION, emission)
-		'Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_DIFFUSE, diffuseLight)
-		'Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_AMBIENT, ambient)
-
-
 
 
 		Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
@@ -216,8 +167,7 @@ Module modOpenGL
 		Gl.glEnable(Gl.GL_COLOR_MATERIAL)
 		Gl.glLightModeli(Gl.GL_LIGHT_MODEL_TWO_SIDE, Gl.GL_FALSE)
 
-		'Gl.glFrontFace(Gl.GL_CCW)
-		Gl.glClearDepth(1.0F)
+        Gl.glClearDepth(1.0F)
 		Gl.glEnable(Gl.GL_DEPTH_TEST)
 		Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_LOCAL_VIEWER, 0.0F)
 		Gl.glEnable(Gl.GL_NORMALIZE)
@@ -235,15 +185,7 @@ Module modOpenGL
 
 	Public Sub ResizeGL()
 		Gl.glViewport(0, 0, frmMain.pb1.Width, frmMain.pb1.Height)
-        'Gl.glMatrixMode(Gl.GL_PROJECTION) ' Select The Projection Matrix
-        'Gl.glLoadIdentity() ' Reset The Projection Matrix
-
-        '' Calculate The Aspect Ratio Of The Window
-        'Glu.gluPerspective(70.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 0.02F, Far_Clip)
-
-        'Gl.glMatrixMode(Gl.GL_MODELVIEW)	' Select The Modelview Matrix
-        'Gl.glLoadIdentity() ' Reset The Modelview Matrix
-
+       
 	End Sub
     Public Sub ResizeGL_2(ByVal size_x As Single, ByVal size_y As Single)
         frmMain.pb2.Width = size_x
@@ -262,14 +204,6 @@ Module modOpenGL
 		frmMain.pb2.Location = New Point(frmMain.pb1.Width - frmMain.pb2.Width, frmMain.pb1.Height - frmMain.pb2.Height)
 
 		Gl.glViewport(0, 0, frmMain.pb2.Width, frmMain.pb2.Height)
-		'Gl.glMatrixMode(Gl.GL_PROJECTION) ' Select The Projection Matrix
-		'Gl.glLoadIdentity() ' Reset The Projection Matrix
-
-		'' Calculate The Aspect Ratio Of The Window
-		'Glu.gluPerspective(70.0F, CSng((frmMain.pb2.Width) / (frmMain.pb2.Height)), 0.02F, Far_Clip)
-
-		'Gl.glMatrixMode(Gl.GL_MODELVIEW)	' Select The Modelview Matrix
-		'Gl.glLoadIdentity() ' Reset The Modelview Matrix
 
 	End Sub
 	Public Sub glutPrint(ByVal x As Single, ByVal y As Single, _
@@ -285,11 +219,9 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
 		Gl.glEnable(Gl.GL_BLEND)
 		Gl.glColor3f(r, g, b)
 		Gl.glRasterPos2f(x, y)
-		For Each I In text
-
-			Glut.glutBitmapCharacter(Glut.GLUT_BITMAP_8_BY_13, Asc(I))
-
-		Next
+        For Each I In text
+            Glut.glutBitmapCharacter(Glut.GLUT_BITMAP_8_BY_13, Asc(I))
+        Next
 		If Not blending Then Gl.glDisable(Gl.GL_BLEND)
 	End Sub
 	Public Sub glutPrintBox(ByVal x As Single, ByVal y As Single, _
@@ -330,8 +262,6 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
 		Gl.glLoadIdentity() 'Reset The Matrix
 	End Sub
 
-
-
     Public Sub ViewOrtho()
         ResizeGL()
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
@@ -349,14 +279,10 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
     End Sub
     Public Sub ViewPerspective_2()
         ' Set Up A Perspective View
-
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity()
 
         Glu.gluPerspective(60.0F, CSng((frmMain.pb2.Width) / (frmMain.pb2.Height)), 1.0F, 2500)
-        ' Gl.glEnable(Gl.GL_DEPTH_TEST)
-        ' Gl.glDepthMask(Gl.GL_TRUE)
-        ' Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
         Gl.glLoadIdentity() 'Reset The Matrix
     End Sub
@@ -365,13 +291,7 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity()
 
-        ' If frmMain.m_Orbit_Light.Checked Then
         Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.02F, 3000)
-        ' Else
-        ' Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.01F, 4000)
-        ' End If
-        'Gl.glEnable(Gl.GL_DEPTH_TEST)
-        'Gl.glDepthMask(Gl.GL_TRUE)
         Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
         Gl.glLoadIdentity() 'Reset The Matrix
@@ -396,7 +316,6 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
 
         End If
         Gl.glEnable(Gl.GL_DEPTH_TEST)
-        'Gl.glDepthMask(Gl.GL_TRUE)
         Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
         Gl.glLoadIdentity() 'Reset The Matrix
