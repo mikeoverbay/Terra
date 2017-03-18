@@ -5955,12 +5955,15 @@ no_move_xz:
     End Sub
     Private Sub pb2_MouseWheel(sender As Object, e As MouseEventArgs) Handles pb2.MouseWheel
         If pb2.Parent Is frmShowImage.SPC.Panel1 Then
+            frmShowImage.mouse_pos = e.Location
             frmShowImage.mouse_delta = e.Location
             If e.Delta > 0 Then
-                frmShowImage.img_scale_up_Click()
+                frmShowImage.img_scale_up()
             Else
-                frmShowImage.img_scale_down_Click()
+                frmShowImage.img_scale_down()
             End If
+            frmShowImage.TextBox1.Text = String.Format("Zoom:" + "{000}%", Round((frmShowImage.Zoom_Factor / 1) * 100))
+
         End If
     End Sub
 
@@ -5989,29 +5992,8 @@ no_move_xz:
             Return
         End If
         If pb2.Parent Is frmShowImage.SPC.Panel1 Then
-            Dim loc As New Point
-            Dim Csize = Cursor.Size
-            Dim HS As New Point(0, -16)
-            loc = pb2.PointToClient(Cursor.Position)
-            'loc.Y = loc.Y - (Csize.Height / 2) + 16
-            'loc.Y = loc.Y - (Csize.Height / 2)
-            Dim g = GetDC(pb2.Handle)
-            Dim c As Color
-            Try
-                c = frmShowImage.t_bmp.GetPixel(loc.X, loc.Y)
-                'frmShowImage.TextBox1.BackColor = c
-            Catch ex As Exception
 
-            End Try
-            Dim cr, cg, cb, ca As Integer
-            ca = c.A
-            cr = c.R
-            cg = c.G
-            cb = c.B
-            frmShowImage.TextBox1.Text = _
-                "R:" + cr.ToString + "  G:" + cg.ToString + "   B:" + cb.ToString + "   A:" + ca.ToString
-            'frmShowImage.TextBox1.Text = "X:" + loc.X.ToString + "   Y:" + loc.Y.ToString
-            ReleaseDC(pb2.Handle, g)
+            frmShowImage.TextBox1.Text = String.Format("Zoom:" + "{000}%", Round((frmShowImage.Zoom_Factor / 1) * 100))
             Application.DoEvents()
         End If
     End Sub

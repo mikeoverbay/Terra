@@ -2327,7 +2327,7 @@ get_billboard_data:
         Gl.glNewList(Trees.flora(tree).billboard_displayID, Gl.GL_COMPILE)
 
         'Grrrrrr
-        ind_cnt = 42
+        'ind_cnt = 42
         Gl.glBegin(Gl.GL_TRIANGLES)
         For i = 0 To (ind_cnt) - 7
             '   For k = 0 To 2
