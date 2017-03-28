@@ -1462,7 +1462,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V032.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V033.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -6144,7 +6144,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
         "ProductCode" = "8:{C195B34A-EFE4-4940-A420-04D22DFF64A0}"
-        "PackageCode" = "8:{7B633E1A-5E0D-4941-841D-E26C58D56BE3}"
+        "PackageCode" = "8:{B11FCABF-C45D-4C04-BC99-556CD5D3CDFC}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -6698,7 +6698,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0C5BF608457D480B87B630800FAE9C40"
             {
-            "SourcePath" = "8:..\\Terra\\obj\\x86\\Debug\\Terra.exe"
+            "SourcePath" = "8:..\\Terra\\obj\\x86\\Release\\Terra.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"
