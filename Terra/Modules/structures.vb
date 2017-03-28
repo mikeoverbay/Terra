@@ -175,16 +175,23 @@ Module structures
         Public billboard_displayID As Integer
         Public branch_textureID As Integer
         Public branch_normalID As Integer
-        'Public frond_textureID As Integer
-        'Public frond_normalID As Integer
-        'Public leaf_textureID As Integer
-        'Public leaf_normalID As Integer
+        Public frond_textureID As Integer
+        Public frond_normalID As Integer
+        Public leaf_textureID As Integer
+        Public leaf_normalID As Integer
         Public billboard_textureID As Integer
         Public billboard_normalID As Integer
 
         Public branch_displayID As Integer
         Public frond_displayID As Integer
         Public leaf_displayID As Integer
+        'adding these so I can reduce the state changes.
+        'If I do this right, I can bind the textures once and render many trees.
+        'It should save considerable time.
+        Dim tree_id() As Integer
+        Dim matrix_list() As matrix_
+        Dim tree_cnt As Integer
+
     End Structure
     Public Structure f_indices
         Public indices() As Integer
@@ -315,15 +322,18 @@ Module structures
         Public matName As List(Of String)
     End Structure
     Public Structure vertex_data
-        Public x As Double
-        Public y As Double
-        Public z As Double
-        Public u As Double
-        Public v As Double
-        Public nx As Double
-        Public ny As Double
-        Public nz As Double
-
+        Public x As Single
+        Public y As Single
+        Public z As Single
+        Public u As Single
+        Public v As Single
+        Public nx As Single
+        Public ny As Single
+        Public nz As Single
+        Public map As Integer
+        Public t As vect3
+        Public bt As vect3
+        Public fog_uv As vect2
     End Structure
     Public Function get_length_vertex(v As vertex_data)
         Dim s As Single = v.x + v.y + v.z
@@ -364,9 +374,9 @@ Module structures
         Public w As Single
     End Structure
     Public Structure vect3
-        Public x As Double
-        Public y As Double
-        Public z As Double
+        Public x As Single
+        Public y As Single
+        Public z As Single
 
     End Structure
     Public Structure vect3Norm
@@ -375,8 +385,8 @@ Module structures
         Public nz As Single
     End Structure
     Public Structure vect2
-        Public x As Double
-        Public y As Double
+        Public x As Single
+        Public y As Single
     End Structure
     Public Structure vect3B
         Public x As Byte
@@ -389,8 +399,8 @@ Module structures
         Public z As SByte
     End Structure
     Public Structure vect2uv
-        Public u As Double
-        Public v As Double
+        Public u As Single
+        Public v As Single
     End Structure
     Public Structure pngStruct
         Public head1 As UInteger '4

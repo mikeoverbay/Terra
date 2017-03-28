@@ -65,7 +65,8 @@ Module modTextures
             Il.ilBindImage(0)
             ilu.iludeleteimage(texID)
         Else
-            Stop
+            'Stop
+            frmMapInfo.I__General_Info_tb.Text += "Failed to load normal texture. Map:" + map.ToString + vbCrLf
         End If
         ms.Close()
         ms.Dispose()
@@ -80,8 +81,8 @@ Module modTextures
         ms.Read(textIn, 0, ms.Length)
         texID = Ilu.iluGenImage() ' Generation of one image name
         Il.ilBindImage(texID) ' Binding of image name 
-        Dim success = Il.ilGetError
         Il.ilLoadL(Il.IL_DDS, textIn, textIn.Length)
+        Dim success = Il.ilGetError
         success = Il.ilGetError
         ms.Close()
         ms.Dispose()
@@ -91,7 +92,10 @@ Module modTextures
             Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
             Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
 
-            success = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
+            Dim passed = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
+            If Not passed Then
+                MsgBox("Failed Converting Image : get_main_tex_bmp:")
+            End If
             Ilu.iluFlipImage()
             Ilu.iluMirror()
             'If your image contains alpha channel you can replace IL_RGB with IL_RGBA 
@@ -113,22 +117,29 @@ Module modTextures
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
             Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
             Il.ilGetData()) '  Texture specification 
+            Gl.glFinish()
 
+            frmMain.pb2.Visible = True
+            'frmMain.pb2.SendToBack()
             frmMain.pb2.Height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
             frmMain.pb2.Width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
             Il.ilBindImage(0)
-            Ilu.iluDeleteImage(texID)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Il.ilDeleteImages(1, texID)
             'GC.Collect()
             'GC.WaitForFullGCComplete()
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             ' has to run on vertical and horz
             image = blur_image(image, "vert", False)
             image = blur_image(image, "horz", False)
+            If bmap IsNot Nothing Then
+                bmap = Nothing
+                GC.Collect()
+            End If
             bmap = New Bitmap(temp_bmp.Width, temp_bmp.Height, temp_bmp.PixelFormat)
             bmap = temp_bmp.Clone
             Gl.glDeleteTextures(1, image)
         Else
-            Stop
+            MsgBox("Failed at :get_main_tex_bmp:" + success.ToString)
         End If
         Return bmap
     End Function

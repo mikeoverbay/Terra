@@ -33,7 +33,7 @@ Module ModDepthMap
 
             ResizeGL()
             ViewPerspective()
-            render_depths()
+            'render_depths()
             attach_texture_to_FBO(0)
             Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
 
@@ -125,145 +125,145 @@ Module ModDepthMap
 
 
     End Sub
-    Public Sub render_depths()
-        Dim loc_map = Gl.glGetUniformLocation(shader_list.write3D_shader, "map")
-        Dim flag = Gl.glGetUniformLocation(shader_list.write3D_shader, "flag")
+    '    Public Sub render_depths()
+    '        Dim loc_map = Gl.glGetUniformLocation(shader_list.write3D_shader, "map")
+    '        Dim flag = Gl.glGetUniformLocation(shader_list.write3D_shader, "flag")
 
-        Gl.glUseProgram(shader_list.write3D_shader)
-        Gl.glUniform1i(loc_map, 0)
-
-
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-
-        Gl.glColorMask(1, 1, 1, 0)
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glUniform1i(flag, 1)
-
-        'draw terrain
-        For i = 0 To test_count
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
-            Gl.glCallList(maplist(i).calllist_Id)
-            Gl.glCallList(maplist(i).seamCallId)
-
-        Next
-        'draw models
-        For model As UInt32 = 0 To Models.matrix.Length - 1
-            For k = 0 To Models.models(model)._count - 1
-                Gl.glPushMatrix()
-                Gl.glMultMatrixf(Models.matrix(model).matrix)
-                Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                Gl.glPopMatrix()
-            Next
-        Next
-        'draw trees 
-        GoTo f_this
-        If maploaded And frmMain.m_show_trees.Checked _
-           And Not frmMain.m_hell_mode.Checked Then
-            If Trees.flora IsNot Nothing Then
-
-                ' Dim map_loc As Integer = Gl.glGetUniformLocation(alpha_shader, "map")
-                'Gl.glUseProgram(alpha_shader)
-                ' Gl.glUniform1i(map_loc, 0)
-
-                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-                Gl.glDisable(Gl.GL_CULL_FACE)
-                Gl.glActiveTexture(Gl.GL_TEXTURE0)
+    '        Gl.glUseProgram(shader_list.write3D_shader)
+    '        Gl.glUniform1i(loc_map, 0)
 
 
-                Dim rad As Single
-                For mode = 0 To 1
+    '        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+    '        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+    '        Gl.glEnable(Gl.GL_DEPTH_TEST)
 
-                    If mode = 1 Then
-                        Gl.glDisable(Gl.GL_CULL_FACE)
-                    End If
-                    'Dim draw As Boolean = True
-                    Dim t_cut_off As Single = 300000
-                    For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
-                        Gl.glPushMatrix()
-                        Gl.glMultMatrixf(Trees.matrix(i).matrix)
-                        Dim ll As vect3
-                        ll.x = Trees.matrix(i).matrix(12)
-                        ll.y = Trees.matrix(i).matrix(13)
-                        ll.z = Trees.matrix(i).matrix(14)
-                        ll.x -= eyeX
-                        ll.y -= eyeY
-                        ll.z -= eyeZ
-                        rad = (ll.x ^ 2) + (ll.y ^ 2) + (ll.z ^ 2)
+    '        Gl.glColorMask(1, 1, 1, 0)
+    '        Gl.glDisable(Gl.GL_BLEND)
+    '        Gl.glUniform1i(flag, 1)
+
+    '        'draw terrain
+    '        For i = 0 To test_count
+    '            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
+    '            Gl.glCallList(maplist(i).calllist_Id)
+    '            Gl.glCallList(maplist(i).seamCallId)
+
+    '        Next
+    '        'draw models
+    '        For model As UInt32 = 0 To Models.matrix.Length - 1
+    '            For k = 0 To Models.models(model)._count - 1
+    '                Gl.glPushMatrix()
+    '                Gl.glMultMatrixf(Models.matrix(model).matrix)
+    '                Gl.glCallList(Models.models(model).componets(k).callList_ID)
+    '                Gl.glPopMatrix()
+    '            Next
+    '        Next
+    '        'draw trees 
+    '        GoTo f_this
+    '        If maploaded And frmMain.m_show_trees.Checked _
+    '           And Not frmMain.m_hell_mode.Checked Then
+    '            If Trees.flora IsNot Nothing Then
+
+    '                ' Dim map_loc As Integer = Gl.glGetUniformLocation(alpha_shader, "map")
+    '                'Gl.glUseProgram(alpha_shader)
+    '                ' Gl.glUniform1i(map_loc, 0)
+
+    '                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+    '                Gl.glDisable(Gl.GL_CULL_FACE)
+    '                Gl.glActiveTexture(Gl.GL_TEXTURE0)
 
 
-                        'rad = 10
-                        If frmMain.m_low_quality_trees.Checked Then
-                            rad = 200001
-                        End If
-                        'If rad > 300000 Then
-                        'draw = True
-                        If rad > t_cut_off And mode = 0 Then
-                            'draw = False
-                            Gl.glEnable(Gl.GL_CULL_FACE)
-                            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
-                            Gl.glCallList(Trees.flora(i).billboard_displayID)
-                        Else
-                            Gl.glDisable(Gl.GL_CULL_FACE)
-                            If mode = 0 Then
-                                If Trees.flora(i).branch_displayID > 0 Then
-                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).branch_textureID)
-                                    Gl.glCallList(Trees.flora(i).branch_displayID)
-                                Else
-                                End If
-                                If Trees.flora(i).frond_displayID > 0 Then
-                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
-                                    Gl.glCallList(Trees.flora(i).frond_displayID)
-                                End If
-                            Else
-                                If rad <= t_cut_off Then
-                                    If Trees.flora(i).leaf_displayID > 0 Then
-                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
-                                        Gl.glCallList(Trees.flora(i).leaf_displayID)
-                                    End If
-                                End If
-                            End If
-                        End If
-                        Gl.glPopMatrix()
-                    Next
-                Next
+    '                Dim rad As Single
+    '                For mode = 0 To 1
 
-            End If
-        End If
-f_this:
-        Gl.glDisable(Gl.GL_DEPTH_TEST)
-        Gl.glColorMask(0, 0, 0, 1)
-        Gl.glUniform1i(flag, 0)
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, noise_map_id)
-        Dim l, r, t, b As Single
-        l = map_x_min * 2
-        r = map_x_max * 2
-        t = map_y_max * 2
-        b = map_y_min * 2
-        Gl.glBegin(Gl.GL_QUADS)
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(l, 0.0, t)
+    '                    If mode = 1 Then
+    '                        Gl.glDisable(Gl.GL_CULL_FACE)
+    '                    End If
+    '                    'Dim draw As Boolean = True
+    '                    Dim t_cut_off As Single = 300000
+    '                    For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
+    '                        Gl.glPushMatrix()
+    '                        Gl.glMultMatrixf(Trees.matrix(i).matrix)
+    '                        Dim ll As vect3
+    '                        ll.x = Trees.matrix(i).matrix(12)
+    '                        ll.y = Trees.matrix(i).matrix(13)
+    '                        ll.z = Trees.matrix(i).matrix(14)
+    '                        ll.x -= eyeX
+    '                        ll.y -= eyeY
+    '                        ll.z -= eyeZ
+    '                        rad = (ll.x ^ 2) + (ll.y ^ 2) + (ll.z ^ 2)
 
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(r, 0.0, t)
 
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(r, 0.0, b)
+    '                        'rad = 10
+    '                        If frmMain.m_low_quality_trees.Checked Then
+    '                            rad = 200001
+    '                        End If
+    '                        'If rad > 300000 Then
+    '                        'draw = True
+    '                        If rad > t_cut_off And mode = 0 Then
+    '                            'draw = False
+    '                            Gl.glEnable(Gl.GL_CULL_FACE)
+    '                            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+    '                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
+    '                            Gl.glCallList(Trees.flora(i).billboard_displayID)
+    '                        Else
+    '                            Gl.glDisable(Gl.GL_CULL_FACE)
+    '                            If mode = 0 Then
+    '                                If Trees.flora(i).branch_displayID > 0 Then
+    '                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).branch_textureID)
+    '                                    Gl.glCallList(Trees.flora(i).branch_displayID)
+    '                                Else
+    '                                End If
+    '                                If Trees.flora(i).frond_displayID > 0 Then
+    '                                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
+    '                                    Gl.glCallList(Trees.flora(i).frond_displayID)
+    '                                End If
+    '                            Else
+    '                                If rad <= t_cut_off Then
+    '                                    If Trees.flora(i).leaf_displayID > 0 Then
+    '                                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, Trees.flora(i).billboard_textureID) 'speedtree composite texture
+    '                                        Gl.glCallList(Trees.flora(i).leaf_displayID)
+    '                                    End If
+    '                                End If
+    '                            End If
+    '                        End If
+    '                        Gl.glPopMatrix()
+    '                    Next
+    '                Next
 
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(l, 0.0, b)
-        Gl.glEnd()
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+    '            End If
+    '        End If
+    'f_this:
+    '        Gl.glDisable(Gl.GL_DEPTH_TEST)
+    '        Gl.glColorMask(0, 0, 0, 1)
+    '        Gl.glUniform1i(flag, 0)
+    '        Gl.glEnable(Gl.GL_TEXTURE_2D)
+    '        Gl.glActiveTexture(0)
+    '        Gl.glBindTexture(Gl.GL_TEXTURE_2D, noise_map_id)
+    '        Dim l, r, t, b As Single
+    '        l = map_x_min * 2
+    '        r = map_x_max * 2
+    '        t = map_y_max * 2
+    '        b = map_y_min * 2
+    '        Gl.glBegin(Gl.GL_QUADS)
+    '        Gl.glTexCoord2f(0.0, 1.0)
+    '        Gl.glVertex3f(l, 0.0, t)
 
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glColorMask(1, 1, 1, 1)
-        Gl.glUseProgram(0)
+    '        Gl.glTexCoord2f(1.0, 1.0)
+    '        Gl.glVertex3f(r, 0.0, t)
 
-    End Sub
+    '        Gl.glTexCoord2f(1.0, 0.0)
+    '        Gl.glVertex3f(r, 0.0, b)
+
+    '        Gl.glTexCoord2f(0.0, 0.0)
+    '        Gl.glVertex3f(l, 0.0, b)
+    '        Gl.glEnd()
+    '        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+
+    '        Gl.glDisable(Gl.GL_BLEND)
+    '        Gl.glColorMask(1, 1, 1, 1)
+    '        Gl.glUseProgram(0)
+
+    '    End Sub
 
 
     Public Function make_post_FBO_and_Textures() As Boolean
@@ -286,15 +286,15 @@ f_this:
         post_color_image_id = Make_post_texture(post_map_width, post_map_height)
         Gl.glFinish()
 
-        Gl.glDeleteTextures(1, post_depth_image_id)
-        Gl.glFinish()
-        post_depth_image_id = Make_post_texture(post_map_width, post_map_height)
-        Gl.glFinish()
+        'Gl.glDeleteTextures(1, post_depth_image_id)
+        'Gl.glFinish()
+        'post_depth_image_id = Make_post_texture(post_map_width, post_map_height)
+        'Gl.glFinish()
 
-        Gl.glDeleteTextures(1, post_3D_image_id)
-        Gl.glFinish()
-        post_3D_image_id = Make_post_texture(post_map_width, post_map_height)
-        Gl.glFinish()
+        'Gl.glDeleteTextures(1, post_3D_image_id)
+        'Gl.glFinish()
+        'post_3D_image_id = Make_post_texture(post_map_width, post_map_height)
+        'Gl.glFinish()
 
         create_FBO_post()
         Gl.glFinish()

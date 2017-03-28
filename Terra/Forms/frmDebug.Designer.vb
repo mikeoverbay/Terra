@@ -22,35 +22,36 @@ Partial Class frmDebug
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-		Me.tb = New System.Windows.Forms.TextBox()
-		Me.SuspendLayout()
-		'
-		'tb
-		'
-		Me.tb.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-				Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-		Me.tb.ForeColor = System.Drawing.Color.Lime
-		Me.tb.Location = New System.Drawing.Point(0, 245)
-		Me.tb.Multiline = True
-		Me.tb.Name = "tb"
-		Me.tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-		Me.tb.Size = New System.Drawing.Size(626, 17)
-		Me.tb.TabIndex = 0
-		'
-		'frmDebug
-		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-		Me.ClientSize = New System.Drawing.Size(623, 262)
-		Me.Controls.Add(Me.tb)
-		Me.ForeColor = System.Drawing.Color.Lime
-		Me.Name = "frmDebug"
-		Me.Text = "Debug Info"
-		Me.ResumeLayout(False)
-		Me.PerformLayout()
+        Me.tb = New System.Windows.Forms.TextBox()
+        Me.SuspendLayout()
+        '
+        'tb
+        '
+        Me.tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(32, Byte), Integer), CType(CType(32, Byte), Integer))
+        Me.tb.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tb.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tb.ForeColor = System.Drawing.Color.Gainsboro
+        Me.tb.Location = New System.Drawing.Point(0, 0)
+        Me.tb.Multiline = True
+        Me.tb.Name = "tb"
+        Me.tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.tb.Size = New System.Drawing.Size(623, 262)
+        Me.tb.TabIndex = 0
+        Me.tb.WordWrap = False
+        '
+        'frmDebug
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(623, 262)
+        Me.Controls.Add(Me.tb)
+        Me.ForeColor = System.Drawing.Color.Lime
+        Me.Name = "frmDebug"
+        Me.Text = "Debug Info"
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
 
-	End Sub
+    End Sub
 	Friend WithEvents tb As System.Windows.Forms.TextBox
 End Class

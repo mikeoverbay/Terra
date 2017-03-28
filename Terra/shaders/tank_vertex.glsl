@@ -9,6 +9,5 @@ void main()
   normal = gl_NormalMatrix * gl_Normal;
   vec4 vVertex = gl_ModelViewMatrix * gl_Vertex;
   eyeVec = -vVertex.xyz;
-  int i;
-    lightDir =  vec3(gl_LightSource[0].position.xyz - vVertex.xyz);
+  lightDir =  vec3(gl_LightSource[0].position.xyz - vVertex.xyz);
 }

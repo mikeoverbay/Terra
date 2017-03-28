@@ -5,6 +5,7 @@
     Private Sub frmTestView_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Me.Hide()
         e.Cancel = True ' if we close this form, we lose the event handlers added at load time!!
+        frmMain.pb2.Parent = frmMain
     End Sub
     Private Sub frmTestView_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.Show()
@@ -16,7 +17,8 @@
 
         AddHandler img_1.CheckedChanged, AddressOf image_changed
         AddHandler img_2.CheckedChanged, AddressOf image_changed
-
+        frmMain.pb2.Parent = Me.pb3
+        frmMain.pb2.BringToFront()
         image_id = CInt(img_1.Tag)
         update_screen()
     End Sub
@@ -59,7 +61,7 @@
                 Gl.glUseProgram(shader_list.toLinear_shader)
             Case 2
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, post_color_image_id)
-                Gl.glUseProgram(shader_list.basicONEtexture_shader)
+                Gl.glUseProgram(shader_list.lowQualityTrees_shader)
             Case 3
             Case 4
             Case 5

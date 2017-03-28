@@ -308,7 +308,7 @@ Module modDecals
         ReDim decal_matrix_list(decal).decal_data((decal_grid_size ^ 2) * 6)
         decal_matrix_list(decal).decal_count = 0
 
-        Dim uvScale = 1.0# / CSng(decal_grid_size - 2.0)
+        Dim uvScale = 1.0# / CSng(decal_grid_size - 1.0)
         Dim scale = 1.0 / CSng(decal_grid_size)
         Dim w = (decal_grid_size - 1) / reduction
         With decal_matrix_list(decal)
@@ -320,27 +320,27 @@ Module modDecals
                     topleft.x = Int(i)
                     topleft.y = Int(j)
                     topleft.z = -0.5
-                    topleft.u = Int(i - 1) * uvScale
-                    topleft.v = Int(j - 1) * uvScale
+                    topleft.u = Int(i) * uvScale
+                    topleft.v = Int(j) * uvScale
 
 
                     topRight.x = Int(i + w)
                     topRight.y = Int(j)
                     topRight.z = -0.5
-                    topRight.u = Int((i - 1) + w) * uvScale
-                    topRight.v = Int(j - 1) * uvScale
+                    topRight.u = Int((i) + w) * uvScale
+                    topRight.v = Int(j) * uvScale
 
                     bottomRight.x = Int(i + w)
                     bottomRight.y = Int(j + w)
                     bottomRight.z = -0.5
-                    bottomRight.u = Int((i - 1) + w) * uvScale
-                    bottomRight.v = Int((j - 1) + w) * uvScale
+                    bottomRight.u = Int((i) + w) * uvScale
+                    bottomRight.v = Int((j) + w) * uvScale
 
                     bottomleft.x = Int(i)
                     bottomleft.y = Int(j + w)
                     bottomleft.z = -0.5
-                    bottomleft.u = Int((i - 1)) * uvScale
-                    bottomleft.v = Int((j - 1) + w) * uvScale
+                    bottomleft.u = Int((i)) * uvScale
+                    bottomleft.v = Int((j) + w) * uvScale
 
                     save_vertex(topRight, decal, ar1, decal_count, reduction)
                     decal_count += 1

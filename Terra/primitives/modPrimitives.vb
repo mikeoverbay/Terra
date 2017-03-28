@@ -642,9 +642,9 @@ fing_loop:
 
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                .tangents(i) = unpackNormal_8_8_8(packed)
+                                '.tangents(i) = unpackNormal_8_8_8(packed)
                             Else
-                                .tangents(i) = unpackNormal(packed)
+                                '.tangents(i) = unpackNormal(packed)
                             End If
                             '
                             packed = vr.ReadUInt32
@@ -663,9 +663,9 @@ fing_loop:
                                 '
                                 packed = vr.ReadUInt32
                                 If BPVT_mode Then
-                                    .binormals(i) = unpackNormal_8_8_8(packed)
+                                    '.binormals(i) = unpackNormal_8_8_8(packed)
                                 Else
-                                    .binormals(i) = unpackNormal(packed)
+                                    '.binormals(i) = unpackNormal(packed)
                                 End If
                             End If
                         End If
@@ -721,16 +721,16 @@ fing_loop:
 
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                .tangents(i + 1) = unpackNormal_8_8_8(packed)
+                                '.tangents(i + 1) = unpackNormal_8_8_8(packed)
                             Else
-                                .tangents(i + 1) = unpackNormal(packed)
+                                '.tangents(i + 1) = unpackNormal(packed)
                             End If
                             '
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                .binormals(i + 1) = unpackNormal_8_8_8(packed)
+                                '.binormals(i + 1) = unpackNormal_8_8_8(packed)
                             Else
-                                .binormals(i + 1) = unpackNormal(packed)
+                                '.binormals(i + 1) = unpackNormal(packed)
                             End If
                         Else
                             If Not realNormals And Not stride = 24 Then
@@ -797,16 +797,16 @@ fing_loop:
 
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                .tangents(i + 2) = unpackNormal_8_8_8(packed)
+                                '.tangents(i + 2) = unpackNormal_8_8_8(packed)
                             Else
-                                .tangents(i + 2) = unpackNormal(packed)
+                                '.tangents(i + 2) = unpackNormal(packed)
                             End If
                             '
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                .binormals(i + 2) = unpackNormal_8_8_8(packed)
+                                '.binormals(i + 2) = unpackNormal_8_8_8(packed)
                             Else
-                                .binormals(i + 2) = unpackNormal(packed)
+                                '.binormals(i + 2) = unpackNormal(packed)
                             End If
                         Else
                             If Not realNormals And Not stride = 24 Then
@@ -915,7 +915,33 @@ dont_save_this:
         'Console.WriteLine(p.x.ToString("0.000000") + " " + p.y.ToString("0.000000") + " " + p.z.ToString("0.000000"))
         Return p
     End Function
-    Private Function unpackNormal(ByVal packed As UInt32) As vect3Norm
+    Public Function unpackNormal(ByVal packed As UInt32)
+        Dim pkz, pky, pkx As Int32
+        pkz = packed And &HFFC00000
+        pky = packed And &H4FF800
+        pkx = packed And &H7FF
+
+        Dim z As Int32 = pkz >> 22
+        Dim y As Int32 = (pky << 10L) >> 21
+        Dim x As Int32 = (pkx << 21L) >> 21
+        Dim p As New vect3
+      
+        p.x = CSng(x) / 1023.0!
+        p.y = CSng(y) / 1023.0!
+        p.z = CSng(z) / 511.0!
+        Dim len As Single = Sqrt((p.x ^ 2) + (p.y ^ 2) + (p.z ^ 2))
+
+        'avoid division by 0
+        If len = 0.0F Then len = 1.0F
+
+        'reduce to unit size
+        p.x = (p.x / len)
+        p.y = (p.y / len)
+        p.z = (p.z / len)
+        Return p
+    End Function
+
+    Private Function unpackNormal_old(ByVal packed As UInt32) As vect3Norm
         Dim pkz, pky, pkx As Int32
         Dim p As New vect3Norm
         pkz = (packed >> 22) And &H3FF
@@ -972,6 +998,91 @@ dont_save_this:
         Gl.glEnd()
 
     End Sub
+    Private Function convert_normal(ByVal v As vect3Norm) As Vector3D
+        Dim v3d As New Vector3D
+        v3d.X = v.nx
+        v3d.Y = v.ny
+        v3d.Z = v.nz
+        Return v3d
+    End Function
+    Private Function convert_vertex(ByVal v As vect3) As Vector3D
+        Dim v3d As New Vector3D
+        v3d.X = v.x
+        v3d.Y = v.y
+        v3d.Z = v.z
+        Return v3d
+    End Function
+
+    Private Sub ComputeTangentBasis_models(ByRef Md As Model_Section, ByVal i As Integer)
+        Dim tangent, bitangent As Vector3D
+        Dim n1, n2, n3 As Vector3D
+
+        Dim t1, t2, t3 As Vector3D
+
+        Dim b1, b2, b3 As Vector3D
+
+        n1 = convert_normal(Md.normals(i + 0))
+        n2 = convert_normal(Md.normals(i + 1))
+        n3 = convert_normal(Md.normals(i + 2))
+
+        'convert to vector3d type... they are WAY easier to do complex math with!!
+        Dim v0 = convert_vertex(Md.vertices(i + 0))
+        Dim v1 = convert_vertex(Md.vertices(i + 1))
+        Dim v2 = convert_vertex(Md.vertices(i + 2))
+        Dim uv0, uv1, uv2 As vect2
+        uv0.x = Md.UVs(i + 0).u
+        uv0.y = Md.UVs(i + 0).v
+        uv1.x = Md.UVs(i + 1).u
+        uv1.y = Md.UVs(i + 1).v
+        uv2.x = Md.UVs(i + 2).u
+        uv2.y = Md.UVs(i + 2).v
+
+        Dim edge1 = v1 - v0
+        Dim edge2 = v2 - v0
+        Dim deltaU1 = (uv1.x - uv0.x)
+        Dim deltaU2 = (uv2.x - uv0.x)
+        Dim deltaV1 = (uv1.y - uv0.y)
+        Dim deltaV2 = (uv2.y - uv0.y)
+
+        Dim f As Single = 1.0! / ((deltaU1 * deltaV2) - (deltaU2 * deltaV1))
+
+        tangent.X = f * ((deltaV2 * edge1.X) - (deltaV1 * edge2.X))
+        tangent.Y = f * ((deltaV2 * edge1.Y) - (deltaV1 * edge2.Y))
+        tangent.Z = f * ((deltaV2 * edge1.Z) - (deltaV1 * edge2.Z))
+
+        t1 = tangent - (Vector3D.DotProduct(n1, tangent) * n1)
+        t2 = tangent - (Vector3D.DotProduct(n1, tangent) * n2)
+        t3 = tangent - (Vector3D.DotProduct(n1, tangent) * n3)
+        b1 = Vector3D.CrossProduct(t1, n1)
+        b2 = Vector3D.CrossProduct(t2, n2)
+        b3 = Vector3D.CrossProduct(t3, n3)
+        '
+        tangent /= tangent.Length
+        bitangent /= bitangent.Length
+
+        Md.tangents(i + 0).nx = t1.X
+        Md.tangents(i + 0).ny = t1.Y
+        Md.tangents(i + 0).nz = t1.Z
+        Md.binormals(i + 0).nx = b1.X
+        Md.binormals(i + 0).ny = b1.Y
+        Md.binormals(i + 0).nz = b1.Z
+
+        Md.tangents(i + 1).nx = t2.X
+        Md.tangents(i + 1).ny = t2.Y
+        Md.tangents(i + 1).nz = t2.Z
+        Md.binormals(i + 1).nx = b2.X
+        Md.binormals(i + 1).ny = b2.Y
+        Md.binormals(i + 1).nz = b2.Z
+
+        Md.tangents(i + 2).nx = t3.X
+        Md.tangents(i + 2).ny = t3.Y
+        Md.tangents(i + 2).nz = t3.Z
+        Md.binormals(i + 2).nx = b3.X
+        Md.binormals(i + 2).ny = b3.Y
+        Md.binormals(i + 2).nz = b3.Z
+
+    End Sub
+
     Public Sub build_primitive(ByVal mId As UInt32, ByVal cId As UInt32)
         'this routine makes the triangles from the loaded primitive data.
         If Models.models(mId).componets(cId).multi_textured Then
@@ -979,6 +1090,8 @@ dont_save_this:
             Gl.glBegin(Gl.GL_TRIANGLES)
             With Models.models(mId).componets(cId)
                 For i As UInt32 = 0 To (Models.models(mId).componets(cId)._count - 1) * 3 Step 3
+
+                    ComputeTangentBasis_models(Models.models(mId).componets(cId), i)
                     '1-------------
                     Gl.glMultiTexCoord2f(0, -.UVs(i).u, .UVs(i).v)
                     Gl.glMultiTexCoord2f(1, -.UV2s(i).u, .UV2s(i).v)
@@ -1010,6 +1123,8 @@ dont_save_this:
             Gl.glBegin(Gl.GL_TRIANGLES)
             With Models.models(mId).componets(cId)
                 For i As UInt32 = 0 To (Models.models(mId).componets(cId)._count - 1) * 3 Step 3
+
+                    ComputeTangentBasis_models(Models.models(mId).componets(cId), i)
 
                     Gl.glMultiTexCoord2f(0, -.UVs(i).u, .UVs(i).v)
                     Gl.glMultiTexCoord3f(2, .tangents(i).nx, .tangents(i).ny, .tangents(i).nz)
@@ -1260,7 +1375,7 @@ jump_normal:
 
         Return got_it
     End Function
- 
+
     Public Sub build_water()
         water.size_.x = BWWa.bwwa_t1(0).width
         water.size_.z = BWWa.bwwa_t1(0).height
@@ -1308,7 +1423,7 @@ jump_normal:
     End Sub
 
     Public Sub get_tree_branch_texture(ByVal diffuse As String, ByVal tree As Integer)
-      
+
         With Trees
             'see if this texture is created
             For i = 0 To tree_textures.Length - 1
@@ -1344,7 +1459,7 @@ jump_normal:
     End Sub
     Public Sub get_tree_branch_normalmap(ByVal normal As String, ByVal tree As Integer)
 
-       
+
         With Trees
             'see if this texture is created
             For i = 0 To tree_textures.Length - 1
@@ -1457,259 +1572,23 @@ jump_normal:
         End With
     End Sub
 
-    'Public Sub get_tree_frond_texture(ByVal diffuse As String, ByVal tree As Integer)
-
-    '    If diffuse = speedtree_name Then
-    '        Trees.flora(tree).frond_textureID = speedtree_imageID
-    '        Return
-    '    End If
-    '    With Trees
-    '        'see if this texture is created
-    '        For i = 0 To tree_textures.Length - 1
-    '            If diffuse = tree_textures(i).name Then
-    '                .flora(tree).frond_textureID = tree_textures(i).textureID
-    '                saved_texture_loads += 1
-    '                Return
-    '            End If
-    '        Next
-    '        Dim ms As New MemoryStream
-    '        Try
-    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(diffuse)
-    '            If entry1 Is Nothing Then
-    '                entry1 = get_shared(diffuse)
-    '                If entry1 Is Nothing Then
-    '                    Debug.Write("cant find: " & diffuse & vbCrLf)
-    '                    frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
-    '                End If
-    '                entry1.Extract(ms)
-    '            Else
-    '                entry1.Extract(ms)
-    '            End If
-    '        Catch ex As Exception
-    '            Stop
-    '        End Try
-    '        frmMapInfo.I__Tree_Textures_tb.Text += "Frond Texture: " + diffuse + vbCrLf
-    '        .flora(tree).frond_textureID = get_tree_texture(ms, False)
-    '        Dim len = tree_textures.Length
-    '        ReDim Preserve tree_textures(len)
-    '        tree_textures(len - 1).name = diffuse
-    '        tree_textures(len - 1).textureID = .flora(tree).frond_textureID
-    '    End With
-    'End Sub
-    'Public Sub get_tree_frond_normalmap(ByVal normal As String, ByVal tree As Integer)
-
-    '    If normal = speedtree_normalmap Then
-    '        Trees.flora(tree).frond_normalID = speedtree_NormalMapID
-    '        Return
-    '    End If
-    '    With Trees
-    '        'see if this texture is created
-    '        For i = 0 To tree_textures.Length - 1
-    '            If normal = tree_textures(i).normalname Then
-    '                .flora(tree).frond_normalID = tree_textures(i).textureNormID
-    '                saved_texture_loads += 1
-    '                Return
-    '            End If
-    '        Next
-    '        Dim ms As New MemoryStream
-    '        Try
-    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(normal)
-    '            If entry1 Is Nothing Then
-    '                entry1 = get_shared(normal)
-    '                If entry1 Is Nothing Then
-    '                    Debug.Write("cant find: " & normal & vbCrLf)
-    '                    frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
-    '                End If
-    '                entry1.Extract(ms)
-    '            Else
-    '                entry1.Extract(ms)
-    '            End If
-    '        Catch ex As Exception
-    '            Stop
-    '        End Try
-    '        frmMapInfo.I__Tree_Textures_tb.Text += "Frond Texture: " + normal + vbCrLf
-    '        .flora(tree).frond_normalID = get_normal_texture(ms, False)
-    '        Dim len = tree_textures.Length
-    '        ReDim Preserve tree_textures(len)
-    '        tree_textures(len - 1).normalname = normal
-    '        tree_textures(len - 1).textureNormID = .flora(tree).frond_normalID
-    '    End With
-    'End Sub
-
-    'Public Sub get_tree_leaf_texture(ByVal diffuse As String, ByVal tree As Integer)
-    '    'If diffuse = speedtree_name Then
-    '    '    Trees.flora(tree).leaf_textureID = speedtree_imageID
-    '    '    Return
-    '    'End If
-    '    With Trees
-    '        'see if this texture is created
-    '        For i = 0 To tree_textures.Length - 1
-    '            If diffuse = tree_textures(i).name Then
-    '                .flora(tree).leaf_textureID = tree_textures(i).textureID
-    '                saved_texture_loads += 1
-    '                Return
-    '            End If
-    '        Next
-    '        Dim ms As New MemoryStream
-    '        Try
-    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(diffuse)
-    '            If entry1 Is Nothing Then
-    '                entry1 = get_shared(diffuse)
-    '                If entry1 Is Nothing Then
-    '                    Debug.Write("cant find: " & diffuse & vbCrLf)
-    '                    frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
-    '                End If
-    '                entry1.Extract(ms)
-    '            Else
-    '                entry1.Extract(ms)
-    '            End If
-    '        Catch ex As Exception
-    '            Stop
-    '        End Try
-    '        frmMapInfo.I__Tree_Textures_tb.Text += "leaf Texture: " + diffuse + vbCrLf
-    '        .flora(tree).leaf_textureID = get_tree_texture(ms, False)
-    '        Dim len = tree_textures.Length
-    '        ReDim Preserve tree_textures(len)
-    '        tree_textures(len - 1).name = diffuse
-    '        tree_textures(len - 1).textureID = .flora(tree).leaf_textureID
-    '    End With
-    'End Sub
-    'Public Sub get_tree_leaf_normalmap(ByVal normal As String, ByVal tree As Integer)
-
-    '    'If normal = speedtree_normalmap Then
-    '    '    Trees.flora(tree).leaf_normalID = speedtree_NormalMapID
-    '    '    Return
-    '    'End If
-    '    With Trees
-    '        'see if this texture is created
-    '        For i = 0 To tree_textures.Length - 1
-    '            If normal = tree_textures(i).normalname Then
-    '                .flora(tree).leaf_normalID = tree_textures(i).textureNormID
-    '                saved_texture_loads += 1
-    '                Return
-    '            End If
-    '        Next
-    '        Dim ms As New MemoryStream
-    '        Try
-    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(normal)
-    '            If entry1 Is Nothing Then
-    '                entry1 = get_shared(normal)
-    '                If entry1 Is Nothing Then
-    '                    Debug.Write("cant find: " & normal & vbCrLf)
-    '                    frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
-    '                End If
-    '                entry1.Extract(ms)
-    '            Else
-    '                entry1.Extract(ms)
-    '            End If
-    '        Catch ex As Exception
-    '            Stop
-    '        End Try
-    '        frmMapInfo.I__Tree_Textures_tb.Text += "Leaf norm: " + normal + vbCrLf
-    '        .flora(tree).leaf_normalID = get_normal_texture(ms, False)
-    '        Dim len = tree_textures.Length
-    '        ReDim Preserve tree_textures(len)
-    '        tree_textures(len - 1).normalname = normal
-    '        tree_textures(len - 1).textureNormID = .flora(tree).leaf_normalID
-    '    End With
-    'End Sub
-
-    'Public Sub get_tree_billboard_texture(ByVal diffuse As String, ByVal tree As Integer)
-
-    '    'If diffuse = speedtree_name Then
-    '    '    Trees.flora(tree).billboard_textureID = speedtree_imageID
-    '    '    Return
-    '    'End If
-    '    With Trees
-    '        'see if this texture is created
-    '        For i = 0 To tree_textures.Length - 1
-    '            If diffuse = tree_textures(i).name Then
-    '                .flora(tree).billboard_textureID = tree_textures(i).textureID
-    '                saved_texture_loads += 1
-    '                Return
-    '            End If
-    '        Next
-    '        Dim ms As New MemoryStream
-    '        Try
-    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(diffuse)
-    '            If entry1 Is Nothing Then
-    '                entry1 = get_shared(diffuse)
-    '                If entry1 Is Nothing Then
-    '                    Debug.Write("cant find: " & diffuse & vbCrLf)
-    '                    frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
-    '                End If
-    '                entry1.Extract(ms)
-    '            Else
-    '                entry1.Extract(ms)
-    '            End If
-    '        Catch ex As Exception
-    '            Stop
-    '        End Try
-    '        frmMapInfo.I__Tree_Textures_tb.Text += "Biilboard Texture: " + diffuse + vbCrLf
-    '        .flora(tree).billboard_textureID = get_tree_texture(ms, False)
-    '        Dim len = tree_textures.Length
-    '        ReDim Preserve tree_textures(len)
-    '        tree_textures(len - 1).name = diffuse
-    '        tree_textures(len - 1).textureID = .flora(tree).billboard_textureID
-    '    End With
-    'End Sub
-    'Public Sub get_tree_billboard_normalmap(ByVal normal As String, ByVal tree As Integer)
-
-    '    'If normal = speedtree_normalmap Then
-    '    '    Trees.flora(tree).billboard_normalID = speedtree_NormalMapID
-    '    '    Return
-    '    'End If
-    '    With Trees
-    '        'see if this texture is created
-    '        For i = 0 To tree_textures.Length - 1
-    '            If normal = tree_textures(i).normalname Then
-    '                .flora(tree).billboard_normalID = tree_textures(i).textureNormID
-    '                saved_texture_loads += 1
-    '                Return
-    '            End If
-    '        Next
-    '        Dim ms As New MemoryStream
-    '        Try
-    '            Dim entry1 As Ionic.Zip.ZipEntry = active_pkg(normal)
-    '            If entry1 Is Nothing Then
-    '                entry1 = get_shared(normal)
-    '                If entry1 Is Nothing Then
-    '                    Debug.Write("cant find: " & normal & vbCrLf)
-    '                    frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
-    '                End If
-    '                entry1.Extract(ms)
-    '            Else
-    '                entry1.Extract(ms)
-    '            End If
-    '        Catch ex As Exception
-    '            Stop
-    '        End Try
-    '        frmMapInfo.I__Tree_Textures_tb.Text += "Billboard norm: " + normal + vbCrLf
-    '        .flora(tree).billboard_normalID = get_normal_texture(ms, False)
-    '        Dim len = tree_textures.Length
-    '        ReDim Preserve tree_textures(len)
-    '        tree_textures(len - 1).normalname = normal
-    '        tree_textures(len - 1).textureNormID = .flora(tree).billboard_normalID
-    '    End With
-    'End Sub
-    ''========================================================================================
     Public Sub build_branch_model(ByVal tree As Integer, ByVal tree_data As tree_)
         Dim vert, t As vect3
         Dim uv As vect2
         Dim norm As vect3
-        Dim id As Integer = Gl.glGenLists(1)
-        If id = 0 Then
-            Stop ' cant make list?
-        End If
-        Trees.flora(tree).branch_displayID = id
-        Gl.glNewList(id, Gl.GL_COMPILE)
-        Gl.glBegin(Gl.GL_TRIANGLE_STRIP)
+
         Dim tbuf(tree_data.b_indices.Length) As Integer
         Dim c As Integer = 0
         For i = tree_data.b_indices.Length - 2 To 0 Step -1
             tbuf(i) = tree_data.b_indices(c)
             c += 1
         Next
+
+        Dim id As Integer = Gl.glGenLists(1)
+        Trees.flora(tree).branch_displayID = id
+        Gl.glNewList(id, Gl.GL_COMPILE)
+        Gl.glBegin(Gl.GL_TRIANGLE_STRIP)
+
         For i = 0 To tree_data.b_indices.Length - 2
             vert.x = -tree_data.b_vert((tbuf(i)) * 13 + 0)
             vert.y = tree_data.b_vert((tbuf(i)) * 13 + 1)
@@ -1724,10 +1603,9 @@ jump_normal:
             t.z = tree_data.b_vert((tbuf(i)) * 13 + 12)
 
             Gl.glTexCoord2f(-uv.x, uv.y)
-            Gl.glMultiTexCoord3f(1, t.x, t.y, t.z)
-            Gl.glNormal3f(-norm.x, norm.y, norm.z)
+            Gl.glMultiTexCoord3f(2, t.x, t.y, t.z)
+            Gl.glNormal3f(norm.x, norm.y, norm.z)
             Gl.glVertex3f(vert.x, vert.y, vert.z)
-
         Next
         Gl.glEnd()
         Gl.glEndList()
@@ -1737,33 +1615,29 @@ jump_normal:
         Dim uv As vect2
         Dim norm As vect3
         Dim id As Integer = Gl.glGenLists(1)
-        If id = 0 Then
-            Stop ' cant make list?
-        End If
         Trees.flora(tree).frond_displayID = id
         Gl.glNewList(id, Gl.GL_COMPILE)
         Gl.glBegin(Gl.GL_TRIANGLE_STRIP)
-        For k = 0 To tree_data.strip_count - 1
-
-            For i = 0 To tree_data.strip_inds(k).indices.Length - 2
-                vert.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 0)
-                vert.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 1)
-                vert.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 2)
-                norm.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 3)
-                norm.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 4)
-                norm.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 5)
-                uv.x = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 6)
-                uv.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 7)
-                t.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 10)
-                t.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 11)
-                t.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 12)
-                Gl.glTexCoord2f(-uv.x, uv.y)
-                Gl.glMultiTexCoord3f(1, t.x, t.y, t.z)
-                Gl.glNormal3f(norm.x, norm.y, norm.z)
-                Gl.glVertex3f(vert.x, vert.y, vert.z)
-
-            Next
-        Next k
+        ' For k = 0 To tree_data.strip_count - 1
+        Dim k As Integer = 0
+        For i = 0 To tree_data.strip_inds(k).indices.Length - 2
+            vert.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 0)
+            vert.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 1)
+            vert.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 2)
+            norm.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 3)
+            norm.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 4)
+            norm.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 5)
+            uv.x = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 6)
+            uv.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 7)
+            t.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 10)
+            t.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 11)
+            t.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 12)
+            Gl.glTexCoord2f(-uv.x, uv.y)
+            Gl.glMultiTexCoord3f(2, t.x, t.y, t.z)
+            Gl.glNormal3f(norm.x, norm.y, norm.z)
+            Gl.glVertex3f(vert.x, vert.y, vert.z)
+        Next
+        ' Next k
         Gl.glEnd()
         Gl.glEndList()
     End Sub
@@ -1804,7 +1678,7 @@ jump_normal:
         Dim idx, rot As vect2
         Gl.glNewList(id, Gl.GL_COMPILE)
         'Gl.glBegin(Gl.GL_TRIANGLES)
-        Gl.glBegin(Gl.GL_QUADS)
+        Gl.glBegin(Gl.GL_TRIANGLES)
         Dim sb As New StringBuilder
         For i = 0 To tree_data.l_indices.Length - 3
             'struct LeafVertex
@@ -1820,15 +1694,16 @@ jump_normal:
             '76	19 Vector3 Tangent;
             If cnt = 6 Then
                 cnt = 0
+                'Stop
             End If
             If cnt = 2 Or cnt = 3 Then
-                GoTo skip_this_vert
+                'GoTo skip_this_vert
             End If
             p.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 0)
             p.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 1)
             p.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 2)
 
-            norm.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 3)
+            norm.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 3)
             norm.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 4)
             norm.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 5)
 
@@ -1841,7 +1716,7 @@ jump_normal:
             vn = tree_data.l_vert((tree_data.l_indices(i) * 22) + 15) ' corner index
             vn2 = tree_data.l_vert((tree_data.l_indices(i) * 22) + 16)
             If vn2 <> 1.0 Then
-                'Stop ' has NEVER been hit. It is always 1.0
+                Stop ' has NEVER been hit. It is always 1.0
             End If
             sizey = tree_data.l_vert((tree_data.l_indices(i) * 22) + 12)
             sizex = tree_data.l_vert((tree_data.l_indices(i) * 22) + 13)
@@ -1849,13 +1724,13 @@ jump_normal:
             pivot.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 10)
             pivot.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 11)
 
-            'not sure 100% sure.. This might also be the BiNormal
-            tangent.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 19)
+            'not sure 100% sure.. This might also be the BiTangent
+            tangent.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 19)
             tangent.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 20)
             tangent.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 21)
 
             'debug string
-            sb.Append(vn.ToString("00") + vbCrLf)
+            'sb.Append(vn.ToString("00") + vbCrLf)
             'If vn = 4 Then
             '    sb.Append("mesh" + vbCrLf)
             'End If
@@ -1868,6 +1743,8 @@ jump_normal:
             corner.y *= tree_scale
             corner.x *= sizex
             corner.y *= sizex
+            'Debug.WriteLine("X:" & corner.x.ToString("0.000000") & "  Y:" & corner.y.ToString("0.000000"))
+            'Debug.WriteLine("U:" & -uv.x.ToString("0.000000") & "  V:" & uv.y.ToString("0.000000") + vbCrLf)
             Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
             Gl.glMultiTexCoord3f(1, corner.x, corner.y, 0.0)
             Gl.glMultiTexCoord3f(2, tangent.x, tangent.y, tangent.z)
@@ -1894,15 +1771,11 @@ skip_this_vert:
         Dim id As Integer = Gl.glGenLists(1)
         Trees.flora(tree).leaf_displayID = id
         Dim tangent As vect3
-        'Dim vn, vn2 As Integer
-        'Dim sizex, sizey As Single
-        'Dim pivot As vect2
         Dim p, pp As New vect3
         Dim cnt As Integer = 0
         'Dim rot As vect2
         Gl.glNewList(id, Gl.GL_COMPILE)
         Gl.glBegin(Gl.GL_TRIANGLES)
-        'Dim sb As New StringBuilder
         For i = 0 To tree_data.l_indices.Length - 3
             'struct LeafVertex
             '
@@ -1920,7 +1793,7 @@ skip_this_vert:
             p.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 1)
             p.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 2)
 
-            norm.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 3)
+            norm.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 3)
             norm.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 4)
             norm.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 5)
 
@@ -1939,10 +1812,9 @@ skip_this_vert:
             'pivot.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 11)
 
             'not sure 100% sure.. This might also be the BiNormal
-            tangent.x = tree_data.l_vert((tree_data.l_indices(i) * 22) + 19)
+            tangent.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 19)
             tangent.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 20)
             tangent.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 21)
-
 
             ' just use these directly.
             Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
@@ -1995,6 +1867,15 @@ skip_this_vert:
                 Trees.flora(tree).billboard_displayID = treeCache(i).billboard_displayID
                 Trees.flora(tree).billboard_textureID = treeCache(i).billboard_textureID
                 Trees.flora(tree).billboard_normalID = treeCache(i).billboard_normalID
+
+                ReDim Preserve treeCache(i).matrix_list(treeCache(i).tree_cnt + 1)
+                ReDim Preserve treeCache(i).tree_id(treeCache(i).tree_cnt + 1)
+                treeCache(i).matrix_list(treeCache(i).tree_cnt) = New matrix_
+                treeCache(i).matrix_list(treeCache(i).tree_cnt).matrix = speedtree_matrix_list(tree).matrix
+                treeCache(i).tree_id(treeCache(i).tree_cnt) = tree
+
+                treeCache(i).tree_cnt += 1
+
                 saved_model_loads += 1
                 Return ' no need to do anything else.. this tree is copied now
             End If
@@ -2327,7 +2208,8 @@ get_billboard_data:
         Gl.glNewList(Trees.flora(tree).billboard_displayID, Gl.GL_COMPILE)
 
         'Grrrrrr
-        'ind_cnt = 42
+        'ind_cnt changes... some trees have junk on the end Im not sure about.
+
         Gl.glBegin(Gl.GL_TRIANGLES)
         For i = 0 To (ind_cnt) - 7
             '   For k = 0 To 2
@@ -2345,23 +2227,23 @@ get_billboard_data:
             vt.x = br.ReadSingle
             vt.y = br.ReadSingle
             ' rotate them to make them blend better
-            Dim l = Sqrt((v1.x ^ 2) + (v1.z ^ 2))
-            Dim theta = Atan2(v1.z, v1.x)
-            If theta < 0.0 Then theta += (PI * 2)
-            Dim beta = theta + (-PI * 0.3)
-            Dim nx, nz As Single
-            nx = (l * Cos(beta)) - (l * Sin(beta))
-            nz = (l * Sin(beta)) + (l * Cos(beta))
-            v1.x = nx * 0.6
-            v1.z = nz * 0.6
-            l = Sqrt((vn.x ^ 2) + (vn.z ^ 2))
-            nx = (l * Cos(beta)) - (l * Sin(beta))
-            nz = (l * Sin(beta)) + (l * Cos(beta))
-            vn.x = nx
-            vn.z = nz
-            Gl.glTexCoord2f(-vt.x, vt.y)
-            Gl.glVertex3f(-v1.x, v1.y, v1.z)
-            Gl.glNormal3f(-vn.x, vn.y, vn.z)
+            'Dim l = Sqrt((v1.x ^ 2) + (v1.z ^ 2))
+            'Dim theta = Atan2(v1.z, v1.x)
+            'If theta < 0.0 Then theta += (PI * 2)
+            'Dim beta = theta + (-PI * 0.3)
+            'Dim nx, nz As Single
+            'nx = (l * Cos(beta)) - (l * Sin(beta))
+            'nz = (l * Sin(beta)) + (l * Cos(beta))
+            'v1.x = nx * 0.6
+            'v1.z = nz * 0.6
+            'l = Sqrt((vn.x ^ 2) + (vn.z ^ 2))
+            'nx = (l * Cos(beta)) - (l * Sin(beta))
+            'nz = (l * Sin(beta)) + (l * Cos(beta))
+            'vn.x = nx
+            'vn.z = nz
+            Gl.glTexCoord2f(vt.x, vt.y)
+            Gl.glNormal3f(vn.x, vn.y, vn.z)
+            Gl.glVertex3f(v1.x, v1.y, v1.z)
             ind_pnt += 4
             'Next k
         Next i
@@ -2372,7 +2254,7 @@ get_billboard_data:
             'Stop
         End If
         Try
-           
+
             'tried all kinds a shit to find where the texture info starts.. Its wildly different between the different trees
             'So.. Im' going to search for it.
             Dim cp = treems.Position
@@ -2418,7 +2300,11 @@ get_billboard_data:
         'so that if its used again, we already have the dislaylist for it.
         '-------------------------------------------------
         cnt2 = treeCache.Length
-        ReDim Preserve treeCache(cnt2 + 1)
+        If cnt2 = 0 Then
+            ReDim Preserve treeCache(1)
+        Else
+            ReDim Preserve treeCache(cnt2)
+        End If
         cnt2 -= 1
         treeCache(cnt2) = New flora_
         treeCache(cnt2).name = Trees.Tree_list(tree)
@@ -2430,6 +2316,14 @@ get_billboard_data:
         treeCache(cnt2).billboard_displayID = Trees.flora(tree).billboard_displayID
         treeCache(cnt2).billboard_textureID = Trees.flora(tree).billboard_textureID
         treeCache(cnt2).billboard_normalID = Trees.flora(tree).billboard_normalID
+        treeCache(cnt2).billboard_normalID = Trees.flora(tree).billboard_normalID
+
+        ReDim Preserve treeCache(cnt2).matrix_list(treeCache(cnt2).tree_cnt + 1)
+        ReDim Preserve treeCache(cnt2).tree_id(treeCache(cnt2).tree_cnt + 1)
+        treeCache(cnt2).matrix_list(treeCache(cnt2).tree_cnt) = New matrix_
+        treeCache(cnt2).matrix_list(treeCache(cnt2).tree_cnt).matrix = speedtree_matrix_list(tree).matrix
+        treeCache(cnt2).tree_id(treeCache(cnt2).tree_cnt) = tree
+        treeCache(cnt2).tree_cnt += 1
         Return
         '----------------------------------------
 
@@ -2504,9 +2398,9 @@ get_billboard_data:
         'Return
         Dim w As Double = MAP_BB_UR.x - MAP_BB_BL.x
         Dim v As Double = MAP_BB_UR.y - MAP_BB_BL.y
-        Dim gx As Double = w / 10.0
+        Dim gx As Double = CInt(w / 10.0)
         Dim gxstep As Double = gx / 100.0
-        Dim gy As Double = v / 10.0
+        Dim gy As Double = CInt(v / 10.0)
         Dim gystep As Double = gy / 100.0
         'save the size of each play area cell
         frmMapInfo.I__General_Info_tb.Text += "Player Area Grid Size: " + gx.ToString + " x " + gy.ToString + vbCrLf + vbCrLf
@@ -2516,20 +2410,20 @@ get_billboard_data:
         For y As Double = MAP_BB_BL.y + gy To MAP_BB_UR.y - gy Step gy
             For x As Double = MAP_BB_BL.x To MAP_BB_UR.x - gx + 0.0001 Step gx
                 For xs As Double = x To x + gx - gxstep + 0.0001 Step gxstep
-                    Gl.glVertex3f(xs, get_Z_at_XY(xs, y + ur) + yup, y + ur)
-                    Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y + ur) + yup, y + ur)
-                    Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y - ur) + yup, y - ur)
                     Gl.glVertex3f(xs, get_Z_at_XY(xs, y - ur) + yup, y - ur)
+                    Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y - ur) + yup, y - ur)
+                    Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y + ur) + yup, y + ur)
+                    Gl.glVertex3f(xs, get_Z_at_XY(xs, y + ur) + yup, y + ur)
                 Next xs
             Next
         Next
         For x As Double = MAP_BB_BL.x + gx To MAP_BB_UR.x - gx Step gx
             For y As Double = MAP_BB_BL.y To MAP_BB_UR.y - gy + 0.0001 Step gy
                 For ys As Double = y To y + gy - gystep + 0.0001 Step gystep
-                    Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys + gystep) + yup, ys + gystep)
-                    Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys + gystep) + yup, ys + gystep)
-                    Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys) + yup, ys)
                     Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys) + yup, ys)
+                    Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys) + yup, ys)
+                    Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys + gystep) + yup, ys + gystep)
+                    Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys + gystep) + yup, ys + gystep)
                 Next ys
             Next
         Next
@@ -2549,252 +2443,34 @@ get_billboard_data:
         Dim y As Double = MAP_BB_BL.y
         Dim x As Double = MAP_BB_BL.x
         For xs As Double = MAP_BB_BL.x + ur To MAP_BB_UR.x Step gxstep
-            Gl.glVertex3f(xs, get_Z_at_XY(xs, y + ur) + yup, y + ur)
-            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y + ur) + yup, y + ur)
-            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y - ur) + yup, y - ur)
             Gl.glVertex3f(xs, get_Z_at_XY(xs, y - ur) + yup, y - ur)
+            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y - ur) + yup, y - ur)
+            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y + ur) + yup, y + ur)
+            Gl.glVertex3f(xs, get_Z_at_XY(xs, y + ur) + yup, y + ur)
         Next xs
         y = MAP_BB_UR.y
         For xs As Double = MAP_BB_BL.x + ur To MAP_BB_UR.x Step gxstep
-            Gl.glVertex3f(xs, get_Z_at_XY(xs, y + ur) + yup, y + ur)
-            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y + ur) + yup, y + ur)
-            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y - ur) + yup, y - ur)
             Gl.glVertex3f(xs, get_Z_at_XY(xs, y - ur) + yup, y - ur)
+            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y - ur) + yup, y - ur)
+            Gl.glVertex3f(xs + gxstep, get_Z_at_XY(xs + gxstep, y + ur) + yup, y + ur)
+            Gl.glVertex3f(xs, get_Z_at_XY(xs, y + ur) + yup, y + ur)
         Next xs
 
         x = MAP_BB_BL.x
         For ys As Double = MAP_BB_BL.y + ur To MAP_BB_UR.y Step gystep
-            Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys + gystep) + yup, ys + gystep)
-            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys + gystep) + yup, ys + gystep)
-            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys) + yup, ys)
             Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys) + yup, ys)
+            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys) + yup, ys)
+            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys + gystep) + yup, ys + gystep)
+            Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys + gystep) + yup, ys + gystep)
         Next ys
         x = MAP_BB_UR.x
         For ys As Double = MAP_BB_BL.y + ur To MAP_BB_UR.y Step gystep
-            Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys + gystep) + yup, ys + gystep)
-            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys + gystep) + yup, ys + gystep)
-            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys) + yup, ys)
             Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys) + yup, ys)
+            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys) + yup, ys)
+            Gl.glVertex3f(x + ur, get_Z_at_XY(x + ur, ys + gystep) + yup, ys + gystep)
+            Gl.glVertex3f(x - ur, get_Z_at_XY(x - ur, ys + gystep) + yup, ys + gystep)
         Next ys
         Gl.glEnd()
 
     End Sub
-    Public Function get_map_index_from_XY_Location(ByVal Lx As Double, ByVal Lz As Double) As Integer
-        Dim s = Sqrt(maplist.Length - 1)
-        Dim mpx, mpz As Integer
-        For xo = s - 1 To 0 Step -1
-            For yo = s To 0 Step -1
-                Dim px = maplist(mapBoard(xo, yo)).location.x
-                If px - 50 < Lx And px + 50 > Lx Then
-                    mpx = xo
-                    GoTo exit1
-                End If
-            Next
-        Next
-exit1:
-        For xo = s - 1 To 0 Step -1
-            For yo = s - 1 To 0 Step -1
-                Dim pz = maplist(mapBoard(xo, yo)).location.y
-                If pz - 50 < Lz And pz + 50 > Lz Then
-                    mpz = yo
-                    GoTo exit2
-                End If
-            Next
-        Next
-exit2:
-        Dim location = maplist(mapBoard(mpx, mpz)).location
-
-    End Function
-    Public tl_, tr_, br_, bl_ As Vector3D
-
-    Public Function get_Z_at_XY(ByVal Lx As Double, ByVal Lz As Double) As Single
-        'If Not maploaded Then Return 100.0
-        If mapBoard Is Nothing Then Return Z_Cursor
-        Dim tlx As Single = 100.0 / 64.0
-        Dim tly As Single = 100.0 / 64.0
-        Dim ts As Single = 64.0 / 100.0
-        Dim tl, tr, br, bl, w As Vector3D
-        Dim xvp, yvp As Integer
-        Dim ryp, rxp As Single
-        'Dim mod_ = (MAP_SIDE_LENGTH) And 1
-        Dim s = Sqrt(maplist.Length - 1)
-        For xo = s - 1 To 0 Step -1
-            For yo = s To 0 Step -1
-                Dim px = maplist(mapBoard(xo, yo)).location.x
-                If px - 50 < Lx And px + 50 > Lx Then
-                    xvp = xo
-                    Dim pz = maplist(mapBoard(xo, yo)).location.y
-                    If pz - 50 < Lz And pz + 50 > Lz Then
-                        yvp = yo
-                        GoTo exit2
-                    End If
-                    'GoTo exit1
-                End If
-            Next
-        Next
-exit1:
-        For xo = s - 1 To 0 Step -1
-            For yo = s - 1 To 0 Step -1
-                Dim pz = maplist(mapBoard(xo, yo)).location.y
-                If pz - 50 < Lz And pz + 50 > Lz Then
-                    yvp = yo
-                    GoTo exit2
-                End If
-            Next
-        Next
-exit2:
-
-        'If maploaded Then
-        '    Debug.Write("XP:" + xvp.ToString + "  ZP:" + yvp.ToString + vbCrLf)
-        'End If
-        'Dim msqrt = (MAP_SIDE_LENGTH / 2)
-
-        Dim map = mapBoard(xvp, yvp)
-        If maplist.Length - 1 < map Then
-            Return eyeY
-        End If
-        If maplist(map).heights Is Nothing Then
-            Return Z_Cursor
-        End If
-
-        Dim vxp As Double = ((((Lx) / 100)) - Truncate((Truncate(Lx) / 100))) * 64.0
-        Dim tx As Int32 = Round(Truncate(Lx / 100))
-        Dim tz As Int32 = Round(Truncate(Lz / 100))
-        If Lx < 0 Then
-            tx += -1
-        End If
-        If Lz < 0 Then
-            tz += -1
-        End If
-        Dim tx1 = (tx * 100)
-        Dim tz1 = (tz * 100)
-
-        Dim vyp As Double = ((((Lz) / 100)) - Truncate((Truncate(Lz) / 100))) * 64.0
-
-        If vyp < 0.0 Then
-            vyp = 64.0 + vyp
-        End If
-        If vxp < 0 Then
-            vxp = 64.0 + vxp
-
-        End If
-        vxp = Round(vxp, 12)
-        vyp = Round(vyp, 12)
-        rxp = (Floor(vxp))
-        rxp *= tlx
-        ryp = Floor(vyp)
-        ryp *= tlx
-        'rxp = 64 + rxp
-        w.X = (vxp * tlx)
-        w.Y = (vyp * tlx)
-        vaid.x = w.X + maplist(map).location.x - 50.0
-        vaid.y = w.Y + maplist(map).location.y - 50.0
-        Dim HX, HY, OX, OY As Integer
-        HX = Floor(vxp)
-        OX = 1
-        HY = Floor(vyp)
-        OY = 1
-        d_hx = HX
-        d_hy = HY
-        Dim altitude As Single = 0.0
-        'Try
-        'look_point_Y = cp
-        'w.Z = 1.0 'dont need this but who cares?
-        tl.X = rxp
-        tl.Y = ryp
-        tl.Z = maplist(map).heights(HX, HY)
-
-        tr.X = rxp + tlx
-        tr.Y = ryp
-        If HX + OX > 64 Then
-            Return Z_Cursor
-        End If
-        tr.Z = maplist(map).heights(HX + OX, HY)
-
-        br.X = rxp + tlx
-        br.Y = ryp + tlx
-        br.Z = maplist(map).heights(HX + OX, HY + OY)
-
-        bl.X = rxp
-        bl.Y = ryp + tlx
-        bl.Z = maplist(map).heights(HX, HY + OY)
-
-        tr_ = tr
-        br_ = br
-        tl_ = tl
-        bl_ = bl
-
-        tr_.X += tx1
-        br_.X += tx1
-        tl_.X += tx1
-        bl_.X += tx1
-
-        tr_.Y += tz1
-        br_.Y += tz1
-        tl_.Y += tz1
-        bl_.Y += tz1
-
-
-        T_1.x = tr.X + maplist(map).location.x - 50
-        T_1.y = tr.Y + maplist(map).location.y - 50
-        T_1.z = tr.Z
-
-        T_2.x = tl.X + maplist(map).location.x - 50
-        T_2.y = tl.Y + maplist(map).location.y - 50
-        T_2.z = tl.Z
-
-        T_3.x = br.X + maplist(map).location.x - 50
-        T_3.y = br.Y + maplist(map).location.y - 50
-        T_3.z = br.Z
-
-        T_4.x = bl.X + maplist(map).location.x - 50
-        T_4.y = bl.Y + maplist(map).location.y - 50
-        T_4.z = bl.Z
-
-
-        Dim agl = Atan2(w.Y - tl.Y, w.X - tl.X)
-        If agl <= PI / 4 Then
-            altitude = find_altitude(tr, tl, br, w)
-            Return altitude
-        End If
-        If agl > PI / 4 Then
-            altitude = find_altitude(bl, br, tl, w)
-            Return altitude
-        End If
-        'frmMain.tb1.Update()
-domath:
-        Return altitude
-
-        'Catch ex As Exception
-
-        'End Try
-
-    End Function
-
-    Private Function find_altitude(ByVal p As Vector3D, ByVal q As Vector3D, ByVal r As Vector3D, ByVal f As Vector3D) As Double
-        'This finds the height on the face of a triangle at point f.x, f.y
-        'It returns that value as a double
-
-        Dim nc As Vector3D
-        nc = CrossProduct(p - q, q - r)
-        nc.Normalize()
-
-        If p.Y = q.Y And q.Y = r.Y Then
-            Return r.Y
-        End If
-        surface_normal.x = nc.X
-        surface_normal.y = nc.Y
-        surface_normal.z = nc.Z
-
-        Dim k As Double
-        If nc.Z < 0 Then
-            k = (nc.X * (f.X - p.X)) + (nc.Y * (f.Y - q.Y))
-        Else
-            k = (nc.X * (f.X - p.X)) + (nc.Y * (f.Y - q.Y))
-
-        End If
-        Dim y = ((k) / -nc.Z) + p.Z
-
-        Return y
-    End Function
 End Module

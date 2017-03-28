@@ -1,13 +1,11 @@
 ﻿// render_vertex.txt
 // used to render blended hirez terrain
 
-uniform sampler2D normalMap;
 
 uniform int main_texture;
 uniform vec3 cam_position;
 
 uniform float tile_width;
-
 
 varying vec3 lightVec; 
 varying vec3 eyeVec;
@@ -15,23 +13,40 @@ varying vec2 texCoord;
 varying vec3 g_viewvector;
 varying vec3 lightDirection;
 
-varying vec3 norm;
+
+varying vec3 n;
 varying float ln;
 varying vec4 Vposition;
-varying vec3 Vertex;
 varying vec4 mask;
 varying vec4 mask_2;
-
+varying mat3 TBN;
 varying vec2 hUV;
-
 void main(void)
 { 
-    
-    hUV = -gl_MultiTexCoord0 /10.0 ;
+    gl_Position = ftransform();     
+    gl_TexCoord[0] = -gl_MultiTexCoord0;
+    texCoord = gl_MultiTexCoord0.xy/1.001;
+
+  
+    vec4 point = gl_Vertex;
+    Vposition.x = point.x ;
+    Vposition.y = point.y;
+    Vposition.z = -point.z;
+    Vposition.w = point.w;
 
 
-    lightDirection = gl_LightSource[0].position.xyz - gl_Vertex.xyz;
-    lightDirection.z*= -1.0;
+    vec3 b,t;
+
+    n   = gl_NormalMatrix * gl_Normal;
+    t   = gl_NormalMatrix * gl_MultiTexCoord2.xyz;
+    b   = gl_NormalMatrix *gl_MultiTexCoord3.xyz;
+    t   = normalize(t - dot(n, t) * n);
+    b   = normalize(b - dot(n, b) * n);
+    TBN = mat3(t, b, n);
+
+    hUV = -gl_MultiTexCoord0.xy /10.0 ;
+    vec4 vert = gl_ModelViewMatrix * gl_Vertex;
+    lightDirection = gl_LightSource[0].position.xyz - vert.xyz;
 
     g_viewvector = cam_position - gl_Vertex.xyz;
 
@@ -62,24 +77,6 @@ if (main_texture == 4 )
 mask.a = m_scale;
 mask_2.a = 0.0;
 }
-
-
-    vec4 point = gl_Vertex;
-    Vposition.x = point.x ;
-    Vposition.y = point.y;
-    Vposition.z = -point.z;
-    Vposition.w = point.w;
-
-
-    gl_Position = ftransform();     
-    gl_TexCoord[0] = -gl_MultiTexCoord0;
-    texCoord = gl_MultiTexCoord0.xy/1.001;
-
-norm.zx = ( texture2D(normalMap, -texCoord*.1).gb *2.0-1.0);
-norm.y  = sqrt(1.0-((norm.x*norm.x)+(norm.z*norm.z)));
-norm    = normalize(norm);
-norm.xz *= -1.0;
-
 // This is the cut off distance for bumpping the surface.
 ln = distance(point.xyz,cam_position.xyz);
 if (ln<400.0)

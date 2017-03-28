@@ -30,7 +30,26 @@ Imports Ionic
 
 Module modOpenGL
 
+    Public stars_display_id As Integer
 
+
+    Public Sub make_stars()
+        Dim rand As New Random
+        Dim scale As Single = 100.0
+        stars_display_id = Gl.glGenLists(1)
+        Gl.glNewList(stars_display_id, Gl.GL_COMPILE)
+        Gl.glBegin(Gl.GL_POINTS)
+        Dim x, y, z As Single
+        For i = 0 To 2999
+            x = 2.0 * rand.NextDouble - 1.0
+            y = 2.0 * rand.NextDouble - 1.0
+            z = 2.0 * rand.NextDouble - 1.0
+            Gl.glVertex3f(x * scale, y * scale, z * scale)
+        Next
+        Gl.glEnd()
+        Gl.glEndList()
+
+    End Sub
 	Public Sub EnableOpenGL()
         frmMain.pb2.Visible = False
 		frmMain.pb2.SendToBack()
@@ -122,7 +141,16 @@ Module modOpenGL
 		'next line creates the FBOs and Textures needed to shadow map. Still under development.
 		'frmMain.create_shadow_render_texture()
 		frmMain.pb2.Visible = False
-		Gl.glGetIntegerv(Gl.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max_texture_units)
+        Gl.glGetIntegerv(Gl.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max_texture_units)
+        Dim gl_strings As String
+        gl_strings = Gl.glGetString(Gl.GL_EXTENSIONS).Replace(vbLf, vbCrLf)
+        gl_strings = gl_strings.Replace(" ", vbCrLf)
+        '================================================================
+        'this hangs the app for some reason
+        'If gl_strings.ToLower.Contains("wgl_ext_swap_control") Then
+        '    Wgl.wglSwapIntervalEXT(1)
+        'End If
+        '================================================================
     End Sub
 
 
@@ -291,12 +319,12 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity()
 
-        Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.02F, 3000)
+        Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.02F, 4000)
         Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
         Gl.glLoadIdentity() 'Reset The Matrix
-        Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
         frmMain.set_eyes()
+        Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
     End Sub
     Public Sub ViewPerspective()
         ' Set Up A Perspective View
@@ -304,23 +332,14 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
 
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity()
-        If testing Then
-            Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.0F, 4000.0)
-        Else
-
-            If frmMain.m_Orbit_Light.Checked Then
-                Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.0F, 6500)
-            Else
-                Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.0F, Far_Clip)
-            End If
-
-        End If
+        Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.0F, 4000.0)
+    
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
         Gl.glLoadIdentity() 'Reset The Matrix
-        Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position) 'must be set before projection matrix is set
         frmMain.set_eyes()
+        Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position) 'must be set before projection matrix is set
     End Sub
 
 End Module

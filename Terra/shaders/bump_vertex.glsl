@@ -1,32 +1,32 @@
 //#Version 130
-varying vec3 rgb;
-varying vec3 vVertex;
-varying vec3 g_vertexnormal;
-varying vec3 lightDirection;
-varying vec2 TC1;
-varying vec2 TC2;
-varying vec3 T;
-varying vec3 BN;
-uniform mat4 ModelMatrix1;
+//Used to light all models
+out vec3 vVertex;
+out vec3 lightDirection;
+out vec2 TC1;
+out vec2 TC2;
+out mat3 TBN;
 
-uniform vec3 camPos;
-
+out vec3 t;
+out vec3 b;
+out vec3 n;
 void main(void) {
 
-  TC1 = gl_MultiTexCoord0.xy;
-  TC2 = gl_MultiTexCoord1.xy;
+    TC1 = gl_MultiTexCoord0.xy;
+    TC2 = gl_MultiTexCoord1.xy;
 
-  mat3 ModelMatrix = mat3(ModelMatrix1);
-  T = normalize(ModelMatrix * gl_MultiTexCoord2.xyz);
-  BN = normalize(ModelMatrix * gl_MultiTexCoord3.xyz);
+    vec3 n = normalize(gl_NormalMatrix * gl_Normal);
+    vec3 t = normalize(gl_NormalMatrix * gl_MultiTexCoord2.xyz);
+    vec3 b = normalize(gl_NormalMatrix * gl_MultiTexCoord3.xyz);
+    t = normalize(t - dot(n, t) * n);
+    b = normalize(b - dot(n, b) * n);
 
-  g_vertexnormal = normalize(ModelMatrix * gl_Normal);
+    float invmax = inversesqrt(max(dot(t, t), dot(b, b)));
+    TBN = mat3(t * invmax, b * invmax, n * invmax);
 
-  vVertex = vec3(ModelMatrix1 * gl_Vertex);
+    vVertex = vec3(gl_ModelViewMatrix * gl_Vertex);
 
-  gl_Position = ftransform();
-  lightDirection = gl_LightSource[0].position.xyz - vVertex;
+    lightDirection = gl_LightSource[0].position.xyz - vVertex;
 
-  rgb = lightDirection;
+    gl_Position    = ftransform();
 
 }

@@ -40,8 +40,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.0.3.2</ApplicationVersion>
+    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationVersion>1.0.3.3</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -162,6 +162,12 @@
     <Import Include="Tao.Platform.Windows" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\frmLoadOptions.Designer.vb">
+      <DependentUpon>frmLoadOptions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLoadOptions.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmMapInfo.Designer.vb">
       <DependentUpon>frmMapInfo.vb</DependentUpon>
     </Compile>
@@ -351,6 +357,9 @@
     <EmbeddedResource Include="Forms\frmLighting.resx">
       <DependentUpon>frmLighting.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLoadOptions.resx">
+      <DependentUpon>frmLoadOptions.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.en-US.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>
@@ -535,10 +544,16 @@
     <None Include="shaders\alphaTransparent_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\basicONEtexture_fragment.glsl">
+    <None Include="shaders\lowQualityTrees_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\BasicONEtexture_shader_vertex.glsl">
+    <None Include="shaders\lowQualityTrees_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\frond_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\frond_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\comp_fragment.glsl">
@@ -562,10 +577,10 @@
     <None Include="shaders\leaf_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\clip_fragment.glsl">
+    <None Include="shaders\decalMask_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\clip_vertex.glsl">
+    <None Include="shaders\decalMask_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\normal_fragment.glsl">
@@ -875,10 +890,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\splash.png" />
-    <None Include="shaders\trees_fragment.glsl">
+    <None Include="shaders\branch_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\trees_vertex.glsl">
+    <None Include="shaders\branch_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\depth_fragment.glsl">

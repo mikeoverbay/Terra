@@ -11,26 +11,25 @@ uniform float gamma;
 uniform float ambient;
 in vec2 texCoord;
 in vec3 norm;
-in float ln;
 in vec3 tangent;
 in vec3 bitangent;
 in vec3 g_vertexnormal;
 in vec3 g_viewvector;
 in vec3 lightDirection;
-
+in mat3 TBN;
+in vec4 vVertex;
 void main (void)
 {
 //discard;
-// create TBN
-    float invmax = inversesqrt( max( dot(tangent,tangent), dot(bitangent,bitangent) ));
-    mat3 TBN = mat3( tangent * invmax, bitangent * invmax, -g_vertexnormal );
+
 // Get color texture
     vec4 base = texture2D(colorMap,  texCoord);
-    base.xyz *= l_texture;
+    vec4 color = base;
+    color.xyz *= l_texture;
     if ( base.a <0.2 ) {discard;}
 // get normalmap
-    vec3 bump = texture2D(normalMap, texCoord).rgb * 2.0 - 1.0;
-    bump =  normalize(bump);
+    vec3 bump = normalize((255.0/128.0) * texture2D(normalMap, texCoord).rgb  - 1.0);
+
     float specular = texture2D(normalMap, texCoord).a ; // specular hides in the alpha channel
 
     vec3 N = normalize(g_vertexnormal);
@@ -40,34 +39,33 @@ void main (void)
     vec3 L = normalize(lightDirection);
 
 //caclulate lighting
+   float lambertTerm;
+   vec4 final_color = color;
+      if (gl_FrontFacing) {
+       lambertTerm = max(dot(N,L) , 0.0) * 0.5;
 
-vec4 final_color = base * vec4(ambient,ambient,ambient,1.0);
+       final_color +=  lambertTerm * base;
+       vec3 E = normalize(g_viewvector.xyz);
+       vec3 R = normalize(reflect(-L, PN));
+       float specular1 = pow( max(dot(R, E), 0.0), 30.0)* specular * 0.03;
+       final_color +=  specular1;
+   }
+   
+   final_color.rgb += base.rgb * vec3(ambient,ambient,ambient);
+    final_color*=final_color;
+   gl_FragColor = final_color*4.0;
 
-float lambertTerm= max(pow(dot(PN,L),3.0) , 0.0);
-float light_diffuse = 0.5;
-
-   final_color += (light_diffuse * max(lambertTerm,0.0)*.2) * base;
-   vec3 E = normalize(g_viewvector.xyz);
-   vec3 R = normalize(reflect(-L, PN));
-   float specular1 = pow( max(dot(R, E), 0.0), 300.0)*specular*0.001;
-   final_color +=  specular1;
-
-   //  gl_FragColor.xyz = rgb.xyz;
-
-   gl_FragColor = final_color *5.0;
-
-    //gl_FragColor += vColor;
 // gamma correction
     const float vGv = 1.0;
     vec3 vG = vec3(vGv , vGv , vGv);
-    gl_FragColor.rgb *= 1.3;
+
     gl_FragColor.rgb = pow(gl_FragColor.rgb, vG/gamma);
     
 //gray level
-vec3 luma = vec3(0.299, 0.587, 0.114);
-vec3 co = vec3(dot(luma,gl_FragColor.rgb));
-vec3 c = mix(co, gl_FragColor.rgb,gray_level);
-gl_FragColor.rgb = c;
+    vec3 luma = vec3(0.299, 0.587, 0.114);
+    vec3 co = vec3(dot(luma,gl_FragColor.rgb));
+    vec3 c = mix(co, gl_FragColor.rgb,gray_level);
+    gl_FragColor.rgb = c;
 //======================================================
 //Debug junk
 //gl_FragColor.xyz = ( (base.rgb ) * (lambertTerm  * 1.0));
@@ -88,4 +86,6 @@ gl_FragColor.rgb = c;
     {
         gl_FragColor = gl_FragColor;
     }
+    //gl_FragColor.xyz = (gl_FragColor.rgb*.001 ) + (bump.xyz  * 0.5);
+    
 }

@@ -2,6 +2,9 @@
 Imports System.Math
 Imports System.Runtime.InteropServices
 Imports System
+Imports System.Text
+Imports System.Windows.Media.Media3D
+Imports System.Windows.Media.Media3D.Vector3D
 
 Imports Tao.OpenGl
 Imports Tao.FreeGlut
@@ -19,7 +22,14 @@ Imports Ionic
 Imports System.IO.Compression
 Module modTerrain
     Public get_main_texture As Boolean = False
-
+    Public mesh(0) As vertex_data
+    Public triangle_holder(0) As t_holder_
+    Public Cursor_point As Vector3D
+    Public Structure t_holder_
+        Dim v As vertex_data
+        Dim mesh_location As UInt32
+    End Structure
+#Region "Layer buidlng functions"
 
     Public Sub open_hole_info(ByVal map As Integer, ByVal dom As MemoryStream)
 
@@ -63,17 +73,17 @@ Module modTerrain
         Dim dbuff((stride * 8) * (h * 2) * 4) As Byte ' make room
         count = 0
         'convert to 4 color data.
-        For z = 0 To (h * 2) - 1
-            For x = 0 To (stride) - 1
-                Dim val = data((z * stride) + x)
+        For z1 = 0 To (h * 2) - 1
+            For x1 = 0 To (stride) - 1
+                Dim val = data((z1 * stride) + x1)
                 For q = 0 To 7
                     Dim b = (1 And (val >> q))
                     If b > 0 Then b = 1
-                    dbuff((((z * stride * 8) + (x * 8) + q) * 4)) = CByte(b) * 255 'r only care about X/red in shader
+                    dbuff((((z1 * stride * 8) + (x1 * 8) + q) * 4)) = CByte(b) * 255 'r only care about X/red in shader
                     'dbuff((((z * stride) + (x * 8) + q + 1) * 4)) = CByte(b) * 255 'g
                     'dbuff((((z * stride) + (x * 8) + q + 2) * 4)) = CByte(b) * 255 'b
                     'dbuff((((z * stride) + (x * 8) + q + 3) * 4)) = CByte(b) * 255 'a
-                    count = (((z * stride * 8) + (x * 8) + q) * 4) 'debug
+                    count = (((z1 * stride * 8) + (x1 * 8) + q) * 4) 'debug
                 Next
             Next
         Next
@@ -800,7 +810,6 @@ try_again:
             For y = 0 To w - 1
                 wx = (x * 272)
                 wy = (-(w - y) * 272)
-                Gl.glColor3f(0.0!, 0.6!, 0.0!)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(cnt).mix_text_Id)
 
                 Gl.glBegin(Gl.GL_TRIANGLES)
@@ -874,7 +883,7 @@ try_again:
 
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
-        ilu.iludeleteimage(texID)
+        Il.ilDeleteImages(1, texID)
         ' has to run on vertical and horz
         mix_atlas_Id = blur_image(mix_atlas_Id, "vert", True)
         mix_atlas_Id = blur_image(mix_atlas_Id, "horz", True)
@@ -889,7 +898,7 @@ try_again:
         End If
         Dim uc As vect2
         Dim lc As vect2
-        'frmMain.pb2.Location = New Point(0, 0)
+        frmMain.pb2.Location = New Point(0, 0)
         'frmMain.pb2.BringToFront()
         'frmMain.pb2.Visible = True
 
@@ -910,11 +919,12 @@ try_again:
         Dim comap, si As Integer
         si = Gl.glGetUniformLocation(shader_list.gaussian_shader, "blurScale")
         comap = Gl.glGetUniformLocation(shader_list.gaussian_shader, "s_texture")
+
+        Gl.glUseProgram(shader_list.gaussian_shader)
+
         If orientatin = "vert" Then
-            Gl.glUseProgram(shader_list.gaussian_shader)
             Gl.glUniform3f(si, 1.0 \ lc.x, 0.0, 0.0)
         Else
-            Gl.glUseProgram(shader_list.gaussian_shader)
             Gl.glUniform3f(si, 0.0, 1.0 \ lc.y, 0.0)
         End If
         Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
@@ -925,7 +935,7 @@ try_again:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
         Dim e = Gl.glGetError
 
-        Gl.glBegin(Gl.GL_TRIANGLES)
+        Gl.glBegin(Gl.GL_QUADS)
         '---
         Gl.glTexCoord2f(0.0, 0.0)
         Gl.glVertex3f(uc.x, lc.y, -1.0!)
@@ -933,16 +943,16 @@ try_again:
         Gl.glTexCoord2f(0.0, 1.0)
         Gl.glVertex3f(uc.x, uc.y, -1.0!)
 
-        Gl.glTexCoord2f(-1.0, 0.0)
-        Gl.glVertex3f(lc.x, lc.y, -1.0!)
+        'Gl.glTexCoord2f(1.0, 0.0)
+        'Gl.glVertex3f(lc.x, lc.y, -1.0!)
         '---
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(uc.x, uc.y, -1.0!)
+        'Gl.glTexCoord2f(0.0, -1.0)
+        'Gl.glVertex3f(uc.x, uc.y, -1.0!)
 
-        Gl.glTexCoord2f(-1.0, 1.0)
+        Gl.glTexCoord2f(1.0, 1.0)
         Gl.glVertex3f(lc.x, uc.y, -1.0!)
 
-        Gl.glTexCoord2f(-1.0, 0.0)
+        Gl.glTexCoord2f(1.0, 0.0)
         Gl.glVertex3f(lc.x, lc.y, -1.0!)
 
         Gl.glEnd()
@@ -963,11 +973,17 @@ try_again:
         End If
         Dim ptr_2 As IntPtr = Il.ilGetData()
         Gl.glReadPixels(0, 0, CInt(lc.x), CInt(-lc.y), Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
-        Ilu.iluMirror()
+        Gl.glFinish()
+        'Ilu.iluMirror()
 
         'Ilu.iluFlipImage()
         'Ilu.iluBlurGaussian(2)
-        Gdi.SwapBuffers(pb2_hDC)
+        Try
+            Gdi.SwapBuffers(pb2_hDC)
+
+        Catch ex As Exception
+
+        End Try
         If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
             End
@@ -995,8 +1011,8 @@ try_again:
         'Dim bitmap = New System.Drawing.Bitmap(lc.x, -lc.y, PixelFormat.Format24bppRgb)
         If temp_bmp IsNot Nothing Then
             temp_bmp.Dispose()
-            'GC.Collect()
-            'GC.WaitForFullGCComplete()
+            GC.Collect()
+            GC.WaitForFullGCComplete()
         End If
         temp_bmp = New System.Drawing.Bitmap(lc.x, -lc.y, PixelFormat.Format24bppRgb)
         Dim rect As Rectangle = New Rectangle(0, 0, lc.x, -lc.y)
@@ -1004,11 +1020,13 @@ try_again:
         ' Store the DevIL image data into the bitmap.
         Dim bitmapData As BitmapData = temp_bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb)
 
+        Ilu.iluMirror()
+        Ilu.iluFlipImage()
         Il.ilConvertImage(Il.IL_RGB, Il.IL_UNSIGNED_BYTE)
         Il.ilCopyPixels(0, 0, 0, lc.x, -lc.y, 1, Il.IL_RGB, Il.IL_UNSIGNED_BYTE, bitmapData.Scan0)
         temp_bmp.UnlockBits(bitmapData)
         'temp_bmp = bitmap.Clone
-        temp_bmp.RotateFlip(RotateFlipType.RotateNoneFlipXY)
+        'temp_bmp.RotateFlip(RotateFlipType.RotateNoneFlipXY)
         'bitmap.Dispose()
 
         'success = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
@@ -1070,6 +1088,7 @@ try_again:
         '    map_center_offset_y += 49
         'End If
     End Sub
+#End Region
 
     Public Sub get_location(ByVal map As Integer)
         'Creates the mapBoard array and figures out where each chunk is
@@ -1114,9 +1133,191 @@ try_again:
 
     End Sub
 
+#Region "Terra Tarrain creation functions"
+    Dim vert_cnt As Integer = 0
+
+    Public Sub make_chunk_meshes()
+        tri_count = 0
+        Dim bm_w As Integer = Sqrt(maplist.Length - 1)
+        Dim mesh_stride As Integer = bm_w * 64
+        Dim half_w As Integer = bm_w / 2
+        Dim p1 As vertex_data
+        Dim loc As Integer
+        Dim v_step As Integer
+        Dim map As Integer
+        Dim cnt As Integer = 0
+        For j = 0 To bm_w - 2
+            Application.DoEvents()
+            v_step = j * mesh_stride * 64
+            For k As Integer = 0 To mesh_stride - 64 Step 64
+                If k > 64 * stride Then
+                    'Exit For
+                End If
+                For v2 = 0 To 63
+                    Dim y = (v2 * mesh_stride) + v_step
+                    For x1 = k To k + 63
+                        If v2 = 0 And x1 = k Then
+                            loc = (x1 + 4) + y + (mesh_stride * 4)
+                            p1 = mesh(loc)
+                            map = p1.map
+                            Gl.glDeleteLists(maplist(map).calllist_Id, 1)
+                            Dim id = Gl.glGenLists(1)
+                            maplist(map).calllist_Id = id
+                            Gl.glNewList(id, Gl.GL_COMPILE)
+                            Gl.glBegin(Gl.GL_TRIANGLES)
+                            If y > (((bm_w - 1) * 64) * mesh_stride) + 1 Then
+                                Exit For
+                            End If
+                        End If
+                        If x1 = mesh_stride - 1 Then
+                            Exit For
+                        End If
+                        process_verts(x1, y, mesh_stride)
+                    Next x1
+                Next v2
+                Gl.glEnd()
+                Gl.glEndList()
+            Next k
+        Next j
+        'sucks but i need to deal with the last row
+        v_step = (bm_w - 1) * mesh_stride * 64
+        For k As Integer = 0 To mesh_stride - 63 Step 64
+            For v2 = 0 To 62
+                Dim y = (v2 * mesh_stride) + v_step
+                For x1 = k To k + 63
+                    If v2 = 0 And x1 = k Then
+                        'this is where we will create the new display list if I EVER get this working!!!
+                        loc = (x1 + 4) + y + (mesh_stride * 4)
+                        p1 = mesh(loc)
+                        map = p1.map
+                        Gl.glDeleteLists(maplist(map).calllist_Id, 1)
+                        Dim id = Gl.glGenLists(1)
+                        maplist(map).calllist_Id = id
+                        Gl.glNewList(id, Gl.GL_COMPILE)
+                        Gl.glBegin(Gl.GL_TRIANGLES)
+                        If y > (((bm_w - 1) * 64) * mesh_stride) + 1 Then
+                            Exit For
+                        End If
+                    End If
+                    If x1 = mesh_stride - 1 Then
+                        Exit For
+                    End If
+                    process_verts(x1, y, mesh_stride)
+                Next x1
+            Next v2
+            Gl.glEnd()
+            Gl.glEndList()
+        Next
+    End Sub
+    Private Sub process_verts(ByVal x As Integer, ByVal y As Integer, ByVal mesh_stride As Integer)
+        Dim p1, p2, p3, p4 As vertex_data
+        Dim l1, l2, l3, l4 As Integer
+        l1 = x + 0 + y
+        l2 = x + 1 + y
+        l3 = x + 0 + y + mesh_stride
+        l4 = x + 1 + y + mesh_stride
+
+        p1 = mesh(l1)
+        p2 = mesh(l2)
+        p3 = mesh(l3)
+        p4 = mesh(l4)
+        If p1.u = -9.84375 Then
+            p2.u = -10.0
+            p4.u = -10.0
+        End If
+        If p1.v = -9.84375 Then
+            p3.v = -10.0
+            p4.v = -10.0
+        End If
+        Gl.glNormal3f(p1.nx, p1.ny, p1.nz)
+        Gl.glMultiTexCoord2f(0, p1.u, p1.v)
+        Gl.glMultiTexCoord3f(2, p1.t.x, p1.t.y, p1.t.z)
+        Gl.glMultiTexCoord3f(3, p1.bt.x, p1.bt.y, p1.bt.z)
+        'Gl.glMultiTexCoord2f(4, p1.fog_uv.x, p1.fog_uv.y)
+        Gl.glVertex3f(p1.x, p1.y, p1.z)
+
+        Gl.glNormal3f(p3.nx, p3.ny, p3.nz)
+        Gl.glMultiTexCoord2f(0, p3.u, p3.v)
+        Gl.glMultiTexCoord3f(2, p3.t.x, p3.t.y, p3.t.z)
+        Gl.glMultiTexCoord3f(3, p3.bt.x, p3.bt.y, p3.bt.z)
+        'Gl.glMultiTexCoord2f(4, p3.fog_uv.x, p3.fog_uv.y)
+        Gl.glVertex3f(p3.x, p3.y, p3.z)
+
+        Gl.glNormal3f(p2.nx, p2.ny, p2.nz)
+        Gl.glMultiTexCoord2f(0, p2.u, p2.v)
+        Gl.glMultiTexCoord3f(2, p2.t.x, p2.t.y, p2.t.z)
+        Gl.glMultiTexCoord3f(3, p2.bt.x, p2.bt.y, p2.bt.z)
+        'Gl.glMultiTexCoord2f(4, p2.fog_uv.x, p2.fog_uv.y)
+        Gl.glVertex3f(p2.x, p2.y, p2.z)
+        '===============================
+        Gl.glNormal3f(p3.nx, p3.ny, p3.nz)
+        Gl.glMultiTexCoord2f(0, p3.u, p3.v)
+        Gl.glMultiTexCoord3f(2, p3.t.x, p3.t.y, p3.t.z)
+        Gl.glMultiTexCoord3f(3, p3.bt.x, p3.bt.y, p3.bt.z)
+        'Gl.glMultiTexCoord2f(4, p3.fog_uv.x, p3.fog_uv.y)
+        Gl.glVertex3f(p3.x, p3.y, p3.z)
+
+        Gl.glNormal3f(p4.nx, p4.ny, p4.nz)
+        Gl.glMultiTexCoord2f(0, p4.u, p4.v)
+        Gl.glMultiTexCoord3f(2, p4.t.x, p4.t.y, p4.t.z)
+        Gl.glMultiTexCoord3f(3, p4.bt.x, p4.bt.y, p4.bt.z)
+        'Gl.glMultiTexCoord2f(4, p4.fog_uv.x, p4.fog_uv.y)
+        Gl.glVertex3f(p4.x, p4.y, p4.z)
+
+        Gl.glNormal3f(p2.nx, p2.ny, p2.nz)
+        Gl.glMultiTexCoord2f(0, p2.u, p2.v)
+        Gl.glMultiTexCoord3f(2, p2.t.x, p2.t.y, p2.t.z)
+        Gl.glMultiTexCoord3f(3, p2.bt.x, p2.bt.y, p2.bt.z)
+        'Gl.glMultiTexCoord2f(4, p2.fog_uv.x, p2.fog_uv.y)
+        Gl.glVertex3f(p2.x, p2.y, p2.z)
+    End Sub
+
+
+    Private Sub store_in_mesh(ByVal v As vertex_data, ByVal map As Integer)
+        If map = 41 Then
+            'Stop
+        End If
+        Dim v_copy As vertex_data = v
+        v_copy.z = v.y
+        v_copy.y = v.z
+        Dim a, b As Single
+        Dim loc = maplist(map).location
+        Dim total_width = Sqrt(maplist.Length - 1) * 100.0
+        Dim map_offset = ((Sqrt(maplist.Length - 1) / 2)) * 100.0
+        If map_odd Then
+            v.x += 50.0
+            v.y -= 50.0
+        End If
+        Dim w = Sqrt(maplist.Length - 1)
+        If w / 2 = 7.5 Then
+            v.y += 100.0
+        End If
+        'Just shift it and rescale and use it as the location to write in the mesh() array.
+        'It works well with this data.
+        Dim xu = v.x + map_offset
+        Dim yu = v.y + map_offset
+        Dim x = (v.x + map_offset) * 0.64
+        Dim y = (v.y + map_offset) * 0.64
+        Dim vy = y * w * 64 ' always 64 locations on x,y in a chunk
+        Dim abs_loc = x + vy
+        a = v.z
+        b = v.y
+        v.y = a
+        v.z = b
+        v_copy.fog_uv.x = xu / total_width
+        v_copy.fog_uv.y = yu / total_width
+        'If map_odd Then
+        '    If w / 2 = 7.5 Then
+        '        v.z -= 100.0
+        '    End If
+        '    v.x -= 50.0
+        '    v.z += 50.0
+        'End If
+        mesh(abs_loc) = v_copy
+    End Sub
+
+
     Public Sub build_terra(ByVal map As Int32)
-        midz = 0 : midy = 0 : midx = 0
-        ' Gl.glColor3f(0.6, 0.6, 0.6)
         Dim w As UInt32 = heightMapSize 'bmp_w
         Dim h As UInt32 = heightMapSize 'bmp_h
         Dim uvScale = (1.0# / 64.0#)
@@ -1124,21 +1325,10 @@ try_again:
         Dim h_ = h / 2.0#
         Dim scale = 100.0 / (64.0#)
         Dim cnt As UInt32 = 0
-        Gl.glBegin(Gl.GL_TRIANGLES)
         For j = 0 To w - 2
             For i = 0 To h - 2
                 cnt += 1
-                'Dim ans = (i Xor j) And 1
-                'If i = 0 Or i = 63 Then
-                '    Gl.glColor3f(1.0, 0.0, 0.0)
-                'Else
-                '    Gl.glColor3f(0.2, 0.2, 0.2)
-                'End If
-                'If j = 0 Or j = 63 Then
-                '    Gl.glColor3f(0.0, 0.0, 1.0)
-                'Else
-                '    Gl.glColor3f(0.2, 0.2, 0.2)
-                'End If
+
                 midx += (i - w_)
                 midy += (j - h_)
                 midz += (bmp_data((i), (j)))
@@ -1170,69 +1360,65 @@ try_again:
 
                 make_world_triangle(topRight, bottomRight, topleft, scale, map)
                 make_world_triangle(topleft, bottomRight, bottomleft, scale, map)
-                '	If i = 62 Then
-                '		Stop
-                '	End If
             Next
         Next
-        Gl.glEnd()
-        midz = (midz / cnt)
-        'look_point_Y = midz
-        midx = (midx / cnt)
-        look_point_X = midx
-        midy = (midy / cnt)
-        look_point_Z = midy
+
     End Sub
     Public Sub make_world_triangle(ByVal vt1 As vertex_data, ByVal vt2 As vertex_data, ByVal vt3 As vertex_data, ByRef scale As Single, ByVal map As Int32)
         tri_count += 1
         'add offsets
+        vt1.map = map
+        vt2.map = map
+        vt3.map = map
+
         vt1.x = (vt1.x * scale) + maplist(map).location.x
         vt1.y = (vt1.y * scale) + maplist(map).location.y
         vt2.x = (vt2.x * scale) + maplist(map).location.x
         vt2.y = (vt2.y * scale) + maplist(map).location.y
         vt3.x = (vt3.x * scale) + maplist(map).location.x
         vt3.y = (vt3.y * scale) + maplist(map).location.y
-        Dim a, b, n As vect3
 
-        a.x = vt1.x - vt2.x
-        a.y = vt1.y - vt2.y
-        a.z = vt1.z - vt2.z
-        b.x = vt2.x - vt3.x
-        b.y = vt2.y - vt3.y
-        b.z = vt2.z - vt3.z
-        n.x = (a.y * b.z) - (a.z * b.y)
-        n.y = (a.z * b.x) - (a.x * b.z)
-        n.z = (a.x * b.y) - (a.y * b.x)
-        Dim len As Single = Sqrt((n.x * n.x) + (n.y * n.y) + (n.z * n.z))
-        If len = 0 Then len = 1.0 ' no divide by zero
-        n.x /= len
-        n.y /= len
-        n.z /= len
         vt1.u *= -10.0
         vt1.v *= -10.0
         vt2.u *= -10.0
         vt2.v *= -10.0
         vt3.u *= -10.0
         vt3.v *= -10.0
-        Gl.glNormal3f(n.x, n.z, n.y)
-        Gl.glTexCoord2f(vt1.u, vt1.v)
-        Gl.glVertex3f(vt1.x, vt1.z, vt1.y)
+        'store for reworking
+        store_in_mesh(vt1, map)
+        store_in_mesh(vt2, map)
+        store_in_mesh(vt3, map)
 
-        Gl.glNormal3f(n.x, n.z, n.y)
-        Gl.glTexCoord2f(vt2.u, vt2.v)
-        Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
+        'Gl.glNormal3f(n.x, n.z, n.y)
+        'Gl.glTexCoord2f(vt1.u, vt1.v)
+        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
+        'Gl.glVertex3f(vt1.x, vt1.z, vt1.y)
 
-        Gl.glNormal3f(n.x, n.z, n.y)
-        Gl.glTexCoord2f(vt3.u, vt3.v)
-        Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
+        'Gl.glNormal3f(n.x, n.z, n.y)
+        'Gl.glTexCoord2f(vt2.u, vt2.v)
+        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
+        'Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
+
+        'Gl.glNormal3f(n.x, n.z, n.y)
+        'Gl.glTexCoord2f(vt3.u, vt3.v)
+        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
+        'Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
 
 
     End Sub
 
-    Private Sub make_strip_triangle(ByVal vt1 As vertex_data, ByVal vt2 As vertex_data, ByVal vt3 As vertex_data)
+    Private Sub make_strip_triangle(ByVal vt1 As vertex_data, ByVal vt2 As vertex_data, ByVal vt3 As vertex_data, ByVal map As Integer)
         tri_count += 1
+        vt1.map = map
+        vt2.map = map
+        vt3.map = map
         'add offsets
         Dim a, b, n As vect3
+        Dim tangent, biTangent As vect3
+        ' ComputeTangentBasis(vt1, vt2, vt3, tangent, biTangent)
 
         a.x = vt1.x - vt2.x
         a.y = vt1.y - vt2.y
@@ -1255,26 +1441,676 @@ try_again:
         vt2.v *= -10.0
         vt3.u *= -10.0
         vt3.v *= -10.0
+
+        'store for reworking
+        'store_in_mesh(vt1, map)
+        'store_in_mesh(vt2, map)
+        'store_in_mesh(vt3, map)
+
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt1.u, vt1.v)
+        Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt1.x, vt1.z, vt1.y)
 
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt2.u, vt2.v)
+        Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
 
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt3.u, vt3.v)
+        Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
 
-        check_bounds(vt1)
-        check_bounds(vt2)
-        check_bounds(vt3)
 
 
 
 
     End Sub
+    Public Sub seam_map()
+        Dim scale As Double = 100.0# / (64.0#)
+        Dim uvinc As Double = 1.0# / 64.0#
+        Dim u_start As Double = uvinc * 63.0#
+        Dim almost1 As Double = 1.0
+        Dim u_end As Double = almost1
+        Dim uleft As Double = 0.0
+        Dim vtop As Double = 0.0
+        Dim v_start As Double = u_start
+        Dim v_end As Double = 1.0
+        Dim cnt As Integer = 0
+        Dim y_pos As Integer = 0
+        Dim x_pos As Integer = 0
+        Dim yu, yl, xu, xl As Single
+        Dim tl, bl, tr, br, cur_x, cur_y As Single
+        Dim mmx, mmy As Single
+        Dim mcolumn As Integer = 0
+        Dim mod_ = (Sqrt(maplist.Length - 1)) And 1
+
+        For mboardX = 0 To (Sqrt(maplist.Length - 1) - 1) '+ mod_
+            For mboardy = 0 To (Sqrt(maplist.Length - 1)) '+ mod_
+                mmy = mboardy
+                If mboardy = 0 Then
+                    GoTo endx
+                End If
+                ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+                maplist(mapBoard(mboardX, mboardy)).seamCallId = Gl.glGenLists(1)
+                Gl.glNewList(maplist(mapBoard(mboardX, mboardy)).seamCallId, Gl.GL_COMPILE)
+                ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                Gl.glBegin(Gl.GL_TRIANGLES)
+                yu = maplist(mapBoard(mboardX, mboardy)).location.y + 50
+                yl = yu - (1.0# * scale)
+                x_pos = 0.0#
+                mmx = mboardX
+                If mmx = 7 Then
+                    'Stop
+                End If
+                If mboardy > (Sqrt(maplist.Length - 1) - 1) Then
+                    GoTo endx
+                End If
+                u_start = 0
+                'Debug.WriteLine(mapBoard(mmx, mmy))
+                'Debug.WriteLine(mapBoard(mmx + 1, mmy))
+                For x1 = maplist(mapBoard(mboardX, mboardy)).location.x - 50 To _
+                                            maplist(mapBoard(mboardX, mboardy)).location.x + 50 - (scale * 2) Step 1 * scale
+                    tl = maplist(mapBoard(mboardX, mboardy + 1)).heights(x_pos, 0)
+                    tr = maplist(mapBoard(mboardX, mboardy + 1)).heights(x_pos + 1, 0)
+                    bl = maplist(mapBoard(mboardX, mboardy)).heights(x_pos, 63)
+                    br = maplist(mapBoard(mboardX, mboardy)).heights(x_pos + 1, 63)
+                    maplist(mapBoard(mboardX, mboardy)).heights(x_pos, 64) = tl
+
+                    topleft.x = x1
+                    topleft.y = yu
+                    topleft.z = tl
+                    topleft.u = u_start
+                    topleft.v = almost1
+
+                    bottomleft.x = x1
+                    bottomleft.y = yl
+                    bottomleft.z = bl
+                    bottomleft.u = u_start
+                    bottomleft.v = almost1 - uvinc
+
+                    topRight.x = x1 + scale
+                    topRight.y = yu
+                    topRight.z = tr
+                    topRight.u = u_start + uvinc
+                    topRight.v = almost1
+
+                    bottomRight.x = x1 + scale
+                    bottomRight.y = yl
+                    bottomRight.z = br
+                    bottomRight.u = u_start + uvinc
+                    bottomRight.v = almost1 - uvinc
+
+                    make_strip_triangle(topRight, bottomRight, topleft, mapBoard(mboardX, mboardy))
+                    make_strip_triangle(topleft, bottomRight, bottomleft, mapBoard(mboardX, mboardy))
+                    u_start += uvinc
+                    x_pos += 1
+                    cur_x = x1
+                Next
+                If mmx > (Sqrt(maplist.Length - 1) - 2) Then
+                    GoTo endx
+                End If
+                'this part does the one corner we can't loop in to
+                tl = maplist(mapBoard(mmx, mmy)).heights(63, 63)
+                tr = maplist(mapBoard(mmx + 1, mmy)).heights(0, 63)
+                bl = maplist(mapBoard(mmx, mmy + 1)).heights(63, 0)
+                br = maplist(mapBoard(mmx + 1, mmy + 1)).heights(0, 0)
+                'these 3 positions was a pain to sort out :)
+                maplist(mapBoard(mmx, mmy)).heights(64, 64) = br 'ok
+                maplist(mapBoard(mmx, mmy)).heights(63, 64) = bl 'ok
+                maplist(mapBoard(mmx, mmy)).heights(64, 63) = tr 'ok
+                topleft.x = cur_x + scale
+                topleft.y = yl
+                topleft.z = tl
+                topleft.u = almost1 - uvinc
+                topleft.v = almost1 - uvinc
+
+
+                topRight.x = cur_x + (scale * 2)
+                topRight.y = yl
+                topRight.z = tr
+                topRight.u = almost1
+                topRight.v = almost1 - uvinc
+
+                bottomleft.x = cur_x + scale
+                bottomleft.y = yu
+                bottomleft.z = bl
+                bottomleft.u = almost1 - uvinc
+                bottomleft.v = almost1 '
+
+                bottomRight.x = cur_x + (scale * 2)
+                bottomRight.y = yu
+                bottomRight.z = br
+                bottomRight.u = almost1 '
+                bottomRight.v = almost1
+                make_strip_triangle(topRight, bottomRight, topleft, mapBoard(mboardX, mboardy))
+                make_strip_triangle(topleft, bottomRight, bottomleft, mapBoard(mboardX, mboardy))
+
+endx:
+                If mboardy = 0 Then
+                    GoTo endy
+                End If
+                If mmx > Sqrt(maplist.Length - 1) - 2 Then
+                    mcolumn += 1
+                    GoTo endy
+                End If
+                xu = maplist(mapBoard(mboardX, mboardy)).location.x + 50
+                xl = xu - (1 * scale)
+                cur_y = 0
+                y_pos = 0
+                'mmx = mcolumn
+                v_start = 0
+                'If mboardy = 8 And mmx = 0 Then
+                '    Gl.glColor3f(1.0, 0.0, 0.0)
+                'Else
+                '    Gl.glColor3f(0.6, 0.6, 0.6)
+                'End If
+                For y1 = maplist(mapBoard(mmx, mboardy)).location.y - 50 To _
+                          maplist(mapBoard(mmx, mboardy)).location.y + 50 - (scale * 2) Step 1 * scale
+                    tl = maplist(mapBoard(mmx, mboardy)).heights(63, y_pos + 1)
+                    tr = maplist(mapBoard(mmx + 1, mboardy)).heights(0, y_pos + 1)
+                    bl = maplist(mapBoard(mmx, mboardy)).heights(63, y_pos)
+                    br = maplist(mapBoard(mmx + 1, mboardy)).heights(0, y_pos)
+                    maplist(mapBoard(mmx, mboardy)).heights(64, y_pos) = br
+                    topleft.x = xl
+                    topleft.y = y1 + scale
+                    topleft.z = tl
+                    topleft.u = almost1 - uvinc
+                    topleft.v = v_start + uvinc
+
+                    bottomleft.x = xl
+                    bottomleft.y = y1
+                    bottomleft.z = bl
+                    bottomleft.u = almost1 - uvinc
+                    bottomleft.v = v_start
+
+                    topRight.x = xu
+                    topRight.y = y1 + scale
+                    topRight.z = tr
+                    topRight.u = almost1
+                    topRight.v = v_start + uvinc
+
+                    bottomRight.x = xu
+                    bottomRight.y = y1
+                    bottomRight.z = br
+                    bottomRight.u = almost1
+                    bottomRight.v = v_start
+
+
+                    make_strip_triangle(topRight, bottomRight, topleft, mapBoard(mboardX, mboardy))
+                    make_strip_triangle(topleft, bottomRight, bottomleft, mapBoard(mboardX, mboardy))
+                    v_start += uvinc
+                    y_pos += 1
+                    cur_y = y1
+                Next
+Endy:
+                Gl.glEnd()
+                Gl.glEndList()
+                Gl.glFinish()
+            Next
+        Next
+
+
+
+
+    End Sub
+
+    Private loc_list(0) As l_
+    Private Structure l_
+        Dim cnt As Integer
+        Dim list() As Integer
+    End Structure
+
+
+    Public Sub average_mesh_btns()
+        Dim count = triangle_count - 1
+        'do the inside of the mesh
+        Dim w = global_map_width
+        Dim len As Single
+        Dim n = ((w * 64) - 1) * 6
+        Dim a1, a2, a3, a4, a5, a6 As vertex_data
+        'If File.Exists("C:\!_test_data.data") Then
+        '    File.Delete("C:\!_test_data.data")
+        'End If
+        'Dim f = File.OpenWrite("C:\!_test_data.data")
+        'Dim br As New BinaryWriter(f)
+        'For i = 0 To triangle_count - 1
+        '    br.Write(CSng(triangle_holder(i).v.t.x))
+        '    'br.Write(CSng(triangle_holder(i).v.y))
+        '    br.Write(CSng(triangle_holder(i).v.t.y))
+
+        'Next
+        'br.Close()
+        'f.Close()
+
+        For i As Integer = 0 To (count - 1) - (n) Step n
+            Application.DoEvents()
+            For k As Integer = i To (i + n) - 12 Step 6
+                'loop thru and grab the 6 vertices that share the same exact space.
+                a1 = triangle_holder(k + 4).v
+                a2 = triangle_holder(k + 7).v
+                a3 = triangle_holder(k + 9).v
+                a4 = triangle_holder((k + n) + 2).v
+                a5 = triangle_holder((k + n) + 5).v
+                a6 = triangle_holder((k + n) + 6).v
+                'Average out the normals
+                a1.nx = (a1.nx + a2.nx + a3.nx + a4.nx + a5.nx + a6.nx) / 6.0
+                a1.ny = (a1.ny + a2.ny + a3.ny + a4.ny + a5.ny + a6.ny) / 6.0
+                a1.nz = (a1.nz + a2.nz + a3.nz + a4.nz + a5.nz + a6.nz) / 6.0
+
+                len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+                If len = 0 Then len = 1.0 ' no divide by zero
+                a1.nx /= len
+                a1.ny /= len
+                a1.nz /= len
+
+
+                'Store the averaged normal back in to the 6 vertices
+                triangle_holder(k + 4).v.nx = a1.nx
+                triangle_holder(k + 4).v.ny = a1.ny
+                triangle_holder(k + 4).v.nz = a1.nz
+
+                triangle_holder(k + 7).v.nx = a1.nx
+                triangle_holder(k + 7).v.ny = a1.ny
+                triangle_holder(k + 7).v.nz = a1.nz
+
+                triangle_holder(k + 9).v.nx = a1.nx
+                triangle_holder(k + 9).v.ny = a1.ny
+                triangle_holder(k + 9).v.nz = a1.nz
+
+                triangle_holder((k + n) + 2).v.nx = a1.nx
+                triangle_holder((k + n) + 2).v.ny = a1.ny
+                triangle_holder((k + n) + 2).v.nz = a1.nz
+
+                triangle_holder((k + n) + 5).v.nx = a1.nx
+                triangle_holder((k + n) + 5).v.ny = a1.ny
+                triangle_holder((k + n) + 5).v.nz = a1.nz
+
+                triangle_holder((k + n) + 6).v.nx = a1.nx
+                triangle_holder((k + n) + 6).v.ny = a1.ny
+                triangle_holder((k + n) + 6).v.nz = a1.nz
+
+            Next
+        Next
+        Application.DoEvents()
+        'do the right side
+        For i As Integer = 0 To (count - 1) - (n) Step n
+            a1 = triangle_holder(i + 1).v
+            a2 = triangle_holder((i + 0) + 3).v
+            a3 = triangle_holder((i + n) + 0).v
+
+            a1.nx = (a1.nx + a2.nx + a3.nx) / 3.0
+            a1.ny = (a1.ny + a2.ny + a3.ny) / 3.0
+            a1.nz = (a1.nz + a2.nz + a3.nz) / 3.0
+
+            Len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+            If len = 0 Then len = 1.0 ' no divide by zero
+            a1.nx /= len
+            a1.ny /= len
+            a1.nz /= len
+
+            triangle_holder(i + 1).v.nx = a1.nx
+            triangle_holder(i + 1).v.ny = a1.ny
+            triangle_holder(i + 1).v.nz = a1.nz
+
+            triangle_holder((i + 0) + 3).v.nx = a1.nx
+            triangle_holder((i + 0) + 3).v.ny = a1.ny
+            triangle_holder((i + 0) + 3).v.nz = a1.nz
+
+            triangle_holder((i + n) + 0).v.nx = a1.nx
+            triangle_holder((i + n) + 0).v.ny = a1.ny
+            triangle_holder((i + n) + 0).v.nz = a1.nz
+
+        Next
+        Application.DoEvents()
+        'bottom left corner
+        Dim ii = n - 6
+
+        a1 = triangle_holder(ii + 2).v
+        a2 = triangle_holder(ii + 5).v
+
+        a1.nx = (a1.nx + a2.nx) / 2.0
+        a1.ny = (a1.ny + a2.ny) / 2.0
+        a1.nz = (a1.nz + a2.nz) / 2.0
+
+        len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+        If len = 0 Then len = 1.0 ' no divide by zero
+        a1.nx /= len
+        a1.ny /= len
+        a1.nz /= len
+
+        triangle_holder(ii + 2).v.nx = a1.nx
+        triangle_holder(ii + 2).v.ny = a1.ny
+        triangle_holder(ii + 2).v.nz = a1.nz
+
+        triangle_holder(ii + 5).v.nx = a1.nx
+        triangle_holder(ii + 5).v.ny = a1.ny
+        triangle_holder(ii + 5).v.nz = a1.nz
+
+        'top right corner
+        ii = (count - n) + 1
+
+        a1 = triangle_holder(ii + 1).v
+        a2 = triangle_holder(ii + 3).v
+
+        a1.nx = (a1.nx + a2.nx) / 2.0
+        a1.ny = (a1.ny + a2.ny) / 2.0
+        a1.nz = (a1.nz + a2.nz) / 2.0
+
+        len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+        If len = 0 Then len = 1.0 ' no divide by zero
+        a1.nx /= len
+        a1.ny /= len
+        a1.nz /= len
+
+        triangle_holder(ii + 1).v.nx = a1.nx
+        triangle_holder(ii + 1).v.ny = a1.ny
+        triangle_holder(ii + 1).v.nz = a1.nz
+
+        triangle_holder(ii + 3).v.nx = a1.nx
+        triangle_holder(ii + 3).v.ny = a1.ny
+        triangle_holder(ii + 3).v.nz = a1.nz
+        Application.DoEvents()
+
+        'do the left side
+        For i As Integer = n - 6 To (count) - (n) Step n
+            a1 = triangle_holder(i + 4).v
+            a2 = triangle_holder((i + n) + 2).v
+            a3 = triangle_holder((i + n) + 5).v
+
+            a1.nx = (a1.nx + a2.nx + a3.nx) / 3.0
+            a1.ny = (a1.ny + a2.ny + a3.ny) / 3.0
+            a1.nz = (a1.nz + a2.nz + a3.nz) / 3.0
+
+            len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+            If len = 0 Then len = 1.0 ' no divide by zero
+            a1.nx /= len
+            a1.ny /= len
+            a1.nz /= len
+
+            triangle_holder(i + 4).v.nx = a1.nx
+            triangle_holder(i + 4).v.ny = a1.ny
+            triangle_holder(i + 4).v.nz = a1.nz
+
+            triangle_holder((i + n) + 2).v.nx = a1.nx
+            triangle_holder((i + n) + 2).v.ny = a1.ny
+            triangle_holder((i + n) + 2).v.nz = a1.nz
+
+            triangle_holder((i + n) + 5).v.nx = a1.nx
+            triangle_holder((i + n) + 5).v.ny = a1.ny
+            triangle_holder((i + n) + 5).v.nz = a1.nz
+
+        Next
+        'do top row
+        Application.DoEvents()
+        For i As Integer = (count + 1) - n To (count + 1) - 12 Step 6
+            a1 = triangle_holder(i + 4).v
+            a2 = triangle_holder((i + 6) + 1).v
+            a3 = triangle_holder((i + 6) + 3).v
+
+            a1.nx = (a1.nx + a2.nx + a3.nx) / 2.0
+            a1.ny = (a1.ny + a2.ny + a3.ny) / 2.0
+            a1.nz = (a1.nz + a2.nz + a3.nz) / 2.0
+
+            len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+            If len = 0 Then len = 1.0 ' no divide by zero
+            a1.nx /= len
+            a1.ny /= len
+            a1.nz /= len
+
+            triangle_holder(i + 4).v.nx = a1.nx
+            triangle_holder(i + 4).v.ny = a1.ny
+            triangle_holder(i + 4).v.nz = a1.nz
+
+            triangle_holder((i + 6) + 1).v.nx = a1.nx
+            triangle_holder((i + 6) + 1).v.ny = a1.ny
+            triangle_holder((i + 6) + 1).v.nz = a1.nz
+
+            triangle_holder((i + 6) + 3).v.nx = a1.nx
+            triangle_holder((i + 6) + 3).v.ny = a1.ny
+            triangle_holder((i + 6) + 3).v.nz = a1.nz
+
+        Next
+        Application.DoEvents()
+        'do the bottom row (first row)
+        For i As Integer = 0 To n - 12 Step 6
+            a1 = triangle_holder(i + 2).v
+            a2 = triangle_holder((i + 0) + 5).v
+            a3 = triangle_holder((i + 6) + 0).v
+
+            a1.nx = (a1.nx + a2.nx + a3.nx) / 3.0
+            a1.ny = (a1.ny + a2.ny + a3.ny) / 3.0
+            a1.nz = (a1.nz + a2.nz + a3.nz) / 3.0
+
+            len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+            If len = 0 Then len = 1.0 ' no divide by zero
+            a1.nx /= len
+            a1.ny /= len
+            a1.nz /= len
+
+            triangle_holder(i + 2).v.nx = a1.nx
+            triangle_holder(i + 2).v.ny = a1.ny
+            triangle_holder(i + 2).v.nz = a1.nz
+
+            triangle_holder((i + 0) + 5).v.nx = a1.nx
+            triangle_holder((i + 0) + 5).v.ny = a1.ny
+            triangle_holder((i + 0) + 5).v.nz = a1.nz
+
+            triangle_holder((i + 6) + 0).v.nx = a1.nx
+            triangle_holder((i + 6) + 0).v.ny = a1.ny
+            triangle_holder((i + 6) + 0).v.nz = a1.nz
+
+        Next
+        'now to put all these back in the mesh() so the chunk meshes can be created.. actually just display IDs'
+        For i = 0 To triangle_count - 1
+            check_bounds(triangle_holder(i).v) ' get map bounding box size
+            mesh(triangle_holder(i).mesh_location) = triangle_holder(i).v
+        Next
+    End Sub
+    Public Sub createTBNs()
+        Dim bm_w As Integer = global_map_width
+        Dim mesh_stride As Integer = (bm_w * 64)
+        Dim cnt As Integer = 0
+
+        For y1 = 0 To (mesh_stride) - 2
+            For x1 = 0 To mesh_stride - 2
+                get_TBN(x1, y1 * mesh_stride, mesh_stride)
+            Next x1
+        Next
+        GC.Collect()
+        GC.WaitForFullGCComplete()
+    End Sub
+    Private Sub get_TBN(ByVal x As Integer, ByVal y As Integer, ByVal mesh_stride As Integer)
+        Dim p1, p2, p3, p4 As vertex_data
+        Dim p1t, p2t, p3t, p4t As vertex_data
+        Dim l1, l2, l3, l4 As Integer
+        l1 = x + 0 + y
+        l2 = x + 1 + y
+        l3 = x + 0 + y + mesh_stride
+        l4 = x + 1 + y + mesh_stride
+        p1 = mesh(l1)
+        p2 = mesh(l2)
+        p3 = mesh(l3)
+        p4 = mesh(l4)
+        'so we can restore the UVs if they are changed for the math
+        p1t = p1
+        p2t = p2
+        p3t = p3
+        p4t = p4
+        '10 fucking hours to figure out why the UVs where messed up. Grrrrrrrrr!!!
+        'Im over-writing the vertices on every 64th column and row so the -10.0 became 0.0!!!
+        'This fixes that bullshit!!! Has to be done before tangent creation!!!
+        'They also can't has to be returned to their previous state.
+        If p1.u = -9.84375 Then
+            p2.u = -10.0
+            p4.u = -10.0
+        End If
+        If p1.v = -9.84375 Then
+            p3.v = -10.0
+            p4.v = -10.0
+        End If
+        get_normal(p1, p3, p2)
+        get_normal(p3, p4, p2)
+        ComputeTangentBasis(p1, p3, p2, l1, l3, l2, p1t, p3t, p2t)
+        ComputeTangentBasis(p3, p4, p2, l3, l4, l2, p3t, p4t, p2t)
+        '==========================================================================
+
+        mesh(l1) = p1
+        mesh(l2) = p2
+        mesh(l3) = p3
+        mesh(l4) = p4
+        'restore UVs
+        mesh(l1).u = p1t.u
+        mesh(l1).v = p1t.v
+        mesh(l2).u = p2t.u
+        mesh(l2).v = p2t.v
+        mesh(l3).u = p3t.u
+        mesh(l3).v = p3t.v
+        mesh(l4).u = p4t.u
+        mesh(l4).v = p4t.v
+    End Sub
+    Private Sub get_normal(ByRef p1 As vertex_data, ByRef p2 As vertex_data, ByRef p3 As vertex_data)
+
+        Dim a, b, n As vect3
+
+        a.x = p1.x - p2.x
+        a.y = p1.y - p2.y
+        a.z = p1.z - p2.z
+        b.x = p2.x - p3.x
+        b.y = p2.y - p3.y
+        b.z = p2.z - p3.z
+        n.x = (a.y * b.z) - (a.z * b.y)
+        n.y = (a.z * b.x) - (a.x * b.z)
+        n.z = (a.x * b.y) - (a.y * b.x)
+        Dim len As Single = Sqrt((n.x * n.x) + (n.y * n.y) + (n.z * n.z))
+        If len = 0 Then len = 1.0 ' no divide by zero
+        n.x /= len
+        n.y /= len
+        n.z /= len
+
+        p1.nx = n.x
+        p1.ny = n.y
+        p1.nz = n.z
+        p2.nx = n.x
+        p2.ny = n.y
+        p2.nz = n.z
+        p3.nx = n.x
+        p3.ny = n.y
+        p3.nz = n.z
+    End Sub
+    Private Sub ComputeTangentBasis(ByRef p0 As vertex_data, ByRef p1 As vertex_data, ByRef p2 As vertex_data, _
+                           ByVal l1 As Integer, ByVal l2 As Integer, ByVal l3 As Integer, _
+                           ByVal pt0 As vertex_data, ByVal pt1 As vertex_data, ByVal pt2 As vertex_data)
+        Dim tangent, bitangent As Vector3D
+        Dim n As Vector3D
+
+        n.X = p0.nx
+        n.Y = p0.ny
+        n.Z = p0.nz
+
+        'convert to vector3d type... they are WAY easier to do complex math with!!
+        Dim v0 = convert_vector3d(p0)
+        Dim v1 = convert_vector3d(p1)
+        Dim v2 = convert_vector3d(p2)
+
+        Dim edge1 = v1 - v0
+        Dim edge2 = v2 - v0
+        Dim deltaU1 = (p1.u - p0.u)
+        Dim deltaU2 = (p2.u - p0.u)
+        Dim deltaV1 = (p1.v - p0.v)
+        Dim deltaV2 = (p2.v - p0.v)
+
+        Dim f As Single = 1.0! / ((deltaU1 * deltaV2) - (deltaU2 * deltaV1))
+
+        tangent.X = f * ((deltaV2 * edge1.X) - (deltaV1 * edge2.X))
+        tangent.Y = f * ((deltaV2 * edge1.Y) - (deltaV1 * edge2.Y))
+        tangent.Z = f * ((deltaV2 * edge1.Z) - (deltaV1 * edge2.Z))
+        bitangent = Vector3D.CrossProduct(tangent, n)
+        tangent = tangent - (Vector3D.DotProduct(tangent, n) * n)
+        '
+        tangent /= tangent.Length
+        bitangent /= bitangent.Length
+
+        p0.t.x = tangent.X
+        p0.t.y = tangent.Y
+        p0.t.z = tangent.Z
+        p0.bt.x = bitangent.X
+        p0.bt.y = bitangent.Y
+        p0.bt.z = bitangent.Z
+        p0.u = pt0.u
+        p0.v = pt0.v
+        '
+        p1.t.x = tangent.X
+        p1.t.y = tangent.Y
+        p1.t.z = tangent.Z
+        p1.bt.x = bitangent.X
+        p1.bt.y = bitangent.Y
+        p1.bt.z = bitangent.Z
+        p1.u = pt1.u
+        p1.v = pt1.v
+        '
+        p2.t.x = tangent.X
+        p2.t.y = tangent.Y
+        p2.t.z = tangent.Z
+        p2.bt.x = bitangent.X
+        p2.bt.y = bitangent.Y
+        p2.bt.z = bitangent.Z
+        p2.u = pt2.u
+        p2.v = pt2.v
+
+        '==========================================================================
+        'add these to the buffer for averaging
+        triangle_holder(triangle_count + 0) = New t_holder_
+        triangle_holder(triangle_count + 1) = New t_holder_
+        triangle_holder(triangle_count + 2) = New t_holder_
+
+        triangle_holder(triangle_count + 0).v = p0
+        triangle_holder(triangle_count + 0).mesh_location = l1 ' need this so we can put them back in mesh()!
+
+        triangle_holder(triangle_count + 1).v = p1
+        triangle_holder(triangle_count + 1).mesh_location = l2
+
+        triangle_holder(triangle_count + 2).v = p2
+        triangle_holder(triangle_count + 2).mesh_location = l3
+
+
+        triangle_count += 3
+
+    End Sub
+
+    Private Function normalize(ByVal normal As Vector3D) As vect3
+        Dim len As Single = Sqrt((normal.X * normal.X) + (normal.Y * normal.Y) + (normal.Z * normal.Z))
+        len = normal.Length
+        ' avoid division by 0
+        If len = 0.0F Then len = 1.0F
+        Dim v As vect3
+        ' reduce to unit size
+        v.x = (normal.X / len)
+        v.y = (normal.Y / len)
+        v.z = (normal.Z / len)
+
+        Return v
+    End Function
+    Public Function convert_vector3d(ByVal p As vertex_data) As Vector3D
+        Dim v As Vector3D
+        v.X = p.x
+        v.Y = p.y
+        v.Z = p.z
+        Return v
+    End Function
+    Public Function convert_vect3(ByVal p As Vector3D) As vect3
+        Dim v As vect3
+        v.x = p.X
+        v.y = p.Y
+        v.z = p.Z
+        Return v
+    End Function
+#End Region
 
     Private Sub check_bounds(ByVal v As vertex_data)
         If v.x > x_max Then x_max = v.x
@@ -1286,16 +2122,6 @@ try_again:
 
     End Sub
 
-    Public Sub make_lists(ByVal map As UInt32)
-        ' start list
-
-        maplist(map).calllist_Id = Gl.glGenLists(1)
-        Gl.glNewList(maplist(map).calllist_Id, Gl.GL_COMPILE)
-        build_terra(map)
-        Gl.glEndList()
-        Gl.glFinish()
-
-    End Sub
 
     Public Sub get_surface_normals(ByRef s As MemoryStream, ByVal map As Int32)
         Dim data((heightMapSize * heightMapSize * 2) + heightMapSize) As SByte
@@ -1474,195 +2300,6 @@ try_again:
         'End If
     End Sub
 
-    Public Sub seam_map()
-        Dim scale As Double = 100.0# / (64.0#)
-        Dim uvinc As Double = 1.0# / 64.0#
-        Dim u_start As Double = uvinc * 63.0#
-        Dim almost1 As Double = 1.0
-        Dim u_end As Double = almost1
-        Dim uleft As Double = 0.0
-        Dim vtop As Double = 0.0
-        Dim v_start As Double = u_start
-        Dim v_end As Double = 1.0
-        Dim cnt As Integer = 0
-        Dim y_pos As Integer = 0
-        Dim x_pos As Integer = 0
-        Dim yu, yl, xu, xl As Single
-        Dim tl, bl, tr, br, cur_x, cur_y As Single
-        Dim mmx, mmy As Single
-        Dim mcolumn As Integer = 0
-        Dim mod_ = (Sqrt(maplist.Length - 1)) And 1
-
-        For mboardX = 0 To (Sqrt(maplist.Length - 1) - 1) '+ mod_
-            For mboardy = 0 To (Sqrt(maplist.Length - 1)) '+ mod_
-                mmy = mboardy
-                If mboardy = 0 Then
-                    GoTo endx
-                End If
-                ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-                maplist(mapBoard(mboardX, mboardy)).seamCallId = Gl.glGenLists(1)
-                Gl.glNewList(maplist(mapBoard(mboardX, mboardy)).seamCallId, Gl.GL_COMPILE)
-                ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-                Gl.glBegin(Gl.GL_TRIANGLES)
-                yu = maplist(mapBoard(mboardX, mboardy)).location.y + 50
-                yl = yu - (1.0# * scale)
-                x_pos = 0.0#
-                mmx = mboardX
-                If mmx = 7 Then
-                    'Stop
-                End If
-                If mboardy > (Sqrt(maplist.Length - 1) - 1) Then
-                    GoTo endx
-                End If
-                u_start = 0
-                'Debug.WriteLine(mapBoard(mmx, mmy))
-                'Debug.WriteLine(mapBoard(mmx + 1, mmy))
-                For x = maplist(mapBoard(mboardX, mboardy)).location.x - 50 To _
-                                            maplist(mapBoard(mboardX, mboardy)).location.x + 50 - (scale * 2) Step 1 * scale
-                    tl = maplist(mapBoard(mboardX, mboardy + 1)).heights(x_pos, 0)
-                    tr = maplist(mapBoard(mboardX, mboardy + 1)).heights(x_pos + 1, 0)
-                    bl = maplist(mapBoard(mboardX, mboardy)).heights(x_pos, 63)
-                    br = maplist(mapBoard(mboardX, mboardy)).heights(x_pos + 1, 63)
-                    maplist(mapBoard(mboardX, mboardy)).heights(x_pos, 64) = tl
-
-                    topleft.x = x
-                    topleft.y = yu
-                    topleft.z = tl
-                    topleft.u = u_start
-                    topleft.v = almost1
-
-                    bottomleft.x = x
-                    bottomleft.y = yl
-                    bottomleft.z = bl
-                    bottomleft.u = u_start
-                    bottomleft.v = almost1 - uvinc
-
-                    topRight.x = x + scale
-                    topRight.y = yu
-                    topRight.z = tr
-                    topRight.u = u_start + uvinc
-                    topRight.v = almost1
-
-                    bottomRight.x = x + scale
-                    bottomRight.y = yl
-                    bottomRight.z = br
-                    bottomRight.u = u_start + uvinc
-                    bottomRight.v = almost1 - uvinc
-
-                    make_strip_triangle(topRight, topleft, bottomleft)
-                    make_strip_triangle(bottomleft, bottomRight, topRight)
-                    u_start += uvinc
-                    x_pos += 1
-                    cur_x = x
-                Next
-                If mmx > (Sqrt(maplist.Length - 1) - 2) Then
-                    GoTo endx
-                End If
-                'this part does the one corner we can't loop in to
-                tl = maplist(mapBoard(mmx, mmy)).heights(63, 63)
-                tr = maplist(mapBoard(mmx + 1, mmy)).heights(0, 63)
-                bl = maplist(mapBoard(mmx, mmy + 1)).heights(63, 0)
-                br = maplist(mapBoard(mmx + 1, mmy + 1)).heights(0, 0)
-                'these 3 positions was a pain to sort out :)
-                maplist(mapBoard(mmx, mmy)).heights(64, 64) = br 'ok
-                maplist(mapBoard(mmx, mmy)).heights(63, 64) = bl 'ok
-                maplist(mapBoard(mmx, mmy)).heights(64, 63) = tr 'ok
-                topleft.x = cur_x + scale
-                topleft.y = yl
-                topleft.z = tl
-                topleft.u = almost1 - uvinc
-                topleft.v = almost1 - uvinc
-
-
-                topRight.x = cur_x + (scale * 2)
-                topRight.y = yl
-                topRight.z = tr
-                topRight.u = almost1
-                topRight.v = almost1 - uvinc
-
-                bottomleft.x = cur_x + scale
-                bottomleft.y = yu
-                bottomleft.z = bl
-                bottomleft.u = almost1 - uvinc
-                bottomleft.v = almost1 '
-
-                bottomRight.x = cur_x + (scale * 2)
-                bottomRight.y = yu
-                bottomRight.z = br
-                bottomRight.u = almost1 '
-                bottomRight.v = almost1
-                make_strip_triangle(bottomleft, topleft, topRight)
-                make_strip_triangle(topRight, bottomRight, bottomleft)
-
-endx:
-                If mboardy = 0 Then
-                    GoTo endy
-                End If
-                If mmx > Sqrt(maplist.Length - 1) - 2 Then
-                    mcolumn += 1
-                    GoTo endy
-                End If
-                xu = maplist(mapBoard(mboardX, mboardy)).location.x + 50
-                xl = xu - (1 * scale)
-                cur_y = 0
-                y_pos = 0
-                'mmx = mcolumn
-                v_start = 0
-                'If mboardy = 8 And mmx = 0 Then
-                '    Gl.glColor3f(1.0, 0.0, 0.0)
-                'Else
-                '    Gl.glColor3f(0.6, 0.6, 0.6)
-                'End If
-                For y = maplist(mapBoard(mmx, mboardy)).location.y - 50 To _
-                          maplist(mapBoard(mmx, mboardy)).location.y + 50 - (scale * 2) Step 1 * scale
-                    tl = maplist(mapBoard(mmx, mboardy)).heights(63, y_pos + 1)
-                    tr = maplist(mapBoard(mmx + 1, mboardy)).heights(0, y_pos + 1)
-                    bl = maplist(mapBoard(mmx, mboardy)).heights(63, y_pos)
-                    br = maplist(mapBoard(mmx + 1, mboardy)).heights(0, y_pos)
-                    maplist(mapBoard(mmx, mboardy)).heights(64, y_pos) = br
-                    topleft.x = xl
-                    topleft.y = y + scale
-                    topleft.z = tl
-                    topleft.u = almost1 - uvinc
-                    topleft.v = v_start + uvinc
-
-                    bottomleft.x = xl
-                    bottomleft.y = y
-                    bottomleft.z = bl
-                    bottomleft.u = almost1 - uvinc
-                    bottomleft.v = v_start
-
-                    topRight.x = xu
-                    topRight.y = y + scale
-                    topRight.z = tr
-                    topRight.u = almost1
-                    topRight.v = v_start + uvinc
-
-                    bottomRight.x = xu
-                    bottomRight.y = y
-                    bottomRight.z = br
-                    bottomRight.u = almost1
-                    bottomRight.v = v_start
-
-
-                    make_strip_triangle(topRight, topleft, bottomleft)
-                    make_strip_triangle(bottomleft, bottomRight, topRight)
-                    v_start += uvinc
-                    y_pos += 1
-                    cur_y = y
-                Next
-Endy:
-                Gl.glEnd()
-                Gl.glEndList()
-                Gl.glFinish()
-            Next
-        Next
-
-
-
-
-    End Sub
     Private Function get_string(ByVal f As BinaryReader) As String
         Dim c As Byte
         Dim os As String = ""
@@ -1676,4 +2313,207 @@ Endy:
         Return os
     End Function
 
+
+    Public Function get_Z_at_XY(ByVal Lx As Double, ByVal Lz As Double) As Single
+        'If Not maploaded Then Return 100.0
+        If mapBoard Is Nothing Then Return Z_Cursor
+        Dim tlx As Single = 100.0 / 64.0
+        Dim tly As Single = 100.0 / 64.0
+        Dim ts As Single = 64.0 / 100.0
+        Dim tl, tr, br, bl, w As Vector3D
+        Dim xvp, yvp As Integer
+        Dim ryp, rxp As Single
+        'Dim mod_ = (MAP_SIDE_LENGTH) And 1
+        Dim s = Sqrt(maplist.Length - 1)
+        For xo = s - 1 To 0 Step -1
+            For yo = s To 0 Step -1
+                Dim px = maplist(mapBoard(xo, yo)).location.x
+                If px - 50 < Lx And px + 50 > Lx Then
+                    xvp = xo
+                    Dim pz = maplist(mapBoard(xo, yo)).location.y
+                    If pz - 50 < Lz And pz + 50 > Lz Then
+                        yvp = yo
+                        GoTo exit2
+                    End If
+                    'GoTo exit1
+                End If
+            Next
+        Next
+exit1:
+        For xo = s - 1 To 0 Step -1
+            For yo = s - 1 To 0 Step -1
+                Dim pz = maplist(mapBoard(xo, yo)).location.y
+                If pz - 50 < Lz And pz + 50 > Lz Then
+                    yvp = yo
+                    GoTo exit2
+                End If
+            Next
+        Next
+exit2:
+
+        'If maploaded Then
+        '    Debug.Write("XP:" + xvp.ToString + "  ZP:" + yvp.ToString + vbCrLf)
+        'End If
+        'Dim msqrt = (MAP_SIDE_LENGTH / 2)
+
+        Dim map = mapBoard(xvp, yvp)
+        If maplist.Length - 1 < map Then
+            Return eyeY
+        End If
+        If maplist(map).heights Is Nothing Then
+            Return Z_Cursor
+        End If
+
+        Dim vxp As Double = ((((Lx) / 100)) - Truncate((Truncate(Lx) / 100))) * 64.0
+        Dim tx As Int32 = Round(Truncate(Lx / 100))
+        Dim tz As Int32 = Round(Truncate(Lz / 100))
+        If Lx < 0 Then
+            tx += -1
+        End If
+        If Lz < 0 Then
+            tz += -1
+        End If
+        Dim tx1 = (tx * 100)
+        Dim tz1 = (tz * 100)
+
+        Dim vyp As Double = ((((Lz) / 100)) - Truncate((Truncate(Lz) / 100))) * 64.0
+
+        If vyp < 0.0 Then
+            vyp = 64.0 + vyp
+        End If
+        If vxp < 0 Then
+            vxp = 64.0 + vxp
+
+        End If
+        vxp = Round(vxp, 12)
+        vyp = Round(vyp, 12)
+        rxp = (Floor(vxp))
+        rxp *= tlx
+        ryp = Floor(vyp)
+        ryp *= tlx
+        'rxp = 64 + rxp
+        w.X = (vxp * tlx)
+        w.Y = (vyp * tlx)
+        'vaid.x = w.X + maplist(map).location.x - 50.0
+        'vaid.y = w.Y + maplist(map).location.y - 50.0
+        Dim HX, HY, OX, OY As Integer
+        HX = Floor(vxp)
+        OX = 1
+        HY = Floor(vyp)
+        OY = 1
+        'd_hx = HX
+        'd_hy = HY
+        Dim altitude As Single = 0.0
+        'Try
+        'look_point_Y = cp
+        'w.Z = 1.0 'dont need this but who cares?
+        If HX + OX > 64 Then
+            Return Z_Cursor
+        End If
+        tl.X = rxp
+        tl.Y = ryp
+        tl.Z = maplist(map).heights(HX, HY)
+
+        tr.X = rxp + tlx
+        tr.Y = ryp
+        tr.Z = maplist(map).heights(HX + OX, HY)
+
+        br.X = rxp + tlx
+        br.Y = ryp + tlx
+        br.Z = maplist(map).heights(HX + OX, HY + OY)
+
+        bl.X = rxp
+        bl.Y = ryp + tlx
+        bl.Z = maplist(map).heights(HX, HY + OY)
+
+        tr_ = tr
+        br_ = br
+        tl_ = tl
+        bl_ = bl
+
+        tr_.X += tx1
+        br_.X += tx1
+        tl_.X += tx1
+        bl_.X += tx1
+
+        tr_.Y += tz1
+        br_.Y += tz1
+        tl_.Y += tz1
+        bl_.Y += tz1
+
+        'for drawing the red square on the terrain
+        T_1.x = tr.X + maplist(map).location.x - 50
+        T_1.y = tr.Y + maplist(map).location.y - 50
+        T_1.z = tr.Z
+
+        T_2.x = tl.X + maplist(map).location.x - 50
+        T_2.y = tl.Y + maplist(map).location.y - 50
+        T_2.z = tl.Z
+
+        T_3.x = br.X + maplist(map).location.x - 50
+        T_3.y = br.Y + maplist(map).location.y - 50
+        T_3.z = br.Z
+
+        T_4.x = bl.X + maplist(map).location.x - 50
+        T_4.y = bl.Y + maplist(map).location.y - 50
+        T_4.z = bl.Z
+      
+        Dim agl = Atan2(w.Y - tr.Y, w.X - tr.X)
+        If agl <= PI * 0.75 Then
+            altitude = find_altitude(tr, bl, br, w)
+            Return altitude
+        End If
+        If agl > PI * 0.75 Then
+            altitude = find_altitude(tr, tl, bl, w)
+            Return altitude
+        End If
+        'frmMain.tb1.Update()
+domath:
+        Return altitude
+
+        'Catch ex As Exception
+
+        'End Try
+
+    End Function
+    Public Sub flipYZ(ByRef v As Vector3D)
+        Dim t As Single
+        t = v.Y
+        v.Y = v.Z
+        v.Z = t
+    End Sub
+
+    Private Function find_altitude(ByVal p As Vector3D, ByVal q As Vector3D, ByVal r As Vector3D, ByVal f As Vector3D) As Double
+        'This finds the height on the face of a triangle at point f.x, f.z
+        flipYZ(p)
+        flipYZ(q)
+        flipYZ(r)
+        flipYZ(f)
+      
+        Cursor_point.X = f.X
+        Cursor_point.Z = f.Z
+        'It returns that value as a double
+
+        Dim nc As Vector3D
+        nc = CrossProduct(p - r, q - r)
+        nc.Normalize()
+
+        If p.Z = q.Z And q.Z = r.Z Then
+            Return r.Y
+        End If
+        surface_normal.x = -nc.X
+        surface_normal.y = -nc.Z
+        surface_normal.z = -nc.Y
+        'nc *= -1.0
+        Dim k As Double
+        k = (nc.X * (f.X - p.X)) + (nc.Z * (f.Z - q.Z))
+
+        Dim y = ((k) / -nc.Y) + p.Y
+
+        Cursor_point.Y = y
+        Dim vx As Vector3D = r - f
+        Dim vy = ((nc.Z * vx.Z) + (nc.X * vx.X)) / nc.Y
+        y = r.Y + vy
+        Return y
+    End Function
 End Module

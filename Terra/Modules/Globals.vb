@@ -2,8 +2,22 @@
 Imports Tao.FreeGlut.Glut
 Imports System.Math
 Imports Lidgren.Network
-
+Imports System.Windows.Media.Media3D
 Module Globals
+    '==============
+    Public global_map_width As Integer
+    Public triangle_count As Integer
+    Public m_decals_, m_terrain_, m_trees_, m_sky_, m_water_, m_bases_, m_models_ As Boolean
+    Public map_odd As Boolean = False
+    '===============
+    Public terrain_loaded As Boolean
+    Public trees_loaded As Boolean
+    Public decals_loaded As Boolean
+    Public models_loaded As Boolean
+    Public bases_laoded As Boolean
+    Public sky_loaded As Boolean
+    Public water_loaded As Boolean
+
     Public map_x_min, map_x_max, map_y_max, map_y_min As Single
     Public map_center_offset_x, map_center_offset_y As Single
     Public noise_map_id As Integer
@@ -28,6 +42,7 @@ Module Globals
     Public MV(16) As Single
     Public lightProject(16) As Single
     Public selected_map_hit As Integer = 0
+    Public tl_, tr_, br_, bl_ As Vector3D
 
 
     Public decal_grid_size As Integer = 32
@@ -189,7 +204,7 @@ Module Globals
     Public map_borderId As Integer
     Public team_1 As vect3
     Public team_2 As vect3
-    
+
     Public saved_texture_loads As Integer = 0
     Public saved_model_loads As Integer = 0
     Public gl_busy As Boolean = False
