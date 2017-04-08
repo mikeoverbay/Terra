@@ -392,7 +392,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("60")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("50")>  _
         Public Property s_terrain_ambient_level() As Integer
             Get
                 Return CType(Me("s_terrain_ambient_level"),Integer)
@@ -404,7 +404,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("10")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("5")>  _
         Public Property s_fog_level() As Integer
             Get
                 Return CType(Me("s_fog_level"),Integer)
@@ -416,7 +416,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("70")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("60")>  _
         Public Property s_model_level() As Integer
             Get
                 Return CType(Me("s_model_level"),Integer)

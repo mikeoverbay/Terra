@@ -49,7 +49,7 @@ Module modDeferred
                 Return False
             End If
 
-            'resture fbo to stock
+            'restore fbo to stock
             Gl.glBindFramebufferEXT(Gl.GL_DRAW_FRAMEBUFFER_EXT, 0)
             Return True
         End Function

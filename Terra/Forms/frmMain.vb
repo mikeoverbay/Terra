@@ -51,7 +51,8 @@ Public Class frmMain
     'Dim TextArea As RectangleF
     'Dim TabArea As Rectangle
 #Region "variables"
-
+    Dim bias() As Single = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0}
+    Dim autoEventScreen As New Threading.AutoResetEvent(False)
     Dim swat2 As New Stopwatch
     Dim swat1 As New Stopwatch
     Dim angle_offset As Single
@@ -82,7 +83,7 @@ Public Class frmMain
     Private nFilesCompleted As Integer
     Private _appCuKey As Microsoft.Win32.RegistryKey
     Public pfc As New PrivateFontCollection
-    Public update_thread As New Thread(AddressOf update_mouse)
+    Public update_thread As New Thread(AddressOf screen_updater)
     Public mouse_update_thread As New Thread(AddressOf check_mouse)
     Public M_FLY As Boolean = False
     Public Shared d_counter As Integer = 0
@@ -90,6 +91,7 @@ Public Class frmMain
     Public view_mode As Boolean = False
     Dim M_current As New vect2
     Public pb2_mouse_down As Boolean = False
+    Private welcome_screen As Integer
 #End Region
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -218,6 +220,9 @@ fail_path:
         make_map_buttons()
         tb1.Text = "Welcome to Terra!"
         tb1.SelectionLength = 0
+        Application.DoEvents()
+        'open up our huge virual file for access.
+        triangle_holder.open((15 * 15) * (4096 * 6))
 
         Timer1.Enabled = True
         frmSplash.Close()
@@ -331,6 +336,7 @@ fail_path:
         Application.DoEvents()
         tb1.Text = "Welcome to Terra!"
         tb1.SelectionLength = 0
+        Application.DoEvents()
         Packet_in.tankId = -1
         Packet_out.tankId = -1
         Packet_in.comment = ""
@@ -340,6 +346,10 @@ fail_path:
         frmTanks.Hide()
         make_locations() ' setup tank location data and clear displaylist
         make_map_buttons()
+
+        'open up our huge virual file for access.
+        triangle_holder.open((15 * 15) * (4096 * 6))
+
         Timer1.Enabled = True
         frmSplash.Close()
         testing = True
@@ -479,9 +489,12 @@ fail_path:
             m_info_window.PerformClick()
         End If
         If e.KeyCode = Keys.F2 Then
-            m_Orbit_Light.PerformClick()
+            m_show_status.PerformClick()
         End If
         If e.KeyCode = Keys.F3 Then
+            m_Orbit_Light.PerformClick()
+        End If
+        If e.KeyCode = Keys.F4 Then
             m_fly_map.PerformClick()
         End If
         If e.KeyCode = Keys.H Then
@@ -664,7 +677,6 @@ fail_path:
         m_load_lod.Checked = My.Settings.lod0
         m_load_details.Checked = My.Settings.load_extra
         m_low_quality_textures.Checked = My.Settings.txt_256
-        m_show_fog.Checked = My.Settings.enable_fog
         m_high_rez_Terrain.Checked = My.Settings.hi_rez_terra
         m_bump_map_models.Checked = My.Settings.m_bump_map_models
         m_show_uv2.Checked = My.Settings.m_show_uv2
@@ -1289,7 +1301,7 @@ fail_path:
             loadmaplist(cnt) = New map_item_
             loadmaplist(cnt).name = fi
             Dim a = fi.Split(":")
-            loadmaplist(cnt).realname = a(1)
+            loadmaplist(cnt).realname = a(1).Replace("Winter ", "Wtr ")
             cnt += 1
 dontaddthis:
         Next
@@ -1311,8 +1323,15 @@ dontaddthis:
                     cnt += 1
                 End If
             Next
+        End Using
+        Using Zip As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
+            Dim ms As New MemoryStream
+            Dim entry As Ionic.Zip.ZipEntry = Zip("gui\maps\bg.png")
+            entry.Extract(ms)
+            welcome_screen = load_png(ms)
 
         End Using
+        GC.Collect()
     End Sub
 
 
@@ -1748,21 +1767,17 @@ nope:
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
         Gl.glDisable(Gl.GL_FOG)
         seek_scene_trees()
-        If m_show_fog.Checked Then
-            Gl.glEnable(Gl.GL_FOG)
-        End If
         Dim viewport(4) As Integer
         Dim pixel() As Byte = {0, 0, 0, 0}
         Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
         Gl.glReadPixels(x, viewport(3) - y, 1, 1, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixel)
         Dim type = pixel(3)
         Dim index As UInt32 = (CUInt(pixel(1) * 256) + pixel(2))
-        If type = 0 Then
-            If index > 0 Then
-                index = index - 1
-                tb1.Text = speedtree_matrix_list(index).tree_name
-                Return True
-            End If
+        Dim cacheId = pixel(0) - 1
+        If index > 0 Then
+            index = index - 1
+            tb1.Text = treeCache(cacheId).name
+            Return True
         End If
         Application.DoEvents()
         tb1.Text = "Nothing...."
@@ -1775,13 +1790,13 @@ nope:
 
         Gl.glDisable(Gl.GL_LIGHTING)
         Gl.glDisable(Gl.GL_BLEND)
-
+        Gl.glDisable(Gl.GL_ALPHA_TEST)
         Gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         ResizeGL()
         ViewPerspective()   ' set 3d view mode
         'set_eyes()
-
+        Gl.glDisable(Gl.GL_CULL_FACE)
         Gl.glEnable(Gl.GL_TEXTURE_2D)
         Gl.glActiveTexture(Gl.GL_TEXTURE1)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
@@ -1790,55 +1805,58 @@ nope:
         Gl.glDisable(Gl.GL_TEXTURE_2D)
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Dim red, blue, green As Byte
-        '        '---------------------------------
-        '        ' draw the decal boxes with its own color
-        '        '---------------------------------
-        '        'if we are in team edit mode.we dont display any models
         If maploaded Then   ' cant let this try and draw shit that isnt there yet!!!
             If m_show_trees.Checked And m_trees_ Then
                 For mode = 0 To 1
                     If mode = 0 Then
+                        Gl.glUseProgram(0)
                     Else
                         Gl.glUseProgram(shader_list.leafcolored_shader)
                     End If
+                    For k = 0 To treeCache.Length - 1
+                        With treeCache(k)
 
-                    For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
-                        red = 0
-                        green = CByte((i + 1 And &HFF00) >> 8)
-                        blue = CByte(i + 1 And &HFF)
-                        Gl.glColor4ub(CByte(red), CByte(green), CByte(blue), CByte(0))
-                        Gl.glPushMatrix()
-                        Gl.glMultMatrixf(Trees.matrix(i).matrix)
-                        If Trees.flora(i).branch_displayID > 0 And mode = 0 Then
-                            Gl.glCallList(Trees.flora(i).branch_displayID)
-                        End If
-                        If Trees.flora(i).frond_displayID > 0 And mode = 0 Then
-                            Gl.glCallList(Trees.flora(i).frond_displayID)
-                        End If
-                        If Trees.flora(i).leaf_displayID > 0 And mode = 1 Then
-                            Gl.glCallList(Trees.flora(i).leaf_displayID)
-                        End If
-                        Gl.glPopMatrix()
+                            For i = 0 To treeCache(k).tree_cnt - 1
+                                red = k + 1
+                                green = CByte((i + 1 And &HFF00) >> 8)
+                                blue = CByte(i + 1 And &HFF)
+                                Gl.glColor4ub(CByte(red), CByte(green), CByte(blue), CByte(0))
+                                'Gl.glColor3f(0.6, 0.6, 0.6)
+                                Gl.glPushMatrix()
+                                Gl.glMultMatrixf(.matrix_list(i).matrix)
+                                If mode = 0 Then
+                                    If .branch_displayID > 0 Then
+                                        Gl.glCallList(.branch_displayID)
+                                    End If
+                                    If .frond_displayID > 0 Then
+                                        Gl.glCallList(.frond_displayID)
+                                    End If
+                                Else
+                                    If .leaf_displayID > 0 Then
+                                        Gl.glCallList(.leaf_displayID)
+                                    End If
+                                End If
+                                Gl.glPopMatrix()
+                            Next
+                        End With
+
                     Next
-                    Gl.glUseProgram(0)
                 Next
+                Gl.glUseProgram(0)
 
             End If
 
 
         End If
+        'Gdi.SwapBuffers(pb1_hDC)
         '        '--------------------------------------------------------------------------
         Gl.glFinish()
-        Application.DoEvents()
     End Sub
 
     Public Function GetOGLPos_Decals(ByVal x As Integer, ByVal y As Integer) As Integer
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
         Gl.glDisable(Gl.GL_FOG)
         seek_scene_decals()
-        If m_show_fog.Checked Then
-            Gl.glEnable(Gl.GL_FOG)
-        End If
         Dim viewport(4) As Integer
         Dim pixel() As Byte = {0, 0, 0, 0}
         Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
@@ -1942,19 +1960,19 @@ nope:
         '        'if we are in team edit mode.we dont display any models
         If maploaded Then   ' cant let this try and draw shit that isnt there yet!!!
             If m_show_decals.Checked And m_decals_ Then
-                For model As UInt32 = 0 To Models.matrix.Length - 1
-                    Gl.glColor4ub(0, 0, 0, 0)
-                    For k = 0 To Models.models(model)._count - 1
-                        If Models.models(model).componets(k).callList_ID > 0 Then
+                'For model As UInt32 = 0 To Models.matrix.Length - 1
+                '    Gl.glColor4ub(0, 0, 0, 0)
+                '    For k = 0 To Models.models(model)._count - 1
+                '        If Models.models(model).componets(k).callList_ID > 0 Then
 
-                            Gl.glPushMatrix()
-                            Gl.glMultMatrixf(Models.matrix(model).matrix)
+                '            Gl.glPushMatrix()
+                '            Gl.glMultMatrixf(Models.matrix(model).matrix)
 
-                            Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                            Gl.glPopMatrix()
-                        End If
-                    Next
-                Next
+                '            Gl.glCallList(Models.models(model).componets(k).callList_ID)
+                '            Gl.glPopMatrix()
+                '        End If
+                '    Next
+                'Next
                 For k As UInt32 = 0 To decal_matrix_list.Length - 1
                     green = 0 : blue = 0 : type = 0
                     If decal_matrix_list(k).display_id > 0 Then
@@ -1974,15 +1992,19 @@ nope:
         End If
         '        '--------------------------------------------------------------------------
         Gl.glFinish()
-        Application.DoEvents()
     End Sub
 
 
     Public Sub GetOGLPos(ByVal x As Integer, ByVal y As Integer)
         'ResizeGL()
+        stopGL = True
+        While gl_busy
+            Application.DoEvents()
+        End While
         Gl.glPushMatrix()
         If GetOGLPos_Decals(x, y) Then
             Gl.glPopMatrix()
+            stopGL = False
             draw_scene()
             'draw_scene()
             Return
@@ -1991,17 +2013,13 @@ nope:
         Gl.glPushMatrix()
         If GetOGLPos_trees(x, y) Then
             Gl.glPopMatrix()
+            stopGL = False
             draw_scene()
             Return
         End If
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        'Gl.glPushMatrix()
         Gl.glDisable(Gl.GL_FOG)
         seek_scene()
-        'Gl.glPopMatrix()
-        If m_show_fog.Checked Then
-            Gl.glEnable(Gl.GL_FOG)
-        End If
         Dim viewport(4) As Integer
         Dim pixel() As Byte = {0, 0, 0, 0}
         _SELECTED_map = 0
@@ -2112,10 +2130,10 @@ nope:
 
         End If
         Gl.glPopMatrix()
+        stopGL = False
         draw_scene()
     End Sub
     Public Sub seek_scene()
-
         Gl.glEnable(Gl.GL_DEPTH_TEST)
 
         Gl.glDisable(Gl.GL_LIGHTING)
@@ -2227,7 +2245,331 @@ nope:
         out_string += "L   " + String.Format("X{0,12:F4} Y{0,12:F4} Z{0,12:F4} ", v4.X, v4.Y, v4.Z)
         Debug.Write(out_string)
     End Sub
-    Dim bias() As Single = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0}
+
+    Public Sub draw_maps()
+        If Not _STARTED Then Return
+        ' If Not SHOW_MAPS Then Return
+        Gl.glDisable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
+        ResizeGL()
+        ViewOrtho()
+        'gl_busy = True
+        If stopGL Then Return
+        If stopGL Then Return
+        If stopGL Then Return
+        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+
+
+        Gl.glClearColor(0.125F, 0.125F, 0.125F, 1.0F)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+        Gl.glEnable(Gl.GL_TEXTURE_2D)
+        'ResizeGL()
+        Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
+        Dim w = pb1.Width
+        Dim h = pb1.Height
+        If w = 0 Then
+            Return
+            Gl.glDisable(Gl.GL_DEPTH_TEST)
+        End If
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, welcome_screen)
+
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0, -1)
+        Gl.glVertex2d(0, 0)
+
+        Gl.glTexCoord2f(1, -1)
+        Gl.glVertex2d(w, 0)
+
+        Gl.glTexCoord2f(1, 0)
+        Gl.glVertex2d(w, -h)
+
+        Gl.glTexCoord2f(0, 0)
+        Gl.glVertex2d(0, -h)
+        Gl.glEnd()
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+
+
+        Dim ms_x As Single = 120
+        Dim ms_y As Single = -72
+        Dim space_x As Single = 15
+
+        Dim w_cnt As Single = 7 'Floor(w / (ms_x + space_x))
+        Dim space_cnt As Single = (w_cnt - 1) * space_x
+        Dim border As Single = (w - ((w_cnt * ms_x) + space_cnt)) / 2
+        Dim map As Integer = 0
+        Dim v_cnt = (map_texture_ids.Length - 1) / w_cnt
+        If (v_cnt * (ms_x + space_x)) + (border * 2) < pb1.Width Then
+            v_cnt -= 1
+        End If
+        Dim v_pos As Integer = 0
+        Dim vi, hi, sz As Single
+        For i = 0 To map_texture_ids.Length - 2
+            If loadmaplist(i).grow_shrink Then
+                loadmaplist(i).delay_time += 1
+                If loadmaplist(i).delay_time = 1 Then
+                    loadmaplist(i).delay_time = 0
+                    If loadmaplist(i).size = 0 Or loadmaplist(i).size = 20 Then
+                        loadmaplist(i).grow_shrink = False
+                    Else
+                        loadmaplist(i).size += loadmaplist(i).direction
+                    End If
+                End If
+            End If
+        Next
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        vi = -15
+        While map < map_texture_ids.Length - 2
+            If pb1.Width = 0 Then
+                Exit While
+            End If
+            For i = 0 To w_cnt - 1
+                If map + 1 = map_texture_ids.Length Then
+                    Exit While
+                End If
+                hi = border + (i * (ms_x + space_x))
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_texture_ids(map))
+                Gl.glColor3f(1.0, 1.0, 1.0)
+                If selected_map_hit > 0 And map = selected_map_hit - 1 Then
+                    loadmaplist(map).grow_shrink = False
+                    GoTo dont_draw
+                Else
+                    loadmaplist(map).direction = -0.25
+                    If loadmaplist(map).size > 0.5 Then
+                        loadmaplist(map).grow_shrink = True
+                        loadmaplist(map).direction = -0.25
+                        If loadmaplist(map).size = 20 Then
+                            loadmaplist(map).size = 19.75
+                        End If
+                    End If
+
+                End If
+                sz = loadmaplist(map).size
+
+                Gl.glBegin(Gl.GL_QUADS)
+                Gl.glTexCoord2f(0, 1)
+                Gl.glVertex2f(-sz + hi, -sz + vi + ms_y)
+
+                Gl.glTexCoord2f(0, 0)
+                Gl.glVertex2f(-sz + hi, sz + vi)
+
+                Gl.glTexCoord2f(1, 0)
+                Gl.glVertex2f(sz + hi + ms_x, sz + vi)
+
+                Gl.glTexCoord2f(1, 1)
+                Gl.glVertex2f(sz + hi + ms_x, -sz + vi + ms_y)
+
+                Gl.glEnd()
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+                Dim cs As Single = loadmaplist(map).size / 40.0!
+                glutPrintBox(-sz + hi, -sz + vi + ms_y, loadmaplist(map).realname, 0.5 + cs, 0.5 + cs, 0.5, 1.0)
+
+dont_draw:
+
+                map += 1
+            Next
+            vi += -space_x + ms_y
+        End While
+        vi = -15
+        map = 0
+        While map < map_texture_ids.Length - 2
+            If pb1.Width = 0 Then
+                Exit While
+            End If
+            For i = 0 To w_cnt - 1
+                If map + 1 = map_texture_ids.Length Then
+                    Exit While
+                End If
+                hi = border + (i * (ms_x + space_x))
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_texture_ids(map))
+                Gl.glColor3f(1.0, 1.0, 1.0)
+                If selected_map_hit > 0 And map = selected_map_hit - 1 Then
+                    Dim selm = selected_map_hit - 1
+                    If loadmaplist(selm).size < 20 And Not loadmaplist(selm).grow_shrink Then
+                        loadmaplist(selm).grow_shrink = True
+                        loadmaplist(selm).direction = 1.0
+                        If loadmaplist(selm).size < 1.0 Then
+                            loadmaplist(selm).size = 1.0
+                        End If
+                    End If
+                Else
+                    GoTo skip
+                End If
+                sz = loadmaplist(map).size
+
+                Gl.glBegin(Gl.GL_QUADS)
+                Gl.glTexCoord2f(0, 1)
+                Gl.glVertex2f(-sz + hi, -sz + vi + ms_y)
+
+                Gl.glTexCoord2f(0, 0)
+                Gl.glVertex2f(-sz + hi, sz + vi)
+
+                Gl.glTexCoord2f(1, 0)
+                Gl.glVertex2f(sz + hi + ms_x, sz + vi)
+
+                Gl.glTexCoord2f(1, 1)
+                Gl.glVertex2f(sz + hi + ms_x, -sz + vi + ms_y)
+
+                Gl.glEnd()
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+                Dim cs As Single = loadmaplist(map).size / 40.0!
+                glutPrintBox(-sz + hi, -sz + vi + ms_y, loadmaplist(map).realname, 0.5 + cs, 0.5 + cs, 0.5, 1.0)
+
+skip:
+                map += 1
+            Next
+            vi += -space_x + ms_y
+        End While
+
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        'If selected_map_hit > 0 Then
+        '    glutPrintBox(mouse.X, -mouse.Y, loadmaplist(selected_map_hit - 1).realname, 1.0, 1.0, 1.0, 1.0)
+
+        'End If
+        Gdi.SwapBuffers(pb1_hDC)
+        Application.DoEvents()
+        If finish_maps Then
+            Dim no_stragglers As Boolean = True
+            For i = 0 To loadmaplist.Length - 2
+                If loadmaplist(i).size > 0.0 Then
+                    no_stragglers = False
+                End If
+            Next
+            If no_stragglers Then
+                finish_maps = False
+                SHOW_MAPS = False
+                block_mouse = False
+                open_pkg(load_map_name)
+            End If
+        End If
+        autoEventScreen.Set()
+
+    End Sub
+    Public Sub draw_pick_map()
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            'MessageBox.Show("Unable to make rendering context current")
+            'End
+            Return
+        End If
+        ResizeGL()
+        ViewOrtho()
+        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+
+        Dim w = pb1.Width
+        Dim h = pb1.Height
+        If w = 0 Then
+            Return
+        End If
+        Dim ms_x As Single = 120
+        Dim ms_y As Single = -72
+        Dim space_x As Single = 15
+
+        Dim w_cnt As Single = 7 'Floor(w / (ms_x + space_x))
+        Dim space_cnt As Single = (w_cnt - 1) * space_x
+        Dim border As Single = (w - ((w_cnt * ms_x) + space_cnt)) / 2
+        Dim map As Byte = 0
+        Dim v_cnt = (map_texture_ids.Length - 1) / w_cnt
+        If (v_cnt * (ms_x + space_x)) + (border * 2) < pb1.Width Then
+            v_cnt -= 1
+        End If
+        Dim v_pos As Integer = 0
+        Dim vi, hi As Single
+
+        vi = -15
+
+        Gl.glBegin(Gl.GL_QUADS)
+        While True
+            If pb1.Width = 0 Then
+                Exit While
+            End If
+            For i = 0 To w_cnt - 1
+                map += 1
+                Gl.glColor4ub(CByte(map), CByte(map), CByte(map), CByte(255))
+                Gl.glFinish()
+                Gl.glFinish()
+                Gl.glFinish()
+                Gl.glFinish()
+                Gl.glFinish()
+                If map = map_texture_ids.Length Then
+                    Exit While
+                End If
+                hi = border + (i * (ms_x + space_x))
+
+                Gl.glVertex3f(hi, vi + ms_y, 0.0)
+
+                Gl.glVertex3f(hi, vi, 0.0)
+
+                Gl.glVertex3f(hi + ms_x, vi, 0.0)
+
+                Gl.glVertex3f(hi + ms_x, vi + ms_y, 0.0)
+
+            Next
+            vi += -space_x + ms_y
+        End While
+        Gl.glEnd()
+        Gl.glFinish()
+
+
+        '--------------------------------------------------------------------------
+        Gl.glFinish()
+        'Gdi.SwapBuffers(pb1_hDC)
+        'Gdi.SwapBuffers(pb1_hDC)
+        'Gl.glDisable(Gl.GL_DEPTH_TEST)
+        'Gl.glEnable(Gl.GL_LIGHTING)
+
+    End Sub
+    Public Sub gl_pick_map(ByVal x As Integer, ByVal y As Integer)
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            'MessageBox.Show("Unable to make rendering context current")
+            Return
+        End If
+        m_Orbit_Light.Checked = False
+        m_fly_map.Checked = False
+        Gl.glDisable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
+
+        Gl.glDisable(Gl.GL_FOG)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        draw_pick_map()
+
+
+        Dim viewport(4) As Integer
+        Gl.glFinish()
+        Dim pixel() As Byte = {0, 0, 0, 0}
+
+
+        Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
+        Gl.glReadPixels(x, viewport(3) - y, 1, 1, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixel)
+        Gl.glFinish()
+
+        Dim hit = pixel(2)
+        If hit > 0 Then
+            selected_map_hit = hit
+            'tb1.Text = loadmaplist(hit - 1).realname
+            Application.DoEvents()
+            Application.DoEvents()
+            Application.DoEvents()
+            Application.DoEvents()
+        Else
+            selected_map_hit = 0
+            'tb1.Text = x.ToString + "   " + y.ToString + vbCrLf + hit.ToString
+            Application.DoEvents()
+        End If
+        Gl.glFinish()
+        Application.DoEvents()
+        draw_maps()
+    End Sub
+
 #End Region
 
 
@@ -2328,218 +2670,7 @@ nope:
 
 
 
-
-    Public Sub draw_maps()
-        If Not _STARTED Then Return
-        ' If Not SHOW_MAPS Then Return
-        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-            'MessageBox.Show("Unable to make rendering context current")
-            Return
-        End If
-        Gl.glDisable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
-        ResizeGL()
-        ViewOrtho()
-
-        'gl_busy = True
-        If stopGL Then Return
-        If stopGL Then Return
-        If stopGL Then Return
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-
-
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
-        'ResizeGL()
-
-        Dim w = pb1.Width
-        Dim h = pb1.Height
-        If w = 0 Then
-            Return
-
-        End If
-        Dim ms_x As Single = 120
-        Dim ms_y As Single = -72
-        Dim space_x As Single = 15
-
-        Dim w_cnt As Single = Floor(w / (ms_x + space_x))
-        Dim border As Single = (w - (w_cnt * (ms_x + space_x))) / 2
-        Dim map As Integer = 0
-        Dim v_cnt = (map_texture_ids.Length - 1) / w_cnt
-        If (v_cnt * (ms_x + space_x)) + (border * 2) < pb1.Width Then
-            v_cnt -= 1
-        End If
-        Dim v_pos As Integer = 0
-        Dim vi, hi, sz As Single
-
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        vi = -15
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        While map < map_texture_ids.Length
-            If pb1.Width = 0 Then
-                Exit While
-            End If
-            For i = 0 To w_cnt - 1
-                If map + 1 = map_texture_ids.Length Then
-                    Exit While
-                End If
-                hi = border + (i * (ms_x + space_x))
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_texture_ids(map))
-                Gl.glColor3f(1.0, 1.0, 1.0)
-                Gl.glBegin(Gl.GL_QUADS)
-                If selected_map_hit > 0 Then
-                    If selected_map_hit - 1 = map Then
-                        sz = 20
-                    Else
-                        sz = 0
-                    End If
-                End If
-                Gl.glTexCoord2f(0, 1)
-                Gl.glVertex2f(-sz + hi, -sz + vi + ms_y)
-
-                Gl.glTexCoord2f(0, 0)
-                Gl.glVertex2f(-sz + hi, sz + vi)
-
-                Gl.glTexCoord2f(1, 0)
-                Gl.glVertex2f(sz + hi + ms_x, sz + vi)
-
-                Gl.glTexCoord2f(1, 1)
-                Gl.glVertex2f(sz + hi + ms_x, -sz + vi + ms_y)
-
-                Gl.glEnd()
-                map += 1
-            Next
-            vi += -space_x + ms_y
-        End While
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        If selected_map_hit > 0 Then
-            glutPrintBox(mouse.X, -mouse.Y, loadmaplist(selected_map_hit - 1).realname, 1.0, 1.0, 1.0, 1.0)
-
-        End If
-        Gdi.SwapBuffers(pb1_hDC)
-        Application.DoEvents()
-    End Sub
-    Public Sub draw_pick_map()
-        ResizeGL()
-        ViewOrtho()
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-
-        Gl.glDisable(Gl.GL_LIGHTING)
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glDisable(Gl.GL_DEPTH_TEST)
-
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-
-        Dim w = pb1.Width
-        Dim h = pb1.Height
-        If w = 0 Then
-            Return
-        End If
-        Dim ms_x As Single = 120
-        Dim ms_y As Single = -72
-        Dim space_x As Single = 15
-
-        Dim w_cnt As Single = Floor(w / (ms_x + space_x))
-        Dim border As Single = (w - (w_cnt * (ms_x + space_x))) / 2
-        Dim map As Byte = 0
-        Dim v_cnt = (map_texture_ids.Length - 1) / w_cnt
-        If (v_cnt * (ms_x + space_x)) + (border * 2) < pb1.Width Then
-            v_cnt -= 1
-        End If
-        Dim v_pos As Integer = 0
-        Dim vi, hi As Single
-
-        vi = -15
-
-        Gl.glBegin(Gl.GL_QUADS)
-        While True
-            If pb1.Width = 0 Then
-                Exit While
-            End If
-            For i = 0 To w_cnt - 1
-                map += 1
-                Gl.glColor4ub(CByte(map), CByte(map), CByte(map), CByte(255))
-                Gl.glFinish()
-                Gl.glFinish()
-                Gl.glFinish()
-                Gl.glFinish()
-                Gl.glFinish()
-                If map = map_texture_ids.Length Then
-                    Exit While
-                End If
-                hi = border + (i * (ms_x + space_x))
-
-                Gl.glVertex3f(hi, vi + ms_y, 0.0)
-
-                Gl.glVertex3f(hi, vi, 0.0)
-
-                Gl.glVertex3f(hi + ms_x, vi, 0.0)
-
-                Gl.glVertex3f(hi + ms_x, vi + ms_y, 0.0)
-
-            Next
-            vi += -space_x + ms_y
-        End While
-        Gl.glEnd()
-        Gl.glFinish()
-
-
-        '--------------------------------------------------------------------------
-        Gl.glFinish()
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Gl.glDisable(Gl.GL_DEPTH_TEST)
-        'Gl.glEnable(Gl.GL_LIGHTING)
-
-    End Sub
-    Public Sub gl_pick_map(ByVal x As Integer, ByVal y As Integer)
-        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-            'MessageBox.Show("Unable to make rendering context current")
-            'End
-        End If
-        m_Orbit_Light.Checked = False
-        m_fly_map.Checked = False
-        Gl.glDisable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
-
-        Gl.glDisable(Gl.GL_FOG)
-        Gl.glReadBuffer(Gl.GL_BACK)
-        draw_pick_map()
-
-
-        If m_show_fog.Checked Then
-            Gl.glEnable(Gl.GL_FOG)
-        End If
-        Dim viewport(4) As Integer
-        Gl.glFinish()
-        Dim pixel() As Byte = {0, 0, 0, 0}
-
-
-        Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
-        Gl.glReadPixels(x, viewport(3) - y, 1, 1, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixel)
-        Gl.glFinish()
-
-        Dim hit = pixel(2)
-        If hit > 0 Then
-            selected_map_hit = hit
-            tb1.Text = loadmaplist(hit - 1).realname
-            Application.DoEvents()
-            Application.DoEvents()
-            Application.DoEvents()
-            Application.DoEvents()
-        Else
-            selected_map_hit = 0
-            'tb1.Text = x.ToString + "   " + y.ToString + vbCrLf + hit.ToString
-            Application.DoEvents()
-        End If
-        Gl.glFinish()
-        Application.DoEvents()
-        draw_maps()
-    End Sub
+    Private finish_maps As Boolean = False
 
 
 
@@ -2586,11 +2717,7 @@ nope:
                     Gl.glUniform1f(gamma_2, gamma_level * 0.75)
                     Gl.glUniform1f(gray_level_2, gray_level)
 
-                    If m_show_fog.Checked Then
-                        Gl.glUniform1i(f_address2, 1)
-                    Else
-                        Gl.glUniform1i(f_address2, 0)
-                    End If
+                 
                     rendermode = True
                     Gl.glActiveTexture(Gl.GL_TEXTURE0)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
@@ -2602,10 +2729,7 @@ nope:
                     Gl.glUseProgram(shader_list.render_shader)
                     'Dim er = Gl.glGetError
                     'sr = Glu.gluErrorString(er)
-                    Gl.glUniform1f(row_address, maplist(i).row)
-                    Gl.glUniform1f(col_address, maplist(i).col)
-                    Gl.glUniform1f(tile_w, tile_width)
-                    Gl.glUniform1i(used_layers, map_layers(i).used_layers)
+                    'Gl.glUniform1i(used_layers, map_layers(i).used_layers)
                     u = map_layers(i).layers(1).uP
                     Gl.glUniform4f(layer0U, u.x, u.y, u.z, u.w)
                     u = map_layers(i).layers(2).uP
@@ -2634,11 +2758,7 @@ nope:
                     Gl.glUniform1i(n_address, 1)
                     Gl.glUniform1f(gamma, gamma_level * 0.75)
                     Gl.glUniform1i(render_has_holes, maplist(i).has_holes)
-                    If m_show_fog.Checked Then
-                        Gl.glUniform1i(f_address, 1)
-                    Else
-                        Gl.glUniform1i(f_address, 0)
-                    End If
+                  
                     'er = Gl.glGetError
                     'bind the lowrez normal map
                     Gl.glUniform1i(render_hole_texture, 0)
@@ -2652,6 +2772,7 @@ nope:
                     Gl.glUniform1i(n_layer_4, 8)
                     Gl.glUniform1i(mixtexture, 9)
                     Gl.glUniform1i(c_address, 10)
+                    'Gl.glUniform1i(color_correct_addy, 11)
 
                     ' bind all the textures
                     Gl.glActiveTexture(Gl.GL_TEXTURE0)
@@ -2684,10 +2805,13 @@ nope:
                     'sr = Glu.gluErrorString(er)
                     'bind the mix layer. 
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 9)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, mix_atlas_Id)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).mix_texture_Id)
                     'bind lowrez colormap
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 10)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
+
+                    'Gl.glActiveTexture(Gl.GL_TEXTURE0 + 11)
+                    'Gl.glBindTexture(Gl.GL_TEXTURE_2D, colour_correct_tex_id)
 
                     'er = Gl.glGetError
                     'sr = Glu.gluErrorString(er)
@@ -2844,11 +2968,7 @@ nope:
                 'Gl.glDisable(Gl.GL_LIGHTING)
                 Gl.glDisable(Gl.GL_TEXTURE_2D)
                 Gl.glUseProgram(shader_list.bump_shader)
-                If m_show_fog.Checked Then
-                    Gl.glUniform1i(f_address3, 1)
-                Else
-                    Gl.glUniform1i(f_address3, 0)
-                End If
+               
                 Gl.glUniform1i(c_address3, 0)
                 Gl.glUniform1i(n_address3, 1)
                 Gl.glUniform1i(colormap2, 2)
@@ -3071,13 +3191,9 @@ nope:
 
                             Case 0 ' branchs
                                 Gl.glUseProgram(shader_list.branch_shader)
-                                If m_show_fog.Checked Then
-                                    Gl.glUniform1i(branch_fog_enable_id, 1)
-                                Else
-                                    Gl.glUniform1i(branch_fog_enable_id, 0)
-                                End If
+                               
                                 Gl.glUniform1i(branch_color_map_id, 0)
-                                Gl.glUniform1i(branch_normap_map_id, 1)
+                                Gl.glUniform1i(branch_normalmap_map_id, 1)
                                 Gl.glUniform3f(branch_eye_pos_id, eyeX, eyeZ, eyeY)
                                 Gl.glUniform1f(branch_tex_level_id, lighting_model_level)
                                 Gl.glUniform1f(branch_gray_level_id, gray_level)
@@ -3085,29 +3201,21 @@ nope:
                                 Gl.glUniform1f(branch_ambient_level_id, lighting_ambient)
                             Case 1 ' fronds
                                 Gl.glUseProgram(shader_list.frond_shader)
-                                If m_show_fog.Checked Then
-                                    Gl.glUniform1i(branch_fog_enable_id, 1)
-                                Else
-                                    Gl.glUniform1i(branch_fog_enable_id, 0)
-                                End If
-                                Gl.glUniform1i(branch_color_map_id, 0)
-                                Gl.glUniform1i(branch_normap_map_id, 1)
-                                Gl.glUniform3f(branch_eye_pos_id, eyeX, eyeZ, eyeY)
-                                Gl.glUniform1f(branch_tex_level_id, lighting_model_level)
-                                Gl.glUniform1f(branch_gray_level_id, gray_level)
-                                Gl.glUniform1f(branch_gamma_level_id, gamma_level)
-                                Gl.glUniform1f(branch_ambient_level_id, lighting_ambient)
+                               
+                                Gl.glUniform1i(frond_color_map_id, 0)
+                                Gl.glUniform1i(frond_normal_map_id, 1)
+                                Gl.glUniform3f(frond_eye_pos_id, eyeX, eyeZ, eyeY)
+                                Gl.glUniform1f(frond_tex_level_id, lighting_model_level)
+                                Gl.glUniform1f(frond_gray_level_id, gray_level)
+                                Gl.glUniform1f(frond_gamma_level_id, gamma_level)
+                                Gl.glUniform1f(frond_ambient_level_id, lighting_ambient)
 
                             Case 2 'leaves
                                 Gl.glUseProgram(shader_list.leaf_shader)
-                                If m_show_fog.Checked Then
-                                    Gl.glUniform1i(leaf_fog_enable_id, 1)
-                                Else
-                                    Gl.glUniform1i(leaf_fog_enable_id, 0)
-                                End If
+                               
                                 Gl.glUniform1i(leaf_color_map_id, 0)
                                 Gl.glUniform1i(leaf_normal_map_id, 1)
-                                Gl.glUniform3f(leaf_eye_pos_id, eyeX, eyeZ, eyeY)
+                                'Gl.glUniform3f(leaf_eye_pos_id, eyeX, eyeZ, eyeY)
                                 Gl.glUniform1f(leaf_tex_level_id, lighting_model_level)
                                 Gl.glUniform1f(leaf_gray_level_id, gray_level)
                                 Gl.glUniform1f(leaf_gamma_level_id, gamma_level)
@@ -3211,7 +3319,7 @@ nope:
         If Not m_decals_ Then
             Return
         End If
-        Gl.glFrontFace(Gl.GL_CW)
+        Gl.glFrontFace(Gl.GL_CCW)
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Gl.glDisable(Gl.GL_CULL_FACE)
         Gl.glDisable(Gl.GL_ALPHA_TEST)
@@ -3226,23 +3334,30 @@ nope:
         '-------- decals
         If maploaded And m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
             If Not view_mode Then
-                ViewPerspective_d()
+                'ViewPerspective_d()
             End If
 
             Gl.glUseProgram(shader_list.comp_shader)
-            Gl.glUniform1f(bump_out_, -0.0)
+            Gl.glUniform1f(bump_out_, 0.02)
             Gl.glDisable(Gl.GL_BLEND)
             Gl.glColor3f(0.2, 0.05, 0.0)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+
+            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
+            'Gl.glPolygonOffset(-5.0, 1.0)
+
             For k = 0 To decal_matrix_list.Length - 1
                 If decal_matrix_list(k).good Then
                     Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
             Next
 
+            'Gl.glDisable(Gl.GL_POLYGON_OFFSET_LINE)
+            'Gl.glPolygonOffset(0.0, 0.0)
+
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-            Gl.glColor3f(0.0, 0.0, 0.0)
-            Gl.glUniform1f(bump_out_, -0.015)
+            Gl.glColor3f(0.3, 0.3, 0.3)
+            Gl.glUniform1f(bump_out_, 0.015)
 
             For k = 0 To decal_matrix_list.Length - 1
                 If decal_matrix_list(k).good Then
@@ -3250,7 +3365,6 @@ nope:
                 End If
             Next
             Gl.glUseProgram(0)
-            Gl.glDisable(Gl.GL_STENCIL_TEST)
             If normal_mode > 0 Then
                 Gl.glColor3f(0.5, 0.5, 0.5)
                 Gl.glUseProgram(shader_list.normal_shader)
@@ -3275,27 +3389,23 @@ nope:
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
             Gl.glDepthMask(Gl.GL_FALSE)
 
+            Gl.glUseProgram(shader_list.decals_shader)
+          
+            Gl.glUniform1i(decal_color_map_id, 0)
+            Gl.glUniform1i(decal_normal_map_id, 1)
+            Gl.glUniform3f(decal_cam_position_id, eyeX, eyeY, eyeZ)
+            Gl.glUniform1f(decal_tex_level_id, lighting_model_level)
+            Gl.glUniform1f(decal_gray_level_id, gray_level)
+            Gl.glUniform1f(decal_gamma_level_id, gamma_level)
+            Gl.glUniform1f(decal_ambient, lighting_ambient)
+            ''''''''''''''''''''''''''''''''''''''''''''''''''
+            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
+            'Gl.glPolygonOffset(-5.0, -5.0)
             Gl.glEnable(Gl.GL_BLEND)
             Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
             Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE)
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
 
-            Gl.glUseProgram(shader_list.decals_shader)
-            If m_show_fog.Checked Then
-                Gl.glUniform1i(f_address5, 1)
-            Else
-                Gl.glUniform1i(f_address5, 0)
-            End If
-            Gl.glUniform1i(c_address5, 0)
-            Gl.glUniform1i(n_address5, 1)
-            Gl.glUniform3f(c_position5, eyeX, eyeY, eyeZ)
-            Gl.glUniform1f(t_address5, lighting_model_level)
-            Gl.glUniform1f(gray_level_5, gray_level)
-            Gl.glUniform1f(gamma_5, gamma_level)
-            Gl.glUniform1f(decal_ambient, lighting_ambient)
-            ''''''''''''''''''''''''''''''''''''''''''''''''''
-            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
-            Gl.glPolygonOffset(-5.0, -5.0)
             For k = 0 To decal_matrix_list.Length - 1
                 If decal_matrix_list(k).good Then
                     Gl.glUniform1f(decal_u_wrap, decal_matrix_list(k).u_wrap)
@@ -3309,8 +3419,9 @@ nope:
                     Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
             Next
-            Gl.glDisable(Gl.GL_POLYGON_OFFSET_FILL)
             Gl.glUseProgram(0)
+
+            'Gl.glDisable(Gl.GL_POLYGON_OFFSET_FILL)
             Gl.glEnable(Gl.GL_DEPTH_TEST)
             Gl.glDisable(Gl.GL_BLEND)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
@@ -3343,7 +3454,7 @@ nope:
                                 Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
                                 Gl.glLineWidth(1.0)
                                 Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-                                Gl.glUniform1f(bump_out_, -0.01)
+                                Gl.glUniform1f(bump_out_, 0.015)
                                 Gl.glCallList(decal_matrix_list(d_counter).display_id)
                                 Gl.glUseProgram(0)
                             End If
@@ -3392,6 +3503,7 @@ nope:
     End Sub
     Private Sub draw_tanks(ByRef cp() As Single, ByVal model_view() As Double, ByVal projection() As Double, ByVal viewport() As Integer, ByVal sx As Single, ByVal sy As Single, ByVal sz As Single)
         Gl.glFrontFace(Gl.GL_CW)
+        Gl.glEnable(Gl.GL_LIGHTING)
         Dim tdl As Integer = 0
         If maploaded And Not m_hell_mode.Checked Then
             If tankID > -1 And m_show_tank_comments.Checked Then
@@ -3533,10 +3645,11 @@ nope:
             'Gl.glEnable(Gl.GL_LIGHTING)
             Return
         End If
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
         If mini_map_loaded Then
-
-            Gl.glColor3f(1.0, 1.0, 1.0)
-            Gl.glDisable(Gl.GL_LIGHTING)
+            Dim c = lighting_ambient + 0.5
+            Gl.glColor3f(c, c, c)
+            'Gl.glDisable(Gl.GL_LIGHTING)
             Gl.glDisable(Gl.GL_DEPTH_TEST)
 
             Gl.glPushMatrix()
@@ -3553,7 +3666,7 @@ nope:
 
             End If
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            Gl.glColor4f(0.6, 0.6, 0.6, 0.5)
+            'Gl.glColor4f(0.6, 0.6, 0.6, 0.5)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, skydometextureID)
@@ -3568,6 +3681,7 @@ nope:
 
             Gl.glPopMatrix()
         End If
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
 
     End Sub
     Private Sub draw_light_sphear()
@@ -3586,21 +3700,18 @@ nope:
         End If
     End Sub
     Private Sub setup_fog()
-        If m_show_fog.Checked Then
-            'Gl.glEnable(Gl.GL_FOG)
-            'fog is currently disabled in all shaders.
-            'Im working towards adding this in deferred rendering
-            Dim fmode As Integer = Gl.GL_EXP2
-            Gl.glFogi(Gl.GL_FOG_MODE, fmode)
-            Dim fogcolor() As Single = {0.6, 0.6, 0.65}
+        'Gl.glEnable(Gl.GL_FOG)
+        'fog is currently disabled in all shaders.
+        'Im working towards adding this in deferred rendering
+        Dim fmode As Integer = Gl.GL_EXP2
+        Gl.glFogi(Gl.GL_FOG_MODE, fmode)
+        Dim fogcolor() As Single = {0.6, 0.6, 0.65}
 
-            Gl.glFogfv(Gl.GL_FOG_COLOR, fogcolor)
-            Gl.glFogf(Gl.GL_FOG_DENSITY, lighting_fog_level * 0.8)
-            Gl.glHint(Gl.GL_FOG_HINT, Gl.GL_NICEST)
-            Gl.glFogf(Gl.GL_FOG_START, 1.0)
-            Gl.glFogf(Gl.GL_FOG_END, 2.0)
-        Else
-        End If
+        Gl.glFogfv(Gl.GL_FOG_COLOR, fogcolor)
+        Gl.glFogf(Gl.GL_FOG_DENSITY, lighting_fog_level * 0.8)
+        Gl.glHint(Gl.GL_FOG_HINT, Gl.GL_NICEST)
+        Gl.glFogf(Gl.GL_FOG_START, 1.0)
+        Gl.glFogf(Gl.GL_FOG_END, 2.0)
     End Sub
     Private Sub draw_base_rings()
         If Not m_bases_ Then
@@ -3671,11 +3782,18 @@ nope:
     End Sub
 
     Public Sub draw_scene()
+        'Application.DoEvents()
         If stopGL Then Return
+        gl_busy = True
         If Not _STARTED Then Return
+        If SHOW_MAPS Then
+            gl_pick_map(mouse.X, mouse.Y)
+            Return
+        End If
         If Not maploaded Then
             Return
         End If
+
         swat1.Restart()
         If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
@@ -3687,8 +3805,7 @@ nope:
         Dim cp(2) As Single
         Dim sx, sy, sz As Single
 
-        Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT) 'improves colors
-        gl_busy = True
+        'Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT) 'improves colors
 
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
 
@@ -3699,7 +3816,7 @@ nope:
         Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
         Gl.glDisable(Gl.GL_BLEND)
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
         ResizeGL()
         Gl.glDisable(Gl.GL_NORMALIZE)
 
@@ -3784,6 +3901,7 @@ nope:
         swat2.Restart()
         If decals_loaded Then
             draw_decals()
+            ViewPerspective()
         End If
 
         If frmStats.Visible = True Then
@@ -3791,7 +3909,6 @@ nope:
         End If
 
         Gl.glEnable(Gl.GL_DEPTH_TEST)
-        ViewPerspective()
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         '---------------------------------------------------------------------------------
         'Tanks
@@ -3817,6 +3934,7 @@ nope:
 
         'Draw the water. IF there is water....
         If water.IsWater And maploaded And m_show_water.Checked And Not m_hell_mode.Checked And m_water_ And water_loaded Then
+            Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
             Gl.glFrontFace(Gl.GL_CW)
             Gl.glEnable(Gl.GL_LIGHTING)
             Gl.glEnable(Gl.GL_DEPTH_TEST)
@@ -3878,33 +3996,12 @@ nope:
                 Gl.glVertex3f(Packet_in.Ex, Packet_in.Ey, Packet_in.Ez - 1000)
             End If
             Gl.glEnd()
-            'Gl.glPointSize(6.0)
-            'Gl.glColor3f(1.0, 0.0, 0.0)
-            'Gl.glBegin(Gl.GL_POINTS)
-            'Gl.glVertex3f(Cursor_point.Z, Cursor_point.Y, Cursor_point.Z)
-            'Gl.glEnd()
         End If
 
 
         '======================== test
         Gl.glEnable(Gl.GL_LIGHTING)
-        'If maploaded Then
-        '    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-        '    make_baby_meshes()
-        'End If
-        'Gl.glCallList(noise_map_id)
-        '======================== test
-        'If m_show_decals.Checked Then
 
-        '    Gl.glColor4f(0.5, 0.0, 0.5, 1.0)
-        '    Gl.glPointSize(6.0)
-        '    Gl.glBegin(Gl.GL_POINTS)
-        '    For i = 0 To mesh.Length - 1
-        '        Dim v = mesh(i)
-        '        Gl.glVertex3f(v.x, v.y, v.z)
-        '    Next
-        '    Gl.glEnd()
-        'End If
         '======================== end test
         Gl.glDisable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
         '---------------------------------
@@ -3914,13 +4011,17 @@ nope:
         'all below is 2D ortho stuff
         '---------------------------------
         ViewOrtho()
+        Gl.glFrontFace(Gl.GL_CCW)
         '==========================
         'draw_post_test()
         '==========================
         Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glEnable(Gl.GL_BLEND)
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        Gl.glTranslatef(0.0, 0.0F, -0.01F)
+
+
         If maploaded And EDIT_INCULDERS Then
             For k = 0 To decal_matrix_list.Length - 1
                 With decal_matrix_list(k)
@@ -3979,32 +4080,28 @@ nope:
             If m_show_minimap.Checked And mini_map_loaded Then
                 w = (minimap_size * 1.066666)    ' used to make room for the minimap
             End If
-            Gl.glDisable(Gl.GL_DEPTH_TEST)
             If m_show_minimap.Checked And mini_map_loaded Then
                 draw_minimap()
             End If
-            Gl.glDisable(Gl.GL_LIGHTING)
             Gl.glEnable(Gl.GL_BLEND)
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
             Gl.glColor4f(0.3, 0.0, 0.0, 0.6)
             Gl.glBegin(Gl.GL_QUADS)
             Gl.glVertex3f(0.0, -pb1.Height, 0.0)
             Gl.glVertex3f(0.0, -pb1.Height + 20, 0.0)
+            Gl.glColor4f(0.1, 0.0, 0.0, 0.6)
             Gl.glVertex3f(pb1.Width - w, -pb1.Height + 20, 0.0)
             Gl.glVertex3f(pb1.Width - w, -pb1.Height, 0.0)
             Gl.glEnd()
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glEnable(Gl.GL_LIGHTING)
 
             If maploaded Then
-                Gl.glDisable(Gl.GL_DEPTH_TEST)
-                Dim fps As Integer = 1.0 / (screen_totaled_draw_time * 0.001)
+                Dim fps As Integer = screen_totaled_draw_time
                 Dim str = " FPS:" + fps.ToString
                 str += "  Location: [ "
                 str += coordStr + " ]"
                 ' Dim yp = get_Z_at_XY(u_look_point_X, u_look_point_Z)
-                str += "   X:" + u_look_point_X.ToString("0.000000") + "  Y:" + u_look_point_Y.ToString("0.000000") + "  Z:" + u_look_point_Z.ToString("0.000000")
-                str += "   GX:" + d_hx.ToString + "  GY:" + d_hy.ToString
+                'str += "   X:" + u_look_point_X.ToString("0.000000") + "  Y:" + u_look_point_Y.ToString("0.000000") + "  Z:" + u_look_point_Z.ToString("0.000000")
+                'str += "   GX:" + d_hx.ToString + "  GY:" + d_hy.ToString
                 'swat.Stop()
                 glutPrint(10, 8 - pb1.Height, str.ToString, 0.0, 1.0, 0.0, 1.0)
             End If
@@ -4017,6 +4114,7 @@ nope:
         If frmTestView.Visible Then
             frmTestView.update_screen()
         End If
+        autoEventScreen.Set()
         gl_busy = False
     End Sub
 
@@ -4239,7 +4337,6 @@ nope:
             Gl.glEnd()
         End If
         'Gl.glFinish()
-        Gl.glEnable(Gl.GL_LIGHTING)
         Try
             Dim xr = Floor((mex / minimap_size) * 10)
             Dim yr = Floor((mey / minimap_size) * 10)
@@ -4277,7 +4374,6 @@ nope:
         Gl.glTranslatef(0.0, 0.0F, -0.1F)
 
 
-        Gl.glDisable(Gl.GL_LIGHTING)
         Gl.glColor3f(1.0!, 1.0!, 1.0!)
         '-------------------------------------
         'draw loaded minimap
@@ -4480,7 +4576,6 @@ nope:
         'Dim d_y As Single = Sin((PI * 1.5) - (Cam_X_angle + angle_offset)) * (15 * scale)
         'Gl.glVertex3f(mex + d_x + uc.x, -mey - d_y + uc.y, -0.1)
         'Gl.glEnd()
-        Gl.glEnable(Gl.GL_LIGHTING)
         Try
             Dim xr = Floor((mex / minimap_size) * 10)
             Dim yr = Floor((mey / minimap_size) * 10)
@@ -4511,12 +4606,10 @@ nope:
         Dim xo As Single = -12
         Dim yo As Single = -5
         'draw the compus face
-        Gl.glDisable(Gl.GL_LIGHTING) 'shut this off so it dont get messed up by the lights
         Gl.glPushMatrix()
         Gl.glBlendEquation(Gl.GL_FUNC_ADD)
         Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
         Gl.glEnable(Gl.GL_BLEND)
-        Gl.glDisable(Gl.GL_DEPTH_TEST)
         'Dim loc = Gl.glGetUniformLocation(comp_shader, "colorMap")
         'Gl.glUseProgram(comp_shader)
         'Gl.glUniform1i(loc, 0)
@@ -4577,9 +4670,6 @@ nope:
         glutPrint((Cos(radi) * r) + xo + 8, (Sin(radi) * r) + yo + 4, "S", 0.0, 1.0, 0.0, 1.0)
         radi += halfPI
         Gl.glPopMatrix()
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glEnable(Gl.GL_LIGHTING) ' turn lighting back on
-        Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
         'glutPrint(10, -300, m_rot.ToString, 1, 1, 1, 1)
     End Sub
 
@@ -4764,28 +4854,31 @@ nope:
     End Sub
     Private Sub pb1_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles pb1.MouseDown
         'let the user cancel loading a map"
+        If block_mouse Then Return
+
         If view_mode Then
             Return
         End If
         If SHOW_MAPS Then
             If e.Button = Forms.MouseButtons.Left Then
-                If selected_map_hit = 0 Then
+                If selected_map_hit = 0 And maploaded Then
                     SHOW_MAPS = False
                     draw_scene()
                     draw_scene()
                     Application.DoEvents()
-                    Application.DoEvents()
-
-
+                    Return
                 Else
-                    SHOW_MAPS = False
-                    mini_map_loaded = False
+                    Dim dx = selected_map_hit - 1 'deal with posible false hit
+                    If dx < 0 Then Return
+                    block_mouse = True
+                    finish_maps = True
+                    mouse.X = 0
+                    mouse.Y = 0
+                    'SHOW_MAPS = False
                     If maploaded Then
                         save_light_settings() ' save our light settings
                     End If
-                    maploaded = False
-                    draw_scene()
-                    Dim dx = selected_map_hit - 1
+
                     Dim r_name = loadmaplist(dx).realname
                     Dim p_name = loadmaplist(dx).name.Replace(".png", ".pkg")
                     Dim a1 = p_name.Split(":")
@@ -4801,7 +4894,6 @@ nope:
                     Dim sn1 = ar(ar.Length - 1)
                     Dim sn2 = sn1.Split(".")
                     Dim shortname = sn2(0)
-                    flush_data() 'clear everything
                     saved_texture_loads = 0
                     saved_model_loads = 0
                     resetBoundingBox()
@@ -4811,14 +4903,12 @@ nope:
 
                     'if we are hosting a session we need to load 
                     'just like everyone else would.
-                    draw_scene()
                     load_map_name = sn1
                     JUST_MAP_NAME = Path.GetFileNameWithoutExtension(sn1)
 
-                    open_pkg(sn1)
-                    SHOW_MAPS = False
-                    draw_scene()
-                    SHOW_MAPS = False
+                    mini_map_loaded = False
+                    maploaded = False
+                    'block_mouse = False
                     Return
                 End If
             End If
@@ -4857,7 +4947,8 @@ nope:
                 Packet_out.Ez = look_point_Z
                 position_camera()
                 set_eyes()
-                draw_scene()
+                mouse_moved = True
+                activity = True
             End If
         End If
 
@@ -4874,6 +4965,7 @@ nope:
             mouse.Y = e.Y
         End If
         If e.Button = Forms.MouseButtons.Middle Then
+      
             GetOGLPos(e.X, e.Y)
         End If
     End Sub
@@ -4887,297 +4979,18 @@ nope:
 
 
     Private Sub pb1_MouseMove(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles pb1.MouseMove
+        If block_mouse Then Return
         M_current.x = e.X
         M_current.y = e.Y
         If SHOW_MAPS Then
+            mouse_moved = True 'force screen updates
+            activity = True 'force screen updates
             mouse.X = e.X
             mouse.Y = e.Y
-            gl_pick_map(e.X, e.Y)
             Application.DoEvents()
             Return
         End If
         Return
-        'moved to its own sub for better response from update thread.
-        '        Dim dead As Integer = 5
-        '        Dim t As Double
-        '        Dim M_Speed As Double = 0.8
-        '        Dim tempX, tempZ As Single
-        '        tempZ = look_point_Z
-        '        tempX = look_point_X
-        '        Dim ms As Double = 1.0F * View_Radius ' distance away changes speed. THIS WORKS WELL!
-        '        Dim ms2 As Double = 0.25 * View_Radius  ' distance away changes speed. THIS WORKS WELL!
-        '        If M_DOWN Then
-        '            If e.X > (mouse.X + dead) Then
-        '                If e.X - mouse.X > 100 Then t = (1.0F * M_Speed)
-        '            Else : t = CSng(Sin((e.X - mouse.X) / 100)) * M_Speed
-        '                If Not ROTATE_TANK Then
-        '                Else
-        '                    If ROTATE_TANK Then
-        '                        Dim tr As Single
-        '                        If tankID > -1 Then
-        '                            If tankID >= 100 Then
-        '                                tr = locations.team_2(tankID - 100).rot_y
-        '                                tr -= t
-        '                                If tr < 0 Then tr += (2 * PI)
-        '                                locations.team_2(tankID - 100).rot_y = tr
-        '                                Packet_out.Tr = tr
-        '                            Else
-        '                                tr = locations.team_1(tankID).rot_y
-        '                                tr -= t
-        '                                If tr < 0 Then tr += (2 * PI)
-        '                                locations.team_1(tankID).rot_y = tr
-        '                                Packet_out.Tr = tr
-        '                            End If
-        '                            mouse.X = e.X
-        '                            'draw_scene()
-        '                        End If
-        '                    End If
-        '                End If
-        '            End If
-        '            If M_DOWN Then
-        '                If e.X < (mouse.X - dead) Then
-        '                    If mouse.X - e.X > 100 Then t = (M_Speed)
-        '                Else : t = CSng(Sin((mouse.X - e.X) / 100)) * M_Speed
-        '                    If Not ROTATE_TANK Then
-        '                    Else
-        '                        If ROTATE_TANK Then
-        '                            Dim tr As Single
-        '                            If tankID > -1 Then
-        '                                If tankID >= 100 Then
-        '                                    tr = locations.team_2(tankID - 100).rot_y
-        '                                    tr += t
-        '                                    If tr > (2 * PI) Then tr -= (2 * PI)
-        '                                    locations.team_2(tankID - 100).rot_y = tr
-        '                                    Packet_out.Tr = tr
-        '                                Else
-        '                                    tr = locations.team_1(tankID).rot_y
-        '                                    tr += t
-        '                                    If tr > (2 * PI) Then tr -= (2 * PI)
-        '                                    locations.team_1(tankID).rot_y = tr
-        '                                    Packet_out.Tr = tr
-        '                                End If
-        '                            End If
-        '                        End If
-        '                        mouse.X = e.X
-        '                    End If
-        '                End If
-        '            End If
-        '        End If
-        '        If M_DOWN Then
-        '            If e.X > (mouse.X + dead) Then
-        '                If e.X - mouse.X > 100 Then t = (1.0F * M_Speed)
-        '            Else : t = CSng(Sin((e.X - mouse.X) / 100)) * M_Speed
-        '                If Not z_move Then
-        '                    If move_mod Then ' check for modifying flag
-        '                        tempX -= ((t * ms) * (Cos(Cam_X_angle)))
-        '                        tempZ -= ((t * ms) * (-Sin(Cam_X_angle)))
-        '                        If tempX < MAP_BB_BL.x Then
-        '                            tempX = MAP_BB_BL.x
-        '                        End If
-        '                        If tempX > MAP_BB_UR.x Then
-        '                            tempX = MAP_BB_UR.x
-        '                        End If
-        '                        If tempZ < MAP_BB_BL.y Then
-        '                            tempZ = MAP_BB_BL.y
-        '                        End If
-        '                        If tempZ > MAP_BB_UR.y Then
-        '                            tempZ = MAP_BB_UR.y
-        '                        End If
-        '                        If Not check_zoom_collision() Then
-        '                            look_point_X = tempX : look_point_Z = tempZ
-        '                        End If
-
-        '                    Else
-        '                        ' If Not ROTATE_TANK Then
-        '                        Cam_X_angle = check_border_collision_y_rot(-t)
-        '                        'Cam_X_angle -= t
-        '                        If Cam_X_angle > (2 * PI) Then Cam_X_angle -= (2 * PI)
-        '                    End If
-        '                    'End If
-        '                    mouse.X = e.X
-        'no_move_xz:
-        '                End If
-        '            End If
-        '            If e.X < (mouse.X - dead) Then
-        '                If mouse.X - e.X > 100 Then t = (M_Speed)
-        '            Else : t = CSng(Sin((mouse.X - e.X) / 100)) * M_Speed
-        '                If Not z_move Then
-        '                    If move_mod Then ' check for modifying flag
-        '                        tempX += ((t * ms) * (Cos(Cam_X_angle)))
-        '                        tempZ += ((t * ms) * (-Sin(Cam_X_angle)))
-        '                        If tempX < MAP_BB_BL.x Then
-        '                            tempX = MAP_BB_BL.x
-        '                        End If
-        '                        If tempX > MAP_BB_UR.x Then
-        '                            tempX = MAP_BB_UR.x
-        '                        End If
-        '                        If tempZ < MAP_BB_BL.y Then
-        '                            tempZ = MAP_BB_BL.y
-        '                        End If
-        '                        If tempZ > MAP_BB_UR.y Then
-        '                            tempZ = MAP_BB_UR.y
-        '                        End If
-        '                        If Not check_zoom_collision() Then
-        '                            look_point_X = tempX : look_point_Z = tempZ
-        '                        End If
-        '                    Else
-        '                        '     If Not ROTATE_TANK And Not MOVE_TANK Then
-
-        '                        Cam_X_angle = check_border_collision_y_rot(t)
-        '                        'Cam_X_angle += t
-        '                        If Cam_X_angle < 0 Then Cam_X_angle += (2 * PI)
-        '                    End If
-        '                    '  End If
-        '                    mouse.X = e.X
-
-        '                    Try
-        '                        'This has to remain "INLINE" as it kills the mouse's reaction time.
-        '                        If maploaded Then
-
-        '                            'Dim xvp As Integer = ((look_point_X - 50) / 100) + (MAP_SIDE_LENGTH / 2)
-        '                            'Dim yvp As Integer = ((look_point_Z + 50) / 100) + (MAP_SIDE_LENGTH / 2)
-        '                            'Dim rxp As Integer = (((Floor(look_point_X) / 100)) - Floor((Floor(look_point_X) / 100))) * 65
-        '                            'Dim ryp As Integer = (((Floor(look_point_Z) / 100)) - Floor((Floor(look_point_Z) / 100))) * 65
-        '                            'Dim map = mapBoard(xvp, yvp)
-        '                            Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
-        '                            look_point_Y = Z_Cursor ' + 5
-        '                        End If
-        '                    Catch ex As Exception
-
-        '                    End Try
-        '                End If
-        '            End If
-        '            If e.Y > (mouse.Y + dead) Then
-        '                If e.Y - mouse.Y > 100 Then t = (M_Speed)
-        '            Else : t = CSng(Sin((e.Y - mouse.Y) / 100)) * M_Speed
-        '                If z_move Then
-        '                    y_offset -= (t * ms)
-
-        '                Else
-        '                    If move_mod Then ' check for modifying flag
-        '                        tempZ -= ((t * ms) * (Cos(Cam_X_angle)))
-        '                        tempX -= ((t * ms) * (Sin(Cam_X_angle)))
-        '                        If tempX < MAP_BB_BL.x Then
-        '                            tempX = MAP_BB_BL.x
-        '                        End If
-        '                        If tempX > MAP_BB_UR.x Then
-        '                            tempX = MAP_BB_UR.x
-        '                        End If
-        '                        If tempZ < MAP_BB_BL.y Then
-        '                            tempZ = MAP_BB_BL.y
-        '                        End If
-        '                        If tempZ > MAP_BB_UR.y Then
-        '                            tempZ = MAP_BB_UR.y
-        '                        End If
-        '                        If Not check_zoom_collision() Then
-        '                            look_point_X = tempX : look_point_Z = tempZ
-        '                        End If
-
-        '                    Else
-        '                        If Not ROTATE_TANK And Not MOVE_TANK Then
-        '                            Cam_Y_angle = check_border_collision_x_rot(-t)
-        '                        End If
-        '                    End If
-        '                End If
-        '                'If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
-        '                mouse.Y = e.Y
-        '            End If
-        '            If e.Y < (mouse.Y - dead) Then
-        '                If mouse.Y - e.Y > 100 Then t = (M_Speed)
-        '            Else : t = CSng(Sin((mouse.Y - e.Y) / 100)) * M_Speed
-        '                If z_move Then
-        '                    y_offset += (t * ms)
-        '                Else
-        '                    If move_mod Then ' check for modifying flag
-        '                        tempZ += ((t * ms) * (Cos(Cam_X_angle)))
-        '                        tempX += ((t * ms) * (Sin(Cam_X_angle)))
-        '                        If tempX < MAP_BB_BL.x Then
-        '                            tempX = MAP_BB_BL.x
-        '                        End If
-        '                        If tempX > MAP_BB_UR.x Then
-        '                            tempX = MAP_BB_UR.x
-        '                        End If
-        '                        If tempZ < MAP_BB_BL.y Then
-        '                            tempZ = MAP_BB_BL.y
-        '                        End If
-        '                        If tempZ > MAP_BB_UR.y Then
-        '                            tempZ = MAP_BB_UR.y
-        '                        End If
-        '                        If Not check_zoom_collision() Then
-        '                            look_point_X = tempX : look_point_Z = tempZ
-        '                        End If
-
-        '                    Else
-        '                        If Not ROTATE_TANK And Not MOVE_TANK Then
-        '                            Cam_Y_angle = check_border_collision_x_rot(t)
-        '                        End If
-        '                    End If
-        '                End If
-        '                mouse.Y = e.Y
-        '            End If
-        '            If Cam_Y_angle > -0.0 Then Cam_Y_angle = -0.0
-        '            If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
-        '            If Not ROTATE_TANK Then
-        '                If MOVE_TANK Then
-        '                    If tankID > -1 Then
-        '                        If tankID > -1 Then
-        '                            If tankID >= 100 Then
-        '                                locations.team_2(tankID - 100).loc_x = look_point_X
-        '                                locations.team_2(tankID - 100).loc_z = look_point_Z
-        '                                Packet_out.Tx = look_point_X
-        '                                Packet_out.Tz = look_point_Z
-        '                            Else
-        '                                locations.team_1(tankID).loc_x = look_point_X
-        '                                locations.team_1(tankID).loc_z = look_point_Z
-        '                                Packet_out.Tx = look_point_X
-        '                                Packet_out.Tz = look_point_Z
-        '                            End If
-        '                        End If
-        '                    End If
-        '                End If
-        '            End If
-        '            Packet_out.Ex = look_point_X
-        '            Packet_out.Ez = look_point_Z
-        '            Packet_out.Ey = look_point_Y
-        '            Packet_out.Rx = Cam_X_angle
-        '            Packet_out.Ry = Cam_Y_angle
-        '            Packet_out.Lr = View_Radius
-
-        '        End If
-        '        If move_cam_z Then
-        '            If e.Y > (mouse.Y + dead) Then
-        '                If e.Y - mouse.Y > 100 Then t = (10)
-        '            Else : t = CSng(Sin((e.Y - mouse.Y) / 100)) * 12
-        '                Dim tl = View_Radius
-        '                View_Radius += (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
-        '                If check_zoom_collision() Then
-        '                    View_Radius = tl
-        '                End If
-        '                mouse.Y = e.Y
-        '            End If
-        '            If e.Y < (mouse.Y - dead) Then
-        '                If mouse.Y - e.Y > 100 Then t = (10)
-        '            Else : t = CSng(Sin((mouse.Y - e.Y) / 100)) * 12
-        '                Dim tl = View_Radius
-        '                View_Radius -= (t * (View_Radius * 0.2))    ' zoom is factored in to look radius
-        '                If check_zoom_collision() Then
-        '                    View_Radius = tl
-        '                End If
-        '                If View_Radius > -5.0 Then View_Radius = -5.0
-        '                mouse.Y = e.Y
-        '            End If
-        '            If View_Radius > -1.0 Then View_Radius = -1.0
-        '            'If View_Radius < -550 Then View_Radius = -550
-        '            If View_Radius < -1550 Then View_Radius = -1550
-        '            Packet_out.Ex = look_point_X
-        '            Packet_out.Ez = look_point_Z
-        '            Packet_out.Ey = look_point_Y
-        '            Packet_out.Rx = Cam_X_angle
-        '            Packet_out.Ry = Cam_Y_angle
-        '            Packet_out.Lr = View_Radius
-
-        '        End If
-
     End Sub
     Private Sub pb1_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles pb1.MouseUp
         If e.Button = Forms.MouseButtons.Right Then
@@ -5626,7 +5439,7 @@ no_move_xz:
         End If
     End Sub
 
-    Private Sub m_show_fog_Click(sender As Object, e As EventArgs) Handles m_show_fog.Click
+    Private Sub m_show_fog_Click(sender As Object, e As EventArgs)
         If Not _STARTED Then
             Return
         End If
@@ -5964,7 +5777,6 @@ no_move_xz:
         'End If
         If m_fly_map.Checked Then
             M_FLY = True
-            fly()
         Else
             M_FLY = False
         End If
@@ -6174,16 +5986,6 @@ no_move_xz:
 
     End Sub
 
-    Private Sub m_mini_down_Click(sender As Object, e As EventArgs) Handles m_mini_down.Click
-        If Not _STARTED Then Return
-        minimap_size -= 32.0!
-        If minimap_size < 128.0! Then
-            minimap_size = 128.0!
-        End If
-        'tb1.Text = "Minimap size: " + minimap_size.ToString
-        My.Settings.minimap_size = minimap_size
-        draw_scene()
-    End Sub
 
     Private Sub m_minizoom_Click(sender As Object, e As EventArgs) Handles m_minizoom.Click
         If Not _STARTED Then Return
@@ -6678,41 +6480,55 @@ no_move_xz:
 
     End Sub
     Private mouse_moved As Boolean = False
-    Private Sub update_mouse()
+    Dim activity As Boolean = True
+    Private Sub screen_updater()
         'This will run for the duration that Terra! is open.
         'Its in a closed loop
         Dim swat As New Stopwatch
+        Dim timeout As Integer
         While _STARTED
-            If Not M_FLY And Not m_Orbit_Light.Checked And maploaded Then
-                angle_offset = 0
-                If mouse_moved Then
-                    'If we need to update the screen, lets caclulate draw times and update the timer.
-                    If screen_avg_counter > 15.0! Then
-                        screen_totaled_draw_time = screen_avg_draw_time / screen_avg_counter
-                        screen_avg_counter = 1.0!
-                        screen_avg_draw_time = 0.0!
-                    Else
-                        If Screen_draw_time < 2.0! Then
-                            Screen_draw_time = 2.0!
-                        End If
-                        screen_avg_counter += 1.0!
-                        screen_avg_draw_time += Screen_draw_time
-                    End If
-                    swat.Reset()
-                    swat.Start()
-                    update_screen()
-                    Screen_draw_time = swat.ElapsedMilliseconds
-                End If
+            If mouse_moved Then
+                swat.Start()
+                activity = True
+                timeout = 0
             End If
-            Thread.Sleep(1)
+            activity = fly(activity)
+            If activity Then
+                'If we need to update the screen, lets caclulate draw times and update the timer.
+                If swat.ElapsedMilliseconds >= 1000 Then
+                    timeout += 1
+                    If timeout = 10 Then
+                        activity = False
+                        screen_totaled_draw_time = 0
+                        swat.Stop()
+                    Else
+                        swat.Restart()
+                        screen_totaled_draw_time = screen_avg_counter
+                        screen_avg_counter = 1.0!
+                    End If
+                Else
+                    screen_avg_counter += 1.0!
+                End If
+                If SHOW_MAPS Then
+                    draw_maps_buttons()
+                Else
+                    update_screen()
+                End If
+                autoEventScreen.WaitOne(300)
+            End If
+            Thread.Sleep(5)
         End While
     End Sub
 
     Private Delegate Sub update_screen_delegate()
+    Private lockdrawing As New Object
     Public Sub update_screen()
+
         Try
             If Me.InvokeRequired Then
-                Me.Invoke(New update_screen_delegate(AddressOf update_screen))
+                SyncLock lockdrawing
+                    Me.Invoke(New update_screen_delegate(AddressOf update_screen))
+                End SyncLock
             Else
                 draw_scene()
             End If
@@ -6738,118 +6554,76 @@ no_move_xz:
             old_light_position.x = position(0)
             old_light_position.y = position(1)
             old_light_position.z = position(2)
-            fly()
         Else
             'position(0) = old_light_position.x
             'position(1) = old_light_position.y
             'position(2) = old_light_position.z
         End If
     End Sub
-    Public Sub fly()
-        Dim scale As Single = MAP_BB_UR.x - 50.0
-        Dim lx, ly, lz As Single
-        Dim swat As New Stopwatch
-        While m_fly_map.Checked Or m_Orbit_Light.Checked
+    Dim lx_light, ly_light, lz_light As Single
+    Public Function fly(ByVal activity As Boolean) As Boolean
+        'Dim swat As New Stopwatch
+        'While m_fly_map.Checked Or m_Orbit_Light.Checked
 
-            'scale = 700.0
-            If m_fly_map.Checked And maploaded Then
-                FLY_ = True
-                view_rot += 0.002
-                look_point_X = Cos(view_rot) * scale
-                look_point_Z = Sin(view_rot) * scale
-                cam_x = Cos(view_rot - 0.01) * scale
-                cam_z = Sin(view_rot - 0.01) * scale
-                Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  ' + 1
-                cam_y = Z_Cursor + 15
-                look_point_Y = cam_y
-                angle_offset = -view_rot - (PI * 0.1)
+        'scale = 700.0
+        If m_fly_map.Checked And maploaded Then
+            FLY_ = True
+            activity = True
+            view_rot += 0.002
+            look_point_X = Cos(view_rot) * MAP_BB_UR.x - 50.0
+            look_point_Z = Sin(view_rot) * MAP_BB_UR.x - 50.0
+            cam_x = Cos(view_rot - 0.01) * MAP_BB_UR.x - 50.0
+            cam_z = Sin(view_rot - 0.01) * MAP_BB_UR.x - 50.0
+            Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  ' + 1
+            cam_y = Z_Cursor + 15
+            look_point_Y = cam_y
+            angle_offset = -view_rot - (PI * 0.1)
 
-                If screen_avg_counter > 15.0! Then
-                    screen_totaled_draw_time = screen_avg_draw_time / screen_avg_counter
-                    screen_avg_counter = 1.0!
-                    screen_avg_draw_time = Screen_draw_time
-                Else
-                    If Screen_draw_time < 2.0! Then
-                        Screen_draw_time = 2.0!
-                    End If
-                    screen_avg_counter += 1.0!
-                    screen_avg_draw_time += Screen_draw_time
-                End If
-                need_update()
-                'swat1.Reset()
-                swat.Restart()
-                draw_scene()
-                Screen_draw_time = swat.ElapsedMilliseconds
-                If view_rot > 2 * PI Then
-                    view_rot -= (2 * PI)
-                End If
-                Application.DoEvents()
-            Else
-                angle_offset = 0
-            End If
-            If m_Orbit_Light.Checked And maploaded Then
-
-                'scale = 1000.0
-                light_rot += 0.015
-                lx = Cos(light_rot) * scale
-                lz = Sin(light_rot) * scale
-                ly = 120.0 'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z) ' + 1
-                'ly = 320.0 'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z) ' + 1
-                position(0) = lx 'u_look_point_X - lx
-                position(1) = ly 'u_look_point_Y + 10 'ly
-                position(2) = lz 'u_look_point_Z - lz
-                position(3) = 1.0
-
-                'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
-                If Not m_fly_map.Checked Then
-                    If screen_avg_counter > 15.0! Then
-                        screen_totaled_draw_time = screen_avg_draw_time / screen_avg_counter
-                        screen_avg_counter = 1.0!
-                        screen_avg_draw_time = Screen_draw_time
-                    Else
-                        If Screen_draw_time < 2.0! Then
-                            Screen_draw_time = 2.0!
-                        End If
-                        screen_avg_counter += 1.0!
-                        screen_avg_draw_time += Screen_draw_time
-                    End If
-                    'swat2.Reset()
-                    swat.Restart()
-                    'need_update()
-
-                    update_screen()
-
-                    Screen_draw_time = swat.ElapsedMilliseconds
-                End If
-                If light_rot > 2 * PI Then
-                    light_rot -= (2 * PI)
-                End If
-            Else
-                'position(0) = old_light_position.x
-                'position(1) = old_light_position.y
-                'position(2) = old_light_position.z
-
+          
+            If view_rot > 2 * PI Then
+                view_rot -= (2 * PI)
             End If
             Application.DoEvents()
-        End While
+        Else
+            angle_offset = 0
+        End If
+        If m_Orbit_Light.Checked And maploaded Then
+            activity = True
+            'scale = 1000.0
+            light_rot += 0.015
+            lx_light = Cos(light_rot) * (MAP_BB_UR.x * 0.75)
+            lz_light = Sin(light_rot) * (MAP_BB_UR.x * 0.75)
+            ly_light = 400.0 'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z) ' + 1
+            'ly_light = get_Z_at_XY(lx_light, lz_light) + 150.0
+            position(0) = lx_light 'u_look_point_X - lx
+            position(1) = ly_light 'u_look_point_Y + 10 'ly
+            position(2) = lz_light 'u_look_point_Z - lz
+            position(3) = 1.0
 
+            Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
+            If light_rot > 2 * PI Then
+                light_rot -= (2 * PI)
+            End If
+        Else
 
-    End Sub
+        End If
+        Return activity
+
+    End Function
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Timer1.Enabled = False
         update_thread.IsBackground = True
-        update_thread.Name = "mouse move updater"
+        update_thread.Name = "Screen updater"
         update_thread.Priority = ThreadPriority.Highest
         update_thread.Start()
 
-        mouse_update_thread.Name = "check mouse for movement"
+        mouse_update_thread.Name = "Check mouse for movement"
         mouse_update_thread.Priority = ThreadPriority.Highest
         mouse_update_thread.IsBackground = True
         mouse_update_thread.Start()
     End Sub
 #End Region
-
 
 End Class
 

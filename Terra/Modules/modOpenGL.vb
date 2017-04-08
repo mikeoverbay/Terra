@@ -260,10 +260,9 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
 		Catch ex As Exception
 			Return
 		End Try
-		Dim blending As Boolean = False
-		If Gl.glIsEnabled(Gl.GL_BLEND) Then blending = True
-		Gl.glEnable(Gl.GL_BLEND)
-		Gl.glColor4f(0, 0, 0, 0.7)
+        Gl.glDisable(Gl.GL_BLEND)
+
+        Gl.glColor4f(0.125, 0.125, 0.125, 0.5)
 		Gl.glBegin(Gl.GL_QUADS)
 		Dim L1 = text.Length * 8
 		Dim l2 = 7
@@ -271,7 +270,8 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
 		Gl.glVertex2f(x + L1 + 2, y - l2 + 2)
 		Gl.glVertex2f(x + L1 + 2, y + l2 + 5)
 		Gl.glVertex2f(x - 2, y + l2 + 5)
-		Gl.glEnd()
+        Gl.glEnable(Gl.GL_BLEND)
+        Gl.glEnd()
 		Gl.glColor3f(r, g, b)
 		Gl.glRasterPos2f(x, y)
 		For Each I In text
@@ -279,7 +279,7 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
 			Glut.glutBitmapCharacter(Glut.GLUT_BITMAP_8_BY_13, Asc(I))
 
 		Next
-		If Not blending Then Gl.glDisable(Gl.GL_BLEND)
+        Gl.glDisable(Gl.GL_BLEND)
 	End Sub
 
 	Public Sub ViewOrtho_2()
@@ -319,7 +319,7 @@ ByVal text As String, ByVal r As Single, ByVal g As Single, ByVal b As Single, B
         Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
         Gl.glLoadIdentity()
 
-        Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.02F, 4000)
+        Glu.gluPerspective(60.0F, CSng((frmMain.pb1.Width) / (frmMain.pb1.Height)), 1.01, 6000)
         Gl.glDepthRange(0.0, 1.0)
         Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview
         Gl.glLoadIdentity() 'Reset The Matrix

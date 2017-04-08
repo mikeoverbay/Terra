@@ -150,6 +150,7 @@ Module Globals
     Public SHOW_RINGS As Boolean = True
     Public map_texture_ids(0) As Integer
     Public SHOW_MAPS As Boolean = False
+    Public block_mouse As Boolean = False
     Public hz_loaded As Boolean = False
     Public model_bump_loaded As Boolean = False
     Public uv2s_loaded As Boolean = False
@@ -176,7 +177,6 @@ Module Globals
     Public n_list2 As New List(Of String)
     Public dummy_texture As Integer
     Public mix_atlas_Id As Integer
-    Public main_layer_tex As Bitmap
     Public temp_bmp As Bitmap
     Public load_map_name As String = " "
     Public glob_str As String = ""

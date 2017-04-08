@@ -1,22 +1,27 @@
 ﻿// decals_vertex.txt
 // used to render decals
 //#version 130
+#version 330 compatibility
 
-varying vec2 texCoord;
-
-varying float ln;
-varying vec3 g_vertexnormal;
-varying vec3 g_viewvector;
-varying vec3 lightDirection;
-varying mat3 TBN;
-uniform mat4 ModelMatrix1;
 uniform vec3 cam_position;
-////////////////////////////
 
+out vec2 texCoord;
+out float ln;
+out vec3 g_vertexnormal;
+out vec3 g_viewvector;
+out vec3 lightDirection;
+out mat3 TBN;
+
+////////////////////////////
 void main(void)
 {
-    vec3 n = gl_Normal;
-    // some decals are upside down
+
+    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+
+    texCoord    = gl_MultiTexCoord0.xy;
+    
+   vec3 n = gl_Normal;
+    // some decals are upside down??!!
      if (n.y < 0.0) {
         n *= -1.0;
     }
@@ -34,10 +39,6 @@ void main(void)
     g_viewvector = cam_position - gl_Vertex.xyz;
 
     //////////////////////////////////////////////
-    vec4 v = gl_ModelViewProjectionMatrix * gl_Vertex;
-    
-    texCoord    = gl_MultiTexCoord0.xy;
-    
     vec3 camPos = normalize(cam_position);
     vec3 point = vec3(gl_Vertex.xyz);
 
@@ -53,10 +54,4 @@ void main(void)
     {
         ln = 0.0;
     }
-    // bumb z,y out a little so the underlaying terrain dont peek thru.
-    vec3 ns = gl_NormalMatrix * gl_Normal;
-    v.z -= .1 * ns.z;
-    v.y += .1 * ns.y;
-    gl_Position = v;
-
 }

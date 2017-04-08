@@ -30,9 +30,12 @@ Partial Class frmShowImage
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.ListBox2 = New System.Windows.Forms.ListBox()
         Me.SPC = New System.Windows.Forms.SplitContainer()
-        Me.alpha_cb = New System.Windows.Forms.CheckBox()
         Me.btn_scale_down = New System.Windows.Forms.Button()
         Me.btn_scale_up = New System.Windows.Forms.Button()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -119,7 +122,10 @@ Partial Class frmShowImage
         'SPC.Panel1
         '
         Me.SPC.Panel1.BackColor = System.Drawing.Color.Black
-        Me.SPC.Panel1.Controls.Add(Me.alpha_cb)
+        Me.SPC.Panel1.Controls.Add(Me.CheckBox4)
+        Me.SPC.Panel1.Controls.Add(Me.CheckBox3)
+        Me.SPC.Panel1.Controls.Add(Me.CheckBox2)
+        Me.SPC.Panel1.Controls.Add(Me.CheckBox1)
         Me.SPC.Panel1.Controls.Add(Me.btn_scale_down)
         Me.SPC.Panel1.Controls.Add(Me.btn_scale_up)
         Me.SPC.Panel1.Controls.Add(Me.TextBox1)
@@ -131,21 +137,6 @@ Partial Class frmShowImage
         Me.SPC.Size = New System.Drawing.Size(752, 501)
         Me.SPC.SplitterDistance = 457
         Me.SPC.TabIndex = 3
-        '
-        'alpha_cb
-        '
-        Me.alpha_cb.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.alpha_cb.Appearance = System.Windows.Forms.Appearance.Button
-        Me.alpha_cb.AutoSize = True
-        Me.alpha_cb.BackColor = System.Drawing.Color.DimGray
-        Me.alpha_cb.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.alpha_cb.ForeColor = System.Drawing.Color.Black
-        Me.alpha_cb.Location = New System.Drawing.Point(354, 477)
-        Me.alpha_cb.Name = "alpha_cb"
-        Me.alpha_cb.Size = New System.Drawing.Size(49, 23)
-        Me.alpha_cb.TabIndex = 4
-        Me.alpha_cb.Text = "Alpha"
-        Me.alpha_cb.UseVisualStyleBackColor = False
         '
         'btn_scale_down
         '
@@ -172,6 +163,62 @@ Partial Class frmShowImage
         Me.btn_scale_up.Size = New System.Drawing.Size(25, 23)
         Me.btn_scale_up.TabIndex = 2
         Me.btn_scale_up.UseVisualStyleBackColor = False
+        '
+        'CheckBox1
+        '
+        Me.CheckBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBox1.Appearance = System.Windows.Forms.Appearance.Button
+        Me.CheckBox1.BackColor = System.Drawing.Color.Red
+        Me.CheckBox1.ForeColor = System.Drawing.Color.Black
+        Me.CheckBox1.Location = New System.Drawing.Point(300, 478)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(25, 23)
+        Me.CheckBox1.TabIndex = 5
+        Me.CheckBox1.Text = "R"
+        Me.CheckBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CheckBox1.UseVisualStyleBackColor = False
+        '
+        'CheckBox2
+        '
+        Me.CheckBox2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBox2.Appearance = System.Windows.Forms.Appearance.Button
+        Me.CheckBox2.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.CheckBox2.ForeColor = System.Drawing.Color.Black
+        Me.CheckBox2.Location = New System.Drawing.Point(326, 478)
+        Me.CheckBox2.Name = "CheckBox2"
+        Me.CheckBox2.Size = New System.Drawing.Size(25, 23)
+        Me.CheckBox2.TabIndex = 6
+        Me.CheckBox2.Text = "G"
+        Me.CheckBox2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CheckBox2.UseVisualStyleBackColor = False
+        '
+        'CheckBox3
+        '
+        Me.CheckBox3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBox3.Appearance = System.Windows.Forms.Appearance.Button
+        Me.CheckBox3.BackColor = System.Drawing.Color.Blue
+        Me.CheckBox3.ForeColor = System.Drawing.Color.White
+        Me.CheckBox3.Location = New System.Drawing.Point(352, 478)
+        Me.CheckBox3.Name = "CheckBox3"
+        Me.CheckBox3.Size = New System.Drawing.Size(25, 23)
+        Me.CheckBox3.TabIndex = 7
+        Me.CheckBox3.Text = "B"
+        Me.CheckBox3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CheckBox3.UseVisualStyleBackColor = False
+        '
+        'CheckBox4
+        '
+        Me.CheckBox4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBox4.Appearance = System.Windows.Forms.Appearance.Button
+        Me.CheckBox4.BackColor = System.Drawing.Color.Gray
+        Me.CheckBox4.ForeColor = System.Drawing.Color.Black
+        Me.CheckBox4.Location = New System.Drawing.Point(378, 478)
+        Me.CheckBox4.Name = "CheckBox4"
+        Me.CheckBox4.Size = New System.Drawing.Size(25, 23)
+        Me.CheckBox4.TabIndex = 8
+        Me.CheckBox4.Text = "A"
+        Me.CheckBox4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CheckBox4.UseVisualStyleBackColor = False
         '
         'frmShowImage
         '
@@ -206,5 +253,8 @@ Partial Class frmShowImage
     Friend WithEvents SPC As System.Windows.Forms.SplitContainer
     Friend WithEvents btn_scale_down As System.Windows.Forms.Button
     Friend WithEvents btn_scale_up As System.Windows.Forms.Button
-    Friend WithEvents alpha_cb As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox3 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
 End Class

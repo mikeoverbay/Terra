@@ -133,6 +133,8 @@ Module Mod_space_bin
         mr.Dispose()
         br.Close()
         'clean up some space
+        bw_strings.Clear()
+
         BWST = Nothing
         BWSG = Nothing
         BSGD = Nothing

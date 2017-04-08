@@ -1,3 +1,0 @@
-
-
-RENAME *.settings *.light

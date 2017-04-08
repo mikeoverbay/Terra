@@ -33,25 +33,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_02C2CBD4D6F546CFB3FC007DD75338E7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_035C3CE3D34946BF958E14A68806E403"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_03F8FFB828D44BB6923484C65C375AEE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0835625A57DA4837B6F274F22C598E1F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,7 +69,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0D19DF4177B9413AA8709E804B3F1F30"
+        "MsmKey" = "8:_0E0B63F063C345949D294F1C48637522"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -129,12 +111,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_18094E4E023841ADA2987C3EBE9BE1E2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_189C1C5D88B84BCA999151549ECDAC1F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -142,12 +118,6 @@
         "Entry"
         {
         "MsmKey" = "8:_19FF2F15067949849840F05D6426C568"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1AB964E716124AEDBF68968E2DAC4A9B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -171,7 +141,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1DE3342472FF490E89F61CBA4FA95A67"
+        "MsmKey" = "8:_1DB6A08DF09741BF8E4065C83F667318"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -201,19 +171,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_20FE37FB254E4479AC8487D107BD0824"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_210D28F2429645E194EB3104EA26CCD6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_21136E9857794535B9BD59C9A1EC8487"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -232,12 +190,6 @@
         "Entry"
         {
         "MsmKey" = "8:_2300D3A044B04DE8B0779BAD1886AEB6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_247172912FA240A9BA7BA5DAFD7EF3C8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -286,12 +238,6 @@
         "Entry"
         {
         "MsmKey" = "8:_2E1BE6C71C2E4299969D647A826C8D62"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_30A62F53B370446CBEBBC40156DBBF9C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -459,12 +405,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_49F70003B9BD47F0958ECA5091F46C71"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4B2881C90B5345A784C3BD446F78EC95"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -472,12 +412,6 @@
         "Entry"
         {
         "MsmKey" = "8:_4CD05D9E4C874662879EE70D17543621"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4D0E0358B0C942899DA974FF9653811B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -507,12 +441,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_5702AF4A32914FEDBF90E1877120D868"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_57DF8DB42D6146ED964C9053EEEAC436"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -520,18 +448,6 @@
         "Entry"
         {
         "MsmKey" = "8:_57F39BF3B0E643F58FE8EE53823A5E26"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_58D68B751CB441438FC2B9EB0FEA40B5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_591BFCBACC0247E5A8C70F0A5FC21DB3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -568,12 +484,6 @@
         "Entry"
         {
         "MsmKey" = "8:_62CD795B58994F9DB7223D3E85B7DD0D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6460506121CB41E1A73FDEE43B0CCE51"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -621,19 +531,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6F27A21BE9584DEAAC904AFDD92ADD81"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_6F61923FF8FA446C91EFA17EE31F9619"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_701EE195199740E2AB1D3B4CB1E3689D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -657,19 +555,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_76E29E96D8D24F77B53E3889B04F4AAA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_7CF268F9A6944B40A2F38230D1E60C10"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7D01836928CF4A32890215596E9C2592"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -693,19 +579,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_83F04089DCFC41DA9B05AEB747915EF4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_847F67C921DD448E888EBDB354F82F00"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_861DFF82400B49AD8AE7C80B490CFFF8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -718,12 +592,6 @@
         "Entry"
         {
         "MsmKey" = "8:_8A995BC47F1B43B29AB2AB456D53D5D5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8B6D01ED44184525AC9F57CB4B5248B2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -747,12 +615,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8EA099F9365441A29E389EFDA1EFCE1C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_903E8E60616E42A5B38E8690BD33715E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -766,12 +628,6 @@
         "Entry"
         {
         "MsmKey" = "8:_90FA2A6C3D6E42D7B4E051987CD8471F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_918CA5025E3643F9AA26E1BED03CC751"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -796,12 +652,6 @@
         "Entry"
         {
         "MsmKey" = "8:_9C806200213144A1B318EAFE92CE70C4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9EA6AB7B30CC47ECBC5763347DBDD2A0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -832,12 +682,6 @@
         "Entry"
         {
         "MsmKey" = "8:_A12EF42FCFAC48F686E9224C4D496D11"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A1C4CCA504BC429D98CE881EFB7155DC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -880,12 +724,6 @@
         "Entry"
         {
         "MsmKey" = "8:_ACE0F0B1DAEF47B3B93B6753C76CDA05"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_AF4AE2F9F01B46239CABFE448A7AFA45"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -939,19 +777,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B6E4525485F3431F9557268D1DD5F869"
+        "MsmKey" = "8:_B6E35FB46DB744C4B47FF473B00A8F7C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_B79CAF95ECED48EC8EA48D94B8A6E3A4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B967A23E77F8411EB638E3B17CDACFFD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -999,12 +831,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C22E282096A145B79635FBB31BB3CF22"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_C33D9D0A20E743B9A7A80233CFA007F2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1018,12 +844,6 @@
         "Entry"
         {
         "MsmKey" = "8:_C56A1B2408C14D739F7E659F997CF8AB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C5BAC22DB70041C7A86D22C0E65EF695"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1101,12 +921,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D78EAD386EB44F74BE0AB99784022716"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_D81DFC2FEF2D4F2F9AB2C8374014F758"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1137,19 +951,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DCE5C463D52047619054F3D97F1124C8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_DD7DD273C819438EA871C2082D431B21"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DE679ECB92CA4223AFC6AA729D5D8C15"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1227,19 +1029,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E92C10C8A561494AA2B7EC2C7E0F77BF"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E9F921A2C10C466B8559C95217B4889B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EAE39B90E63347899EB4B19EBB0854D5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1270,12 +1060,6 @@
         "Entry"
         {
         "MsmKey" = "8:_EDE121B482714179A9A7D68AA03A4851"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EDE7916C4DD144599AEF863BCC2CDD1E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1317,31 +1101,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F2EBA91498FA400DBC45ECDE068E60AA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_F8E7DF4B495845ECBB9089E05211F251"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_FAA1307D6C824D87A3446B7B16840E69"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FB7EFBAA55B24294B7C3F8AB434A413B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_FB916ADD12174478BC394020EDA5F39C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1462,7 +1228,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V033.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V035.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1582,72 +1348,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_02C2CBD4D6F546CFB3FC007DD75338E7"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\13_erlenberg.pkg.light"
-            "TargetName" = "8:13_erlenberg.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_035C3CE3D34946BF958E14A68806E403"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R93_Object263.russian"
             "TargetName" = "8:R93_Object263.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_03F8FFB828D44BB6923484C65C375AEE"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\36_fishing_bay.pkg.light"
-            "TargetName" = "8:36_fishing_bay.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0835625A57DA4837B6F274F22C598E1F"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\73_asia_korea.pkg.light"
-            "TargetName" = "8:73_asia_korea.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1753,12 +1459,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D19DF4177B9413AA8709E804B3F1F30"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0E0B63F063C345949D294F1C48637522"
             {
-            "SourcePath" = "8:..\\Terra\\light_settings\\47_canada_a.pkg.light"
-            "TargetName" = "8:47_canada_a.pkg.light"
+            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_vertex.glsl"
+            "TargetName" = "8:colorMapper_vertex.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1893,26 +1599,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_18094E4E023841ADA2987C3EBE9BE1E2"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\18_cliff.pkg.light"
-            "TargetName" = "8:18_cliff.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_189C1C5D88B84BCA999151549ECDAC1F"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\toLinear_fragment.glsl"
@@ -1939,26 +1625,6 @@
             "TargetName" = "8:G66_VK2801.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1AB964E716124AEDBF68968E2DAC4A9B"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\100_thepit.pkg.light"
-            "TargetName" = "8:100_thepit.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2033,12 +1699,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1DE3342472FF490E89F61CBA4FA95A67"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1DB6A08DF09741BF8E4065C83F667318"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\decalMask_fragment.glsl"
-            "TargetName" = "8:decalMask_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\light_settings\\sothisfoldergetscreated.txt"
+            "TargetName" = "8:sothisfoldergetscreated.txt"
             "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Folder" = "8:_9464BDFEC9D54C49AB5C97DD04F1CC32"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2133,52 +1799,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_20FE37FB254E4479AC8487D107BD0824"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\45_north_america.pkg.light"
-            "TargetName" = "8:45_north_america.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_210D28F2429645E194EB3104EA26CCD6"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\G56_E-100.german"
             "TargetName" = "8:G56_E-100.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21136E9857794535B9BD59C9A1EC8487"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\28_desert.pkg.light"
-            "TargetName" = "8:28_desert.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2239,26 +1865,6 @@
             "TargetName" = "8:ILUT.dll"
             "Tag" = "8:"
             "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_247172912FA240A9BA7BA5DAFD7EF3C8"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\38_mannerheim_line.pkg.light"
-            "TargetName" = "8:38_mannerheim_line.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2419,26 +2025,6 @@
             "TargetName" = "8:63_tundra_decal_includers.txt"
             "Tag" = "8:"
             "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_30A62F53B370446CBEBBC40156DBBF9C"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\95_lost_city.pkg.light"
-            "TargetName" = "8:95_lost_city.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3004,26 +2590,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_49F70003B9BD47F0958ECA5091F46C71"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\15_komarin.pkg.light"
-            "TargetName" = "8:15_komarin.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4B2881C90B5345A784C3BD446F78EC95"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\A14_T30.american"
@@ -3050,26 +2616,6 @@
             "TargetName" = "8:GB75_AT7.british"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4D0E0358B0C942899DA974FF9653811B"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\11_murovanka.pkg.light"
-            "TargetName" = "8:11_murovanka.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3164,26 +2710,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5702AF4A32914FEDBF90E1877120D868"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\33_fjord.pkg.light"
-            "TargetName" = "8:33_fjord.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57DF8DB42D6146ED964C9053EEEAC436"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F37_AMX50_Foch.french"
@@ -3210,46 +2736,6 @@
             "TargetName" = "8:28_desert_decal_includers.txt"
             "Tag" = "8:"
             "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_58D68B751CB441438FC2B9EB0FEA40B5"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\114_czech.pkg.light"
-            "TargetName" = "8:114_czech.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_591BFCBACC0247E5A8C70F0A5FC21DB3"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\34_Redshire.pkg.light"
-            "TargetName" = "8:34_Redshire.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3370,26 +2856,6 @@
             "TargetName" = "8:F25_Lorraine155_51.french"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6460506121CB41E1A73FDEE43B0CCE51"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\35_steppes.pkg.light"
-            "TargetName" = "8:35_steppes.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3544,52 +3010,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6F27A21BE9584DEAAC904AFDD92ADD81"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\83_kharkiv.pkg.light"
-            "TargetName" = "8:83_kharkiv.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6F61923FF8FA446C91EFA17EE31F9619"
             {
             "SourcePath" = "8:..\\Terra\\decal_includer_files\\44_north_america_decal_includers.txt"
             "TargetName" = "8:44_north_america_decal_includers.txt"
             "Tag" = "8:"
             "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_701EE195199740E2AB1D3B4CB1E3689D"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\01_karelia.pkg.light"
-            "TargetName" = "8:01_karelia.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3664,52 +3090,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_76E29E96D8D24F77B53E3889B04F4AAA"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\31_airfield.pkg.light"
-            "TargetName" = "8:31_airfield.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7CF268F9A6944B40A2F38230D1E60C10"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R104_Object_430_II.russian"
             "TargetName" = "8:R104_Object_430_II.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7D01836928CF4A32890215596E9C2592"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\60_asia_miao.pkg.light"
-            "TargetName" = "8:60_asia_miao.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3784,52 +3170,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_83F04089DCFC41DA9B05AEB747915EF4"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\renderTest_vertex.glsl"
-            "TargetName" = "8:renderTest_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_847F67C921DD448E888EBDB354F82F00"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R54_KV-5.russian"
             "TargetName" = "8:R54_KV-5.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_861DFF82400B49AD8AE7C80B490CFFF8"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\23_westfeld.pkg.light"
-            "TargetName" = "8:23_westfeld.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3870,26 +3216,6 @@
             "TargetName" = "8:gaussian_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8B6D01ED44184525AC9F57CB4B5248B2"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\19_monastery.pkg.light"
-            "TargetName" = "8:19_monastery.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3975,26 +3301,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8EA099F9365441A29E389EFDA1EFCE1C"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\37_caucasus.pkg.light"
-            "TargetName" = "8:37_caucasus.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_903E8E60616E42A5B38E8690BD33715E"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\toLinear_vertex.glsl"
@@ -4041,26 +3347,6 @@
             "TargetName" = "8:F62_ELC_AMX.french"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_918CA5025E3643F9AA26E1BED03CC751"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\101_dday.pkg.light"
-            "TargetName" = "8:101_dday.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4166,26 +3452,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9EA6AB7B30CC47ECBC5763347DBDD2A0"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\00_tank_tutorial.pkg.light"
-            "TargetName" = "8:00_tank_tutorial.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F0E3F8ADDE643629785CE593E17CC32"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\gaussian_fragment.glsl"
@@ -4272,26 +3538,6 @@
             "TargetName" = "8:38_mannerheim_line_decal_includers.txt"
             "Tag" = "8:"
             "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A1C4CCA504BC429D98CE881EFB7155DC"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\53_japan.pkg.light"
-            "TargetName" = "8:53_japan.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4468,26 +3714,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF4AE2F9F01B46239CABFE448A7AFA45"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\04_himmelsdorf.pkg.light"
-            "TargetName" = "8:04_himmelsdorf.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AFE032B90970D8FF805E531922B6C5AB"
             {
             "AssemblyRegister" = "3:1"
@@ -4650,12 +3876,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6E4525485F3431F9557268D1DD5F869"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6E35FB46DB744C4B47FF473B00A8F7C"
             {
-            "SourcePath" = "8:..\\Terra\\light_settings\\05_prohorovka.pkg.light"
-            "TargetName" = "8:05_prohorovka.pkg.light"
+            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_fragment.glsl"
+            "TargetName" = "8:colorMapper_fragment.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4676,26 +3902,6 @@
             "TargetName" = "8:decals_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B967A23E77F8411EB638E3B17CDACFFD"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\44_north_america.pkg.light"
-            "TargetName" = "8:44_north_america.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4850,26 +4056,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C22E282096A145B79635FBB31BB3CF22"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\decalMask_vertex.glsl"
-            "TargetName" = "8:decalMask_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C33D9D0A20E743B9A7A80233CFA007F2"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\G52_Pz38_NA.german"
@@ -4916,26 +4102,6 @@
             "TargetName" = "8:A83_T110E4.american"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C5BAC22DB70041C7A86D22C0E65EF695"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\29_el_hallouf.pkg.light"
-            "TargetName" = "8:29_el_hallouf.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5190,26 +4356,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D78EAD386EB44F74BE0AB99784022716"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\02_malinovka.pkg.light"
-            "TargetName" = "8:02_malinovka.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D81DFC2FEF2D4F2F9AB2C8374014F758"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F64_AMX_50Fosh_155.french"
@@ -5310,52 +4456,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DCE5C463D52047619054F3D97F1124C8"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\63_tundra.pkg.light"
-            "TargetName" = "8:63_tundra.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DD7DD273C819438EA871C2082D431B21"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\A66_M103.american"
             "TargetName" = "8:A66_M103.american"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DE679ECB92CA4223AFC6AA729D5D8C15"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\14_siegfried_line.pkg.light"
-            "TargetName" = "8:14_siegfried_line.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5610,52 +4716,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E92C10C8A561494AA2B7EC2C7E0F77BF"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\22_slough.pkg.light"
-            "TargetName" = "8:22_slough.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E9F921A2C10C466B8559C95217B4889B"
             {
             "SourcePath" = "8:..\\Terra\\decal_includer_files\\18_cliff_decal_includers.txt"
             "TargetName" = "8:18_cliff_decal_includers.txt"
             "Tag" = "8:"
             "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EAE39B90E63347899EB4B19EBB0854D5"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\10_hills.pkg.light"
-            "TargetName" = "8:10_hills.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5747,26 +4813,6 @@
             "TargetName" = "8:tiny.TTF"
             "Tag" = "8:"
             "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EDE7916C4DD144599AEF863BCC2CDD1E"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\86_himmelsdorf_winter.pkg.light"
-            "TargetName" = "8:86_himmelsdorf_winter.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5912,26 +4958,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2EBA91498FA400DBC45ECDE068E60AA"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\07_lakeville.pkg.light"
-            "TargetName" = "8:07_lakeville.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F8E7DF4B495845ECBB9089E05211F251"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\J16_ST_B1.japan"
@@ -5952,52 +4978,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FAA1307D6C824D87A3446B7B16840E69"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\renderTest_fragment.glsl"
-            "TargetName" = "8:renderTest_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FB7EFBAA55B24294B7C3F8AB434A413B"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\G54_E-50.german"
             "TargetName" = "8:G54_E-50.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FB916ADD12174478BC394020EDA5F39C"
-            {
-            "SourcePath" = "8:..\\Terra\\light_settings\\06_ensk.pkg.light"
-            "TargetName" = "8:06_ensk.pkg.light"
-            "Tag" = "8:"
-            "Folder" = "8:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6048,17 +5034,6 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_2BDC1AE327E44EE6BE5E54DF9F95F9E8"
-                    {
-                    "Name" = "8:light_settings"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_322D482F8BD04F7B84E248158CF0E1F1"
-                        "Folders"
-                        {
-                        }
-                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_413B6310B64E4864844E7BA1CA8328B9"
                     {
                     "Name" = "8:decal_includer_files"
@@ -6088,6 +5063,17 @@
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_61897D903E794244B5EBF012C475D6F2"
+                        "Folders"
+                        {
+                        }
+                    }
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_9464BDFEC9D54C49AB5C97DD04F1CC32"
+                    {
+                    "Name" = "8:light_settings"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_1C686AD290DA496F8EBC9302850B0D09"
                         "Folders"
                         {
                         }
@@ -6143,15 +5129,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
-        "ProductCode" = "8:{C195B34A-EFE4-4940-A420-04D22DFF64A0}"
-        "PackageCode" = "8:{B11FCABF-C45D-4C04-BC99-556CD5D3CDFC}"
+        "ProductCode" = "8:{5473F798-BA86-43D4-B68F-D259D81CCF59}"
+        "PackageCode" = "8:{3C4D7E31-1BE4-46FB-986E-ACDAC8AD9843}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.33"
+        "ProductVersion" = "8:1.0.35"
         "Manufacturer" = "8:Coffee_"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -6698,7 +5684,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0C5BF608457D480B87B630800FAE9C40"
             {
-            "SourcePath" = "8:..\\Terra\\obj\\x86\\Release\\Terra.exe"
+            "SourcePath" = "8:..\\Terra\\obj\\x86\\Debug\\Terra.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"

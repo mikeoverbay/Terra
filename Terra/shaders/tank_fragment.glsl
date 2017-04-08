@@ -2,12 +2,9 @@
 //used to render tanks
 
 varying vec3 normal, eyeVec;
-#define MAX_LIGHTS 8
-#define NUM_LIGHTS 1
 varying vec3 lightDir;
 void main (void)
 {
-
     vec4 final_color = gl_FrontColor;
     vec3 N = normalize(normal);
     vec3 L = normalize(lightDir);

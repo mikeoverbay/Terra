@@ -40,8 +40,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>1.0.3.3</ApplicationVersion>
+    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationVersion>1.0.3.5</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -291,6 +291,7 @@
     <Compile Include="Modules\modDeferred.vb" />
     <Compile Include="Modules\ModRenderClasses.vb" />
     <Compile Include="Modules\modTextures.vb" />
+    <Compile Include="Modules\ModTriangleHolderClass.vb" />
     <Compile Include="Modules\Mod_space_bin.vb" />
     <Compile Include="Modules\Mod_Space_Bin_Functions.vb" />
     <Compile Include="Modules\Mod_space_bin_variables.vb" />
@@ -422,46 +423,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="light_settings\00_tank_tutorial.pkg.light">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="light_settings\01_karelia.pkg.light" />
-    <None Include="light_settings\02_malinovka.pkg.light" />
-    <None Include="light_settings\04_himmelsdorf.pkg.light" />
-    <None Include="light_settings\05_prohorovka.pkg.light" />
-    <None Include="light_settings\06_ensk.pkg.light" />
-    <None Include="light_settings\07_lakeville.pkg.light" />
-    <None Include="light_settings\100_thepit.pkg.light" />
-    <None Include="light_settings\101_dday.pkg.light" />
-    <None Include="light_settings\10_hills.pkg.light" />
-    <None Include="light_settings\114_czech.pkg.light" />
-    <None Include="light_settings\11_murovanka.pkg.light" />
-    <None Include="light_settings\13_erlenberg.pkg.light" />
-    <None Include="light_settings\14_siegfried_line.pkg.light" />
-    <None Include="light_settings\15_komarin.pkg.light" />
-    <None Include="light_settings\18_cliff.pkg.light" />
-    <None Include="light_settings\19_monastery.pkg.light" />
-    <None Include="light_settings\22_slough.pkg.light" />
-    <None Include="light_settings\23_westfeld.pkg.light" />
-    <None Include="light_settings\28_desert.pkg.light" />
-    <None Include="light_settings\29_el_hallouf.pkg.light" />
-    <None Include="light_settings\31_airfield.pkg.light" />
-    <None Include="light_settings\33_fjord.pkg.light" />
-    <None Include="light_settings\34_Redshire.pkg.light" />
-    <None Include="light_settings\35_steppes.pkg.light" />
-    <None Include="light_settings\36_fishing_bay.pkg.light" />
-    <None Include="light_settings\37_caucasus.pkg.light" />
-    <None Include="light_settings\38_mannerheim_line.pkg.light" />
-    <None Include="light_settings\44_north_america.pkg.light" />
-    <None Include="light_settings\45_north_america.pkg.light" />
-    <None Include="light_settings\47_canada_a.pkg.light" />
-    <None Include="light_settings\53_japan.pkg.light" />
-    <None Include="light_settings\60_asia_miao.pkg.light" />
-    <None Include="light_settings\63_tundra.pkg.light" />
-    <None Include="light_settings\73_asia_korea.pkg.light" />
-    <None Include="light_settings\83_kharkiv.pkg.light" />
-    <None Include="light_settings\86_himmelsdorf_winter.pkg.light" />
-    <None Include="light_settings\95_lost_city.pkg.light" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -577,12 +538,6 @@
     <None Include="shaders\leaf_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\decalMask_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\decalMask_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="shaders\normal_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -592,10 +547,10 @@
     <None Include="shaders\normal_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\renderTest_fragment.glsl">
+    <None Include="shaders\colorMapper_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\renderTest_vertex.glsl">
+    <None Include="shaders\colorMapper_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\shadowTest_fragment.glsl">
@@ -973,6 +928,9 @@
     <Content Include="decal_includer_files\63_tundra_decal_includers.txt" />
     <Content Include="decal_includer_files\83_kharkiv_decal_includers.txt" />
     <Content Include="decal_includer_files\95_lost_city_decal_includers.txt" />
+    <Content Include="light_settings\sothisfoldergetscreated.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="tanks\selected_tanks.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

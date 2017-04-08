@@ -1,6 +1,4 @@
-﻿// used for blurring textures
-// This is pure beta testing.
-// gaussian_H_vertex
+﻿//Used to blur mixmap and main color map
 
 varying vec2 v_texCoord;
 

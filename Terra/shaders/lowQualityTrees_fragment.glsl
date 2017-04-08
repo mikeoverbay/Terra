@@ -32,8 +32,7 @@ void main(){
     float fogFactor = exp2(-gl_Fog.density * gl_Fog.density * z * z * LOG2);
     fogFactor = clamp(fogFactor, 0.0, 1.0);
 
-    gl_FragColor     = mix(gl_Fog.color, gl_FragColor, fogFactor);
-    //gl_FragColor.rgb = (gl_FragColor.rgb *.01) + L.rgb;
+    gl_FragColor = mix(gl_Fog.color, gl_FragColor, fogFactor);
 
 
 }

@@ -23,18 +23,175 @@ Imports System.IO.Compression
 Module modTerrain
     Public get_main_texture As Boolean = False
     Public mesh(0) As vertex_data
-    Public triangle_holder(0) As t_holder_
+    Public triangle_holder As New mappedFile_
     Public Cursor_point As Vector3D
     Public Structure t_holder_
         Dim v As vertex_data
-        Dim mesh_location As UInt32
+        Dim mesh_location As Integer
     End Structure
 #Region "Layer buidlng functions"
 
-    Public Sub open_hole_info(ByVal map As Integer, ByVal dom As MemoryStream)
+    Public Sub get_decal_bin(ByVal ms As MemoryStream)
+        'I can loat the data but I don't know how to use it.
+        'There are some numbers that look like chunk addresses
+        'but even that's iffy.
+        Dim enc As New System.Text.ASCIIEncoding
 
-        dom.Position = 0
-        Dim br As New BinaryReader(dom)
+        ms.Position = 0
+        Dim br As New BinaryReader(ms)
+
+        'unzip the data
+        ms.Position = 0
+        Dim s_buff(16) As Byte
+        s_buff = br.ReadBytes(16)
+        Dim texture_name = enc.GetString(s_buff)
+
+
+
+        ms.Position = 36
+        Dim mg1 = br.ReadInt32
+        Dim mg2 = br.ReadInt32
+        Dim uncompressedsize = br.ReadInt32
+        Dim buff(4096) As Byte
+        'Dim ps As New MemoryStream(buff)
+        Dim count As UInteger = 0
+        Dim total_read As Integer = 0
+        'Dim p_w As New StreamWriter(ps)
+
+        Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(ms, Zlib.CompressionMode.Decompress, False)
+            Decompress.BufferSize = 4096
+            Dim numRead As Integer
+            numRead = Decompress.Read(buff, total_read, buff.Length)
+            While numRead > 0
+                If buff.Length < numRead + total_read Then
+                    ReDim Preserve buff(numRead + total_read + 1)
+                End If
+                numRead = Decompress.Read(buff, total_read, numRead)
+                total_read += numRead
+            End While
+        End Using
+
+        'Dim p_rd As New BinaryReader(ps)
+        ReDim Preserve buff(total_read)
+        Dim c_buff((total_read) * 4) As Byte
+        'File.WriteAllBytes("C:\decal_binary.data", buff)
+        ms.Dispose()
+    End Sub
+
+
+   Public Sub get_dominate_texture(ByVal map As Integer, ByVal ms As MemoryStream)
+
+        Dim enc As New System.Text.ASCIIEncoding
+
+        ms.Position = 0
+        Dim br As New BinaryReader(ms)
+
+        Dim magic1 = br.ReadInt32
+        Dim version = br.ReadInt32
+        'unzip the data
+        ms.Position = 0
+        magic1 = br.ReadUInt32
+        version = br.ReadUInt32
+        Dim number_of_textures As Integer = br.ReadUInt32
+        Dim texture_string_length As Integer = br.ReadUInt32
+        Dim d_width As Integer = br.ReadUInt32
+        Dim d_height As Integer = br.ReadUInt32
+        br.ReadUInt64()
+        Dim texture_names(number_of_textures) As String
+        Dim s_buff(texture_string_length) As Byte
+        For i = 0 To number_of_textures - 1
+            s_buff = br.ReadBytes(texture_string_length)
+            texture_names(i) = enc.GetString(s_buff)
+            'Threading.Thread.Sleep(10)
+        Next
+
+
+
+        Dim mg1 = br.ReadInt32
+        Dim mg2 = br.ReadInt32
+        Dim uncompressedsize = br.ReadInt32
+        Dim buff(65536) As Byte
+        Dim ps As New MemoryStream(buff)
+        Dim count As UInteger = 0
+        Dim total_read As Integer = 0
+        Dim p_w As New StreamWriter(ps)
+
+        Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(ms, Zlib.CompressionMode.Decompress, False)
+            Decompress.BufferSize = 65536
+            Dim buffer(65536) As Byte
+            Dim numRead As Integer
+            numRead = Decompress.Read(buff, 0, buff.Length)
+            total_read = numRead 'debug
+
+        End Using
+
+        Dim p_rd As New BinaryReader(ps)
+        ReDim Preserve buff(total_read)
+        Dim c_buff((total_read) * 4) As Byte
+
+
+        For i = 0 To total_read - 1
+            c_buff((i * 4) + 0) = (buff(i) + 1 And 7) << 4
+            c_buff((i * 4) + 1) = (buff(i) + 1 And 7) << 4
+            c_buff((i * 4) + 2) = (buff(i) + 1 And 7) << 4
+            c_buff((i * 4) + 3) = 255
+        Next
+        'done with these so dispose of them.
+        p_rd.Close()
+        ps.Dispose()
+        br.Close()
+        br.Dispose()
+        ms.Dispose()
+
+        Dim h, w As Integer
+        w = d_width
+        h = d_height
+        stride = (w / 2)
+        count = 0
+        'convert to 4 color data.
+
+        '------------------------------------------------------------------
+        'w = stride * 8 : h = h * 2
+        'need point in to dbuff color buffer array
+        Dim bufPtr As IntPtr = Marshal.AllocHGlobal(c_buff.Length - 1)
+        Marshal.Copy(c_buff, 0, bufPtr, c_buff.Length - 1) ' copy dbuff to pufPtr's memory
+        Dim texID = Ilu.iluGenImage() ' Generation of one image name
+        Il.ilBindImage(texID) ' Binding of image name 
+        Dim success = Il.ilGetError
+
+        Il.ilTexImage(w, h, 1, 4, Il.IL_RGBA, Il.IL_UNSIGNED_BYTE, bufPtr) ' Create new image from pufPtr's data
+        success = Il.ilGetError
+        Marshal.FreeHGlobal(bufPtr) ' free this up
+        If success = Il.IL_NO_ERROR Then
+            Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
+            Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
+            Dim f = Il.IL_FALSE
+            Dim t = Il.IL_TRUE
+            Ilu.iluMirror()
+
+            Gl.glGenTextures(1, maplist(map).dominateId) ' make texture id
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(map).dominateId) ' bind the texture
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST) ' no filtering
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
+            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, Il.ilGetData()) '  Texture specification 
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Il.ilBindImage(0)
+            Ilu.iluDeleteImage(texID)
+            post_depth_image_id = maplist(map).dominateId
+            frmTestView.update_screen()
+            'Stop
+        Else
+            MsgBox("Error Dom Texture! Il Error" + success.ToString, MsgBoxStyle.Exclamation, "Well Shit...")
+        End If
+    End Sub
+
+    Public Sub open_hole_info(ByVal map As Integer, ByVal ms As MemoryStream)
+
+        ms.Position = 0
+        Dim br As New BinaryReader(ms)
 
         Dim magic1 = br.ReadInt32
         Dim magic2 = br.ReadInt32
@@ -44,7 +201,7 @@ Module modTerrain
         Dim count As UInteger = 0
         Dim total_read As Integer = 0
         'unzip the data
-        Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(dom, Zlib.CompressionMode.Decompress, False)
+        Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(ms, Zlib.CompressionMode.Decompress, False)
             Decompress.BufferSize = 65536
             Dim buffer(65536) As Byte
             Dim numRead As Integer
@@ -125,7 +282,7 @@ Module modTerrain
         End If
         br.Close()
         br.Dispose()
-        dom.Dispose()
+        ms.Dispose()
     End Sub
     Public Sub get_horizonShadowMap(map As Integer, e As Ionic.Zip.ZipEntry)
         'unused function
@@ -274,7 +431,8 @@ Module modTerrain
         End If
         'make the mix map for this layer
         make_mix_texture_id(map, map_layers(map).mix_image)
-
+        map_layers(map).mix_image = Nothing
+        GC.Collect()
         'frmMain.PictureBox1.Image = map_layers(map).mix_image.Clone
         'Application.DoEvents()
         'Application.DoEvents()
@@ -340,7 +498,7 @@ Module modTerrain
         b.ReadByte()
         b.ReadByte()
         'stupid hack to fix missing normal_map in layer data.
-        If map_name.Contains("maps/landscape/00_AllTiles/Farmland_A_4") And textcount = 0 Then
+        If map_name.Contains("Farmland_A_4") And textcount = 0 Then
             map_layers(map).layers(layer).n_name = "maps/landscape/00_AllTiles/Farmland_A_4_NM."
             GoTo set_Mask
         End If
@@ -361,6 +519,11 @@ set_mask:
                 Case 4
                     map_layers(map).used_layers = map_layers(map).used_layers Or 8
             End Select
+        Else
+            If Not map_name.ToLower.ToLower.Contains("color_tex") Then
+                frmMapInfo.I__Map_Textures_tb.Text += "No Normal Map in layer data.  Map:" + map.ToString + "   Layer:" + layer.ToString + vbCrLf 'save info
+
+            End If
 
         End If
         get_layer_mix(ms, map, layer)
@@ -523,17 +686,14 @@ set_mask:
         Else
             Dim map_entry As Ionic.Zip.ZipEntry = active_pkg(map_name)
             If map_entry Is Nothing Then
-                map_entry = shared_content1(map_name)
+                map_entry = get_shared(map_name)
                 If map_entry Is Nothing Then
-                    map_entry = shared_content2(map_name)
-                    If map_entry Is Nothing Then
-                        frmMapInfo.I__Map_Textures_tb.Text += "MISSING TEXTURE: " + map_name + vbCrLf 'save info
-                        Return True
-                    End If
+                    frmMapInfo.I__Map_Textures_tb.Text += "MISSING TEXTURE: " + map_name + vbCrLf 'save info
+                    Return True
                 End If
             End If
             map_entry.Extract(dds)
-            build_layer_textures_no_bmp(map, dds, layer)        'We dont need the Bitmap. This saves some time
+            build_layer_color_texture(map, dds, layer)        'We dont need the Bitmap. This saves some time
             dds.Dispose()
         End If
 
@@ -570,34 +730,32 @@ try_again:
         '================= get norml map
         Dim nmap_entry As Ionic.Zip.ZipEntry = active_pkg(n_map_name)
         If nmap_entry Is Nothing Then
-            nmap_entry = shared_content1(n_map_name)
+            nmap_entry = get_shared(n_map_name)
             If nmap_entry Is Nothing Then
-                nmap_entry = shared_content2(n_map_name)
-                If nmap_entry Is Nothing Then
-                    If retry Then
-                        normal_update = False
-                        If Not n_map_name.ToLower.Contains("color_tex") Then ' stop spamming
-                            frmMapInfo.I__Map_Textures_tb.Text += "MISSING TEXTURE: " + n_map_name + vbCrLf 'save info
-                        End If
-                        Return True
+
+                If retry Then
+                    normal_update = False
+                    If Not n_map_name.ToLower.Contains("color_tex") Then ' stop spamming
+                        frmMapInfo.I__Map_Textures_tb.Text += "MISSING TEXTURE: " + n_map_name + vbCrLf 'save info
                     End If
-                    'see if we can find it by adding "_NM" to the diffuse map name.
-                    retry = True ' to stop endless looping
-                    n_map_name = map_layers(map).layers(layer).l_name.Replace(".", "") + "_NM.dds"
-                    For i = 0 To cnt - 1
-                        If normalMap_layer_cache(i).normalname = n_map_name Then
-                            map_layers(map).layers(layer).norm_id = normalMap_layer_cache(i).textureNormID
-                            saved_texture_loads += 1
-                            Return False
-                        End If
-                    Next
-                    GoTo try_again
+                    Return True
                 End If
+                'see if we can find it by adding "_NM" to the diffuse map name.
+                retry = True ' to stop endless looping
+                n_map_name = map_layers(map).layers(layer).l_name.Replace(".", "") + "_NM.dds"
+                For i = 0 To cnt - 1
+                    If normalMap_layer_cache(i).normalname = n_map_name Then
+                        map_layers(map).layers(layer).norm_id = normalMap_layer_cache(i).textureNormID
+                        saved_texture_loads += 1
+                        Return False
+                    End If
+                Next
+                GoTo try_again
             End If
         End If
         Dim mdds As New MemoryStream
         nmap_entry.Extract(mdds)
-        build_normal_layer_textures(map, mdds, layer)
+        build_layer_normal_texture(map, mdds, layer)
         mdds.Dispose()
 
         frmMapInfo.I__Map_Textures_tb.Text += "Normal: " + n_map_name + vbCrLf 'save info
@@ -626,15 +784,12 @@ try_again:
 
     End Function
 
-    Public Sub create_mix_atlas()
-        Dim uc As vect2
-        Dim lc As vect2
+    Public Sub create_mixMaps()
         If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
             End
         End If
         Gl.glFinish()
-        Gl.glDepthFunc(Gl.GL_LEQUAL)
         Gl.glFrontFace(Gl.GL_CW)
         Gl.glCullFace(Gl.GL_BACK)
         Gl.glLineWidth(1)
@@ -644,7 +799,7 @@ try_again:
         Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
         '-------------------------------------------------------------------------------
         Dim w = CInt(Sqrt(maplist.Length - 1))
-        Dim psize = w * 272
+        Dim psize = 272
         '---------------------
         'setup size of renderwindow
         frmMain.pb2.Location = New Point(0, frmMain.mainMenu.Height + frmMain.ProgressBar1.Height)
@@ -665,237 +820,200 @@ try_again:
         'We draw bigger and bigger squares to put a boarder around the actual image.
         'This is to reduce the impact of linear filtering.
         Gl.glDisable(Gl.GL_DEPTH_TEST)
-        Dim x, y, cnt As Integer
-        Dim wx, wy As Integer
-        For x = 0 To w - 1
-            For y = 0 To w - 1
-                wx = (x * 272)
-                wy = (-(w - y) * 272)
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(cnt).mix_text_Id)
+        draw_mixmap_quads(w, psize)
 
-                Gl.glBegin(Gl.GL_TRIANGLES)
-                '---
-                uc.x = wx : uc.y = wy + 272
-                lc.x = wx + 272 : lc.y = wy
-                Gl.glTexCoord2f(0.0!, 0.0!)
-                Gl.glVertex3f(uc.x, lc.y, -1.0!)
 
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
 
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-                '---
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, -1.0!)
-                Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-                Gl.glEnd()
-                cnt += 1
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Next
-        Next
-        cnt = 0
-        Gl.glColor3f(0.0!, 0.0!, 1.0!)
-        For x = 0 To w - 1
-            For y = 0 To w - 1
-                wx = (x * 272)
-                wy = (-(w - y) * 272)
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(cnt).mix_text_Id)
-
-                Gl.glBegin(Gl.GL_TRIANGLES)
-                '---
-                uc.x = wx + 5 : lc.y = wy + 5
-                lc.x = uc.x + 262 : uc.y = lc.y + 262
-                Gl.glTexCoord2f(0.0!, 0.0!)
-                Gl.glVertex3f(uc.x, lc.y, -1.0!)
-
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-                '---
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, -1.0!)
-                Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-                Gl.glEnd()
-                cnt += 1
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Next
-        Next
-        cnt = 0
-        Gl.glColor3f(0.0!, 0.0!, 1.0!)
-        For x = 0 To w - 1
-            For y = 0 To w - 1
-                wx = (x * 272)
-                wy = (-(w - y) * 272)
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(cnt).mix_text_Id)
-
-                Gl.glBegin(Gl.GL_TRIANGLES)
-                '---
-                uc.x = wx + 6 : lc.y = wy + 6
-                lc.x = uc.x + 260 : uc.y = lc.y + 260
-                Gl.glTexCoord2f(0.0!, 0.0!)
-                Gl.glVertex3f(uc.x, lc.y, -1.0!)
-
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-                '---
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, -1.0!)
-                Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-                Gl.glEnd()
-                cnt += 1
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Next
-        Next
-        cnt = 0
-        Gl.glColor3f(0.0!, 0.0!, 1.0!)
-        For x = 0 To w - 1
-            For y = 0 To w - 1
-                wx = (x * 272)
-                wy = (-(w - y) * 272)
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(cnt).mix_text_Id)
-
-                Gl.glBegin(Gl.GL_TRIANGLES)
-                '---
-                uc.x = wx + 7 : lc.y = wy + 7
-                lc.x = uc.x + 258 : uc.y = lc.y + 258
-                Gl.glTexCoord2f(0.0!, 0.0!)
-                Gl.glVertex3f(uc.x, lc.y, -1.0!)
-
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-                '---
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, -1.0!)
-                Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-                Gl.glEnd()
-                cnt += 1
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Next
-        Next
-        cnt = 0
-        For x = 0 To w - 1
-            For y = 0 To w - 1
-                wx = (x * 272)
-                wy = (-(w - y) * 272)
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(cnt).mix_text_Id)
-
-                Gl.glBegin(Gl.GL_TRIANGLES)
-                '---
-                uc.x = wx + 8 : lc.y = wy + 8
-                lc.x = uc.x + 256 : uc.y = lc.y + 256
-                Gl.glTexCoord2f(0.0!, 0.0!)
-                Gl.glVertex3f(uc.x, lc.y, -1.0!)
-
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-                '---
-                Gl.glTexCoord2f(0.0!, -1.0!)
-                Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, -1.0!)
-                Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-                Gl.glTexCoord2f(1.0!, 0.0!)
-                Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-                Gl.glEnd()
-                cnt += 1
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Next
-        Next
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_TEXTURE_2D)
         Gl.glFinish()
         Gl.glFlush()
+
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+
+
+    End Sub
+    Public Sub blur_color_map(ByVal texture_id As Integer) ' unused sub
+        If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+        Dim wx, wy As Integer
+        Dim uc As vect2
+        Dim lc As vect2
+        Gl.glFinish()
+        Gl.glFrontFace(Gl.GL_CW)
+        Gl.glCullFace(Gl.GL_BACK)
+        Gl.glLineWidth(1)
+        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
+        '-------------------------------------------------------------------------------
+        Dim w = CInt(Sqrt(maplist.Length - 1))
+        Dim psize = 272
+        '---------------------
+        'setup size of renderwindow
+        frmMain.pb2.Location = New Point(0, frmMain.mainMenu.Height + frmMain.ProgressBar1.Height)
+        frmMain.pb2.Width = psize
+        frmMain.pb2.Height = psize
+
+        'frmMain.pb2.BringToFront()
+        'frmMain.pb2.Visible = True
+        ResizeGL_2(psize, psize)
+        ViewPerspective_2()
+        ViewOrtho_2()
+        Gl.glDisable(Gl.GL_LIGHTING)
+        'Gl.glColor3f(0.8!, 0.0!, 0.0!)
+        'Gl.glColor3f(1.0!, 1.0!, 1.0!)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glEnable(Gl.GL_TEXTURE_2D)
+        '----------------------
+        'We draw bigger and bigger squares to put a boarder around the actual image.
+        'This is to reduce the impact of linear filtering.
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, texture_id)
+        Gl.glBegin(Gl.GL_QUADS)
+        Dim border As Integer = (psize - 256) / 2
+        For off = 0 To border
+            Dim off_X2 = psize - (off * 2)
+
+            wx = 0
+            wy = 0
+
+            '---
+            uc.x = off : lc.y = off
+            lc.x = uc.x + off_X2 : uc.y = lc.y + off_X2
+            Gl.glTexCoord2f(0.0!, 0.0!)
+            Gl.glVertex3f(uc.x, -lc.y, -1.0!)
+
+            Gl.glTexCoord2f(0.0!, -1.0!)
+            Gl.glVertex3f(uc.x, -uc.y, -1.0!)
+
+            Gl.glTexCoord2f(1.0!, -1.0!)
+            Gl.glVertex3f(lc.x, -uc.y, -1.0!)
+
+            Gl.glTexCoord2f(1.0!, 0.0!)
+            Gl.glVertex3f(lc.x, -lc.y, -1.0!)
+
+        Next ' off loop
+        Gl.glEnd()
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        'frmShowImage.draw_texture(map_layers(cnt).mix_texture_Id)
+        replace_mix_layer(texture_id, psize)
+
+
+
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        Gl.glFinish()
+        Gl.glFlush()
+
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+
+
+    End Sub
+
+    Private Sub draw_mixmap_quads(ByVal w As Integer, ByVal size As Integer)
+        Dim uc As vect2
+        Dim lc As vect2
+        Dim x, y As Integer
+        Dim cnt As Integer
+
+        'We draw smaller and smaller quads to put a boarder around the actual image.
+        'This is to deal with how the bluring screw the boarders up.
+        cnt = 0
+        For x = 0 To w - 1
+            For y = 0 To w - 1
+                Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(cnt).mix_texture_Id)
+                Gl.glBegin(Gl.GL_QUADS)
+                Dim border As Integer = (size - 256) / 2
+                For off = 0 To border
+                    Dim off_X2 = size - (off * 2)
+                    '---
+                    uc.x = off : lc.y = off
+                    lc.x = uc.x + off_X2 : uc.y = lc.y + off_X2
+                    Gl.glTexCoord2f(0.0!, 0.0!)
+                    Gl.glVertex3f(uc.x, -lc.y, -1.0!)
+
+                    Gl.glTexCoord2f(0.0!, -1.0!)
+                    Gl.glVertex3f(uc.x, -uc.y, -1.0!)
+
+                    Gl.glTexCoord2f(1.0!, -1.0!)
+                    Gl.glVertex3f(lc.x, -uc.y, -1.0!)
+
+                    Gl.glTexCoord2f(1.0!, 0.0!)
+                    Gl.glVertex3f(lc.x, -lc.y, -1.0!)
+
+                Next ' off loop
+                Gl.glEnd()
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+                replace_mix_layer(map_layers(cnt).mix_texture_Id, size)
+                '---------
+                'cnt has to be on outside of "off" loop
+                frmMain.ProgressBar1.Value = cnt
+                cnt += 1
+            Next
+        Next
+
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+
+    End Sub
+    Private Sub replace_mix_layer(ByVal mix_texture_Id As Integer, ByVal size As Integer)
         Dim texID As Int32
         texID = Ilu.iluGenImage() ' Generation of one image name
         Il.ilBindImage(texID) ' Binding of image name 
-        Dim success As Boolean = Il.ilTexImage(psize, psize, 0, 4, Il.IL_BGRA, Gl.GL_UNSIGNED_BYTE, Nothing) '  Texture specification 
+        Dim success = Il.ilTexImage(size, size, 0, 4, Il.IL_BGRA, Gl.GL_UNSIGNED_BYTE, Nothing) '  Texture specification 
         Dim ptr_2 As IntPtr = Il.ilGetData()
-        Gl.glReadPixels(0, 0, psize, psize, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glReadPixels(0, 0, size, size, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
 
 
 
         success = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
 
 
-        Ilu.iluFlipImage()
-        Ilu.iluMirror()
-        'Ilu.iluBlurGaussian(2)
-        'Gdi.SwapBuffers(pb2_hDC)
-        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-            MessageBox.Show("Unable to make rendering context current")
-            End
-        End If
-        Gl.glGenTextures(1, mix_atlas_Id)
+        'Ilu.iluFlipImage()
+        'Ilu.iluMirror()
         Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, mix_atlas_Id)
-
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, mix_texture_Id)
+        Dim e = Gl.glGetError
         If largestAnsio > 0 Then
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
         End If
+        Dim width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
+        Dim heigth = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
 
+        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
 
-        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
-        'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
-        'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
-        'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+        Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
+        Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
+
         Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
-        Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
-        Il.ilGetData()) '  Texture specification 
+           Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
+           Il.ilGetData()) '  Texture specification 
 
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
         Il.ilDeleteImages(1, texID)
         ' has to run on vertical and horz
-        mix_atlas_Id = blur_image(mix_atlas_Id, "vert", True)
-        mix_atlas_Id = blur_image(mix_atlas_Id, "horz", True)
-
+        'frmShowImage.draw_texture(mix_texture_Id)
+        mix_texture_Id = blur_image(mix_texture_Id, "vert", True)
+        mix_texture_Id = blur_image(mix_texture_Id, "horz", True)
+      
 
     End Sub
     Public Function blur_image(ByRef image As Integer, orientatin As String, filter As Boolean) As Integer
 
-        If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
-            MessageBox.Show("Unable to make rendering context current")
-            End
-        End If
         Dim uc As vect2
         Dim lc As vect2
         frmMain.pb2.Location = New Point(0, 0)
@@ -911,88 +1029,47 @@ try_again:
         ViewOrtho_2()
         Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glPushMatrix()
-        Gl.glTranslatef(0.0, 0.0F, -0.1F)
+
         Gl.glDisable(Gl.GL_BLEND)
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
         Gl.glDisable(Gl.GL_LIGHTING)
-        Dim comap, si As Integer
-        si = Gl.glGetUniformLocation(shader_list.gaussian_shader, "blurScale")
-        comap = Gl.glGetUniformLocation(shader_list.gaussian_shader, "s_texture")
+
+        Dim texMap_adress, scale_adress As Integer
+        scale_adress = Gl.glGetUniformLocation(shader_list.gaussian_shader, "blurScale")
+        texMap_adress = Gl.glGetUniformLocation(shader_list.gaussian_shader, "s_texture")
 
         Gl.glUseProgram(shader_list.gaussian_shader)
+        Gl.glUniform1i(texMap_adress, 0) 'texture map address
 
         If orientatin = "vert" Then
-            Gl.glUniform3f(si, 1.0 \ lc.x, 0.0, 0.0)
+            Gl.glUniform3f(scale_adress, 1.0 \ frmMain.pb2.Width, 0.0, 0.0)
         Else
-            Gl.glUniform3f(si, 0.0, 1.0 \ lc.y, 0.0)
+            Gl.glUniform3f(scale_adress, 0.0, 1.0 \ frmMain.pb2.Height, 0.0)
         End If
-        Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
-        'Gl.glUseProgram(0)
-        Gl.glUniform1i(comap, 0)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
+
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
         Dim e = Gl.glGetError
 
         Gl.glBegin(Gl.GL_QUADS)
-        '---
+
         Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(uc.x, lc.y, -1.0!)
+        Gl.glVertex2f(uc.x, lc.y)
 
         Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-        'Gl.glTexCoord2f(1.0, 0.0)
-        'Gl.glVertex3f(lc.x, lc.y, -1.0!)
-        '---
-        'Gl.glTexCoord2f(0.0, -1.0)
-        'Gl.glVertex3f(uc.x, uc.y, -1.0!)
+        Gl.glVertex2f(uc.x, uc.y)
 
         Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(lc.x, uc.y, -1.0!)
+        Gl.glVertex2f(lc.x, uc.y)
 
         Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(lc.x, lc.y, -1.0!)
+        Gl.glVertex2f(lc.x, lc.y)
 
         Gl.glEnd()
         Gl.glUseProgram(0)
-        Gl.glPopMatrix()
 
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
         '--------------------
-        ' rebuild texture
-        Dim texID As Int32
-        texID = Ilu.iluGenImage() ' Generation of one image name
-        Il.ilBindImage(texID) ' Binding of image name 
-        Dim success As Boolean = Il.ilTexImage(lc.x, -lc.y, 0, 4, Il.IL_BGRA, Gl.GL_UNSIGNED_BYTE, Nothing) '  Texture specification 
-        If Not success Then
-            Dim er = Il.ilGetError
-            frmMain.tb1.Text = er.ToString
-
-        End If
-        Dim ptr_2 As IntPtr = Il.ilGetData()
-        Gl.glReadPixels(0, 0, CInt(lc.x), CInt(-lc.y), Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
-        Gl.glFinish()
-        'Ilu.iluMirror()
-
-        'Ilu.iluFlipImage()
-        'Ilu.iluBlurGaussian(2)
-        Try
-            Gdi.SwapBuffers(pb2_hDC)
-
-        Catch ex As Exception
-
-        End Try
-        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-            MessageBox.Show("Unable to make rendering context current")
-            End
-        End If
-        Gl.glDeleteTextures(1, image)
-        Gl.glFinish()
-        Gl.glGenTextures(1, image)
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
         If filter Then
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
@@ -1001,41 +1078,9 @@ try_again:
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
 
         End If
-        'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
-        'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
-        'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
-        Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
-        Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
-        Il.ilGetData()) '  Texture specification 
-        ' Create the bitmap.
-        'Dim bitmap = New System.Drawing.Bitmap(lc.x, -lc.y, PixelFormat.Format24bppRgb)
-        If temp_bmp IsNot Nothing Then
-            temp_bmp.Dispose()
-            GC.Collect()
-            GC.WaitForFullGCComplete()
-        End If
-        temp_bmp = New System.Drawing.Bitmap(lc.x, -lc.y, PixelFormat.Format24bppRgb)
-        Dim rect As Rectangle = New Rectangle(0, 0, lc.x, -lc.y)
-
-        ' Store the DevIL image data into the bitmap.
-        Dim bitmapData As BitmapData = temp_bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb)
-
-        Ilu.iluMirror()
-        Ilu.iluFlipImage()
-        Il.ilConvertImage(Il.IL_RGB, Il.IL_UNSIGNED_BYTE)
-        Il.ilCopyPixels(0, 0, 0, lc.x, -lc.y, 1, Il.IL_RGB, Il.IL_UNSIGNED_BYTE, bitmapData.Scan0)
-        temp_bmp.UnlockBits(bitmapData)
-        'temp_bmp = bitmap.Clone
-        'temp_bmp.RotateFlip(RotateFlipType.RotateNoneFlipXY)
-        'bitmap.Dispose()
-
-        'success = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
-        Il.ilBindImage(0)
-        Ilu.iluDeleteImage(texID)
-        'GC.Collect()
-        'GC.WaitForFullGCComplete()
-        'frmMain.pb2.Visible = False
-        'frmMain.pb2.SendToBack()
+        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, frmMain.pb2.Width, frmMain.pb2.Height, 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+      
         Return image
     End Function
     Public Sub get_map_extremes()
@@ -1145,6 +1190,7 @@ try_again:
         Dim loc As Integer
         Dim v_step As Integer
         Dim map As Integer
+        Dim uv As vect2
         Dim cnt As Integer = 0
         For j = 0 To bm_w - 2
             Application.DoEvents()
@@ -1172,7 +1218,9 @@ try_again:
                         If x1 = mesh_stride - 1 Then
                             Exit For
                         End If
-                        process_verts(x1, y, mesh_stride)
+                        uv.x = -(x1 - k)
+                        uv.y = -v2
+                        process_verts(x1, y, uv, mesh_stride)
                     Next x1
                 Next v2
                 Gl.glEnd()
@@ -1202,20 +1250,36 @@ try_again:
                     If x1 = mesh_stride - 1 Then
                         Exit For
                     End If
-                    process_verts(x1, y, mesh_stride)
+                    uv.x = -(x1 - k)
+                    uv.y = -v2
+                    process_verts(x1, y, uv, mesh_stride)
                 Next x1
             Next v2
             Gl.glEnd()
             Gl.glEndList()
         Next
     End Sub
-    Private Sub process_verts(ByVal x As Integer, ByVal y As Integer, ByVal mesh_stride As Integer)
+    Private Sub process_verts(ByVal x As Integer, ByVal y As Integer, ByVal uv As vect2, ByVal mesh_stride As Integer)
         Dim p1, p2, p3, p4 As vertex_data
         Dim l1, l2, l3, l4 As Integer
         l1 = x + 0 + y
         l2 = x + 1 + y
         l3 = x + 0 + y + mesh_stride
         l4 = x + 1 + y + mesh_stride
+
+        Dim p1_u, p1_v As Single
+        Dim p2_u, p2_v As Single
+        Dim p3_u, p3_v As Single
+        Dim p4_u, p4_v As Single
+        p1_u = (uv.x / 64.0) * 10.0
+        p1_v = (uv.y / 64.0) * 10.0
+        Dim uv_off As Single = -(1.0 / 64.0) * 10.0
+        p2_u = p1_u + uv_off
+        p2_v = p1_v
+        p3_u = p1_u
+        p3_v = p1_v + uv_off
+        p4_u = p2_u
+        p4_v = p3_v
 
         p1 = mesh(l1)
         p2 = mesh(l2)
@@ -1229,43 +1293,46 @@ try_again:
             p3.v = -10.0
             p4.v = -10.0
         End If
+        'If uv.y = -63 Then
+        '    Stop
+        'End If
         Gl.glNormal3f(p1.nx, p1.ny, p1.nz)
-        Gl.glMultiTexCoord2f(0, p1.u, p1.v)
+        Gl.glMultiTexCoord2f(0, p1_u, p1_v)
         Gl.glMultiTexCoord3f(2, p1.t.x, p1.t.y, p1.t.z)
         Gl.glMultiTexCoord3f(3, p1.bt.x, p1.bt.y, p1.bt.z)
         'Gl.glMultiTexCoord2f(4, p1.fog_uv.x, p1.fog_uv.y)
         Gl.glVertex3f(p1.x, p1.y, p1.z)
 
         Gl.glNormal3f(p3.nx, p3.ny, p3.nz)
-        Gl.glMultiTexCoord2f(0, p3.u, p3.v)
+        Gl.glMultiTexCoord2f(0, p3_u, p3_v)
         Gl.glMultiTexCoord3f(2, p3.t.x, p3.t.y, p3.t.z)
         Gl.glMultiTexCoord3f(3, p3.bt.x, p3.bt.y, p3.bt.z)
         'Gl.glMultiTexCoord2f(4, p3.fog_uv.x, p3.fog_uv.y)
         Gl.glVertex3f(p3.x, p3.y, p3.z)
 
         Gl.glNormal3f(p2.nx, p2.ny, p2.nz)
-        Gl.glMultiTexCoord2f(0, p2.u, p2.v)
+        Gl.glMultiTexCoord2f(0, p2_u, p2_v)
         Gl.glMultiTexCoord3f(2, p2.t.x, p2.t.y, p2.t.z)
         Gl.glMultiTexCoord3f(3, p2.bt.x, p2.bt.y, p2.bt.z)
         'Gl.glMultiTexCoord2f(4, p2.fog_uv.x, p2.fog_uv.y)
         Gl.glVertex3f(p2.x, p2.y, p2.z)
         '===============================
         Gl.glNormal3f(p3.nx, p3.ny, p3.nz)
-        Gl.glMultiTexCoord2f(0, p3.u, p3.v)
+        Gl.glMultiTexCoord2f(0, p3_u, p3_v)
         Gl.glMultiTexCoord3f(2, p3.t.x, p3.t.y, p3.t.z)
         Gl.glMultiTexCoord3f(3, p3.bt.x, p3.bt.y, p3.bt.z)
         'Gl.glMultiTexCoord2f(4, p3.fog_uv.x, p3.fog_uv.y)
         Gl.glVertex3f(p3.x, p3.y, p3.z)
 
         Gl.glNormal3f(p4.nx, p4.ny, p4.nz)
-        Gl.glMultiTexCoord2f(0, p4.u, p4.v)
+        Gl.glMultiTexCoord2f(0, p4_u, p4_v)
         Gl.glMultiTexCoord3f(2, p4.t.x, p4.t.y, p4.t.z)
         Gl.glMultiTexCoord3f(3, p4.bt.x, p4.bt.y, p4.bt.z)
         'Gl.glMultiTexCoord2f(4, p4.fog_uv.x, p4.fog_uv.y)
         Gl.glVertex3f(p4.x, p4.y, p4.z)
 
         Gl.glNormal3f(p2.nx, p2.ny, p2.nz)
-        Gl.glMultiTexCoord2f(0, p2.u, p2.v)
+        Gl.glMultiTexCoord2f(0, p2_u, p2_v)
         Gl.glMultiTexCoord3f(2, p2.t.x, p2.t.y, p2.t.z)
         Gl.glMultiTexCoord3f(3, p2.bt.x, p2.bt.y, p2.bt.z)
         'Gl.glMultiTexCoord2f(4, p2.fog_uv.x, p2.fog_uv.y)
@@ -1304,8 +1371,6 @@ try_again:
         b = v.y
         v.y = a
         v.z = b
-        v_copy.fog_uv.x = xu / total_width
-        v_copy.fog_uv.y = yu / total_width
         'If map_odd Then
         '    If w / 2 = 7.5 Then
         '        v.z -= 100.0
@@ -1666,7 +1731,28 @@ Endy:
         Dim list() As Integer
     End Structure
 
+    Public Sub save_norms(ByRef a1 As vertex_data, ByRef a2 As vertex_data, ByRef a3 As vertex_data, ByRef a4 As vertex_data, ByRef a5 As vertex_data, ByRef a6 As vertex_data)
+        a2.nx = a1.nx
+        a2.ny = a1.ny
+        a2.nz = a1.nz
 
+        a3.nx = a1.nx
+        a3.ny = a1.ny
+        a3.nz = a1.nz
+
+        a4.nx = a1.nx
+        a4.ny = a1.ny
+        a4.nz = a1.nz
+
+        a5.nx = a1.nx
+        a5.ny = a1.ny
+        a5.nz = a1.nz
+
+        a6.nx = a1.nx
+        a6.ny = a1.ny
+        a6.nz = a1.nz
+
+    End Sub
     Public Sub average_mesh_btns()
         Dim count = triangle_count - 1
         'do the inside of the mesh
@@ -1692,12 +1778,12 @@ Endy:
             Application.DoEvents()
             For k As Integer = i To (i + n) - 12 Step 6
                 'loop thru and grab the 6 vertices that share the same exact space.
-                a1 = triangle_holder(k + 4).v
-                a2 = triangle_holder(k + 7).v
-                a3 = triangle_holder(k + 9).v
-                a4 = triangle_holder((k + n) + 2).v
-                a5 = triangle_holder((k + n) + 5).v
-                a6 = triangle_holder((k + n) + 6).v
+                a1 = triangle_holder.v(k + 4)
+                a2 = triangle_holder.v(k + 7)
+                a3 = triangle_holder.v(k + 9)
+                a4 = triangle_holder.v((k + n) + 2)
+                a5 = triangle_holder.v((k + n) + 5)
+                a6 = triangle_holder.v((k + n) + 6)
                 'Average out the normals
                 a1.nx = (a1.nx + a2.nx + a3.nx + a4.nx + a5.nx + a6.nx) / 6.0
                 a1.ny = (a1.ny + a2.ny + a3.ny + a4.ny + a5.ny + a6.ny) / 6.0
@@ -1711,68 +1797,50 @@ Endy:
 
 
                 'Store the averaged normal back in to the 6 vertices
-                triangle_holder(k + 4).v.nx = a1.nx
-                triangle_holder(k + 4).v.ny = a1.ny
-                triangle_holder(k + 4).v.nz = a1.nz
+                save_norms(a1, a2, a3, a4, a5, a6)
 
-                triangle_holder(k + 7).v.nx = a1.nx
-                triangle_holder(k + 7).v.ny = a1.ny
-                triangle_holder(k + 7).v.nz = a1.nz
 
-                triangle_holder(k + 9).v.nx = a1.nx
-                triangle_holder(k + 9).v.ny = a1.ny
-                triangle_holder(k + 9).v.nz = a1.nz
 
-                triangle_holder((k + n) + 2).v.nx = a1.nx
-                triangle_holder((k + n) + 2).v.ny = a1.ny
-                triangle_holder((k + n) + 2).v.nz = a1.nz
+                triangle_holder.v(k + 4) = a1
+                triangle_holder.v(k + 7) = a2
+                triangle_holder.v(k + 9) = a3
+                triangle_holder.v((k + n) + 2) = a4
+                triangle_holder.v((k + n) + 5) = a5
+                triangle_holder.v((k + n) + 6) = a6
 
-                triangle_holder((k + n) + 5).v.nx = a1.nx
-                triangle_holder((k + n) + 5).v.ny = a1.ny
-                triangle_holder((k + n) + 5).v.nz = a1.nz
-
-                triangle_holder((k + n) + 6).v.nx = a1.nx
-                triangle_holder((k + n) + 6).v.ny = a1.ny
-                triangle_holder((k + n) + 6).v.nz = a1.nz
 
             Next
         Next
         Application.DoEvents()
         'do the right side
         For i As Integer = 0 To (count - 1) - (n) Step n
-            a1 = triangle_holder(i + 1).v
-            a2 = triangle_holder((i + 0) + 3).v
-            a3 = triangle_holder((i + n) + 0).v
+            a1 = triangle_holder.v(i + 1)
+            a2 = triangle_holder.v((i + 0) + 3)
+            a3 = triangle_holder.v((i + n) + 0)
 
             a1.nx = (a1.nx + a2.nx + a3.nx) / 3.0
             a1.ny = (a1.ny + a2.ny + a3.ny) / 3.0
             a1.nz = (a1.nz + a2.nz + a3.nz) / 3.0
 
-            Len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
+            len = Sqrt((a1.nx * a1.nx) + (a1.ny * a1.ny) + (a1.nz * a1.nz))
             If len = 0 Then len = 1.0 ' no divide by zero
             a1.nx /= len
             a1.ny /= len
             a1.nz /= len
+            save_norms(a1, a2, a3, a4, a5, a6)
 
-            triangle_holder(i + 1).v.nx = a1.nx
-            triangle_holder(i + 1).v.ny = a1.ny
-            triangle_holder(i + 1).v.nz = a1.nz
+            triangle_holder.v(i + 1) = a1
+            triangle_holder.v((i + 0) + 3) = a2
+            triangle_holder.v((i + n) + 0) = a3
 
-            triangle_holder((i + 0) + 3).v.nx = a1.nx
-            triangle_holder((i + 0) + 3).v.ny = a1.ny
-            triangle_holder((i + 0) + 3).v.nz = a1.nz
-
-            triangle_holder((i + n) + 0).v.nx = a1.nx
-            triangle_holder((i + n) + 0).v.ny = a1.ny
-            triangle_holder((i + n) + 0).v.nz = a1.nz
 
         Next
         Application.DoEvents()
         'bottom left corner
         Dim ii = n - 6
 
-        a1 = triangle_holder(ii + 2).v
-        a2 = triangle_holder(ii + 5).v
+        a1 = triangle_holder.v(ii + 2)
+        a2 = triangle_holder.v(ii + 5)
 
         a1.nx = (a1.nx + a2.nx) / 2.0
         a1.ny = (a1.ny + a2.ny) / 2.0
@@ -1784,19 +1852,16 @@ Endy:
         a1.ny /= len
         a1.nz /= len
 
-        triangle_holder(ii + 2).v.nx = a1.nx
-        triangle_holder(ii + 2).v.ny = a1.ny
-        triangle_holder(ii + 2).v.nz = a1.nz
+        save_norms(a1, a2, a3, a4, a5, a6)
 
-        triangle_holder(ii + 5).v.nx = a1.nx
-        triangle_holder(ii + 5).v.ny = a1.ny
-        triangle_holder(ii + 5).v.nz = a1.nz
+        triangle_holder.v(ii + 2) = a1
+        triangle_holder.v(ii + 5) = a2
 
         'top right corner
         ii = (count - n) + 1
 
-        a1 = triangle_holder(ii + 1).v
-        a2 = triangle_holder(ii + 3).v
+        a1 = triangle_holder.v(ii + 1)
+        a2 = triangle_holder.v(ii + 3)
 
         a1.nx = (a1.nx + a2.nx) / 2.0
         a1.ny = (a1.ny + a2.ny) / 2.0
@@ -1808,20 +1873,17 @@ Endy:
         a1.ny /= len
         a1.nz /= len
 
-        triangle_holder(ii + 1).v.nx = a1.nx
-        triangle_holder(ii + 1).v.ny = a1.ny
-        triangle_holder(ii + 1).v.nz = a1.nz
+        save_norms(a1, a2, a3, a4, a5, a6)
 
-        triangle_holder(ii + 3).v.nx = a1.nx
-        triangle_holder(ii + 3).v.ny = a1.ny
-        triangle_holder(ii + 3).v.nz = a1.nz
+        triangle_holder.v(ii + 1) = a1
+        triangle_holder.v(ii + 3) = a2
         Application.DoEvents()
 
         'do the left side
         For i As Integer = n - 6 To (count) - (n) Step n
-            a1 = triangle_holder(i + 4).v
-            a2 = triangle_holder((i + n) + 2).v
-            a3 = triangle_holder((i + n) + 5).v
+            a1 = triangle_holder.v(i + 4)
+            a2 = triangle_holder.v((i + n) + 2)
+            a3 = triangle_holder.v((i + n) + 5)
 
             a1.nx = (a1.nx + a2.nx + a3.nx) / 3.0
             a1.ny = (a1.ny + a2.ny + a3.ny) / 3.0
@@ -1833,25 +1895,19 @@ Endy:
             a1.ny /= len
             a1.nz /= len
 
-            triangle_holder(i + 4).v.nx = a1.nx
-            triangle_holder(i + 4).v.ny = a1.ny
-            triangle_holder(i + 4).v.nz = a1.nz
+            save_norms(a1, a2, a3, a4, a5, a6)
 
-            triangle_holder((i + n) + 2).v.nx = a1.nx
-            triangle_holder((i + n) + 2).v.ny = a1.ny
-            triangle_holder((i + n) + 2).v.nz = a1.nz
-
-            triangle_holder((i + n) + 5).v.nx = a1.nx
-            triangle_holder((i + n) + 5).v.ny = a1.ny
-            triangle_holder((i + n) + 5).v.nz = a1.nz
+            triangle_holder.v(i + 4) = a1
+            triangle_holder.v((i + n) + 2) = a2
+            triangle_holder.v((i + n) + 5) = a3
 
         Next
         'do top row
         Application.DoEvents()
         For i As Integer = (count + 1) - n To (count + 1) - 12 Step 6
-            a1 = triangle_holder(i + 4).v
-            a2 = triangle_holder((i + 6) + 1).v
-            a3 = triangle_holder((i + 6) + 3).v
+            a1 = triangle_holder.v(i + 4)
+            a2 = triangle_holder.v((i + 6) + 1)
+            a3 = triangle_holder.v((i + 6) + 3)
 
             a1.nx = (a1.nx + a2.nx + a3.nx) / 2.0
             a1.ny = (a1.ny + a2.ny + a3.ny) / 2.0
@@ -1863,25 +1919,19 @@ Endy:
             a1.ny /= len
             a1.nz /= len
 
-            triangle_holder(i + 4).v.nx = a1.nx
-            triangle_holder(i + 4).v.ny = a1.ny
-            triangle_holder(i + 4).v.nz = a1.nz
+            save_norms(a1, a2, a3, a4, a5, a6)
 
-            triangle_holder((i + 6) + 1).v.nx = a1.nx
-            triangle_holder((i + 6) + 1).v.ny = a1.ny
-            triangle_holder((i + 6) + 1).v.nz = a1.nz
-
-            triangle_holder((i + 6) + 3).v.nx = a1.nx
-            triangle_holder((i + 6) + 3).v.ny = a1.ny
-            triangle_holder((i + 6) + 3).v.nz = a1.nz
+            triangle_holder.v(i + 4) = a1
+            triangle_holder.v((i + 6) + 1) = a2
+            triangle_holder.v((i + 6) + 3) = a3
 
         Next
         Application.DoEvents()
         'do the bottom row (first row)
         For i As Integer = 0 To n - 12 Step 6
-            a1 = triangle_holder(i + 2).v
-            a2 = triangle_holder((i + 0) + 5).v
-            a3 = triangle_holder((i + 6) + 0).v
+            a1 = triangle_holder.v(i + 2)
+            a2 = triangle_holder.v((i + 0) + 5)
+            a3 = triangle_holder.v((i + 6) + 0)
 
             a1.nx = (a1.nx + a2.nx + a3.nx) / 3.0
             a1.ny = (a1.ny + a2.ny + a3.ny) / 3.0
@@ -1893,23 +1943,26 @@ Endy:
             a1.ny /= len
             a1.nz /= len
 
-            triangle_holder(i + 2).v.nx = a1.nx
-            triangle_holder(i + 2).v.ny = a1.ny
-            triangle_holder(i + 2).v.nz = a1.nz
+            save_norms(a1, a2, a3, a4, a5, a6)
 
-            triangle_holder((i + 0) + 5).v.nx = a1.nx
-            triangle_holder((i + 0) + 5).v.ny = a1.ny
-            triangle_holder((i + 0) + 5).v.nz = a1.nz
-
-            triangle_holder((i + 6) + 0).v.nx = a1.nx
-            triangle_holder((i + 6) + 0).v.ny = a1.ny
-            triangle_holder((i + 6) + 0).v.nz = a1.nz
+            triangle_holder.v(i + 2) = a1
+            triangle_holder.v((i + 0) + 5) = a2
+            triangle_holder.v((i + 6) + 0) = a3
 
         Next
         'now to put all these back in the mesh() so the chunk meshes can be created.. actually just display IDs'
+        Dim local As New t_holder_
+        For i = 0 To mesh.Length - 1
+            mesh(i) = New vertex_data
+        Next
         For i = 0 To triangle_count - 1
-            check_bounds(triangle_holder(i).v) ' get map bounding box size
-            mesh(triangle_holder(i).mesh_location) = triangle_holder(i).v
+            check_bounds(triangle_holder.v(i)) ' get map bounding box size
+            local = triangle_holder(i)
+            If Not triangle_holder.mesh_location(i) >= mesh.Length Then
+                mesh(triangle_holder.mesh_location(i)) = triangle_holder.v(i)
+            Else
+                'Stop
+            End If
         Next
     End Sub
     Public Sub createTBNs()
@@ -2065,18 +2118,18 @@ Endy:
 
         '==========================================================================
         'add these to the buffer for averaging
-        triangle_holder(triangle_count + 0) = New t_holder_
-        triangle_holder(triangle_count + 1) = New t_holder_
-        triangle_holder(triangle_count + 2) = New t_holder_
+        'triangle_holder(triangle_count + 0) = New t_holder_
+        'triangle_holder(triangle_count + 1) = New t_holder_
+        'triangle_holder(triangle_count + 2) = New t_holder_
 
-        triangle_holder(triangle_count + 0).v = p0
-        triangle_holder(triangle_count + 0).mesh_location = l1 ' need this so we can put them back in mesh()!
+        triangle_holder.v(triangle_count + 0) = p0
+        triangle_holder.mesh_location(triangle_count + 0) = l1 ' need this so we can put them back in mesh()!
 
-        triangle_holder(triangle_count + 1).v = p1
-        triangle_holder(triangle_count + 1).mesh_location = l2
+        triangle_holder.v(triangle_count + 1) = p1
+        triangle_holder.mesh_location(triangle_count + 1) = l2
 
-        triangle_holder(triangle_count + 2).v = p2
-        triangle_holder(triangle_count + 2).mesh_location = l3
+        triangle_holder.v(triangle_count + 2) = p2
+        triangle_holder.mesh_location(triangle_count + 2) = l3
 
 
         triangle_count += 3
@@ -2111,7 +2164,271 @@ Endy:
         Return v
     End Function
 #End Region
+    Public Function use_main_low_rez_texture(ByVal sections_per_side As Integer) As Boolean
 
+        If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+        Gl.glFinish()
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
+
+        '-------------------------------------------------------------------------------
+        Dim psize = 256
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        '---------------------
+        '============================
+        frmMain.pb2.Location = New Point(0, 0)
+        frmMain.pb2.Width = psize
+        frmMain.pb2.Height = psize
+        Application.DoEvents()
+
+
+        ResizeGL_2(psize, psize)
+        ViewOrtho_2()
+        Gl.glClearColor(0.0, 0.0, 0.0, 1.0)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        'first we draw the entire color_map
+        Dim e = Gl.glGetError
+        For cnt = 0 To test_count
+
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(cnt).colorMapId)
+            Gl.glBegin(Gl.GL_QUADS)
+
+            Gl.glTexCoord2f(0.0, 0.0)
+            Gl.glVertex2f(0.0, -psize)
+
+            Gl.glTexCoord2f(0.0, 1.0)
+            Gl.glVertex2f(0.0, 0.0)
+
+            Gl.glTexCoord2f(1.0, 1.0)
+            Gl.glVertex2f(psize, 0.0)
+
+            Gl.glTexCoord2f(1.0, 0.0)
+            Gl.glVertex2f(psize, -psize)
+
+            Gl.glEnd()
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0) ' unbind main texture
+
+
+            frmMain.tb1.Text = "Getting the Tarrain Textures (" + cnt.ToString + ")"
+            Application.DoEvents()
+            Dim texID As Int32
+            texID = Ilu.iluGenImage()
+            Il.ilBindImage(texID)
+            Dim success As Boolean = Il.ilTexImage(psize, psize, 0, 4, Il.IL_BGRA, Gl.GL_UNSIGNED_BYTE, Nothing) '  Texture specification 
+            If Not success Then
+                Dim er = Il.ilGetError
+                MsgBox("Error splitting up color_tex image:" + er.ToString, MsgBoxStyle.Exclamation, "Well Shit!")
+            End If
+            Dim ptr_2 As IntPtr = Il.ilGetData()
+            Gl.glReadPixels(0, 0, psize, psize, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
+            Gl.glFinish()
+            'Ilu.iluFlipImage()
+            'Ilu.iluMirror()
+            Dim image As Integer = -1
+            Gl.glGenTextures(1, image)
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
+
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
+            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
+            Il.ilGetData()) '  Texture specification 
+            blur_image(image, "vert", False)
+            blur_image(image, "horz", True)
+            For layer = 1 To map_layers(cnt).layer_count
+                get_layer_image(cnt, layer)
+            Next
+            For layer = 1 To map_layers(cnt).layer_count
+                If map_layers(cnt).layers(layer).l_name.ToLower.Contains("color_tex") Then
+                    map_layers(cnt).layers(layer).text_id = image
+                    map_layers(cnt).main_texture = layer
+                    GC.Collect()
+                End If
+            Next
+            Il.ilBindImage(0)
+            Il.ilDeleteImage(texID)
+            frmMain.ProgressBar1.Value = cnt
+        Next
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+        frmMain.pb2.Visible = False
+    End Function
+
+    Public Function split_up_main_texture(ByVal sections_per_side As Integer, ByVal texture_id As Integer) As Boolean
+        'If the hi rez map is not much bigger than the low rez map, 
+        'we can just use the low rez for the color mix map;
+        If sections_per_side > 12 Then
+            use_main_low_rez_texture(sections_per_side)
+            Return True
+        End If
+        If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+        Gl.glFinish()
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
+
+        '-------------------------------------------------------------------------------
+        Dim w = CInt(Sqrt(maplist.Length - 1))
+        Dim tex_width As Integer = 0
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, texture_id)
+        Gl.glGetTexLevelParameteriv(Gl.GL_TEXTURE_2D, 0, Gl.GL_TEXTURE_WIDTH, tex_width)
+
+        Dim mod_ As Integer = (Sqrt(maplist.Length - 1)) And 1 ' Odd map side length?
+        sections_per_side += mod_
+        Dim sec_width = tex_width / sections_per_side
+        Dim psize = tex_width
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        '---------------------
+        'setup size of renderwindow
+        '============================
+        'debug
+        'frmMain.pb2.Visible = True
+        'frmMain.pb2.BringToFront()
+        Application.DoEvents()
+        '============================
+        frmMain.pb2.Location = New Point(0, 0)
+        frmMain.pb2.Width = psize
+        frmMain.pb2.Height = psize
+        Application.DoEvents()
+
+
+        ResizeGL_2(psize, psize)
+        ViewOrtho_2()
+        Gl.glClearColor(0.0, 0.0, 0.0, 1.0)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        'first we draw the entire color_map
+        Dim e = Gl.glGetError
+        Gl.glEnable(Gl.GL_TEXTURE_2D)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, texture_id)
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex2f(0.0, -psize)
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex2f(0.0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex2f(psize, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex2f(psize, -psize)
+
+        Gl.glEnd()
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0) ' unbind main texture
+
+        Dim cnt As Integer = 0
+        For row = 0 To w - 1
+            For col = 0 To w - 1
+
+                frmMain.tb1.Text = "Getting the Tarrain Textures (" + cnt.ToString + ")"
+                Application.DoEvents()
+                Dim x1 As Integer = (tex_width / 2) - (((maplist(cnt).location.x + 50) / 100) * sec_width)
+                Dim y1 As Integer = (tex_width / 2) - (((maplist(cnt).location.y - 50) / 100) * sec_width) - sec_width
+                Dim texID As Int32
+                texID = Ilu.iluGenImage()
+                Il.ilBindImage(texID)
+                Dim success As Boolean = Il.ilTexImage(sec_width, sec_width, 0, 4, Il.IL_BGRA, Gl.GL_UNSIGNED_BYTE, Nothing) '  Texture specification 
+                If Not success Then
+                    Dim er = Il.ilGetError
+                    MsgBox("Error splitting up color_tex image:" + er.ToString, MsgBoxStyle.Exclamation, "Well Shit!")
+                End If
+                Dim ptr_2 As IntPtr = Il.ilGetData()
+                Gl.glReadPixels(x1, y1, CInt(sec_width), CInt(sec_width), Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
+                Gl.glFinish()
+                Ilu.iluFlipImage()
+                Ilu.iluMirror()
+                Dim image As Integer = -1
+                Gl.glGenTextures(1, image)
+                Gl.glEnable(Gl.GL_TEXTURE_2D)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
+
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+                'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+                Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
+                Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
+                Il.ilGetData()) '  Texture specification 
+                For layer = 1 To map_layers(cnt).layer_count
+                    get_layer_image(cnt, layer)
+                Next
+                For layer = 1 To map_layers(cnt).layer_count
+                    If map_layers(cnt).layers(layer).l_name.ToLower.Contains("color_tex") Then
+                        map_layers(cnt).layers(layer).text_id = image
+                        map_layers(cnt).main_texture = layer
+                        GC.Collect()
+                    End If
+                Next
+                Il.ilBindImage(0)
+                Il.ilDeleteImage(texID)
+                frmMain.ProgressBar1.Value = cnt
+                cnt += 1
+            Next
+        Next
+        Gl.glDeleteTextures(1, texture_id) ' Delete that huge map now that we are done using it.
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+        frmMain.pb2.Visible = False
+    End Function
+    Private Sub debug_draw(ByVal image As Integer)
+        'used just to show that an image was created correctly.
+        'For debuging only.
+        'PB2 MUST be visible and brought to front.
+        'This swaps the buffers so a break point will need to
+        'be added to see the texture.
+        Dim psize As Integer
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
+        Gl.glGetTexLevelParameteriv(Gl.GL_TEXTURE_2D, 0, Gl.GL_TEXTURE_WIDTH, psize)
+        Gdi.SwapBuffers(pb2_hDC)
+        Gl.glClearColor(0.0, 0.0, 0.0, 1.0)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+
+        Dim e = Gl.glGetError
+        Gl.glEnable(Gl.GL_TEXTURE_2D)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex2f(0.0, -psize)
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex2f(0.0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex2f(psize, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex2f(psize, -psize)
+
+        Gl.glEnd()
+
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0) ' unbind texture
+        Gdi.SwapBuffers(pb2_hDC)
+
+    End Sub
     Private Sub check_bounds(ByVal v As vertex_data)
         If v.x > x_max Then x_max = v.x
         If v.x < x_min Then x_min = v.x
@@ -2124,6 +2441,8 @@ Endy:
 
 
     Public Sub get_surface_normals(ByRef s As MemoryStream, ByVal map As Int32)
+        'This sub is no longer used.
+        'I will leave it so others can see how the terrain normals are stored.
         Dim data((heightMapSize * heightMapSize * 2) + heightMapSize) As SByte
         Dim cnt As UInt32 = 0
         Dim i As UInt32 = 0

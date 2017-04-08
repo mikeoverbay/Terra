@@ -5,7 +5,6 @@
 out vec3 N;
 out vec3 normal, eyeVec;
 out vec3 lightDir;
-out vec4 color;
 void main(void)
 {
     vec4 p =  gl_ModelViewMatrix * gl_Vertex;
@@ -19,7 +18,6 @@ void main(void)
     normal.x*= -1.0;
      eyeVec   = gl_Vertex.xyz;
      lightDir = gl_LightSource[0].position.xyz;// - vVertex.xyz);
-     color    = gl_Color;
 
   
 }

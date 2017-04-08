@@ -5,7 +5,7 @@ Imports Tao.FreeGlut
 Imports Tao.FreeGlut.Glut
 Imports System.IO
 Imports System.Windows
-
+Imports System.Math
 
 
 #End Region
@@ -14,7 +14,7 @@ Module modTextures
     Public max_texture_units As Integer
     Public shadowMapID, coMapID, coMapID2, utility_texture, depthID, fboID, fboID2 As Integer
 
-    Public Sub build_normal_layer_textures(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer)
+    Public Sub build_layer_normal_texture(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer)
         Dim s As String = ""
         s = Gl.glGetError
 
@@ -53,17 +53,21 @@ Module modTextures
             End If
 
 
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_NEAREST)
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_LOD_BIAS, 0.05)
+
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_LEVEL, 5)
+
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
 
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
             Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
             Il.ilGetData()) '  Texture specification 
-            Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
+            Ilu.iluDeleteImage(texID)
         Else
             'Stop
             frmMapInfo.I__General_Info_tb.Text += "Failed to load normal texture. Map:" + map.ToString + vbCrLf
@@ -72,78 +76,7 @@ Module modTextures
         ms.Dispose()
         Return
     End Sub
-    Public Function get_main_tex_bmp(ByVal ms As MemoryStream) As Bitmap
-        Dim s As String = ""
-        s = Gl.glGetError
-        Dim texID As UInt32
-        ms.Position = 0
-        Dim textIn(ms.Length) As Byte
-        ms.Read(textIn, 0, ms.Length)
-        texID = Ilu.iluGenImage() ' Generation of one image name
-        Il.ilBindImage(texID) ' Binding of image name 
-        Il.ilLoadL(Il.IL_DDS, textIn, textIn.Length)
-        Dim success = Il.ilGetError
-        success = Il.ilGetError
-        ms.Close()
-        ms.Dispose()
-        'GC.Collect()
-        'GC.WaitForFullGCComplete()
-        If success = Il.IL_NO_ERROR Then
-            Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
-            Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
-
-            Dim passed = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
-            If Not passed Then
-                MsgBox("Failed Converting Image : get_main_tex_bmp:")
-            End If
-            Ilu.iluFlipImage()
-            Ilu.iluMirror()
-            'If your image contains alpha channel you can replace IL_RGB with IL_RGBA 
-            Dim image As Int32
-            Gl.glGenTextures(1, image)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
-            '**************************************************************************
-            If largestAnsio > 0 Then
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
-            End If
-
-            '		DO NOT CHANGE THESE IDIOT!!!
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
-
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
-            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
-            Il.ilGetData()) '  Texture specification 
-            Gl.glFinish()
-
-            frmMain.pb2.Visible = True
-            'frmMain.pb2.SendToBack()
-            frmMain.pb2.Height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
-            frmMain.pb2.Width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
-            Il.ilBindImage(0)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Il.ilDeleteImages(1, texID)
-            'GC.Collect()
-            'GC.WaitForFullGCComplete()
-            ' has to run on vertical and horz
-            image = blur_image(image, "vert", False)
-            image = blur_image(image, "horz", False)
-            If bmap IsNot Nothing Then
-                bmap = Nothing
-                GC.Collect()
-            End If
-            bmap = New Bitmap(temp_bmp.Width, temp_bmp.Height, temp_bmp.PixelFormat)
-            bmap = temp_bmp.Clone
-            Gl.glDeleteTextures(1, image)
-        Else
-            MsgBox("Failed at :get_main_tex_bmp:" + success.ToString)
-        End If
-        Return bmap
-    End Function
-    Public Sub build_layer_textures_no_bmp(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer)
+    Public Sub build_layer_color_texture(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer)
         Dim s As String = ""
         s = Gl.glGetError
 
@@ -170,18 +103,25 @@ Module modTextures
             If largestAnsio > 0 Then
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
             End If
-
+            Dim e = Gl.glGetError
 
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR)
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_LOD_BIAS, 0.05)
+
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_LEVEL, 5)
+
+
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
 
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
             Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
             Il.ilGetData()) '  Texture specification 
-            Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
+            Ilu.iluDeleteImage(texID)
+            e = Gl.glGetError
         Else
 
         End If
@@ -189,6 +129,94 @@ Module modTextures
         ms.Dispose()
         Return
     End Sub
+
+    Public Function get_main_tex_texture_id(ByVal ms As MemoryStream, ByVal w As Integer) As Integer
+        Dim s As String = ""
+        s = Gl.glGetError
+        Dim texID As UInt32
+        ms.Position = 0
+        Dim textIn(ms.Length) As Byte
+        ms.Read(textIn, 0, ms.Length)
+        texID = Ilu.iluGenImage() ' Generation of one image name
+        Il.ilBindImage(texID) ' Binding of image name 
+        Il.ilLoadL(Il.IL_DDS, textIn, textIn.Length)
+        Dim success = Il.ilGetError
+        success = Il.ilGetError
+        ms.Close()
+        ms.Dispose()
+        'GC.Collect()
+        'GC.WaitForFullGCComplete()
+        Dim max_texture_size As Integer
+        Gl.glGetIntegerv(Gl.GL_MAX_TEXTURE_SIZE, max_texture_size)
+        Dim resize As Integer = 512
+        Dim mod_ As Integer = (Sqrt(maplist.Length - 1)) And 1
+        w += mod_
+        If w * 512 > 4096 Then
+            resize = CInt(4096 / w)
+        End If
+        'w -= mod_
+        If success = Il.IL_NO_ERROR Then
+            Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
+            Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
+
+            Dim passed = Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
+            If Not passed Then
+                MsgBox("Failed Converting Image : get_main_tex_bmp:")
+            End If
+            'Ilu.iluFlipImage()
+            'Ilu.iluMirror()
+            Ilu.iluScale(resize * w, resize * w, 1)
+            'If your image contains alpha channel you can replace IL_RGB with IL_RGBA 
+            Dim image As Int32
+            Gl.glGenTextures(1, image)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, image)
+            '**************************************************************************
+            If largestAnsio > 0 Then
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
+            End If
+
+            '		DO NOT CHANGE THESE IDIOT!!!
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
+            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
+            Il.ilGetData()) '  Texture specification 
+            Gl.glFinish()
+
+            'frmMain.pb2.Visible = True
+            'frmMain.pb2.SendToBack()
+            frmMain.pb2.Height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
+            frmMain.pb2.Width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
+            Il.ilBindImage(0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Il.ilDeleteImages(1, texID)
+            'GC.Collect()
+            'GC.WaitForFullGCComplete()
+            ' has to run on vertical and horz
+            If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
+                MessageBox.Show("Unable to make rendering context current")
+                End
+            End If
+
+            image = blur_image(image, "vert", False)
+            image = blur_image(image, "horz", True)
+
+            If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+                MessageBox.Show("Unable to make rendering context current")
+                End
+            End If
+
+            Return image
+        Else
+            MsgBox("Failed at :get_main_tex_bmp:" + success.ToString)
+        End If
+        Return -1
+    End Function
+
     Public Function build_textures(ByVal map As Int32, ByVal ms As MemoryStream) As Bitmap
         Dim s As String = ""
         s = Gl.glGetError
@@ -239,9 +267,11 @@ Module modTextures
             End If
 
 
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
 
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
             Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
@@ -249,7 +279,7 @@ Module modTextures
             Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
+            Ilu.iluDeleteImage(texID)
             bmap = bitmap.Clone
             bitmap.Dispose()
         Else
@@ -299,13 +329,14 @@ Module modTextures
         Return dummy
     End Function
     Public Sub make_mix_texture_id(map As Integer, b As Bitmap)
+        
         b.RotateFlip(RotateFlipType.RotateNoneFlipX)
-        Gl.glGenTextures(1, map_layers(map).mix_text_Id)
+        Gl.glGenTextures(1, map_layers(map).mix_texture_Id)
         Dim bitmapData = b.LockBits(New Rectangle(0, 0, b.Width, _
                              b.Height), Imaging.ImageLockMode.ReadOnly, Imaging.PixelFormat.Format32bppArgb)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(map).mix_text_Id)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(map).mix_texture_Id)
 
-        Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+        Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
         Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
         Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 4, b.Width, b.Height, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, bitmapData.Scan0)
         b.UnlockBits(bitmapData) ' Unlock The Pixel Data From Memory
@@ -337,15 +368,13 @@ Module modTextures
 
             Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE)
             If shrink Then
-            If shrink Then
-                    Ilu.iluScale(width / 2.0, height / 2.0, 1)
-                    width *= 0.5 : height *= 0.5
-                End If
+                Ilu.iluScale(width / 2.0, height / 2.0, 1)
+                width *= 0.5 : height *= 0.5
             End If
             Dim er As Integer = Gl.glGetError
 
-            success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
-            'If your image contains alpha channel you can replace IL_RGB with IL_RGBA */
+            success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE)
+
             Gl.glGenTextures(1, image_id)
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
@@ -356,7 +385,7 @@ Module modTextures
 
 
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
 
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
@@ -367,13 +396,13 @@ Module modTextures
             Il.ilGetData()) '  Texture specification 
             Gl.glFinish()
         Else
-            MsgBox("Out of memory error", MsgBoxStyle.Critical, "Well Shit!")
+            MsgBox("Out of memory error at :get texture:", MsgBoxStyle.Critical, "Well Shit!")
             End
         End If
         'ReDim textIn(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
-        ilu.iludeleteimage(texID)
+        Ilu.iluDeleteImage(texID)
         ms.Close()
         ms.Dispose()
         'GC.Collect()
@@ -423,7 +452,7 @@ Module modTextures
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
 
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
@@ -475,7 +504,7 @@ Module modTextures
             Gl.glGenTextures(1, image_id)
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
 
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
@@ -585,7 +614,7 @@ Module modTextures
             Gl.glGenTextures(1, image_id)
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
 
@@ -644,9 +673,9 @@ Module modTextures
                 Gl.glGenTextures(1, image_id)
                 Gl.glEnable(Gl.GL_TEXTURE_2D)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_true)
 
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
@@ -671,7 +700,7 @@ Module modTextures
         End If
         Return Nothing
     End Function
-    Public Function get_tank_icon_image(ByVal ms As MemoryStream) As Integer
+    Public Function load_png(ByVal ms As MemoryStream) As Integer
         'Dim s As String = ""
         's = Gl.glGetError
         Dim image_id As Integer = -1
@@ -701,8 +730,7 @@ Module modTextures
             Gl.glEnable(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
 
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
@@ -710,10 +738,10 @@ Module modTextures
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
             Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
             Il.ilGetData()) '  Texture specification 
-            Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
+            'Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
-            ilu.iludeleteimage(texID)
+            Ilu.iluDeleteImage(texID)
             Return image_id
         Else
             Stop
@@ -782,5 +810,51 @@ Module modTextures
         ms.Dispose()
         GC.Collect()
     End Sub
+
+    Public Function get_basic_texture(ByVal ms As MemoryStream) As Integer
+        'Dim s As String = ""
+        's = Gl.glGetError
+        Dim image_id As Integer = -1
+        Dim success = Il.ilGetError
+        'Dim app_local As String = Application.StartupPath.ToString
+
+        Dim texID As UInt32
+        Dim textIn(ms.Length) As Byte
+        ms.Position = 0
+        ms.Read(textIn, 0, ms.Length)
+        texID = Ilu.iluGenImage()
+        Il.ilBindImage(texID)
+        Il.ilLoadL(Il.IL_DDS, textIn, textIn.Length)
+        success = Il.ilGetError
+        If success = Il.IL_NO_ERROR Then
+            'Ilu.iluFlipImage()
+            Ilu.iluMirror()
+            Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
+            Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
+
+
+            Gl.glGenTextures(1, image_id)
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
+
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
+
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
+                            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
+                            Il.ilGetData()) '  Texture specification 
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Il.ilBindImage(0)
+            'ilu.iludeleteimage(texID)
+            Il.ilBindImage(0)
+            Ilu.iluDeleteImage(texID)
+            Return image_id
+        End If
+
+        Return Nothing
+    End Function
 
 End Module

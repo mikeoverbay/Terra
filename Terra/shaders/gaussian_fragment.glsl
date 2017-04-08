@@ -1,9 +1,4 @@
-﻿// writes to depth texture.
-// This is not used yet.
-// Im experimenting with pre-bluring the shadow map.
-// if editing this in the shader editor,
-// you will need to recompile V and H shaders!
- 
+﻿//Used to blur mixmap and main color map
 uniform sampler2D s_texture;
 uniform vec3 blurScale;
 varying vec2 v_texCoord;

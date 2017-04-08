@@ -5,8 +5,11 @@ Imports Tao.DevIl.Ilu
 Imports System.Data
 Imports System.Net.Sockets
 Imports System.Threading
-
+Imports System.IO
 Module structures
+
+
+
     Public shaders As shaders__
     Public Structure shaders__
         Public shader() As shaders_
@@ -48,9 +51,10 @@ Module structures
         Public layers() As layer_data_
         Public layer_count As Integer
         Public main_texture As Integer
+        Public main_texture_id As Integer
         Public mix_image As Bitmap
         Public color_tex As Bitmap
-        Public mix_text_Id As Integer
+        Public mix_texture_Id As Integer
     End Structure
     Public Structure layer_data_
         Public l_name As String
@@ -130,6 +134,10 @@ Module structures
     Public Structure map_item_ : Implements IComparable(Of map_item_)
         Public name As String
         Public realname As String
+        Public size As Single
+        Public grow_shrink As Boolean
+        Public direction As Single
+        Public delay_time As Integer
         Public Function CompareTo(ByVal other As map_item_) As Integer Implements System.IComparable(Of map_item_).CompareTo
             Try
                 Return Me.realname.CompareTo(other.realname)
@@ -287,10 +295,9 @@ Module structures
         Public HZ_normMapID As Int32
         Public colorMapId As Int32
         Public HZ_colorMapID As Int32
-        Public DominateId As Int32
         Public HolesId As Int32
+        Public dominateId As Int32
         Public location As vect3
-        Public col, row As Single
         Public name As String
         Public scr_coords() As Single
         Public cdata() As Byte
@@ -321,7 +328,7 @@ Module structures
         Public filename As List(Of String)
         Public matName As List(Of String)
     End Structure
-    Public Structure vertex_data
+    <Serializable()> Public Structure vertex_data
         Public x As Single
         Public y As Single
         Public z As Single
@@ -333,7 +340,6 @@ Module structures
         Public map As Integer
         Public t As vect3
         Public bt As vect3
-        Public fog_uv As vect2
     End Structure
     Public Function get_length_vertex(v As vertex_data)
         Dim s As Single = v.x + v.y + v.z

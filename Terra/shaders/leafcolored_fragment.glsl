@@ -4,12 +4,11 @@
 in vec3 N;
 in vec3 normal, eyeVec;
 in vec3 lightDir;
-in vec4 color;
 
 void main (void)  
 {  
 
-    vec4 final_color = color;
+    vec4 final_color = gl_FrontColor;
     final_color.a = 1.0;
     vec3 N = normalize(normal);
     vec3 L = normalize(lightDir);

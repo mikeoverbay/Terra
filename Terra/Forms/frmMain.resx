@@ -343,7 +343,7 @@
     <value>False</value>
   </data>
   <data name="m_file.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
+    <value>37, 23</value>
   </data>
   <data name="m_file.Text" xml:space="preserve">
     <value>&amp;File</value>
@@ -401,12 +401,6 @@
   </data>
   <data name="m_show_cursor.Text" xml:space="preserve">
     <value>Show &amp;Cursor</value>
-  </data>
-  <data name="m_show_fog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>197, 22</value>
-  </data>
-  <data name="m_show_fog.Text" xml:space="preserve">
-    <value>Show &amp;Fog</value>
   </data>
   <data name="ToolStripMenuItem8.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 6</value>
@@ -589,7 +583,7 @@
     <value>Hell Mode</value>
   </data>
   <data name="m_settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 20</value>
+    <value>61, 23</value>
   </data>
   <data name="m_settings.Text" xml:space="preserve">
     <value>&amp;Settings</value>
@@ -625,13 +619,13 @@
     <value>Join &amp;Remote as Host</value>
   </data>
   <data name="m_session.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 20</value>
+    <value>58, 23</value>
   </data>
   <data name="m_session.Text" xml:space="preserve">
     <value>Sess&amp;ion</value>
   </data>
   <data name="m_layout_mode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 20</value>
+    <value>88, 23</value>
   </data>
   <data name="m_layout_mode.Text" xml:space="preserve">
     <value>Team Layout</value>
@@ -655,7 +649,7 @@
     <value>False</value>
   </data>
   <data name="m_render_to_bitmap.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 20</value>
+    <value>111, 23</value>
   </data>
   <data name="m_render_to_bitmap.Text" xml:space="preserve">
     <value>Render to Bitmap</value>
@@ -673,7 +667,7 @@
     <value>False</value>
   </data>
   <data name="m_clear_tank_comments.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 20</value>
+    <value>137, 23</value>
   </data>
   <data name="m_clear_tank_comments.Text" xml:space="preserve">
     <value>Clear Tank Comments</value>
@@ -682,40 +676,40 @@
     <value>False</value>
   </data>
   <data name="m_minizoom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 20</value>
+    <value>72, 23</value>
   </data>
   <data name="m_minizoom.Text" xml:space="preserve">
     <value>Mini-Map</value>
   </data>
   <data name="m_mini_down.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 20</value>
+    <value>28, 23</value>
   </data>
   <data name="m_find_Item_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 20</value>
+    <value>71, 23</value>
   </data>
   <data name="m_find_Item_menu.Text" xml:space="preserve">
     <value>Dev Tools</value>
   </data>
   <data name="m_edit_shaders.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 20</value>
+    <value>78, 23</value>
   </data>
   <data name="m_edit_shaders.Text" xml:space="preserve">
     <value>Edit Shader</value>
   </data>
   <data name="HelpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
+    <value>44, 23</value>
   </data>
   <data name="HelpToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Help</value>
   </data>
   <data name="m_mini_up.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 20</value>
+    <value>28, 23</value>
   </data>
   <data name="mainMenu.Location" type="System.Drawing.Point, System.Drawing">
     <value>1, 1</value>
   </data>
   <data name="mainMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>990, 24</value>
+    <value>990, 27</value>
   </data>
   <data name="mainMenu.TabIndex" type="System.Int32, mscorlib">
     <value>41</value>
@@ -2280,12 +2274,6 @@
     <value>m_show_cursor</value>
   </data>
   <data name="&gt;&gt;m_show_cursor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_show_fog.Name" xml:space="preserve">
-    <value>m_show_fog</value>
-  </data>
-  <data name="&gt;&gt;m_show_fog.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ToolStripMenuItem8.Name" xml:space="preserve">

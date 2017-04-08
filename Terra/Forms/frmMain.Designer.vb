@@ -58,7 +58,6 @@ Partial Class frmMain
         Me.m_show_water = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_decals = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_cursor = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_show_fog = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem8 = New System.Windows.Forms.ToolStripSeparator()
         Me.ViewDistanceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_200 = New System.Windows.Forms.ToolStripMenuItem()
@@ -263,7 +262,7 @@ Partial Class frmMain
         '
         'm_g_settings
         '
-        Me.m_g_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_show_tank_names, Me.m_show_tank_comments, Me.ToolStripSeparator4, Me.m_show_models, Me.m_show_trees, Me.m_show_water, Me.m_show_decals, Me.m_show_cursor, Me.m_show_fog, Me.ToolStripMenuItem8, Me.ViewDistanceToolStripMenuItem, Me.m_map_border, Me.m_show_map_grid, Me.m_show_chunks, Me.m_show_chuckIds, Me.ToolStripMenuItem9, Me.m_high_rez_Terrain, Me.m_bump_map_models, Me.ToolStripSeparator5, Me.m_show_uv2, Me.m_load_lod, Me.m_load_details, Me.m_low_quality_textures, Me.m_low_quality_trees, Me.ToolStripSeparator7, Me.m_wire_models, Me.m_wire_trees, Me.m_wire_decals, Me.m_wire_terrain})
+        Me.m_g_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_show_tank_names, Me.m_show_tank_comments, Me.ToolStripSeparator4, Me.m_show_models, Me.m_show_trees, Me.m_show_water, Me.m_show_decals, Me.m_show_cursor, Me.ToolStripMenuItem8, Me.ViewDistanceToolStripMenuItem, Me.m_map_border, Me.m_show_map_grid, Me.m_show_chunks, Me.m_show_chuckIds, Me.ToolStripMenuItem9, Me.m_high_rez_Terrain, Me.m_bump_map_models, Me.ToolStripSeparator5, Me.m_show_uv2, Me.m_load_lod, Me.m_load_details, Me.m_low_quality_textures, Me.m_low_quality_trees, Me.ToolStripSeparator7, Me.m_wire_models, Me.m_wire_trees, Me.m_wire_decals, Me.m_wire_terrain})
         Me.m_g_settings.Name = "m_g_settings"
         resources.ApplyResources(Me.m_g_settings, "m_g_settings")
         '
@@ -325,14 +324,6 @@ Partial Class frmMain
         Me.m_show_cursor.CheckOnClick = True
         Me.m_show_cursor.Name = "m_show_cursor"
         resources.ApplyResources(Me.m_show_cursor, "m_show_cursor")
-        '
-        'm_show_fog
-        '
-        Me.m_show_fog.Checked = Global.Terra.My.MySettings.Default.enable_fog
-        Me.m_show_fog.CheckOnClick = True
-        Me.m_show_fog.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.m_show_fog.Name = "m_show_fog"
-        resources.ApplyResources(Me.m_show_fog, "m_show_fog")
         '
         'ToolStripMenuItem8
         '
@@ -738,8 +729,7 @@ Partial Class frmMain
 	Friend WithEvents ToolStripMenuItem5 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem6 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem9 As System.Windows.Forms.ToolStripSeparator
-	Friend WithEvents m_show_fog As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_load_details As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_load_details As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_show_chuckIds As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_low_quality_textures As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_low_quality_trees As System.Windows.Forms.ToolStripMenuItem

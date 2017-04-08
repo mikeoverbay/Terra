@@ -1,4 +1,4 @@
-//#Version 130
+#version 130
 //Used to light all models
 out vec3 vVertex;
 out vec3 lightDirection;

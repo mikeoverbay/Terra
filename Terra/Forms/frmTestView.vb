@@ -58,7 +58,7 @@
         Select Case image_id
             Case 1
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, post_depth_image_id)
-                Gl.glUseProgram(shader_list.toLinear_shader)
+                'Gl.glUseProgram(shader_list.toLinear_shader)
             Case 2
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, post_color_image_id)
                 Gl.glUseProgram(shader_list.lowQualityTrees_shader)

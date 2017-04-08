@@ -2161,17 +2161,26 @@ leafs:
         For i = 0 To (vertex_count * 22) - 1
             tree_data.l_vert(i) = br.ReadSingle 'get the data
         Next
-        'lod? <-- NO!! these are diferent levels of leaves. We need all of them.
+        'lod? Yes... we are only needing LOD 0
         lod_ = br.ReadInt32 'Get number of levels.
         Dim cnt2 = 0 ' running pointer in to array
         ReDim tree_data.l_indices(1)
         For k = 0 To lod_ - 1
             Dim ind_cnt_ = br.ReadInt32 ' get count
-            ReDim Preserve tree_data.l_indices(tree_data.l_indices.Length + ind_cnt_ - 1)   ' make room for them
-            For i = 0 To ind_cnt_ - 1
-                tree_data.l_indices(cnt2) = br.ReadInt32
-                cnt2 += 1
-            Next
+            If k = 0 Then
+
+                ReDim Preserve tree_data.l_indices(tree_data.l_indices.Length + ind_cnt_ - 1)   ' make room for them
+                For i = 0 To ind_cnt_ - 1
+                    tree_data.l_indices(cnt2) = br.ReadInt32
+                    cnt2 += 1
+                Next
+            Else
+                For i = 0 To ind_cnt_ - 1
+                    'just read off the other LODs.. we dont need them.
+                    br.ReadInt32()
+                Next
+
+            End If
 
         Next
 lod_skip:

@@ -4,7 +4,6 @@
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
 uniform sampler2D colorMap_2;
-uniform int enable_fog;
 uniform int is_GAmap;
 uniform float l_texture;
 uniform float gray_level;
@@ -27,7 +26,7 @@ in vec3 n;
 void main(void) {
     vec3 bump;
     float alpha;
-    float harshness = 1.0;
+    float harshness = 0.4;
     float boost = 1.0;
     float a;
     vec3 bumpMap;
@@ -45,19 +44,13 @@ void main(void) {
             if (a < alpha) {
                 discard;
             }
-
-
-    }
-  } else {
+        }
+    } else {
         bumpMap = (2.0 * texture2D(normalMap, TC1.st).rgb) - 1.0;
         bumpMap = normalize(bumpMap);
         a = textureLod(colorMap, TC1.st, int(0)).a;
-        if (a < 0.3) {
-            discard;
-        }
-
-
-  }
+        if (a < 0.3) {discard;}
+    }
 
     vec4 base = texture2D(colorMap, TC1.st);
     if (is_multi_textured == int(1)) {
@@ -68,20 +61,19 @@ void main(void) {
    vec4 color = base;
    color.rgb *= l_texture;
 
+// Get the perturbed normal
+    vec3 PN = normalize(TBN * bumpMap);
+// light position
+    vec3 L = normalize(lightDirection);
+//caclulate lighting
 
-
-    // Get the perturbed normal
-  vec3 PN = normalize(TBN * bumpMap);
-    // light position
-  vec3 L = normalize(lightDirection);
-    //caclulate lighting
-
-  //color*=0.3;
-  float NdotL = max(dot(PN, L), 0.0);
+//color*=0.3;
+    float NdotL = max(dot(PN, L), 0.0);
+    //NdotL -= sin((NdotL) * 1.570796)*1.0;
     color.rgb += (color.rgb * pow(NdotL, 1.0));
     vec4 final_color = color;
     final_color.rgb += (base.rgb * ambient*1.0);
-    gl_FragColor = final_color;
+    gl_FragColor = final_color*.7;
 
     //gamma
     vec3 vG = vec3(harshness, harshness, harshness);
@@ -91,21 +83,15 @@ void main(void) {
     vec3 co = vec3(dot(luma, gl_FragColor.rgb));
     vec3 c = mix(co, gl_FragColor.rgb, gray_level);
     gl_FragColor.rgb = c;
-    //======================================================
-  //debug junk
-  //gl_FragColor.rgb = (color.rgb * 0.00001 + (vec3(3.0) * NdotL));
-  //======================================================
+//======================================================
+//debug junk
+//gl_FragColor.rgb = (color.rgb * 0.00001 + (vec3(3.0) * NdotL));
+//======================================================
 
-  // FOG calculation
-  const float LOG2 = 1.442695;
+// FOG calculation
+    const float LOG2 = 1.442695;
     float z = gl_FragCoord.z / gl_FragCoord.w;
     float fogFactor = exp2(-gl_Fog.density * gl_Fog.density * z * z * LOG2);
     fogFactor = clamp(fogFactor, 0.0, 1.0);
-    if (enable_fog == int(1)) {
-        gl_FragColor = mix(gl_Fog.color, gl_FragColor, fogFactor);
-    }
- else {
-        gl_FragColor = gl_FragColor;
-    }
-    //gl_FragColor.rgb = gl_FragColor.rgb*.001 + n.xyz;
+    gl_FragColor = mix(gl_Fog.color, gl_FragColor, fogFactor);
 }

@@ -31,7 +31,9 @@ Imports Ionic
 Module modZlib
     Public has_high_rez_map As Boolean = False
     Public mini_map_loaded As Boolean = False
-    Private totalEntriesToProcess As Integer
+    Private totalEntriesToProcess As Integer = 0
+    Private main_color_texture As String = ""
+    Public colour_correct_tex_id As Integer
     Public Function get_team_locations(ByRef name As String) As Boolean
         Dim ar = name.Split(".")
         Dim script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\scripts.pkg")
@@ -43,6 +45,7 @@ Module modZlib
         ms.Position = 0
         openXml_stream(ms, "")
         script_pkg.Dispose()
+
         ms.Dispose()
         Dim t As DataSet = xmldataset.Copy
         Dim t1 As DataTable = t.Tables("team1")
@@ -90,6 +93,7 @@ Module modZlib
         If Not maploaded Then
             Return
         End If
+
         Try
             Dim f = File.Open(Application.StartupPath + "/light_settings/" + load_map_name + ".light", FileMode.Create)
             Dim b_writer As New BinaryWriter(f)
@@ -174,18 +178,17 @@ Module modZlib
         'Caluculate data size for mesh. Tis will be used to average normals, tangents and bi-tangents
         ReDim mesh(0) 'first, clear out any old data
         mesh(0) = New vertex_data
-        ReDim Preserve triangle_holder(0) 'first, clear out any old data
-        triangle_holder(0) = New t_holder_
         GC.Collect()
         GC.WaitForFullGCComplete()
         ReDim Preserve mesh((global_map_width * global_map_width) * 4096) '  4096 verts per chunk 
-        ReDim Preserve triangle_holder((global_map_width * global_map_width) * (4096 * 6)) ' will be resized at the end of loading it
         triangle_count = 0 ' very important lol!!
         GC.Collect()
     End Sub
     Public Function open_pkg(ByVal name As String) As Boolean
 
         'This function reads the data and creates the map, models, trees and everything else.
+        'SHOW_MAPS = False
+
         terrain_loaded = False
         trees_loaded = False
         decals_loaded = False
@@ -194,12 +197,7 @@ Module modZlib
         sky_loaded = False
         water_loaded = False
 
-        SHOW_MAPS = False
-        frmMain.draw_scene()
-        SHOW_MAPS = False
-        SHOW_MAPS = False
-        frmMain.draw_scene()
-        SHOW_MAPS = False
+        frmMain.flush_data() 'clear everything
 
         clear_info() 'clear all the text in frmMapInfo
         frmMapInfo.I__General_Info_tb.Text += "Map Name: " + name + vbCrLf + vbCrLf
@@ -212,7 +210,7 @@ Module modZlib
         '================================================================
         'need to reset these so changes in the menu items take effect
         'Also.. they trigger what mode to display the terrain and models
-        screen_totaled_draw_time = 1000
+        screen_totaled_draw_time = 0
         hz_loaded = False
         model_bump_loaded = False
         uv2s_loaded = False
@@ -260,7 +258,18 @@ Module modZlib
         Catch ex As Exception
 
         End Try
-        SHOW_MAPS = False
+        'didn't work out all that great
+        'Using misc As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\misc.pkg")
+        '    Dim crc As ZipEntry = misc("\system\maps\post_processing\colour_correct_default.dds")
+        '    'Dim crc As ZipEntry = misc("\system\maps\post_processing\s_curve\s_curve.dds")
+        '    If crc IsNot Nothing Then
+        '        Dim crc_ms As New MemoryStream
+        '        crc.Extract(crc_ms)
+        '        colour_correct_tex_id = get_basic_texture(crc_ms)
+        '    Else
+        '        MsgBox("Unable to find colour correction texture", MsgBoxStyle.Exclamation, "Well Hell!")
+        '    End If
+        'End Using
 
         'Dim filesize = FileLen("GAME_PATH & " & name)
         'Dim thepkg(filesize) As Byte
@@ -346,6 +355,9 @@ Module modZlib
                 ReDim Preserve maplist(cnt)
                 ReDim Preserve sec_list(cnt)
             End If
+            If contents(pos).ToLower.Contains("color_tex.dds") Then
+                main_color_texture = contents(pos).ToString
+            End If
 dont_grab_this:
         Next
         'Ok this is a hack to get the speedtree info from the shared_content.pkg
@@ -412,53 +424,19 @@ dont_grab_this:
         'openXml_stream(fmp, "flora")
         'fmp.Dispose()
         '---------------------------------------
-        'get the minimap image and put on screen
+        'get the minimap image
+        '====================================================
         Dim mmp As New MemoryStream
         Dim mmentry As Ionic.Zip.ZipEntry = active_pkg(minimap_name)
         mmentry.Extract(mmp)
         minimap_textureid = get_texture(mmp, False)
         mmp.Dispose()
         GC.Collect()
-        '----------------- 
-        frmMain.tb1.Text = "Getting minimap tank Icons..."
-        ' get the little tank icons for the minimap
-        Dim gui = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
-        Dim sp = "\gui\maps\icons\filters\tanks\"
-        'heavy
-        Dim icon_ms As New MemoryStream
-        Dim icon_entry As Ionic.Zip.ZipEntry = gui(sp + "heavyTank.png")
-        icon_entry.Extract(icon_ms)
-        tank_mini_icons(0) = get_tank_icon_image(icon_ms)
-        'med
-        icon_ms = New MemoryStream
-        icon_entry = gui(sp + "mediumTank.png")
-        icon_entry.Extract(icon_ms)
-        tank_mini_icons(1) = get_tank_icon_image(icon_ms)
-        'light
-        icon_ms = New MemoryStream
-        icon_entry = gui(sp + "lightTank.png")
-        icon_entry.Extract(icon_ms)
-        tank_mini_icons(2) = get_tank_icon_image(icon_ms)
-        'td
-        icon_ms = New MemoryStream
-        icon_entry = gui(sp + "AT-SPG.png")
-        icon_entry.Extract(icon_ms)
-        tank_mini_icons(3) = get_tank_icon_image(icon_ms)
-        'spg
-        icon_ms = New MemoryStream
-        icon_entry = gui(sp + "SPG.png")
-        icon_entry.Extract(icon_ms)
-        tank_mini_icons(4) = get_tank_icon_image(icon_ms)
-        'this reads the custom minimap border I made.
-        Dim mini_data() = File.ReadAllBytes(Application.StartupPath + "\resources\minimap_frame.png")
-        icon_ms = New MemoryStream(mini_data)
-        minimsp_frameT_TextureId = get_tank_icon_image(icon_ms)
-        icon_ms.Dispose()
-        gui.Dispose()
+
+        '====================================================
+        get_minimap_tank_icons()
         GC.Collect()
-        minimap_size = My.Settings.minimap_size
-        '	frmMain.draw_minimap()
-        frmMain.draw_scene()
+        '----------------- 
         '====================================================
         'let the user know whats going on
         cnt = 0
@@ -473,20 +451,17 @@ dont_grab_this:
             maplist(cnt).cdata = ms2.GetBuffer
             cnt += 1
             ms2.Dispose()
-
         Next
 
-        contents.Clear()
+        contents.Clear() 'free up memory
         GC.Collect()
 
         test_count = maplist.Length - 2
 
 
         '******************************************************************************
-        prepare_mesh_buffers()
+        prepare_mesh_buffers() ' This is crashing on very large maps
         '******************************************************************************
-
-
 
         Dim mapsize As Integer = (Sqrt(maplist.Length - 1)) * 100
 
@@ -494,8 +469,415 @@ dont_grab_this:
         'test_count = 1
         Dim map_start = 0
         Dim test2 As Int32 = test_count
-        ' gotta setup for skydome.. Im using the modlist and will copy and reset the info when done with it
         '******************************************************************************
+        ' gotta setup for skydome.. Im using the modlist and will copy and reset the info when done with it
+        load_skydome()
+
+        '******************************************************************************
+        'setup progress bar
+        frmMain.ProgressBar1.Visible = True
+        frmMain.ProgressBar1.Maximum = maplist.Length - 2
+        frmMain.ProgressBar1.Minimum = 0
+        frmMain.ProgressBar1.Value = 0
+        Application.DoEvents()
+        'this part gets the grid parts (terrain2) and builds the world.
+        ReDim map_layers(test2)
+        '**********************************************
+        '**********************************************
+        '**********************************************
+        load_terrain(name)
+        GC.Collect()
+        GC.WaitForFullGCComplete() 'release memory.
+        '**********************************************
+        '**********************************************
+        load_models()
+        GC.Collect()
+        GC.WaitForFullGCComplete()
+        '**********************************************
+        '**********************************************
+        load_trees()
+        GC.Collect()
+        GC.WaitForFullGCComplete()
+        '**********************************************
+        '**********************************************
+        load_decals()
+        GC.Collect()
+        GC.WaitForFullGCComplete()
+        '**********************************************
+        '**********************************************
+
+        '-----------------------------------
+        If m_bases_ Then
+            bases_laoded = True
+            'lets make the team rings here? OK.
+            ringDisplayID_1 = Gl.glGenLists(1)
+            Gl.glNewList(ringDisplayID_1, Gl.GL_COMPILE)
+            draw_ring(-team_1.x, team_1.z)
+            Gl.glEndList()
+            Gl.glFinish()
+
+            ringDisplayID_2 = Gl.glGenLists(1)
+            Gl.glNewList(ringDisplayID_2, Gl.GL_COMPILE)
+            draw_ring(-team_2.x, team_2.z)
+            Gl.glEndList()
+            Gl.glFinish()
+            '---------------------------------------
+        End If
+        'lets make the sector outlines
+        sector_outlineID = Gl.glGenLists(1)
+        Gl.glNewList(sector_outlineID, Gl.GL_COMPILE)
+        create_grid_marks()
+        Gl.glEndList()
+        'lets make the map outside border
+        map_borderId = Gl.glGenLists(1)
+        Gl.glNewList(map_borderId, Gl.GL_COMPILE)
+        make_map_boarder()
+        Gl.glEndList()
+
+
+        '**********************************************
+        glob_str = ""
+        'clean up data.. recover memory.
+        For map = map_start To test_count
+            ReDim maplist(map).cdata(1) ' clear
+            GC.Collect()
+        Next
+        '*******************************************************************************************
+
+
+        '*******************************************************************************************
+
+        '*******************************************************************************************
+
+        frmMapInfo.I__General_Info_tb.Text += "Decals: " + Format("0000", decal_matrix_list.Length - 1) + vbCrLf
+        frmMapInfo.I__General_Info_tb.Text += "Trees: " + Format("0000", speedtree_matrix_list.Length - 1) + vbCrLf
+        frmMapInfo.I__General_Info_tb.Text += "Models: " + Format("0000", Model_Matrix_list.Length - 1) + vbCrLf
+
+        'We are going to create the water now.. before closing the PKGs.. may want to get
+        'textures from them?? This app does not refresh nonstop. no point in animated textures for the water
+        If m_water_ Then
+            water_loaded = True
+            If BWWa.bwwa_t1(0).width > 0 Then
+                water.IsWater = True
+                build_water()
+                water.textureID = Load_DDS_File(Application.StartupPath + "\Resources\water2.dds")
+                GC.Collect()
+            End If
+        End If
+        'these packages are HUGE!.. I need to find a way to read as needed.
+        active_pkg.Dispose()    ' VERY IMPORTANT !!!
+        shared_content1.Dispose() ' VERY IMPORTANT !!!
+        shared_content2.Dispose() ' VERY IMPORTANT !!!
+        Try
+            active_pkg_hd.Dispose() ' VERY IMPORTANT !!!
+        Catch ex As Exception
+        End Try
+        Try
+            shared_content1_hd.Dispose() ' VERY IMPORTANT !!!
+        Catch ex As Exception
+        End Try
+        Try
+            shared_content2_hd.Dispose() ' VERY IMPORTANT !!!
+        Catch ex As Exception
+        End Try
+        frmMain.ProgressBar1.Visible = False
+        'let the renderer know the models are loaded and ready
+        sw.Stop() ' stopwatch for load time
+        Cam_Y_angle = PI * -0.125
+        Cam_X_angle = PI * 0.25
+        look_point_X = 0.01
+        look_point_Z = 0.01
+        View_Radius = -150.0
+        Dim tm = sw.Elapsed
+        Dim t = Format(tm.Seconds, "00")
+        Dim mt = Format(tm.Minutes, "00")
+        frmMain.tb1.Text = "Load time " + mt + ":" + t + vbCrLf
+        frmMain.tb1.Text += "Reused Textures: " + saved_texture_loads.ToString + vbCrLf
+        frmMain.tb1.Text += "Reused Models: " + saved_model_loads.ToString + vbCrLf
+        frmMain.tb1.Text += "lod2 used: " + lod2_swap.ToString + _
+                                        "   lod1 used: " + lod1_swap.ToString + _
+                                        "   lod0 used: " + lod0_swap.ToString
+
+        'make_stars()
+
+        frmMain.pb1.Focus()
+        maploaded = True ' entire map is ready for display.
+        frmMain.position_camera() ' this should cause a redraw
+
+        frmMain.draw_scene()
+    End Function
+
+    Private Sub load_terrain(ByVal name As String)
+        Dim dms As New MemoryStream
+        Dim abs_name = Path.GetFileNameWithoutExtension(name)
+        Dim decalBin As Ionic.Zip.ZipEntry = active_pkg("spaces/" & abs_name & "/decals.bin")
+        decalBin.Extract(dms)
+        get_decal_bin(dms) 'gets the dominate texture map
+
+
+
+
+        get_map_extremes()
+        Dim m_layers As Boolean = frmMain.m_high_rez_Terrain.Checked
+        If m_terrain_ Then
+            terrain_loaded = True
+            For map = 0 To test_count
+                'let the user know whats going on
+                frmMain.tb1.Text = "Getting Terrain Data ( " + map.ToString + " )"
+                Application.DoEvents()
+                Dim cms As New MemoryStream(maplist(map).cdata)
+                Dim cdata As New MemoryStream
+                Dim tms As New MemoryStream
+                Dim norms As New MemoryStream
+                Dim dom As New MemoryStream
+                Dim holes_ms As New MemoryStream
+                Using ck As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(cms)
+                    ReDim maplist(map).scr_coords(3) ' used with unproject
+                    Dim heights As Ionic.Zip.ZipEntry = ck("terrain2/heights")
+                    heights.Extract(cdata)
+                    read_heights(cdata, map)
+
+                    Dim texture As Ionic.Zip.ZipEntry = ck("terrain2/lodTexture.dds")
+                    texture.Extract(tms)
+                    Using btm As New Bitmap(build_textures(map, tms).Clone, 64, 64)
+                        maplist(map).bmap = btm.Clone 'used only for grid listing utility
+                    End Using
+                    'maplist(map).bmap = build_textures(map, tms).Clone
+                    GC.Collect()
+                    Dim holes As Ionic.Zip.ZipEntry = ck("terrain2/holes")
+
+                    If holes IsNot Nothing Then
+                        maplist(map).has_holes = 1
+                        holes.Extract(holes_ms)
+                        open_hole_info(map, holes_ms)
+                    Else
+                        maplist(map).has_holes = 0
+                    End If
+                    ' dont know how to use it :(
+                    'Dim dominate As Ionic.Zip.ZipEntry = ck("terrain2/dominantTextures")
+                    'dominate.Extract(dom)
+                    'get_dominate_texture(map, dom) 'gets the dominate texture map
+
+                    get_location(map)   'finds location in the world
+                    build_terra(map) 'builds the geometry
+                    frmMain.ProgressBar1.Value = map
+                    Application.DoEvents()
+                    ck.Dispose()
+                End Using
+                cms.Dispose()
+                cdata.Dispose()
+                tms.Dispose()
+                norms.Dispose()
+                dom.Dispose()
+                holes_ms.Dispose()
+                GC.Collect() ' try to force release of memory.
+            Next
+            'Debug.Write(testSR.ToString)
+            GC.WaitForFullGCComplete() ' wait until memory is released. We need it.
+            '**********************************************
+            'File.WriteAllText("C:\MapLayerList.txt", testSR.ToString)
+            'lets seam the World (creates map seam in between the chunks)
+            seam_map()
+            'Debug.WriteLine("old tri_count:" + tri_count.ToString)
+            '=============================================================
+            'Terrain rework stuff
+            'At this point. the giant mesh "mesh" has been create.
+            'We need to get the Tangents BiTangents and Normals
+            '
+            'order IS important :)
+            frmMain.tb1.Text = "Creating the Terrain's Normals, Tangents and BiTangents."
+            Application.DoEvents()
+            createTBNs()
+            'ReDim Preserve triangle_holder(triangle_count)
+            frmMain.tb1.Text = "Averging the surface normals..."
+            Application.DoEvents()
+            average_mesh_btns()
+            frmMain.tb1.Text = "Creating chunk display lists..."
+            Application.DoEvents()
+            make_chunk_meshes() ' this  breaks the big mesh in to small chunk meshes
+            frmMain.tb1.Text = "Cleaning up memory..."
+            Application.DoEvents()
+            ReDim mesh(0) 'clear
+            'ReDim triangle_holder(0) 'clear
+            GC.Collect()
+            GC.WaitForFullGCComplete(5000)
+            '=============================================================
+            ' this is where we will make the blend texture and slice the huge color_tex in to its chuck areas.
+            Try
+                If m_layers Then
+
+                    hz_loaded = True ' this is to let the user know that switch to hirez does not work if the map was not loaded in hirez
+                    'get the layers
+                    frmMain.ProgressBar1.Maximum = test_count
+                    frmMain.ProgressBar1.Minimum = 0
+                    frmMain.ProgressBar1.Value = 0
+                    Dim found_ As Boolean = False
+                    layer_uv_list = "" 'clear this
+                    get_main_texture = True
+                    frmMain.tb1.Text = "Getting the main Terrain Texture.  This may take a while...."
+                    Application.DoEvents()
+                    Dim main_map As Ionic.Zip.ZipEntry = Nothing
+                    main_map = active_pkg(main_color_texture)
+
+                    'If name.Contains("19_") Then
+                    '    main_map = active_pkg("\maps\landscape\19_Kurgan\color_tex.dds")
+                    'Else
+                    '    main_map = active_pkg("\maps\landscape\" + name.Replace(".pkg", "") + "\color_tex.dds")
+                    'End If
+                    Dim main_map_ms As New MemoryStream
+                    If main_map Is Nothing Then
+                        MsgBox("Can't find main texture")
+                    End If
+                    main_map.Extract(main_map_ms)
+                    'MsgBox("Debug stop")
+                    Dim w = Sqrt(maplist.Length - 1)
+                    'Convert memorystream in to the color_tex image id.
+                    Dim main_tex_id As Integer = get_main_tex_texture_id(main_map_ms, w)
+                    main_map_ms.Dispose()
+                    GC.Collect()
+
+                    'This reads all the data from each chunks .cdata and extracts the layer and mixmap info.
+                    For map = 0 To test_count
+                        frmMain.tb1.Text = "Getting the Terrain layer information and mixmaps (" + map.ToString + ")"
+                        Application.DoEvents()
+                        Dim cms As New MemoryStream(maplist(map).cdata)
+                        Using ck As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(cms)
+                            map_layers(map) = New layer_ ' create the structure to store data
+                            Dim layer_count As Integer = get_layers(ck, map)
+                        End Using
+                        cms.Dispose()
+                        GC.Collect()
+                        frmMain.ProgressBar1.Value = map
+                        Application.DoEvents()
+                    Next
+                    'reset progressbar
+                    frmMain.ProgressBar1.Maximum = maplist.Length - 2
+                    frmMain.ProgressBar1.Minimum = 0
+                    frmMain.ProgressBar1.Value = 0
+
+                    'create the blured mix textures.
+                    'ReWrote to use single textures with 8 padding all around for bluring!!
+                    create_mixMaps()
+                    GC.Collect()
+                    GC.WaitForFullGCComplete()
+                    '
+                    frmMain.ProgressBar1.Maximum = maplist.Length - 2
+                    frmMain.ProgressBar1.Minimum = 0
+                    frmMain.ProgressBar1.Value = 0
+
+                    split_up_main_texture(w, main_tex_id)
+
+                    GC.Collect()
+                    GC.WaitForFullGCComplete()
+
+                    'Debug.WriteLine("========================")
+                    frmMain.pb2.Visible = False
+                    frmMain.pb2.SendToBack()
+
+                End If ' if m_layers
+            Catch ex As Exception
+                MsgBox(ex.ToString + vbCrLf + "Crashed at loading the terrain!", MsgBoxStyle.Exclamation, "Well Shit!")
+            End Try
+        End If ' m_terrain_
+
+
+    End Sub
+
+    Private Sub load_models()
+        If m_models_ Then
+            models_loaded = True
+            'setup progress bar
+            frmMain.ProgressBar1.Value = 0
+            frmMain.ProgressBar1.Maximum = Model_Matrix_list.Length
+            ReDim Models.models(Model_Matrix_list.Length)
+            Models.models(0) = New primitive
+            Models.model_count = Model_Matrix_list.Length - 2
+            'make all the models.
+            For m = 0 To Model_Matrix_list.Length - 2
+                If True Then
+                    'stuff we dont want on the map.
+                    If Model_Matrix_list(m).primitive_name.ToLower.Contains("wgl_banner") _
+                        Or Model_Matrix_list(m).primitive_name.ToLower.Contains("000_base") _
+                        Or Model_Matrix_list(m).primitive_name.ToLower.Contains("particles") Then
+                        GoTo skip_this
+                    End If
+                    frmMain.ProgressBar1.Value = m
+                    frmMain.tb1.Text = "Loading the models ( " + m.ToString + " )"
+                    ReDim Preserve Models.Model_list(m + 1)
+                    Models.Model_list(m) = Model_Matrix_list(m).primitive_name
+                    Models.models(m) = New primitive
+                    ReDim Models.models(m).componets(1)
+                    Models.models(m).componets(0) = New Model_Section
+                    Models.models(m).componets(0).color_id = -1
+                    ReDim Preserve Models.matrix(m + 1)
+                    ReDim Models.matrix(m).matrix(16)
+                    Models.matrix(m).matrix = Model_Matrix_list(m).matrix
+                    'some of the matrix has to be inverted because of Opengl/DirectX issues
+                    Models.matrix(m).matrix(1) *= -1.0
+                    Models.matrix(m).matrix(2) *= -1.0
+                    Models.matrix(m).matrix(4) *= -1.0
+                    Models.matrix(m).matrix(8) *= -1.0
+                    Models.matrix(m).matrix(12) *= -1.0
+                    get_primitive(m, active_pkg)
+                Else
+
+                End If
+skip_this:
+                Application.DoEvents()
+            Next
+        End If
+
+    End Sub
+
+    Private Sub load_trees()
+        If m_trees_ Then
+            trees_loaded = True
+            frmMain.ProgressBar1.Value = 0
+            frmMain.ProgressBar1.Maximum = speedtree_matrix_list.Length
+
+            Trees = New Tree_s
+            ReDim Trees.flora(0)
+            ReDim treeCache(0)
+            treeCache(0) = New flora_
+            ReDim Trees.Tree_list(speedtree_matrix_list.Length)
+            'make all the trees and shrubs... 
+            For tree = 0 To speedtree_matrix_list.Length - 2
+                frmMain.tb1.Text = "Loading the trees ( " + tree.ToString + " )"
+                frmMain.ProgressBar1.Value = tree
+                'same as with models.. we must invert some of the matrix.
+                speedtree_matrix_list(tree).matrix(1) *= -1.0
+                speedtree_matrix_list(tree).matrix(2) *= -1.0
+                speedtree_matrix_list(tree).matrix(4) *= -1.0
+                speedtree_matrix_list(tree).matrix(8) *= -1.0
+                speedtree_matrix_list(tree).matrix(12) *= -1.0
+
+                Trees.Tree_list(tree) = speedtree_matrix_list(tree).tree_name
+                ReDim Preserve Trees.matrix(tree + 1)
+                ReDim Trees.matrix(tree).matrix(15)
+
+                Trees.matrix(tree).matrix = speedtree_matrix_list(tree).matrix
+                build_tree(tree, speedtree_matrix_list(tree).tree_name)
+                Application.DoEvents()
+            Next
+        End If
+        'Make the pr0jected decals' I need to speed this process up!
+
+    End Sub
+
+    Private Sub load_decals()
+        If m_decals_ Then
+            decals_loaded = True
+            make_decals() ' this wont run ok in background thread for some reason.
+            GC.Collect()
+            GC.WaitForFullGCComplete()
+            build_decals() ' finish making the decals.. this involves projecting them on to the terrain and grabbing textures.
+        End If
+
+    End Sub
+
+    Private Sub load_skydome()
+
+
         If m_sky_ Then
             sky_loaded = True
             frmMain.tb1.Text = "Making Skydome..."
@@ -555,450 +937,54 @@ dont_grab_this:
         loaded_models.names = New List(Of String)
         loaded_models.stack(0) = New mdl_stack
         loaded_models._count = 0
-        cnt = 0
         'mini_map and Sky dome are loaded... Tell app they are.
         mini_map_loaded = True
-        '******************************************************************************
-        'setup progress bar
-        frmMain.ProgressBar1.Visible = True
-        frmMain.ProgressBar1.Maximum = maplist.Length - 2
-        frmMain.ProgressBar1.Minimum = 0
-        frmMain.ProgressBar1.Value = 0
-        Application.DoEvents()
-        'this part gets the grid parts (terrain2) and builds the world.
-        ReDim map_layers(test2)
-        '**********************************************
-        '**********************************************
-        '**********************************************
-        Dim m_layers As Boolean = frmMain.m_high_rez_Terrain.Checked
-        '**********************************************
-        '**********************************************
-        '**********************************************
-        get_map_extremes()
-        If m_terrain_ Then
-            terrain_loaded = True
-            For map = map_start To test2
-                'let the user know whats going on
-                frmMain.tb1.Text = "Getting Terrain Data ( " + map.ToString + " )"
-                Application.DoEvents()
-                Dim cms As New MemoryStream(maplist(map).cdata)
-                Dim cdata As New MemoryStream
-                Dim tms As New MemoryStream
-                Dim norms As New MemoryStream
-                Dim dom As New MemoryStream
-                Dim holes_ms As New MemoryStream
-                Using ck As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(cms)
-                    ReDim maplist(map).scr_coords(3) ' used with unproject
-                    Dim heights As Ionic.Zip.ZipEntry = ck("terrain2/heights")
-                    heights.Extract(cdata)
-                    read_heights(cdata, map)
 
-                    Dim texture As Ionic.Zip.ZipEntry = ck("terrain2/lodTexture.dds")
-                    texture.Extract(tms)
-                    Using btm As New Bitmap(build_textures(map, tms).Clone, 64, 64)
-                        maplist(map).bmap = btm.Clone 'used only for grid listing utility
-                    End Using
-                    'maplist(map).bmap = build_textures(map, tms).Clone
-                    GC.Collect()
-                    'Dim normals As Ionic.Zip.ZipEntry = ck("terrain2/lodNormals")
-                    'normals.Extract(norms)
-                    Dim holes As Ionic.Zip.ZipEntry = ck("terrain2/holes")
+    End Sub
 
-                    If holes IsNot Nothing Then
-                        maplist(map).has_holes = 1
-                        holes.Extract(holes_ms)
-                        open_hole_info(map, holes_ms)
-                    Else
-                        maplist(map).has_holes = 0
-                    End If
-                    ' dont know how to use it :(
-                    'Dim dominate As Ionic.Zip.ZipEntry = ck("terrain2/dominantTextures")
-                    'dominate.Extract(dom)
-                    'open_dominate(map, dom)' renamed this to open_hole_info(map,dom)
+    Private Sub get_minimap_tank_icons()
 
-                    'get_surface_normals(norms, map) 'gets the normal map
-                    get_location(map)   'finds location in the world
-                    build_terra(map) 'builds the geometry
-                    'make_lists(map) 'makes the display lists <-- HOLY SHIT!! this was calling build_terra again as it needed to.. the first call was unneeded!!!
-                    frmMain.ProgressBar1.Value = map
-                    'frmMain.draw_scene()    'show each grid be drawn
-                    Application.DoEvents()
-                    ck.Dispose()
-                End Using
-                cms.Dispose()
-                cdata.Dispose()
-                tms.Dispose()
-                norms.Dispose()
-                dom.Dispose()
-                holes_ms.Dispose()
-                GC.Collect() ' try to force release of memory.
-            Next
-            GC.WaitForFullGCComplete() ' wait until memory is released. We need it.
-            '**********************************************
-            'lets seam the World (creates map seam in between the chunks)
-            seam_map()
-            'Debug.WriteLine("old tri_count:" + tri_count.ToString)
-            '=============================================================
-            'Terrain rework stuff
-            'At this point. the giant mesh "mesh" has been create.
-            'We need to get the Tangents BiTangents and Normals
-            '
-            'order IS important :)
-            frmMain.tb1.Text = "Building the Terrain mesh."
-            Application.DoEvents()
-            createTBNs()
-            'ReDim Preserve triangle_holder(triangle_count)
-            frmMain.tb1.Text = "Averging the surface normals..."
-            Application.DoEvents()
-            average_mesh_btns()
-            frmMain.tb1.Text = "Creating chunk display lists..."
-            Application.DoEvents()
-            make_chunk_meshes() ' this  breaks the big mesh in to small chunk meshes
-            frmMain.tb1.Text = "Cleaning up memory..."
-            Application.DoEvents()
-            ReDim mesh(0) 'clear
-            ReDim triangle_holder(0) 'clear
-            GC.Collect()
-            GC.WaitForFullGCComplete(5000)
-            '=============================================================
-            ' this is where we will make the blend texture and slice the huge color_tex in to its chuck areas.
-            Try
-                If m_layers Then
-
-                    main_layer_tex = New Bitmap(12, 12, PixelFormat.Format24bppRgb)
-                    hz_loaded = True ' this is to let the user know that switch to hirez does not work if the map was not loaded in hirez
-                    'get the layers
-                    frmMain.ProgressBar1.Maximum = test2
-                    frmMain.ProgressBar1.Minimum = 0
-                    frmMain.ProgressBar1.Value = 0
-                    Dim found_ As Boolean = False
-                    layer_uv_list = "" 'clear this
-                    get_main_texture = True
-                    frmMain.tb1.Text = "Getting the main Terrain Texture.  This may take a while...."
-                    Application.DoEvents()
-                    Dim main_map As Ionic.Zip.ZipEntry = Nothing
-                    If name.Contains("19_") Then
-                        main_map = active_pkg("\maps\landscape\19_Kurgan\color_tex.dds")
-                    Else
-                        main_map = active_pkg("\maps\landscape\" + name.Replace(".pkg", "") + "\color_tex.dds")
-                    End If
-                    Dim main_map_ms As New MemoryStream
-                    If main_map Is Nothing Then
-                        MsgBox("Can't find main texture")
-                    End If
-                    main_map.Extract(main_map_ms)
-                    'MsgBox("Debug stop")
-                    main_layer_tex = get_main_tex_bmp(main_map_ms)
-                    main_map_ms.Dispose()
-                    GC.Collect()
-                    For map = map_start To test2
-                        frmMain.tb1.Text = "Getting the Terrain layer information and mixmaps (" + map.ToString + ")"
-                        Application.DoEvents()
-                        Dim cms As New MemoryStream(maplist(map).cdata)
-                        Using ck As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(cms)
-                            map_layers(map) = New layer_ ' create the structure to store data
-                            Dim layer_count As Integer = get_layers(ck, map)
-                        End Using
-                        cms.Dispose()
-                        GC.Collect()
-                        frmMain.ProgressBar1.Value = map
-                        Application.DoEvents()
-                    Next
-                    'create the mix texture atlas.
-                    'we have to do this to stop the problems with blending the mix textures one at a time!!
-                    'It creates one big texture map with each mixmap and adds a 8 pixel boarder around each one.
-                    create_mix_atlas()
-                    GC.Collect()
-                    GC.WaitForFullGCComplete()
-                    '
-                    frmMain.ProgressBar1.Maximum = maplist.Length - 2
-                    frmMain.ProgressBar1.Minimum = 0
-                    frmMain.ProgressBar1.Value = 0
-
-                    Dim mod_ = (Sqrt(maplist.Length - 1)) And 1
-
-                    Dim w = Sqrt(maplist.Length - 1)
-                    tile_width = w + mod_
-                    Dim m_s = main_layer_tex.Width / tile_width
-                    Dim ms_i As Integer = m_s
-                    If ms_i = 341 And main_layer_tex.Width = 4096 Then
-                        main_layer_tex = ResizeImage(main_layer_tex, New Size(4104, 4104))
-                        m_s = main_layer_tex.Width / tile_width
-                        ms_i = m_s
-                    End If
-                    If ms_i = 410 And main_layer_tex.Width = 4096 Then
-                        main_layer_tex = ResizeImage(main_layer_tex, New Size(4100, 4100))
-                        m_s = main_layer_tex.Width / tile_width
-                        ms_i = m_s
-                    End If
-                    If ms_i = 293 And main_layer_tex.Width = 4096 Then
-                        main_layer_tex = ResizeImage(main_layer_tex, New Size(4116, 4116))
-                        m_s = main_layer_tex.Width / tile_width
-                        ms_i = m_s
-                    End If
-
-                    Dim text_w = main_layer_tex.Width
-                    cnt = 0
-                    'Debug.WriteLine("========================")
-                    Dim map_pnt As Integer = 0
-                    For row = 0 To w - 1
-                        For col = 0 To w - 1
-                            'If map_pnt = 57 Then Stop
-
-                            maplist(cnt).col = col
-                            maplist(cnt).row = row
-                            frmMain.tb1.Text = "Getting the Tarrain Textures (" + cnt.ToString + ")"
-                            Application.DoEvents()
-                            Dim x1 As Integer = (main_layer_tex.Width / 2) - (((maplist(cnt).location.x + 50) / 100) * m_s)
-                            Dim y1 As Integer = (main_layer_tex.Width / 2) - (((maplist(cnt).location.y - 50) / 100) * m_s) - m_s
-                            'Dim x = x1 / m_s
-                            'Dim y = y1 / m_s
-                            'Debug.WriteLine("X:" + x.ToString("0000") + " | Y:" + y.ToString("0000"))
-
-                            Dim rec As New Rectangle(x1, y1, m_s, m_s)
-                            map_layers(cnt).color_tex = New Bitmap(CInt(m_s), CInt(m_s), System.Drawing.Imaging.PixelFormat.Format24bppRgb)
-                            Dim g As Graphics = Graphics.FromImage(map_layers(cnt).color_tex)
-                            g.DrawImage(main_layer_tex, 0, 0, rec, GraphicsUnit.Pixel)
-
-                            Dim e = Gl.glGetError
-                            For layer = 1 To map_layers(cnt).layer_count
-                                get_layer_image(cnt, layer)
-                            Next
-                            Dim t_id = get_tex_id_from_bmp(map_layers(cnt).color_tex)
-                            For layer = 1 To map_layers(cnt).layer_count
-                                If map_layers(cnt).layers(layer).l_name.ToLower.Contains("color_tex") Then
-                                    map_layers(cnt).layers(layer).text_id = t_id
-                                    map_layers(cnt).main_texture = layer
-                                    GC.Collect()
-                                End If
-                                Dim mask = map_layers(cnt).used_layers
-                            Next
-                            e = Gl.glGetError
-                            frmMain.ProgressBar1.Value = cnt
-                            Application.DoEvents()
-                            cnt += 1
-                            map_pnt += 1
-                        Next
-
-                    Next
-                    'Debug.WriteLine("========================")
-                    tile_width -= mod_
-                    frmMain.pb2.Visible = False
-                    frmMain.pb2.SendToBack()
-
-                End If ' if m_layers
-            Catch ex As Exception
-                MsgBox(ex.InnerException, MsgBoxStyle.Exclamation, "Well Shit!")
-            End Try
-        End If ' m_terrain_
-
+        frmMain.tb1.Text = "Getting minimap tank Icons..."
+        ' get the little tank icons for the minimap
+        Dim gui = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
+        Dim sp = "\gui\maps\icons\filters\tanks\"
+        'heavy
+        Dim icon_ms As New MemoryStream
+        Dim icon_entry As Ionic.Zip.ZipEntry = gui(sp + "heavyTank.png")
+        icon_entry.Extract(icon_ms)
+        tank_mini_icons(0) = load_png(icon_ms)
+        'med
+        icon_ms = New MemoryStream
+        icon_entry = gui(sp + "mediumTank.png")
+        icon_entry.Extract(icon_ms)
+        tank_mini_icons(1) = load_png(icon_ms)
+        'light
+        icon_ms = New MemoryStream
+        icon_entry = gui(sp + "lightTank.png")
+        icon_entry.Extract(icon_ms)
+        tank_mini_icons(2) = load_png(icon_ms)
+        'td
+        icon_ms = New MemoryStream
+        icon_entry = gui(sp + "AT-SPG.png")
+        icon_entry.Extract(icon_ms)
+        tank_mini_icons(3) = load_png(icon_ms)
+        'spg
+        icon_ms = New MemoryStream
+        icon_entry = gui(sp + "SPG.png")
+        icon_entry.Extract(icon_ms)
+        tank_mini_icons(4) = load_png(icon_ms)
+        'this reads the custom minimap border I made.
+        Dim mini_data() = File.ReadAllBytes(Application.StartupPath + "\resources\minimap_frame.png")
+        icon_ms = New MemoryStream(mini_data)
+        minimsp_frameT_TextureId = load_png(icon_ms)
+        icon_ms.Dispose()
+        gui.Dispose()
         GC.Collect()
-        GC.WaitForFullGCComplete() 'release memory.
-        'we got a world.. lets update the minimap,move the camera and draw the map
-        Cam_Y_angle = PI * -0.125
-        Cam_X_angle = PI * 0.25
-        look_point_X = 0.01
-        look_point_Z = 0.01
-        View_Radius = -150.0
-        frmMain.position_camera()
-        frmMain.draw_scene()
-        '-----------------------------------
-        If m_bases_ Then
-            bases_laoded = True
-            'lets make the team rings here? OK.
-            ringDisplayID_1 = Gl.glGenLists(1)
-            Gl.glNewList(ringDisplayID_1, Gl.GL_COMPILE)
-            draw_ring(-team_1.x, team_1.z)
-            Gl.glEndList()
-            Gl.glFinish()
-
-            ringDisplayID_2 = Gl.glGenLists(1)
-            Gl.glNewList(ringDisplayID_2, Gl.GL_COMPILE)
-            draw_ring(-team_2.x, team_2.z)
-            Gl.glEndList()
-            frmMain.draw_scene()
-            Gl.glFinish()
-            '---------------------------------------
-        End If
-        'lets make the sector outlines
-        sector_outlineID = Gl.glGenLists(1)
-        Gl.glNewList(sector_outlineID, Gl.GL_COMPILE)
-        create_grid_marks()
-        Gl.glEndList()
-        'lets make the map outside border
-        map_borderId = Gl.glGenLists(1)
-        Gl.glNewList(map_borderId, Gl.GL_COMPILE)
-        make_map_boarder()
-        Gl.glEndList()
+        minimap_size = My.Settings.minimap_size
 
 
-        '**********************************************
-        glob_str = ""
-        'clean up data.. recover memory.
-        For map = map_start To test_count
-            ReDim maplist(map).cdata(1) ' clear
-            GC.Collect()
-        Next
-        '*******************************************************************************************
+    End Sub
 
-
-        If m_models_ Then
-            models_loaded = True
-            'setup progress bar
-            frmMain.ProgressBar1.Value = 0
-            frmMain.ProgressBar1.Maximum = Model_Matrix_list.Length
-            ReDim Models.models(Model_Matrix_list.Length)
-            Models.models(0) = New primitive
-            Models.model_count = Model_Matrix_list.Length - 2
-            bw_strings.Clear()
-            'make all the models.
-            For m = 0 To Model_Matrix_list.Length - 2
-                If True Then
-                    'stuff we dont want on the map.
-                    If Model_Matrix_list(m).primitive_name.ToLower.Contains("wgl_banner") _
-                        Or Model_Matrix_list(m).primitive_name.ToLower.Contains("000_base") _
-                        Or Model_Matrix_list(m).primitive_name.ToLower.Contains("particles") Then
-                        GoTo skip_this
-                    End If
-                    frmMain.ProgressBar1.Value = m
-                    frmMain.tb1.Text = "Loading the models ( " + m.ToString + " )"
-                    ReDim Preserve Models.Model_list(m + 1)
-                    Models.Model_list(m) = Model_Matrix_list(m).primitive_name
-                    Models.models(m) = New primitive
-                    ReDim Models.models(m).componets(1)
-                    Models.models(m).componets(0) = New Model_Section
-                    Models.models(m).componets(0).color_id = -1
-                    ReDim Preserve Models.matrix(m + 1)
-                    ReDim Models.matrix(m).matrix(16)
-                    Models.matrix(m).matrix = Model_Matrix_list(m).matrix
-                    'some of the matrix has to be inverted because of Opengl/DirectX issues
-                    Models.matrix(m).matrix(1) *= -1.0
-                    Models.matrix(m).matrix(2) *= -1.0
-                    Models.matrix(m).matrix(4) *= -1.0
-                    Models.matrix(m).matrix(8) *= -1.0
-                    Models.matrix(m).matrix(12) *= -1.0
-                    get_primitive(m, active_pkg)
-                Else
-
-                End If
-skip_this:
-                Application.DoEvents()
-            Next
-        End If
-
-
-        bw_strings.Clear()
-        GC.Collect()
-        GC.WaitForFullGCComplete()
-        '================================================
-        If m_trees_ Then
-            trees_loaded = True
-            frmMain.ProgressBar1.Value = 0
-            frmMain.ProgressBar1.Maximum = speedtree_matrix_list.Length
-
-            Trees = New Tree_s
-            ReDim Trees.flora(0)
-            ReDim treeCache(0)
-            treeCache(0) = New flora_
-            ReDim Trees.Tree_list(speedtree_matrix_list.Length)
-            'make all the trees and shrubs... 
-            For tree = 0 To speedtree_matrix_list.Length - 2
-                frmMain.tb1.Text = "Loading the trees ( " + tree.ToString + " )"
-                frmMain.ProgressBar1.Value = tree
-                'same as with models.. we must invert some of the matrix.
-                speedtree_matrix_list(tree).matrix(1) *= -1.0
-                speedtree_matrix_list(tree).matrix(2) *= -1.0
-                speedtree_matrix_list(tree).matrix(4) *= -1.0
-                speedtree_matrix_list(tree).matrix(8) *= -1.0
-                speedtree_matrix_list(tree).matrix(12) *= -1.0
-
-                Trees.Tree_list(tree) = speedtree_matrix_list(tree).tree_name
-                ReDim Preserve Trees.matrix(tree + 1)
-                ReDim Trees.matrix(tree).matrix(15)
-
-                Trees.matrix(tree).matrix = speedtree_matrix_list(tree).matrix
-                build_tree(tree, speedtree_matrix_list(tree).tree_name)
-                Application.DoEvents()
-            Next
-        End If
-        'GoTo fuck_this
-        'While decal_maker.IsAlive
-        '    frmMain.tb1.Text = "Waiting on Decal Thread to finish..."
-        '    Application.DoEvents()
-        '    Thread.Sleep(10)
-        'End While
-        If m_decals_ Then
-            decals_loaded = True
-            make_decals() ' this wont run ok in background thread for some reason.
-            GC.Collect()
-            GC.WaitForFullGCComplete()
-            build_decals() ' finish making the decals.. this involves projecting them on to the terrain and grabbing textures.
-        End If
-        GC.Collect()
-        GC.WaitForFullGCComplete()
-
-fuck_this:
-        frmMapInfo.I__General_Info_tb.Text += "Decals: " + Format("0000", decal_matrix_list.Length - 1) + vbCrLf
-        frmMapInfo.I__General_Info_tb.Text += "Trees: " + Format("0000", speedtree_matrix_list.Length - 1) + vbCrLf
-        frmMapInfo.I__General_Info_tb.Text += "Models: " + Format("0000", Model_Matrix_list.Length - 1) + vbCrLf
-        'frmMain.tb1.Text = "Sorting the Texture Id list up..."
-        'We are going to create the water now.. before closing the PKGs.. may want to get
-        'textures from them?? This app does not refresh nonstop. no point in animated textures for the water
-        If m_water_ Then
-            water_loaded = True
-            If BWWa.bwwa_t1(0).width > 0 Then
-                water.IsWater = True
-                build_water()
-                water.textureID = Load_DDS_File(Application.StartupPath + "\Resources\water2.dds")
-                GC.Collect()
-            End If
-        End If
-        'these packatges are HUGE!.. I need to find a way to read as needed.
-        active_pkg.Dispose()    ' VERY IMPORTANT !!!
-        shared_content1.Dispose() ' VERY IMPORTANT !!!
-        shared_content2.Dispose() ' VERY IMPORTANT !!!
-        Try
-            active_pkg_hd.Dispose() ' VERY IMPORTANT !!!
-        Catch ex As Exception
-        End Try
-        Try
-            shared_content1_hd.Dispose() ' VERY IMPORTANT !!!
-        Catch ex As Exception
-        End Try
-        Try
-            shared_content2_hd.Dispose() ' VERY IMPORTANT !!!
-        Catch ex As Exception
-        End Try
-        frmMain.ProgressBar1.Visible = False
-        'let the renderer know the models are loaded and ready
-        SHOW_MAPS = False
-        maploaded = True ' entire map is ready for display.
-        sw.Stop() ' stopwatch for load time
-        Cam_Y_angle = PI * -0.125
-        Cam_X_angle = PI * 0.25
-        look_point_X = 0.01
-        look_point_Z = 0.01
-        View_Radius = -150.0
-        frmMain.position_camera()
-        frmMain.draw_scene()
-        Dim tm = sw.Elapsed
-        Dim t = Format(tm.Seconds, "00")
-        Dim mt = Format(tm.Minutes, "00")
-        frmMain.tb1.Text = "Load time " + mt + ":" + t + vbCrLf
-        frmMain.tb1.Text += "Reused Textures: " + saved_texture_loads.ToString + vbCrLf
-        frmMain.tb1.Text += "Reused Models: " + saved_model_loads.ToString + vbCrLf
-        frmMain.tb1.Text += "lod2 used: " + lod2_swap.ToString + _
-                                        "   lod1 used: " + lod1_swap.ToString + _
-                                        "   lod0 used: " + lod0_swap.ToString
-
-        'make_stars()
-
-        SHOW_MAPS = False
-        frmMain.pb1.Focus()
-        frmMain.draw_scene()
-        frmMain.draw_scene()
-        frmMain.draw_scene()
-    End Function
     Public Function get_shared(name As String) As Ionic.Zip.ZipEntry
         Dim et As Ionic.Zip.ZipEntry = Nothing
         If Not has_high_rez_map Then
