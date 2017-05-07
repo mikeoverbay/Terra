@@ -5,12 +5,12 @@
     Private Sub frmLighting_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         save_light_settings()
         e.Cancel = True
-        Me.Visible = False
+        Me.visible = False
     End Sub
 
     Private Sub frmLighting_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.Show()
-        While Me.Visible = False
+        While Me.visible = False
             Application.DoEvents()
         End While
         If Not _STARTED Then Return
@@ -19,8 +19,8 @@
 
                 s_fog_level.Value = My.Settings.s_fog_level
                 s_terrain_ambient.Value = My.Settings.s_terrain_ambient_level
-                s_terrain_texture_level.Value = My.Settings.s_terrian_texture_level
-                s_model_level.Value = My.Settings.s_model_level
+                s_terrain_texture_level.Value = My.Settings.s_terrian_texture_level 'bump
+                s_model_level.Value = My.Settings.s_model_level 'specular
                 s_gamma.Value = My.Settings.s_gamma
                 s_gray_level.Value = My.Settings.s_gray_level
             Catch ex As Exception

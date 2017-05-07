@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_019BB5F6544348DA81FBACE279A46985"
+        "MsmKey" = "8:_001CAF929D5442DCA707583958AE69DA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -39,13 +39,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0AA26EE079934285B4F13EF0175F9BCA"
+        "MsmKey" = "8:_0574978F87404D1DBAEAB04CC3BD6888"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_0B0EB6FD67B1493999785D7436C11151"
+        "MsmKey" = "8:_06C91D7C3500422CA3D2D20BE40464A8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,19 +57,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0C353E6B4E684D28AF7878D653B3C465"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_0C5BF608457D480B87B630800FAE9C40"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0E0B63F063C345949D294F1C48637522"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -93,7 +81,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_100CDD3EAE534A9583A1A9C68ECE9994"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_110858CB4D1F427088CEBEBB8015A47C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_12B5FD62EBC447CEB6BCCE05E05966B7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -111,31 +111,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_189C1C5D88B84BCA999151549ECDAC1F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_19FF2F15067949849840F05D6426C568"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1AF22029880E49788FB5FB785857344D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1C32A10E3C39486A99B64482507913E0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1CF861F5B4C6422A91767584EE00CA83"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -177,12 +153,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_213B082B7F6D420294811AF3F426AB2C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_2260BD44A80147078B626D85D4FFCF6C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -195,25 +165,25 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_238008903E604026AFC1EE07338735E2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_23DF146DB43042CF8FB7073334B79352"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_249A085EDD4844C686CFCC74B590AE52"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_27FBBC1272294569A3238CA89A837FA8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_29441F2853DB43E4A2E954568BE8E614"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_29D04AB3AAFF48AF8852F2F3E2B7AA14"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -231,25 +201,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2BFB3A5B7B824AA88D1627A8319AFEBB"
+        "MsmKey" = "8:_2C082A2DBBC54D2288FEB35F9A6DBF56"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2E1BE6C71C2E4299969D647A826C8D62"
+        "MsmKey" = "8:_2EC0D662FBDA46CA975270B88FF0A5F4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_311F74A6272B4863B787C5E7476E0A34"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_317C84E39EAD45F8852ABEBB20C2EA7B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -267,12 +231,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3359AA4946FE492AB2E132C1A9D87C5E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_33DD8103AD4D4CE987BDA8936D7B31F1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -280,12 +238,6 @@
         "Entry"
         {
         "MsmKey" = "8:_34722FD4EC274DEC9825067FEF730854"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_362C5E4313984F1F837953C7BB1CC627"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -303,25 +255,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3825052A60C44DA88583D17F1C8C87AC"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_39571D1D3A40433297A4906E809721C1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3972194812EF4A24A10634F1C42D78F6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3D4480B2B0E843D7BE608FC4013B6C5E"
+        "MsmKey" = "8:_39ABE1E13E7F4C1EBBAA087031EC16A5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -345,18 +285,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4152A262B6E04B6C80229E808784B47D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4154B396B92C4FB0B1195E28444E21BB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_42A1CF29424142EE8EA6A3E61DE189D0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -370,24 +298,6 @@
         "Entry"
         {
         "MsmKey" = "8:_4486C35E45FC4D01AF2DBDABE1954D39"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4706E40D389D400FBAEEB13B8ED31E2C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_47F60A493EC14C03B3D5901C55BC7D0C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_48008718C97D4554A182BA4B3402FFA7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -423,7 +333,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_5181C9CF4102481BACF5C19E93C6F83D"
+        "MsmKey" = "8:_4DE80FF728E34AB88F3DAA6B9C105902"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -441,43 +351,13 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_55188EA0FEA84DD88790351961AF4ACA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_57DF8DB42D6146ED964C9053EEEAC436"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_57F39BF3B0E643F58FE8EE53823A5E26"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_59CBC426C17446388EAA373F94B6F85A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5AF641A6A1AB40CF98CE6C6038256188"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5BDB017471D840ABB8B6935A0358E172"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5DB1E3B3718D4301B85BD713B22BE391"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6232369D7EB44EF7B5BAAF88695AE880"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -489,25 +369,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_675B134FC28F4EC2B9D5E79A357D7B5C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_67B798F118F8487095037A1B6D192479"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_68829FEC7AA54FD78BA4D7117A6D285D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6AFB85A5C6BA436B9CE2E83BE77EAFFB"
+        "MsmKey" = "8:_6D1FFD68B0104D0AB2D193D736738501"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6D29D9770EC14168830A18171B76C081"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -525,19 +399,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6EC037640EA748F6B802C4F0037691BB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6F61923FF8FA446C91EFA17EE31F9619"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_72A2B3EE57D44D24A973E2EE8B734DD0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_739D1D42419F4A3180E0346ECE0DD5D5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -573,25 +441,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_81D5BB18D913439B92492E8AB46781AC"
+        "MsmKey" = "8:_80277C715CB44A60855C400DA867586D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8038309C1DCF4532BFA70008D704FF08"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_847F67C921DD448E888EBDB354F82F00"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8A35393556004DC1B42BF710EF2BC05F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8A995BC47F1B43B29AB2AB456D53D5D5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -609,19 +471,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8E02578C88604FFEBE7D93848AF72FCE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_903E8E60616E42A5B38E8690BD33715E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_90EDE5F7317C4374925C8B6C7A6FF0E0"
+        "MsmKey" = "8:_8E7B5D373A5D4A75934225F7EDDFB189"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -651,37 +501,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9C806200213144A1B318EAFE92CE70C4"
+        "MsmKey" = "8:_94B710E00D2F442889F1DC39B75DFB6C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9F0E3F8ADDE643629785CE593E17CC32"
+        "MsmKey" = "8:_982C65A04D1144F19984C4C6DFA9D388"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9FDA4ACE16AF4ABFA005B26C72EBCC23"
+        "MsmKey" = "8:_9AB049A8183A48348CDD933A7F5991B3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_A0A5F62672B648E8A98E040155E90BFD"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A0C1768AF4324A138A054B2CBA844FF9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A12EF42FCFAC48F686E9224C4D496D11"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -723,7 +561,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_ACE0F0B1DAEF47B3B93B6753C76CDA05"
+        "MsmKey" = "8:_AB96FED8793E478BBCBE1E5CA06FD725"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AD9893FD880142FD9F5E09EB19D3FBFB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AF38064ACDCD4C7B9C077DD7E49FA6D8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -735,13 +585,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B0CA125B7DE541D9B81D9A1DCD330366"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B140EBD396DA4C08A2C546C4DB0314F5"
+        "MsmKey" = "8:_B0A3CD1E6B794EC2864F5CADA23FE837"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -771,24 +615,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B49478AA00284AD7B3BD4276EE0D608A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B6E35FB46DB744C4B47FF473B00A8F7C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B79CAF95ECED48EC8EA48D94B8A6E3A4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B9CC143A7A774AF6BF9E20C548601D74"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -801,13 +627,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BE47A826DA194A6688218188FE755139"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BF740B55E30B4724842D98F7CE8A7804"
+        "MsmKey" = "8:_BD2F4970920D4605B44B041B0FE41183"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -826,6 +646,12 @@
         "Entry"
         {
         "MsmKey" = "8:_C20E80324BFD4846ADDB5E3D370CE9CE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C2C3B86E841347F28BF8B976D6F5923F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -867,43 +693,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C7DC0DFE0721426D84D16D93C77EB72A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C8075A3E0AA44E058EB6691E0A2041F3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CB23C3ABAF324766827C9A453080FACB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_CCBFC7F6CEC54B38970524C6C3AF257B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CF978E328A21426AACC6E31BF73C8145"
+        "MsmKey" = "8:_CDC5A73E50254B8C9B1673E0CA7031AD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D04D7E3D66E041BD8BAD628D68A88312"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D176ACDEB72342078EDE4D6597E37101"
+        "MsmKey" = "8:_CFFF14B0B1284E87999285ABB73F5D0D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -915,7 +717,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D3091042311146F5898E827D15BA462E"
+        "MsmKey" = "8:_D299E514887D4E4B936E601DC1AD384B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D2A9BC16E78C430C856F96267991A6FC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -927,7 +735,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DA4EE3D2B57F484084E69A7F6EB78176"
+        "MsmKey" = "8:_D9335FA9D12D421B872A1393C051AAC4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -940,12 +748,6 @@
         "Entry"
         {
         "MsmKey" = "8:_DAF5CA528D0D4F89BA1C82730F7C38C1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DC19F26DD5494B3488C388C28AA31372"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -993,7 +795,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E2753FAA556E445E907FC284038964AD"
+        "MsmKey" = "8:_E285B689A9484840BC56588F072769C4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1011,25 +813,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E3E3527A921D4EB095CCD3BBF0E15C82"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E65CB761E9494919AB623191BF7FEBB0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E66F141C432949C28E0ED77017E7486A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E9F921A2C10C466B8559C95217B4889B"
+        "MsmKey" = "8:_E4F8F01B792C4B89931E5C95C975C895"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1042,6 +826,18 @@
         "Entry"
         {
         "MsmKey" = "8:_EBFB8D46A15749B0BA199D36EA4380B8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EC9186CD857D4A94999F8475AF0A3BB1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ED0ACB153D194E9FA02C50220BF51763"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1065,6 +861,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_EDF0389BA92D442AA41863FD25B214EF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EEF8F15BAC3A4D4488B4847F94A6E9CD"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_EF483F96A2894915A9FC1996434A4B03"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1083,13 +891,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F139DE2DA0EA48ADAE0231CD5F260F84"
+        "MsmKey" = "8:_F0FCB0CAAE994CA788501BEA84D56912"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F211ED99BE094463A4D0F7F136A81F0D"
+        "MsmKey" = "8:_F139DE2DA0EA48ADAE0231CD5F260F84"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1101,7 +909,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F7D61A1815784BFAAD02735B69C809A2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_F8E7DF4B495845ECBB9089E05211F251"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FB05AD2579C64EEDA49B75EE52D5E456"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1228,7 +1048,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V035.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V040.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1288,12 +1108,12 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_019BB5F6544348DA81FBACE279A46985"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_001CAF929D5442DCA707583958AE69DA"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\36_fishing_bay_decal_includers.txt"
-            "TargetName" = "8:36_fishing_bay_decal_includers.txt"
+            "SourcePath" = "8:..\\Terra\\shaders\\comp_vertex.glsl"
+            "TargetName" = "8:comp_vertex.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1368,12 +1188,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0AA26EE079934285B4F13EF0175F9BCA"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0574978F87404D1DBAEAB04CC3BD6888"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\00_tank_tutorial_decal_includers.txt"
-            "TargetName" = "8:00_tank_tutorial_decal_includers.txt"
+            "SourcePath" = "8:..\\Terra\\shaders\\frondDel_vertex.glsl"
+            "TargetName" = "8:frondDel_vertex.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1388,10 +1208,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0B0EB6FD67B1493999785D7436C11151"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_06C91D7C3500422CA3D2D20BE40464A8"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\fog_vertex.glsl"
-            "TargetName" = "8:fog_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\leafcoloredDef_vertex.glsl"
+            "TargetName" = "8:leafcoloredDef_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -1437,46 +1257,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0C353E6B4E684D28AF7878D653B3C465"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\83_kharkiv_decal_includers.txt"
-            "TargetName" = "8:83_kharkiv_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0E0B63F063C345949D294F1C48637522"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_vertex.glsl"
-            "TargetName" = "8:colorMapper_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0E283315EDCE4F37A70A22F9EBB3B939"
@@ -1539,12 +1319,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_100CDD3EAE534A9583A1A9C68ECE9994"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDeff_vertex.glsl"
+            "TargetName" = "8:decalsCpassDeff_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_110858CB4D1F427088CEBEBB8015A47C"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R27_SU-14.russian"
             "TargetName" = "8:R27_SU-14.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_12B5FD62EBC447CEB6BCCE05E05966B7"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\buildingsDef_vertex.glsl"
+            "TargetName" = "8:buildingsDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1599,92 +1419,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_189C1C5D88B84BCA999151549ECDAC1F"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_fragment.glsl"
-            "TargetName" = "8:toLinear_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_19FF2F15067949849840F05D6426C568"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\G66_VK2801.german"
             "TargetName" = "8:G66_VK2801.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1AF22029880E49788FB5FB785857344D"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\lowQualityTrees_fragment.glsl"
-            "TargetName" = "8:lowQualityTrees_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1C32A10E3C39486A99B64482507913E0"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\render_vertex.glsl"
-            "TargetName" = "8:render_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1CF861F5B4C6422A91767584EE00CA83"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\34_Redshire_decal_includers.txt"
-            "TargetName" = "8:34_Redshire_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1819,26 +1559,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_213B082B7F6D420294811AF3F426AB2C"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\101_dday_decal_includers.txt"
-            "TargetName" = "8:101_dday_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2260BD44A80147078B626D85D4FFCF6C"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\J14_Type_61.japan"
@@ -1879,6 +1599,46 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_238008903E604026AFC1EE07338735E2"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\dome_fragment.glsl"
+            "TargetName" = "8:dome_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_23DF146DB43042CF8FB7073334B79352"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\deferred_fragment.glsl"
+            "TargetName" = "8:deferred_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_249A085EDD4844C686CFCC74B590AE52"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R97_Object_140.russian"
@@ -1899,52 +1659,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_27FBBC1272294569A3238CA89A837FA8"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\depth_fragment.glsl"
-            "TargetName" = "8:depth_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_29441F2853DB43E4A2E954568BE8E614"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R20_T-44.russian"
             "TargetName" = "8:R20_T-44.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_29D04AB3AAFF48AF8852F2F3E2B7AA14"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\29_el_hallouf_decal_includers.txt"
-            "TargetName" = "8:29_el_hallouf_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1999,10 +1719,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2BFB3A5B7B824AA88D1627A8319AFEBB"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2C082A2DBBC54D2288FEB35F9A6DBF56"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\bump_vertex.glsl"
-            "TargetName" = "8:bump_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_fragment.glsl"
+            "TargetName" = "8:colorMapper_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2019,12 +1739,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2E1BE6C71C2E4299969D647A826C8D62"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2EC0D662FBDA46CA975270B88FF0A5F4"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\63_tundra_decal_includers.txt"
-            "TargetName" = "8:63_tundra_decal_includers.txt"
+            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_vertex.glsl"
+            "TargetName" = "8:colorMapper_vertex.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2045,26 +1765,6 @@
             "TargetName" = "8:G72_JagdPz_E100.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_317C84E39EAD45F8852ABEBB20C2EA7B"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\05_prohorovka_decal_includers.txt"
-            "TargetName" = "8:05_prohorovka_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2119,26 +1819,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3359AA4946FE492AB2E132C1A9D87C5E"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\04_himmelsdorf_decal_includers.txt"
-            "TargetName" = "8:04_himmelsdorf_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_33DD8103AD4D4CE987BDA8936D7B31F1"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\A37_M40M43.american"
@@ -2165,26 +1845,6 @@
             "TargetName" = "8:R53_Object_704.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_362C5E4313984F1F837953C7BB1CC627"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\leaf_fragment.glsl"
-            "TargetName" = "8:leaf_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2239,46 +1899,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3825052A60C44DA88583D17F1C8C87AC"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\comp_vertex.glsl"
-            "TargetName" = "8:comp_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_39571D1D3A40433297A4906E809721C1"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\alphaTransparent_vertex.glsl"
-            "TargetName" = "8:alphaTransparent_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3972194812EF4A24A10634F1C42D78F6"
             {
             "SourcePath" = "8:..\\Terra\\freeglut.dll"
@@ -2299,10 +1919,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3D4480B2B0E843D7BE608FC4013B6C5E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_39ABE1E13E7F4C1EBBAA087031EC16A5"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\lowQualityTrees_vertex.glsl"
-            "TargetName" = "8:lowQualityTrees_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\gaussian_fragment.glsl"
+            "TargetName" = "8:gaussian_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2379,46 +1999,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4152A262B6E04B6C80229E808784B47D"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\decals_fragment.glsl"
-            "TargetName" = "8:decals_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4154B396B92C4FB0B1195E28444E21BB"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\95_lost_city_decal_includers.txt"
-            "TargetName" = "8:95_lost_city_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_42A1CF29424142EE8EA6A3E61DE189D0"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F17_AMX_13_90.french"
@@ -2465,66 +2045,6 @@
             "TargetName" = "8:G45_G_Tiger.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4706E40D389D400FBAEEB13B8ED31E2C"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\comp_fragment.glsl"
-            "TargetName" = "8:comp_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_47F60A493EC14C03B3D5901C55BC7D0C"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\leaf_vertex.glsl"
-            "TargetName" = "8:leaf_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_48008718C97D4554A182BA4B3402FFA7"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\07_lakeville_decal_includers.txt"
-            "TargetName" = "8:07_lakeville_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2650,10 +2170,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5181C9CF4102481BACF5C19E93C6F83D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4DE80FF728E34AB88F3DAA6B9C105902"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\fog_fragment.glsl"
-            "TargetName" = "8:fog_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\tankDef_vertex.glsl"
+            "TargetName" = "8:tankDef_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2710,132 +2230,32 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_55188EA0FEA84DD88790351961AF4ACA"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\normal_vertex.glsl"
+            "TargetName" = "8:normal_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57DF8DB42D6146ED964C9053EEEAC436"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F37_AMX50_Foch.french"
             "TargetName" = "8:F37_AMX50_Foch.french"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57F39BF3B0E643F58FE8EE53823A5E26"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\28_desert_decal_includers.txt"
-            "TargetName" = "8:28_desert_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_59CBC426C17446388EAA373F94B6F85A"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\100_thepit_decal_includers.txt"
-            "TargetName" = "8:100_thepit_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5AF641A6A1AB40CF98CE6C6038256188"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\leafcolored_vertex.glsl"
-            "TargetName" = "8:leafcolored_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5BDB017471D840ABB8B6935A0358E172"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\normal_geo.glsl"
-            "TargetName" = "8:normal_geo.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5DB1E3B3718D4301B85BD713B22BE391"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\render_fragment.glsl"
-            "TargetName" = "8:render_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6232369D7EB44EF7B5BAAF88695AE880"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\ShadowDepth_fragment.glsl"
-            "TargetName" = "8:ShadowDepth_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2870,46 +2290,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_675B134FC28F4EC2B9D5E79A357D7B5C"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\45_north_america_decal_includers.txt"
-            "TargetName" = "8:45_north_america_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_67B798F118F8487095037A1B6D192479"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\hell_vertex.glsl"
-            "TargetName" = "8:hell_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_68829FEC7AA54FD78BA4D7117A6D285D"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\A69_T110E5.american"
@@ -2930,10 +2310,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6AFB85A5C6BA436B9CE2E83BE77EAFFB"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6D1FFD68B0104D0AB2D193D736738501"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\tank_vertex.glsl"
-            "TargetName" = "8:tank_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\lzTerrainDef_vertex.glsl"
+            "TargetName" = "8:lzTerrainDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6D29D9770EC14168830A18171B76C081"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\leafcoloredDef_fragment.glsl"
+            "TargetName" = "8:leafcoloredDef_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2990,52 +2390,32 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6EC037640EA748F6B802C4F0037691BB"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\31_airfield_decal_includers.txt"
-            "TargetName" = "8:31_airfield_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6F61923FF8FA446C91EFA17EE31F9619"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\44_north_america_decal_includers.txt"
-            "TargetName" = "8:44_north_america_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_72A2B3EE57D44D24A973E2EE8B734DD0"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\A63_M46_Patton.american"
             "TargetName" = "8:A63_M46_Patton.american"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_739D1D42419F4A3180E0346ECE0DD5D5"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\FXAA_vertex.glsl"
+            "TargetName" = "8:FXAA_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3150,10 +2530,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_81D5BB18D913439B92492E8AB46781AC"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_80277C715CB44A60855C400DA867586D"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\write3D_fragment.glsl"
-            "TargetName" = "8:write3D_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\normal_fragment.glsl"
+            "TargetName" = "8:normal_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8038309C1DCF4532BFA70008D704FF08"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\dome_vertex.glsl"
+            "TargetName" = "8:dome_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3176,46 +2576,6 @@
             "TargetName" = "8:R54_KV-5.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8A35393556004DC1B42BF710EF2BC05F"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\branch_vertex.glsl"
-            "TargetName" = "8:branch_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8A995BC47F1B43B29AB2AB456D53D5D5"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\gaussian_vertex.glsl"
-            "TargetName" = "8:gaussian_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3281,52 +2641,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E02578C88604FFEBE7D93848AF72FCE"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E7B5D373A5D4A75934225F7EDDFB189"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\normal_fragment.glsl"
-            "TargetName" = "8:normal_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\buildingsDef_fragment.glsl"
+            "TargetName" = "8:buildingsDef_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_903E8E60616E42A5B38E8690BD33715E"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_vertex.glsl"
-            "TargetName" = "8:toLinear_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_90EDE5F7317C4374925C8B6C7A6FF0E0"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\13_erlenberg_decal_includers.txt"
-            "TargetName" = "8:13_erlenberg_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3432,30 +2752,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C806200213144A1B318EAFE92CE70C4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_94B710E00D2F442889F1DC39B75DFB6C"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\33_fjord_decal_includers.txt"
-            "TargetName" = "8:33_fjord_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F0E3F8ADDE643629785CE593E17CC32"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\gaussian_fragment.glsl"
-            "TargetName" = "8:gaussian_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\comp_fragment.glsl"
+            "TargetName" = "8:comp_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3472,12 +2772,32 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9FDA4ACE16AF4ABFA005B26C72EBCC23"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_982C65A04D1144F19984C4C6DFA9D388"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\02_malinovka_decal_includers.txt"
-            "TargetName" = "8:02_malinovka_decal_includers.txt"
+            "SourcePath" = "8:..\\Terra\\shaders\\normalOffset_vertex.glsl"
+            "TargetName" = "8:normalOffset_vertex.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AB049A8183A48348CDD933A7F5991B3"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\terrainDef_vertex.glsl"
+            "TargetName" = "8:terrainDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3498,46 +2818,6 @@
             "TargetName" = "8:A88_M53_55.american"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A0C1768AF4324A138A054B2CBA844FF9"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\depth_vertex.glsl"
-            "TargetName" = "8:depth_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A12EF42FCFAC48F686E9224C4D496D11"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\38_mannerheim_line_decal_includers.txt"
-            "TargetName" = "8:38_mannerheim_line_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3694,12 +2974,52 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ACE0F0B1DAEF47B3B93B6753C76CDA05"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AB96FED8793E478BBCBE1E5CA06FD725"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\19_monastery_decal_includers.txt"
-            "TargetName" = "8:19_monastery_decal_includers.txt"
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsNpassef_vertex.glsl"
+            "TargetName" = "8:decalsNpassef_vertex.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AD9893FD880142FD9F5E09EB19D3FBFB"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\FXAA_fragment.glsl"
+            "TargetName" = "8:FXAA_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF38064ACDCD4C7B9C077DD7E49FA6D8"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_fragment.glsl"
+            "TargetName" = "8:toLinear_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3745,32 +3065,12 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B0CA125B7DE541D9B81D9A1DCD330366"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B0A3CD1E6B794EC2864F5CADA23FE837"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\frond_vertex.glsl"
-            "TargetName" = "8:frond_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_vertex.glsl"
+            "TargetName" = "8:toLinear_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B140EBD396DA4C08A2C546C4DB0314F5"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\10_hills_decal_includers.txt"
-            "TargetName" = "8:10_hills_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3856,66 +3156,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B49478AA00284AD7B3BD4276EE0D608A"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\01_karelia_decal_includers.txt"
-            "TargetName" = "8:01_karelia_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6E35FB46DB744C4B47FF473B00A8F7C"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_fragment.glsl"
-            "TargetName" = "8:colorMapper_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B79CAF95ECED48EC8EA48D94B8A6E3A4"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\decals_vertex.glsl"
-            "TargetName" = "8:decals_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B9CC143A7A774AF6BF9E20C548601D74"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\GB31_Conqueror_Gun.british"
@@ -3956,30 +3196,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE47A826DA194A6688218188FE755139"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD2F4970920D4605B44B041B0FE41183"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\leafcolored_fragment.glsl"
-            "TargetName" = "8:leafcolored_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BF740B55E30B4724842D98F7CE8A7804"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\hell_fragment.glsl"
-            "TargetName" = "8:hell_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\leafDef_fragment.glsl"
+            "TargetName" = "8:leafDef_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4042,6 +3262,26 @@
             "TargetName" = "8:F08_AMX_50_100.french"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C2C3B86E841347F28BF8B976D6F5923F"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\branchDef_fragment.glsl"
+            "TargetName" = "8:branchDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4176,66 +3416,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C7DC0DFE0721426D84D16D93C77EB72A"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\bump_fragment.glsl"
-            "TargetName" = "8:bump_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C8075A3E0AA44E058EB6691E0A2041F3"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\branch_fragment.glsl"
-            "TargetName" = "8:branch_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CB23C3ABAF324766827C9A453080FACB"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\frond_fragment.glsl"
-            "TargetName" = "8:frond_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CCBFC7F6CEC54B38970524C6C3AF257B"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F19_Lorraine40t.french"
@@ -4256,10 +3436,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CF978E328A21426AACC6E31BF73C8145"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CDC5A73E50254B8C9B1673E0CA7031AD"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\ss_fragment.glsl"
-            "TargetName" = "8:ss_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\lzTerrainDef_fragment.glsl"
+            "TargetName" = "8:lzTerrainDef_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4276,30 +3456,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D04D7E3D66E041BD8BAD628D68A88312"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CFFF14B0B1284E87999285ABB73F5D0D"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\06_ensk_decal_includers.txt"
-            "TargetName" = "8:06_ensk_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D176ACDEB72342078EDE4D6597E37101"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\tank_fragment.glsl"
-            "TargetName" = "8:tank_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\terrainDef_fragment.glsl"
+            "TargetName" = "8:terrainDef_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4336,10 +3496,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D3091042311146F5898E827D15BA462E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D299E514887D4E4B936E601DC1AD384B"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\alphaTransparent_fragment.glsl"
-            "TargetName" = "8:alphaTransparent_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDef_fragment.glsl"
+            "TargetName" = "8:decalsCpassDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D2A9BC16E78C430C856F96267991A6FC"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\shadow_vertex.glsl"
+            "TargetName" = "8:shadow_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4376,10 +3556,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DA4EE3D2B57F484084E69A7F6EB78176"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D9335FA9D12D421B872A1393C051AAC4"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\write3D_vertex.glsl"
-            "TargetName" = "8:write3D_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\normalOffset_fragment.glsl"
+            "TargetName" = "8:normalOffset_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4422,26 +3602,6 @@
             "TargetName" = "8:A13_T34_hvy.american"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DC19F26DD5494B3488C388C28AA31372"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\37_caucasus_decal_includers.txt"
-            "TargetName" = "8:37_caucasus_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4596,12 +3756,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E2753FAA556E445E907FC284038964AD"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E285B689A9484840BC56588F072769C4"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\47_canada_a_decal_includers.txt"
-            "TargetName" = "8:47_canada_a_decal_includers.txt"
+            "SourcePath" = "8:..\\Terra\\shaders\\normal_geo.glsl"
+            "TargetName" = "8:normal_geo.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4656,72 +3816,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E3E3527A921D4EB095CCD3BBF0E15C82"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E4F8F01B792C4B89931E5C95C975C895"
             {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\14_siegfried_line_decal_includers.txt"
-            "TargetName" = "8:14_siegfried_line_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E65CB761E9494919AB623191BF7FEBB0"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\ss_vertex.glsl"
-            "TargetName" = "8:ss_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\deferred_vertex.glsl"
+            "TargetName" = "8:deferred_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E66F141C432949C28E0ED77017E7486A"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\ShadowDepth_vertex.glsl"
-            "TargetName" = "8:ShadowDepth_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E9F921A2C10C466B8559C95217B4889B"
-            {
-            "SourcePath" = "8:..\\Terra\\decal_includer_files\\18_cliff_decal_includers.txt"
-            "TargetName" = "8:18_cliff_decal_includers.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_413B6310B64E4864844E7BA1CA8328B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4776,6 +3876,46 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EC9186CD857D4A94999F8475AF0A3BB1"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\shadow_fragment.glsl"
+            "TargetName" = "8:shadow_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ED0ACB153D194E9FA02C50220BF51763"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsNpassDef_fragment.glsl"
+            "TargetName" = "8:decalsNpassDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ED9769D54DF5C163439259900072032F"
             {
             "AssemblyRegister" = "3:1"
@@ -4813,6 +3953,46 @@
             "TargetName" = "8:tiny.TTF"
             "Tag" = "8:"
             "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EDF0389BA92D442AA41863FD25B214EF"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\tankDef_fragment.glsl"
+            "TargetName" = "8:tankDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EEF8F15BAC3A4D4488B4847F94A6E9CD"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\gaussian_vertex.glsl"
+            "TargetName" = "8:gaussian_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4898,12 +4078,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F139DE2DA0EA48ADAE0231CD5F260F84"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F0FCB0CAAE994CA788501BEA84D56912"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G61_G_E.german"
-            "TargetName" = "8:G61_G_E.german"
+            "SourcePath" = "8:..\\Terra\\shaders\\frondDef_fragment.glsl"
+            "TargetName" = "8:frondDef_fragment.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4918,12 +4098,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F211ED99BE094463A4D0F7F136A81F0D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F139DE2DA0EA48ADAE0231CD5F260F84"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\normal_vertex.glsl"
-            "TargetName" = "8:normal_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\tanks\\G61_G_E.german"
+            "TargetName" = "8:G61_G_E.german"
             "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4958,12 +4138,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F7D61A1815784BFAAD02735B69C809A2"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\branchDef_vertex.glsl"
+            "TargetName" = "8:branchDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F8E7DF4B495845ECBB9089E05211F251"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\J16_ST_B1.japan"
             "TargetName" = "8:J16_ST_B1.japan"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FB05AD2579C64EEDA49B75EE52D5E456"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\leafDef_vertex.glsl"
+            "TargetName" = "8:leafDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5034,17 +4254,6 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_413B6310B64E4864844E7BA1CA8328B9"
-                    {
-                    "Name" = "8:decal_includer_files"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_580699C944DC4688B75B6540041A487A"
-                        "Folders"
-                        {
-                        }
-                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_468EF3751EC14B278661D79FC11AD10B"
                     {
                     "Name" = "8:shaders"
@@ -5129,15 +4338,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
-        "ProductCode" = "8:{5473F798-BA86-43D4-B68F-D259D81CCF59}"
-        "PackageCode" = "8:{3C4D7E31-1BE4-46FB-986E-ACDAC8AD9843}"
+        "ProductCode" = "8:{9EE8092F-DF0D-44F6-940D-E34107D3FD0D}"
+        "PackageCode" = "8:{880FC35C-50C0-44A4-A292-89A64E085BAB}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.35"
+        "ProductVersion" = "8:1.0.40"
         "Manufacturer" = "8:Coffee_"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -5684,7 +4893,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0C5BF608457D480B87B630800FAE9C40"
             {
-            "SourcePath" = "8:..\\Terra\\obj\\x86\\Debug\\Terra.exe"
+            "SourcePath" = "8:..\\Terra\\obj\\x86\\Release\\Terra.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"

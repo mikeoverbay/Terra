@@ -117,18 +117,19 @@ Module Mod_space_bin
             Model_Matrix_list(k) = New model_matrix_list_
             Model_Matrix_list(k).primitive_name = m.Replace("primitives", "model")
             Model_Matrix_list(k).matrix = BSMI.bsmi_t1(k).matrix
+            Model_Matrix_list(k).matrix(1) *= -1.0
+            Model_Matrix_list(k).matrix(2) *= -1.0
+            Model_Matrix_list(k).matrix(4) *= -1.0
+            Model_Matrix_list(k).matrix(8) *= -1.0
+            Model_Matrix_list(k).matrix(12) *= -1.0
+
             Model_Matrix_list(k).mask = False
+            Model_Matrix_list(k).BB_Min = BSMO.bsmo_t4(BSMO_Index).min_BB
+            Model_Matrix_list(k).BB_Max = BSMO.bsmo_t4(BSMO_Index).max_BB
+            ReDim Model_Matrix_list(k).BB(8)
+            get_translated_bb_model(Model_Matrix_list(k))
             'Console.WriteLine(k.ToString("000") + " : " + m)
         Next
-        If File.Exists(Application.StartupPath + "\decal_includer_files\" + JUST_MAP_NAME + "_decal_includers.txt") Then
-            decal_includers_string = File.ReadAllText(Application.StartupPath + "\decal_includer_files\" + JUST_MAP_NAME + "_decal_includers.txt")
-        Else
-            File.Create(Application.StartupPath + "\decal_includer_files\" + JUST_MAP_NAME + "_decal_includers.txt")
-            decal_includers_string = ""
-        End If
-
-        check_decal_include_strings()
-        get_decal_bias_settings()
 
         mr.Dispose()
         br.Close()
@@ -146,30 +147,29 @@ Module Mod_space_bin
         GC.WaitForFullGCComplete()
 
     End Sub
-    Public Sub check_decal_include_strings()
-        decal_includers_string = decal_includers_string.Replace(vbCrLf + vbCrLf, vbCrLf)
-        For k = 0 To Model_Matrix_list.Length - 2
-            If decal_includers_string.Contains("+" + k.ToString) Then
-                Model_Matrix_list(k).mask = True
-            Else
-                Model_Matrix_list(k).mask = False
-            End If
-        Next
-    End Sub
-    Public Sub get_decal_bias_settings()
-        decal_includers_string = decal_includers_string.Replace(vbCrLf + vbCrLf, vbCrLf)
-        Dim ar = decal_includers_string.Split(vbCrLf)
-        Dim cnt As Integer = 0
-        For Each item In ar
-            If item.Contains(":") Then
-                Dim a = item.Split(":")
-                cnt = -CInt(a(0))
-                Dim val As Single = CSng(a(1))
-                decal_matrix_list(cnt).t_bias = CSng(a(1))
-                decal_matrix_list(cnt).d_bias = CSng(a(2))
-                decal_matrix_list(cnt).exclude = CBool(a(3))
-            End If
+    Private Sub get_translated_bb_model(ByRef mm As model_matrix_list_)
+        Dim v1, v2, v3, v4, v5, v6, v7, v8 As vect3
+        v1.z = mm.BB_Max.z : v2.z = mm.BB_Max.z : v3.z = mm.BB_Max.z : v4.z = mm.BB_Max.z
+        v5.z = mm.BB_Min.z : v6.z = mm.BB_Min.z : v7.z = mm.BB_Min.z : v8.z = mm.BB_Min.z
 
+        v1.x = mm.BB_Min.x : v6.x = mm.BB_Min.x : v7.x = mm.BB_Min.x : v4.x = mm.BB_Min.x
+        v5.x = mm.BB_Max.x : v8.x = mm.BB_Max.x : v3.x = mm.BB_Max.x : v2.x = mm.BB_Max.x
+
+        v4.y = mm.BB_Max.y : v7.y = mm.BB_Max.y : v8.y = mm.BB_Max.y : v3.y = mm.BB_Max.y
+        v6.y = mm.BB_Min.y : v5.y = mm.BB_Min.y : v1.y = mm.BB_Min.y : v2.y = mm.BB_Min.y
+
+        mm.BB(0) = v1
+        mm.BB(1) = v2
+        mm.BB(2) = v3
+        mm.BB(3) = v4
+        mm.BB(4) = v5
+        mm.BB(5) = v6
+        mm.BB(6) = v7
+        mm.BB(7) = v8
+
+        For i = 0 To 7
+            mm.BB(i) = translate_to(mm.BB(i), mm.matrix)
         Next
+
     End Sub
 End Module

@@ -39,7 +39,7 @@ Public Class frmClient
 		frmMain.m_host_session.Enabled = True
 		frmMain.m_join_server_as_host.Enabled = True
 		If ImHost Then
-			If frmServer.Visible Then
+			If frmServer.visible Then
 				frmServer.WindowState = FormWindowState.Normal
 				frmServer.Focus()
 			End If
@@ -47,7 +47,7 @@ Public Class frmClient
 		ImHost = False
 		ImDriver = False
 		NetData = False
-		frmMain.m_show_chat.Visible = False
+		frmMain.m_show_chat.visible = False
 		
 	End Sub
 	Public Sub shut_down_gracefully()
@@ -66,7 +66,7 @@ Public Class frmClient
 		Thread.Sleep(100)
 		ImDriver = False
 		If ImHost Then
-			If frmServer.Visible Then
+			If frmServer.visible Then
 				frmServer.WindowState = FormWindowState.Normal
 				frmServer.Focus()
 			End If
@@ -77,7 +77,7 @@ Public Class frmClient
 	Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 		diag_tb.BringToFront()
 		diag_tb.Text = DateTime.Now.ToShortTimeString + vbCrLf
-		diag_tb.Visible = False
+		diag_tb.visible = False
 		stop_button.Enabled = True
 		ImDriver = False
 		echo_window_tb.Text = ""
@@ -610,7 +610,7 @@ Public Class frmClient
 	End Sub
 	'========================================================
 	Private Sub Prepare_and_send_state()
-		If Not frmTanks.Visible Then
+		If Not frmTanks.visible Then
 			'current_tank_index = -1
 		End If
 		If Not maploaded Then
@@ -1205,7 +1205,7 @@ no_tank_data:
 		End Sub
 		Protected Overrides Sub OnMouseClick(e As MouseEventArgs)
 			If e.Button = Windows.Forms.MouseButtons.Right Then
-				If frmMain.m_comment.Visible Then
+				If frmMain.m_comment.visible Then
 					frmMain.m_comment.Text = Me.Text
 				End If
 			Else
@@ -1242,7 +1242,7 @@ no_tank_data:
 			Return
 		End If
 		Dim w = client_panel.ClientSize.Width
-		client_panel.HorizontalScroll.Visible = False
+		client_panel.HorizontalScroll.visible = False
 		Try
 			client_panel.Controls.Clear()
 
@@ -1272,10 +1272,10 @@ no_tank_data:
 
 
 	Private Sub diagnostics_bt_Click(sender As Object, e As EventArgs) Handles diagnostics_bt.Click
-		If diag_tb.Visible Then
-			diag_tb.Visible = False
+		If diag_tb.visible Then
+			diag_tb.visible = False
 		Else
-			diag_tb.Visible = True
+			diag_tb.visible = True
 		End If
 		chat_entry_tb.Focus()
 

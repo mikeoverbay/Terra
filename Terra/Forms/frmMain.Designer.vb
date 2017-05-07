@@ -25,9 +25,10 @@ Partial Class frmMain
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.pb1 = New System.Windows.Forms.Panel()
+        Me.pb2 = New System.Windows.Forms.Panel()
+        Me.pb4 = New System.Windows.Forms.Panel()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.font_holder = New System.Windows.Forms.Label()
-        Me.tb1 = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog2 = New System.Windows.Forms.OpenFileDialog()
         Me.mainMenu = New System.Windows.Forms.MenuStrip()
         Me.m_file = New System.Windows.Forms.ToolStripMenuItem()
@@ -43,12 +44,13 @@ Partial Class frmMain
         Me.m_map_info = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_render_stats = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_developer = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_edit_biasing = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_post_effect_viewer = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_load_options = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_settings = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_lighting = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem13 = New System.Windows.Forms.ToolStripSeparator()
+        Me.m_small_lights = New System.Windows.Forms.ToolStripMenuItem()
+        Me.m_FXAA = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_g_settings = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_tank_names = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_tank_comments = New System.Windows.Forms.ToolStripMenuItem()
@@ -59,18 +61,12 @@ Partial Class frmMain
         Me.m_show_decals = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_cursor = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem8 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ViewDistanceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_200 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_400 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_700 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_1000 = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_map_border = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_map_grid = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_chunks = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_chuckIds = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem9 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_high_rez_Terrain = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_bump_map_models = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_show_uv2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_load_lod = New System.Windows.Forms.ToolStripMenuItem()
@@ -89,7 +85,6 @@ Partial Class frmMain
         Me.ToolStripMenuItem11 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_fly_map = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_Orbit_Light = New System.Windows.Forms.ToolStripMenuItem()
-        Me.m_hell_mode = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_session = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_host_session = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -111,7 +106,6 @@ Partial Class frmMain
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_mini_up = New System.Windows.Forms.ToolStripMenuItem()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
-        Me.pb2 = New System.Windows.Forms.Panel()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
@@ -123,11 +117,23 @@ Partial Class frmMain
         '
         Me.pb1.AllowDrop = True
         Me.pb1.BackColor = System.Drawing.Color.DimGray
-        Me.pb1.Controls.Add(Me.ProgressBar1)
-        Me.pb1.Controls.Add(Me.font_holder)
-        Me.pb1.ForeColor = System.Drawing.Color.Black
+        Me.pb1.Controls.Add(Me.pb2)
+        Me.pb1.Controls.Add(Me.pb4)
         resources.ApplyResources(Me.pb1, "pb1")
+        Me.pb1.ForeColor = System.Drawing.Color.Black
         Me.pb1.Name = "pb1"
+        '
+        'pb2
+        '
+        Me.pb2.Cursor = System.Windows.Forms.Cursors.Cross
+        resources.ApplyResources(Me.pb2, "pb2")
+        Me.pb2.Name = "pb2"
+        '
+        'pb4
+        '
+        Me.pb4.Cursor = System.Windows.Forms.Cursors.SizeAll
+        resources.ApplyResources(Me.pb4, "pb4")
+        Me.pb4.Name = "pb4"
         '
         'ProgressBar1
         '
@@ -140,13 +146,6 @@ Partial Class frmMain
         Me.font_holder.ForeColor = System.Drawing.Color.White
         Me.font_holder.Name = "font_holder"
         '
-        'tb1
-        '
-        Me.tb1.BackColor = System.Drawing.Color.Black
-        resources.ApplyResources(Me.tb1, "tb1")
-        Me.tb1.ForeColor = System.Drawing.Color.Lime
-        Me.tb1.Name = "tb1"
-        '
         'OpenFileDialog2
         '
         resources.ApplyResources(Me.OpenFileDialog2, "OpenFileDialog2")
@@ -154,15 +153,15 @@ Partial Class frmMain
         '
         'mainMenu
         '
+        resources.ApplyResources(Me.mainMenu, "mainMenu")
         Me.mainMenu.BackColor = System.Drawing.SystemColors.MenuBar
         Me.mainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_file, Me.m_settings, Me.m_session, Me.m_layout_mode, Me.m_reset_tanks, Me.m_show_chat, Me.m_render_to_bitmap, Me.m_comment, Me.m_clear_tank_comments, Me.m_minizoom, Me.m_mini_down, Me.m_find_Item_menu, Me.m_edit_shaders, Me.HelpToolStripMenuItem, Me.m_mini_up})
         Me.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow
-        resources.ApplyResources(Me.mainMenu, "mainMenu")
         Me.mainMenu.Name = "mainMenu"
         '
         'm_file
         '
-        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_map_info, Me.m_render_stats, Me.m_developer, Me.m_edit_biasing, Me.m_post_effect_viewer, Me.m_load_options})
+        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_map_info, Me.m_render_stats, Me.m_developer, Me.m_post_effect_viewer, Me.m_load_options})
         Me.m_file.ForeColor = System.Drawing.Color.Black
         Me.m_file.Name = "m_file"
         resources.ApplyResources(Me.m_file, "m_file")
@@ -228,11 +227,6 @@ Partial Class frmMain
         Me.m_developer.Name = "m_developer"
         resources.ApplyResources(Me.m_developer, "m_developer")
         '
-        'm_edit_biasing
-        '
-        Me.m_edit_biasing.Name = "m_edit_biasing"
-        resources.ApplyResources(Me.m_edit_biasing, "m_edit_biasing")
-        '
         'm_post_effect_viewer
         '
         Me.m_post_effect_viewer.Name = "m_post_effect_viewer"
@@ -245,7 +239,7 @@ Partial Class frmMain
         '
         'm_settings
         '
-        Me.m_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_lighting, Me.ToolStripMenuItem13, Me.m_g_settings, Me.ToolStripMenuItem14, Me.m_show_minimap, Me.m_show_status, Me.m_info_window, Me.ToolStripMenuItem11, Me.m_fly_map, Me.m_Orbit_Light, Me.m_hell_mode})
+        Me.m_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_lighting, Me.ToolStripMenuItem13, Me.m_small_lights, Me.m_FXAA, Me.m_g_settings, Me.ToolStripMenuItem14, Me.m_show_minimap, Me.m_show_status, Me.m_info_window, Me.ToolStripMenuItem11, Me.m_fly_map, Me.m_Orbit_Light})
         Me.m_settings.ForeColor = System.Drawing.Color.Black
         Me.m_settings.Name = "m_settings"
         resources.ApplyResources(Me.m_settings, "m_settings")
@@ -260,9 +254,25 @@ Partial Class frmMain
         Me.ToolStripMenuItem13.Name = "ToolStripMenuItem13"
         resources.ApplyResources(Me.ToolStripMenuItem13, "ToolStripMenuItem13")
         '
+        'm_small_lights
+        '
+        Me.m_small_lights.Checked = Global.Terra.My.MySettings.Default.m_small_lights
+        Me.m_small_lights.CheckOnClick = True
+        Me.m_small_lights.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.m_small_lights.Name = "m_small_lights"
+        resources.ApplyResources(Me.m_small_lights, "m_small_lights")
+        '
+        'm_FXAA
+        '
+        Me.m_FXAA.Checked = Global.Terra.My.MySettings.Default.m_FXAA
+        Me.m_FXAA.CheckOnClick = True
+        Me.m_FXAA.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.m_FXAA.Name = "m_FXAA"
+        resources.ApplyResources(Me.m_FXAA, "m_FXAA")
+        '
         'm_g_settings
         '
-        Me.m_g_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_show_tank_names, Me.m_show_tank_comments, Me.ToolStripSeparator4, Me.m_show_models, Me.m_show_trees, Me.m_show_water, Me.m_show_decals, Me.m_show_cursor, Me.ToolStripMenuItem8, Me.ViewDistanceToolStripMenuItem, Me.m_map_border, Me.m_show_map_grid, Me.m_show_chunks, Me.m_show_chuckIds, Me.ToolStripMenuItem9, Me.m_high_rez_Terrain, Me.m_bump_map_models, Me.ToolStripSeparator5, Me.m_show_uv2, Me.m_load_lod, Me.m_load_details, Me.m_low_quality_textures, Me.m_low_quality_trees, Me.ToolStripSeparator7, Me.m_wire_models, Me.m_wire_trees, Me.m_wire_decals, Me.m_wire_terrain})
+        Me.m_g_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_show_tank_names, Me.m_show_tank_comments, Me.ToolStripSeparator4, Me.m_show_models, Me.m_show_trees, Me.m_show_water, Me.m_show_decals, Me.m_show_cursor, Me.ToolStripMenuItem8, Me.m_map_border, Me.m_show_map_grid, Me.m_show_chunks, Me.m_show_chuckIds, Me.ToolStripMenuItem9, Me.m_high_rez_Terrain, Me.ToolStripSeparator5, Me.m_show_uv2, Me.m_load_lod, Me.m_load_details, Me.m_low_quality_textures, Me.m_low_quality_trees, Me.ToolStripSeparator7, Me.m_wire_models, Me.m_wire_trees, Me.m_wire_decals, Me.m_wire_terrain})
         Me.m_g_settings.Name = "m_g_settings"
         resources.ApplyResources(Me.m_g_settings, "m_g_settings")
         '
@@ -330,41 +340,6 @@ Partial Class frmMain
         Me.ToolStripMenuItem8.Name = "ToolStripMenuItem8"
         resources.ApplyResources(Me.ToolStripMenuItem8, "ToolStripMenuItem8")
         '
-        'ViewDistanceToolStripMenuItem
-        '
-        Me.ViewDistanceToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_200, Me.m_400, Me.m_700, Me.m_1000})
-        Me.ViewDistanceToolStripMenuItem.Name = "ViewDistanceToolStripMenuItem"
-        resources.ApplyResources(Me.ViewDistanceToolStripMenuItem, "ViewDistanceToolStripMenuItem")
-        '
-        'm_200
-        '
-        Me.m_200.Checked = Global.Terra.My.MySettings.Default.vr_400
-        Me.m_200.CheckOnClick = True
-        Me.m_200.Name = "m_200"
-        resources.ApplyResources(Me.m_200, "m_200")
-        '
-        'm_400
-        '
-        Me.m_400.Checked = Global.Terra.My.MySettings.Default.vr_700
-        Me.m_400.CheckOnClick = True
-        Me.m_400.Name = "m_400"
-        resources.ApplyResources(Me.m_400, "m_400")
-        '
-        'm_700
-        '
-        Me.m_700.Checked = Global.Terra.My.MySettings.Default.vr_900
-        Me.m_700.CheckOnClick = True
-        Me.m_700.Name = "m_700"
-        resources.ApplyResources(Me.m_700, "m_700")
-        '
-        'm_1000
-        '
-        Me.m_1000.Checked = Global.Terra.My.MySettings.Default.vr_1200
-        Me.m_1000.CheckOnClick = True
-        Me.m_1000.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.m_1000.Name = "m_1000"
-        resources.ApplyResources(Me.m_1000, "m_1000")
-        '
         'm_map_border
         '
         Me.m_map_border.CheckOnClick = True
@@ -401,14 +376,6 @@ Partial Class frmMain
         Me.m_high_rez_Terrain.CheckState = System.Windows.Forms.CheckState.Checked
         Me.m_high_rez_Terrain.Name = "m_high_rez_Terrain"
         resources.ApplyResources(Me.m_high_rez_Terrain, "m_high_rez_Terrain")
-        '
-        'm_bump_map_models
-        '
-        Me.m_bump_map_models.Checked = Global.Terra.My.MySettings.Default.m_bump_map_models
-        Me.m_bump_map_models.CheckOnClick = True
-        Me.m_bump_map_models.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.m_bump_map_models.Name = "m_bump_map_models"
-        resources.ApplyResources(Me.m_bump_map_models, "m_bump_map_models")
         '
         'ToolStripSeparator5
         '
@@ -527,12 +494,6 @@ Partial Class frmMain
         Me.m_Orbit_Light.CheckOnClick = True
         Me.m_Orbit_Light.Name = "m_Orbit_Light"
         resources.ApplyResources(Me.m_Orbit_Light, "m_Orbit_Light")
-        '
-        'm_hell_mode
-        '
-        Me.m_hell_mode.CheckOnClick = True
-        Me.m_hell_mode.Name = "m_hell_mode"
-        resources.ApplyResources(Me.m_hell_mode, "m_hell_mode")
         '
         'm_session
         '
@@ -657,12 +618,6 @@ Partial Class frmMain
         Me.m_mini_up.Name = "m_mini_up"
         resources.ApplyResources(Me.m_mini_up, "m_mini_up")
         '
-        'pb2
-        '
-        Me.pb2.Cursor = System.Windows.Forms.Cursors.Cross
-        resources.ApplyResources(Me.pb2, "pb2")
-        Me.pb2.Name = "pb2"
-        '
         'Timer1
         '
         Me.Timer1.Interval = 500
@@ -682,14 +637,13 @@ Partial Class frmMain
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.DimGray
-        Me.Controls.Add(Me.pb2)
-        Me.Controls.Add(Me.mainMenu)
-        Me.Controls.Add(Me.tb1)
+        Me.Controls.Add(Me.font_holder)
+        Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.pb1)
+        Me.Controls.Add(Me.mainMenu)
         Me.ForeColor = System.Drawing.Color.Yellow
         Me.Name = "frmMain"
         Me.pb1.ResumeLayout(False)
-        Me.pb1.PerformLayout()
         Me.mainMenu.ResumeLayout(False)
         Me.mainMenu.PerformLayout()
         Me.ResumeLayout(False)
@@ -700,7 +654,6 @@ Partial Class frmMain
 	Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
 	Friend WithEvents OpenFileDialog2 As System.Windows.Forms.OpenFileDialog
 	Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
-	Friend WithEvents tb1 As System.Windows.Forms.TextBox
     Friend WithEvents mainMenu As System.Windows.Forms.MenuStrip
 	Friend WithEvents m_file As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_load_map As System.Windows.Forms.ToolStripMenuItem
@@ -720,12 +673,7 @@ Partial Class frmMain
 	Friend WithEvents ToolStripMenuItem8 As System.Windows.Forms.ToolStripSeparator
 	Friend WithEvents m_show_map_grid As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_show_chunks As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents ViewDistanceToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_200 As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_400 As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_700 As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_1000 As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem5 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem6 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem9 As System.Windows.Forms.ToolStripSeparator
@@ -768,11 +716,9 @@ Partial Class frmMain
 	Friend WithEvents m_load_lod As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_Orbit_Light As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents Timer1 As System.Windows.Forms.Timer
-	Friend WithEvents m_hell_mode As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
 	Friend WithEvents m_developer As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_bump_map_models As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_clear_tank_comments As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_clear_tank_comments As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_show_uv2 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_show_minimap As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_minizoom As System.Windows.Forms.ToolStripMenuItem
@@ -785,10 +731,12 @@ Partial Class frmMain
     Friend WithEvents m_wire_terrain As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_wire_models As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_show_decals As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents m_edit_biasing As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_post_effect_viewer As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_render_stats As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_map_info As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_load_options As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents pb4 As System.Windows.Forms.Panel
+    Friend WithEvents m_small_lights As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_FXAA As System.Windows.Forms.ToolStripMenuItem
 
 End Class

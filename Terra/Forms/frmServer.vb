@@ -41,7 +41,7 @@ Public Class frmServer
 	End Sub
 
 	Private Sub frmmain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-		Diag_tb.Visible = False
+		Diag_tb.visible = False
 		Diag_tb.Text = ""
 		stop_btn.Enabled = False
 		Packet_out.Ex = look_point_X
@@ -81,11 +81,11 @@ Public Class frmServer
 
 		Diag_tb.Text = "Server Started" + vbCrLf
 		If ImHost Then
-			frmClient.Visible = True
+			frmClient.visible = True
 			frmClient.echo_window_tb.Text = ""
 			frmClient.diag_tb.Text = ""
 			frmClient.imHost_cb.Checked = True
-			frmMain.m_show_chat.Visible = True
+			frmMain.m_show_chat.visible = True
 			frmMain.m_show_chat.Checked = True
 			frmMain.m_show_chat.Text = "Hide Chat"
 			Me.WindowState = FormWindowState.Minimized
@@ -108,7 +108,7 @@ Public Class frmServer
 
 		While server_.IsAlive
 			If ImHost Then
-				If Not frmClient.Visible Then
+				If Not frmClient.visible Then
 					Me.WindowState = FormWindowState.Normal
 					Me.TopMost = True
 				End If
@@ -435,10 +435,10 @@ time_:
 	End Sub
 
 	Private Sub diagnostics_bt_Click(sender As Object, e As EventArgs) Handles diagnostics_bt.Click
-		If Diag_tb.Visible Then
-			Diag_tb.Visible = False
+		If Diag_tb.visible Then
+			Diag_tb.visible = False
 		Else
-			Diag_tb.Visible = True
+			Diag_tb.visible = True
 		End If
 	End Sub
 

@@ -102,11 +102,11 @@ Partial Class frmLighting
         '
         Me.Label1.AutoSize = True
         Me.Label1.ForeColor = System.Drawing.Color.Silver
-        Me.Label1.Location = New System.Drawing.Point(2, 160)
+        Me.Label1.Location = New System.Drawing.Point(4, 160)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(43, 26)
+        Me.Label1.Size = New System.Drawing.Size(34, 26)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Texture" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Level"
+        Me.Label1.Text = "Bright" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Level"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         's_terrain_texture_level
@@ -160,9 +160,9 @@ Partial Class frmLighting
         Me.Label3.ForeColor = System.Drawing.Color.Silver
         Me.Label3.Location = New System.Drawing.Point(252, 160)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(36, 26)
+        Me.Label3.Size = New System.Drawing.Size(33, 26)
         Me.Label3.TabIndex = 1
-        Me.Label3.Text = "Model" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Level" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.Label3.Text = "Spec" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Level" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         's_model_level

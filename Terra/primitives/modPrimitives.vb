@@ -104,6 +104,7 @@ fing_loop:
                 ReDim Preserve Models.models(model_ID).componets(mc)
                 Models.models(model_ID)._count = mc
                 saved_model_loads += 1
+                Models.models(model_ID).pass2 = loaded_models.stack(addy).pass2
                 For i = 0 To mc - 1
                     Models.models(model_ID).componets(i).callList_ID = _
                               loaded_models.stack(addy).dispId(i)
@@ -156,7 +157,6 @@ fing_loop:
                         GoTo fing_loop
                     End If
                     Debug.Write("Cant find: " & v_name & vbCrLf)
-                    frmMain.tb1.AppendText("FNF: " & v_name & vbCrLf)
                     ms.Dispose()
                     'Stop
                     Return False
@@ -220,6 +220,13 @@ fing_loop:
         'If success Then
 
         'End If
+        'this is used to determine what the decals is drawn on.
+        If a11(1).ToLower.Contains("building") Or a11(1).ToLower.Contains("installations") Or _
+            a11(2).ToLower.Contains("portwall") Or a11(2).ToLower.Contains("bridge") Then
+            Models.models(model_ID).pass2 = False
+        Else
+            Models.models(model_ID).pass2 = True
+        End If
         make_prim_list(model_ID)
         ms.Close()
         ms.Dispose()
@@ -642,16 +649,16 @@ fing_loop:
 
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                '.tangents(i) = unpackNormal_8_8_8(packed)
+                                .tangents(i) = unpackNormal_8_8_8(packed)
                             Else
-                                '.tangents(i) = unpackNormal(packed)
+                                .tangents(i) = unpackNormal(packed)
                             End If
                             '
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                .binormals(i) = unpackNormal_8_8_8(packed)
+                                '.binormals(i) = unpackNormal_8_8_8(packed)
                             Else
-                                .binormals(i) = unpackNormal(packed)
+                                '.binormals(i) = unpackNormal(packed)
                             End If
                         Else
                             If Not realNormals And Not stride = 24 Then
@@ -721,9 +728,9 @@ fing_loop:
 
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                '.tangents(i + 1) = unpackNormal_8_8_8(packed)
+                                .tangents(i + 1) = unpackNormal_8_8_8(packed)
                             Else
-                                '.tangents(i + 1) = unpackNormal(packed)
+                                .tangents(i + 1) = unpackNormal(packed)
                             End If
                             '
                             packed = vr.ReadUInt32
@@ -742,9 +749,9 @@ fing_loop:
                                 '
                                 packed = vr.ReadUInt32
                                 If BPVT_mode Then
-                                    .binormals(i + 1) = unpackNormal_8_8_8(packed)
+                                    '.binormals(i + 1) = unpackNormal_8_8_8(packed)
                                 Else
-                                    .binormals(i + 1) = unpackNormal(packed)
+                                    '.binormals(i + 1) = unpackNormal(packed)
                                 End If
                             End If
                         End If
@@ -797,9 +804,9 @@ fing_loop:
 
                             packed = vr.ReadUInt32
                             If BPVT_mode Then
-                                '.tangents(i + 2) = unpackNormal_8_8_8(packed)
+                                .tangents(i + 2) = unpackNormal_8_8_8(packed)
                             Else
-                                '.tangents(i + 2) = unpackNormal(packed)
+                                .tangents(i + 2) = unpackNormal(packed)
                             End If
                             '
                             packed = vr.ReadUInt32
@@ -818,9 +825,9 @@ fing_loop:
                                 '
                                 packed = vr.ReadUInt32
                                 If BPVT_mode Then
-                                    .binormals(i + 2) = unpackNormal_8_8_8(packed)
+                                    '.binormals(i + 2) = unpackNormal_8_8_8(packed)
                                 Else
-                                    .binormals(i + 2) = unpackNormal(packed)
+                                    '.binormals(i + 2) = unpackNormal(packed)
                                 End If
                             End If
                         End If
@@ -1024,7 +1031,9 @@ dont_save_this:
         n1 = convert_normal(Md.normals(i + 0))
         n2 = convert_normal(Md.normals(i + 1))
         n3 = convert_normal(Md.normals(i + 2))
-
+        n1.Normalize()
+        n2.Normalize()
+        n3.Normalize()
         'convert to vector3d type... they are WAY easier to do complex math with!!
         Dim v0 = convert_vertex(Md.vertices(i + 0))
         Dim v1 = convert_vertex(Md.vertices(i + 1))
@@ -1037,28 +1046,47 @@ dont_save_this:
         uv2.x = Md.UVs(i + 2).u
         uv2.y = Md.UVs(i + 2).v
 
-        Dim edge1 = v1 - v0
-        Dim edge2 = v2 - v0
-        Dim deltaU1 = (uv1.x - uv0.x)
-        Dim deltaU2 = (uv2.x - uv0.x)
-        Dim deltaV1 = (uv1.y - uv0.y)
-        Dim deltaV2 = (uv2.y - uv0.y)
 
-        Dim f As Single = 1.0! / ((deltaU1 * deltaV2) - (deltaU2 * deltaV1))
+        Dim deltaPos1 = v1 - v0
+        Dim deltaPos2 = v2 - v0
+        Dim deltaUV1 As vect2
+        Dim deltaUV2 As vect2
 
-        tangent.X = f * ((deltaV2 * edge1.X) - (deltaV1 * edge2.X))
-        tangent.Y = f * ((deltaV2 * edge1.Y) - (deltaV1 * edge2.Y))
-        tangent.Z = f * ((deltaV2 * edge1.Z) - (deltaV1 * edge2.Z))
+        deltaUV1.x = (uv1.x - uv0.x)
+        deltaUV1.y = (uv1.y - uv0.y)
+        deltaUV2.x = (uv2.x - uv0.x)
+        deltaUV2.y = (uv2.y - uv0.y)
 
-        t1 = tangent - (Vector3D.DotProduct(n1, tangent) * n1)
-        t2 = tangent - (Vector3D.DotProduct(n1, tangent) * n2)
-        t3 = tangent - (Vector3D.DotProduct(n1, tangent) * n3)
-        b1 = Vector3D.CrossProduct(t1, n1)
-        b2 = Vector3D.CrossProduct(t2, n2)
-        b3 = Vector3D.CrossProduct(t3, n3)
+        Dim f As Single = 1.0F / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x)
+
+        tangent = f * (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)
+        bitangent = f * (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)
+        tangent.Normalize()
+        bitangent.Normalize()
+
+        't1 = CrossProduct(bitangent, n1)
+        't2 = CrossProduct(bitangent, n1)
+        't3 = CrossProduct(bitangent, n1)
+
+        t1 = tangent - (Vector3D.DotProduct(t1, n1) * n1)
+        t2 = tangent - (Vector3D.DotProduct(t2, n1) * n2)
+        t3 = tangent - (Vector3D.DotProduct(t3, n1) * n3)
+
+        b1 = bitangent - (DotProduct(bitangent, n1) * n1)
+        b2 = bitangent - (DotProduct(bitangent, n2) * n2)
+        b3 = bitangent - (DotProduct(bitangent, n3) * n3)
+
         '
-        tangent /= tangent.Length
-        bitangent /= bitangent.Length
+        t1.Normalize()
+        t2.Normalize()
+        t3.Normalize()
+        b1.Normalize()
+        b2.Normalize()
+        b3.Normalize()
+
+        'If DotProduct(CrossProduct(n1, t1), b1) < 0.0 Then t1 = t1 * -1.0
+        'If DotProduct(CrossProduct(n2, t2), b2) < 0.0 Then t2 = t2 * -1.0
+        'If DotProduct(CrossProduct(n3, t3), b3) < 0.0 Then t3 = t3 * -1.0
 
         Md.tangents(i + 0).nx = t1.X
         Md.tangents(i + 0).ny = t1.Y
@@ -1082,7 +1110,6 @@ dont_save_this:
         Md.binormals(i + 2).nz = b3.Z
 
     End Sub
-
     Public Sub build_primitive(ByVal mId As UInt32, ByVal cId As UInt32)
         'this routine makes the triangles from the loaded primitive data.
         If Models.models(mId).componets(cId).multi_textured Then
@@ -1090,30 +1117,26 @@ dont_save_this:
             Gl.glBegin(Gl.GL_TRIANGLES)
             With Models.models(mId).componets(cId)
                 For i As UInt32 = 0 To (Models.models(mId).componets(cId)._count - 1) * 3 Step 3
-
                     ComputeTangentBasis_models(Models.models(mId).componets(cId), i)
                     '1-------------
                     Gl.glMultiTexCoord2f(0, -.UVs(i).u, .UVs(i).v)
                     Gl.glMultiTexCoord2f(1, -.UV2s(i).u, .UV2s(i).v)
                     Gl.glMultiTexCoord3f(2, .tangents(i).nx, .tangents(i).ny, .tangents(i).nz)
-                    Gl.glMultiTexCoord3f(3, .binormals(i).nx, .binormals(i).ny, .binormals(i).nz)
-
+                    'Gl.glMultiTexCoord3f(3, .binormals(i).nx, .binormals(i).ny, .binormals(i).nz)
                     Gl.glNormal3f(.normals(i).nx, .normals(i).ny, .normals(i).nz)
                     Gl.glVertex3f(-.vertices(i).x, .vertices(i).y, .vertices(i).z)
                     '2--------------
                     Gl.glMultiTexCoord2f(0, -.UVs(i + 1).u, .UVs(i + 1).v)
                     Gl.glMultiTexCoord2f(1, -.UV2s(i + 1).u, .UV2s(i + 1).v)
                     Gl.glMultiTexCoord3f(2, .tangents(i + 1).nx, .tangents(i + 1).ny, .tangents(i + 1).nz)
-                    Gl.glMultiTexCoord3f(3, .binormals(i + 1).nx, .binormals(i + 1).ny, .binormals(i + 1).nz)
-
+                    'Gl.glMultiTexCoord3f(3, .binormals(i + 1).nx, .binormals(i + 1).ny, .binormals(i + 1).nz)
                     Gl.glNormal3f(.normals(i + 1).nx, .normals(i + 1).ny, .normals(i + 1).nz)
                     Gl.glVertex3f(-.vertices(i + 1).x, .vertices(i + 1).y, .vertices(i + 1).z)
                     '3--------------
                     Gl.glMultiTexCoord2f(0, -.UVs(i + 2).u, .UVs(i + 2).v)
                     Gl.glMultiTexCoord2f(1, -.UV2s(i + 2).u, .UV2s(i + 2).v)
                     Gl.glMultiTexCoord3f(2, .tangents(i + 2).nx, .tangents(i + 2).ny, .tangents(i + 2).nz)
-                    Gl.glMultiTexCoord3f(3, .binormals(i + 2).nx, .binormals(i + 2).ny, .binormals(i + 2).nz)
-
+                    'Gl.glMultiTexCoord3f(3, .binormals(i + 2).nx, .binormals(i + 2).ny, .binormals(i + 2).nz)
                     Gl.glNormal3f(.normals(i + 2).nx, .normals(i + 2).ny, .normals(i + 2).nz)
                     Gl.glVertex3f(-.vertices(i + 2).x, .vertices(i + 2).y, .vertices(i + 2).z)
                 Next
@@ -1128,19 +1151,19 @@ dont_save_this:
 
                     Gl.glMultiTexCoord2f(0, -.UVs(i).u, .UVs(i).v)
                     Gl.glMultiTexCoord3f(2, .tangents(i).nx, .tangents(i).ny, .tangents(i).nz)
-                    Gl.glMultiTexCoord3f(3, .binormals(i).nx, .binormals(i).ny, .binormals(i).nz)
+                    'Gl.glMultiTexCoord3f(3, .binormals(i).nx, .binormals(i).ny, .binormals(i).nz)
                     Gl.glNormal3f(.normals(i).nx, .normals(i).ny, .normals(i).nz)
                     Gl.glVertex3f(-.vertices(i).x, .vertices(i).y, .vertices(i).z)
 
                     Gl.glMultiTexCoord2f(0, -.UVs(i + 1).u, .UVs(i + 1).v)
                     Gl.glMultiTexCoord3f(2, .tangents(i + 1).nx, .tangents(i + 1).ny, .tangents(i + 1).nz)
-                    Gl.glMultiTexCoord3f(3, .binormals(i + 1).nx, .binormals(i + 1).ny, .binormals(i + 1).nz)
+                    'Gl.glMultiTexCoord3f(3, .binormals(i + 1).nx, .binormals(i + 1).ny, .binormals(i + 1).nz)
                     Gl.glNormal3f(.normals(i + 1).nx, .normals(i + 1).ny, .normals(i + 1).nz)
                     Gl.glVertex3f(-.vertices(i + 1).x, .vertices(i + 1).y, .vertices(i + 1).z)
 
                     Gl.glMultiTexCoord2f(0, -.UVs(i + 2).u, .UVs(i + 2).v)
                     Gl.glMultiTexCoord3f(2, .tangents(i + 2).nx, .tangents(i + 2).ny, .tangents(i + 2).nz)
-                    Gl.glMultiTexCoord3f(3, .binormals(i + 2).nx, .binormals(i + 2).ny, .binormals(i + 2).nz)
+                    'Gl.glMultiTexCoord3f(3, .binormals(i + 2).nx, .binormals(i + 2).ny, .binormals(i + 2).nz)
                     Gl.glNormal3f(.normals(i + 2).nx, .normals(i + 2).ny, .normals(i + 2).nz)
                     Gl.glVertex3f(-.vertices(i + 2).x, .vertices(i + 2).y, .vertices(i + 2).z)
                 Next
@@ -1164,9 +1187,10 @@ dont_save_this:
                 GoTo notToday
             End If
             loaded_models.names.Add(Models.Model_list(id))
-            'see if this model has been created. If so.. use its data.
+            'Add this model to the list of loaded models so we dont load it again.
             For i = 0 To Models.models(id)._count - 1
                 Nmods = loaded_models._count
+                loaded_models.stack(Nmods).pass2 = Models.models(id).pass2
                 If Models.models(id).componets(i)._count > 0 Then
 
                     Dim cl = Gl.glGenLists(1)
@@ -1182,6 +1206,8 @@ dont_save_this:
                     ReDim Preserve loaded_models.stack(Nmods).alphaTestEnable(i + 1)
                     ReDim Preserve loaded_models.stack(Nmods).GAmap(i + 1)
                     ReDim Preserve loaded_models.stack(Nmods).multi_textured(i + 1)
+
+
                     loaded_models.stack(Nmods).dispId(i) = cl
                     loaded_models.stack(Nmods).textId(i) = Models.models(id).componets(i).color_id
                     loaded_models.stack(Nmods).color_name(i) = Models.models(id).componets(i).color_name
@@ -1261,7 +1287,6 @@ Good_image:
                     entry1 = get_shared(.color_name)
                     If entry1 Is Nothing Then
                         Debug.Write("cant find: " & .color_name & vbCrLf)
-                        frmMain.tb1.AppendText("FNF: " & .color_name & vbCrLf)
                     End If
                     entry1.Extract(ms)
                 Else
@@ -1440,7 +1465,6 @@ jump_normal:
                     entry1 = get_shared(diffuse)
                     If entry1 Is Nothing Then
                         Debug.Write("cant find: " & diffuse & vbCrLf)
-                        frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
                     End If
                     entry1.Extract(ms)
                 Else
@@ -1476,7 +1500,6 @@ jump_normal:
                     entry1 = get_shared(normal)
                     If entry1 Is Nothing Then
                         Debug.Write("cant find: " & normal & vbCrLf)
-                        frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
                     End If
                     entry1.Extract(ms)
                 Else
@@ -1515,7 +1538,6 @@ jump_normal:
                     entry1 = get_shared(diffuse)
                     If entry1 Is Nothing Then
                         Debug.Write("cant find: " & diffuse & vbCrLf)
-                        frmMain.tb1.AppendText("FNF: " & diffuse & vbCrLf)
                     End If
                     entry1.Extract(ms)
                 Else
@@ -1554,7 +1576,6 @@ jump_normal:
                     entry1 = get_shared(normal)
                     If entry1 Is Nothing Then
                         Debug.Write("cant find: " & normal & vbCrLf)
-                        frmMain.tb1.AppendText("FNF: " & normal & vbCrLf)
                     End If
                     entry1.Extract(ms)
                 Else
@@ -1602,7 +1623,7 @@ jump_normal:
             t.y = tree_data.b_vert((tbuf(i)) * 13 + 11)
             t.z = tree_data.b_vert((tbuf(i)) * 13 + 12)
 
-            Gl.glTexCoord2f(-uv.x, uv.y)
+            Gl.glMultiTexCoord2f(0, -uv.x, uv.y)
             Gl.glMultiTexCoord3f(2, t.x, t.y, t.z)
             Gl.glNormal3f(norm.x, norm.y, norm.z)
             Gl.glVertex3f(vert.x, vert.y, vert.z)
@@ -1632,7 +1653,8 @@ jump_normal:
             t.x = -tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 10)
             t.y = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 11)
             t.z = tree_data.f_vert((tree_data.strip_inds(k).indices(i)) * 13 + 12)
-            Gl.glTexCoord2f(-uv.x, uv.y)
+
+            Gl.glMultiTexCoord2f(0, -uv.x, uv.y)
             Gl.glMultiTexCoord3f(2, t.x, t.y, t.z)
             Gl.glNormal3f(norm.x, norm.y, norm.z)
             Gl.glVertex3f(vert.x, vert.y, vert.z)
@@ -1678,7 +1700,7 @@ jump_normal:
         Dim idx, rot As vect2
         Gl.glNewList(id, Gl.GL_COMPILE)
         'Gl.glBegin(Gl.GL_TRIANGLES)
-        Gl.glBegin(Gl.GL_TRIANGLES)
+        Gl.glBegin(Gl.GL_QUADS)
         Dim sb As New StringBuilder
         For i = 0 To tree_data.l_indices.Length - 3
             'struct LeafVertex
@@ -1697,7 +1719,7 @@ jump_normal:
                 'Stop
             End If
             If cnt = 2 Or cnt = 3 Then
-                'GoTo skip_this_vert
+                GoTo skip_this_vert
             End If
             p.x = -tree_data.l_vert((tree_data.l_indices(i) * 22) + 0)
             p.y = tree_data.l_vert((tree_data.l_indices(i) * 22) + 1)
@@ -1737,15 +1759,15 @@ jump_normal:
             idx.x = vx(vn)
             idx.y = vy(vn)
             Dim corner As vect3
-            corner.x = vx(vn) '- pivot.x
-            corner.y = vy(vn) '+ pivot.y
+            corner.x = vx(vn) 'get corner x
+            corner.y = vy(vn) 'get corner y
             corner.x *= tree_scale
             corner.y *= tree_scale
             corner.x *= sizex
-            corner.y *= sizex
+            corner.y *= sizey
             'Debug.WriteLine("X:" & corner.x.ToString("0.000000") & "  Y:" & corner.y.ToString("0.000000"))
             'Debug.WriteLine("U:" & -uv.x.ToString("0.000000") & "  V:" & uv.y.ToString("0.000000") + vbCrLf)
-            Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
+            Gl.glMultiTexCoord2f(0, -uv.x, uv.y)
             Gl.glMultiTexCoord3f(1, corner.x, corner.y, 0.0)
             Gl.glMultiTexCoord3f(2, tangent.x, tangent.y, tangent.z)
             Gl.glNormal3f(norm.x, norm.y, norm.z)
@@ -1817,7 +1839,7 @@ skip_this_vert:
             tangent.z = tree_data.l_vert((tree_data.l_indices(i) * 22) + 21)
 
             ' just use these directly.
-            Gl.glMultiTexCoord3f(0, -uv.x, uv.y, 0.0)
+            Gl.glMultiTexCoord2f(0, -uv.x, uv.y)
             Gl.glMultiTexCoord3f(1, 0.0, 0.0, 0.0)
             Gl.glMultiTexCoord3f(2, tangent.x, tangent.y, tangent.z)
             Gl.glNormal3f(norm.x, norm.y, norm.z)
@@ -1870,7 +1892,16 @@ skip_this_vert:
 
                 ReDim Preserve treeCache(i).matrix_list(treeCache(i).tree_cnt + 1)
                 ReDim Preserve treeCache(i).tree_id(treeCache(i).tree_cnt + 1)
+                ReDim Preserve treeCache(i).BB(treeCache(i).tree_cnt + 1)
                 treeCache(i).matrix_list(treeCache(i).tree_cnt) = New matrix_
+
+                Dim bb1 As New BB_
+                bb1.BB_Max = treeCache(i).D_BB.BB_Max
+                bb1.BB_Min = treeCache(i).D_BB.BB_Min
+                ReDim bb1.BB(16)
+
+                get_translated_bb_tree(bb1, tree)
+                treeCache(i).BB(treeCache(i).tree_cnt) = bb1
                 treeCache(i).matrix_list(treeCache(i).tree_cnt).matrix = speedtree_matrix_list(tree).matrix
                 treeCache(i).tree_id(treeCache(i).tree_cnt) = tree
 
@@ -1912,6 +1943,16 @@ skip_this_vert:
         Trees.flora(tree).branch_displayID = 0
         Trees.flora(tree).frond_displayID = 0
         Trees.flora(tree).leaf_displayID = 0
+        Dim bb As BB_
+        ReDim bb.BB(16)
+        'get the bounding box corners
+        bb.BB_Min.x = br.ReadSingle
+        bb.BB_Min.y = br.ReadSingle
+        bb.BB_Min.z = br.ReadSingle
+        bb.BB_Max.x = br.ReadSingle
+        bb.BB_Max.y = br.ReadSingle
+        bb.BB_Max.z = br.ReadSingle
+        'build and translate the bounding box.
 
         If ctree.Contains("Sedge_1") Then
             'Stop
@@ -2327,14 +2368,51 @@ get_billboard_data:
         treeCache(cnt2).billboard_normalID = Trees.flora(tree).billboard_normalID
         treeCache(cnt2).billboard_normalID = Trees.flora(tree).billboard_normalID
 
+        treeCache(cnt2).D_BB = New BB_
+        ReDim treeCache(cnt2).D_BB.BB(16)
+
+        treeCache(cnt2).D_BB.BB = bb.BB
+        treeCache(cnt2).D_BB.BB_Max = bb.BB_Max
+        treeCache(cnt2).D_BB.BB_Min = bb.BB_Min
+
         ReDim Preserve treeCache(cnt2).matrix_list(treeCache(cnt2).tree_cnt + 1)
         ReDim Preserve treeCache(cnt2).tree_id(treeCache(cnt2).tree_cnt + 1)
+        ReDim Preserve treeCache(cnt2).BB(treeCache(cnt2).tree_cnt + 1)
+        get_translated_bb_tree(bb, tree)
+        treeCache(cnt2).BB(treeCache(cnt2).tree_cnt + 1).BB = bb.BB
+
         treeCache(cnt2).matrix_list(treeCache(cnt2).tree_cnt) = New matrix_
         treeCache(cnt2).matrix_list(treeCache(cnt2).tree_cnt).matrix = speedtree_matrix_list(tree).matrix
         treeCache(cnt2).tree_id(treeCache(cnt2).tree_cnt) = tree
         treeCache(cnt2).tree_cnt += 1
         Return
         '----------------------------------------
+
+    End Sub
+    Private Sub get_translated_bb_tree(ByRef mm As BB_, ByVal tree As Integer)
+        Dim v1, v2, v3, v4, v5, v6, v7, v8 As vect3
+        v1.z = mm.BB_Max.z : v2.z = mm.BB_Max.z : v3.z = mm.BB_Max.z : v4.z = mm.BB_Max.z
+        v5.z = mm.BB_Min.z : v6.z = mm.BB_Min.z : v7.z = mm.BB_Min.z : v8.z = mm.BB_Min.z
+
+        v1.x = mm.BB_Min.x : v6.x = mm.BB_Min.x : v7.x = mm.BB_Min.x : v4.x = mm.BB_Min.x
+        v5.x = mm.BB_Max.x : v8.x = mm.BB_Max.x : v3.x = mm.BB_Max.x : v2.x = mm.BB_Max.x
+
+        v4.y = mm.BB_Max.y : v7.y = mm.BB_Max.y : v8.y = mm.BB_Max.y : v3.y = mm.BB_Max.y
+        v6.y = mm.BB_Min.y : v5.y = mm.BB_Min.y : v1.y = mm.BB_Min.y : v2.y = mm.BB_Min.y
+
+        mm.BB(0) = v1
+        mm.BB(1) = v2
+        mm.BB(2) = v3
+        mm.BB(3) = v4
+        mm.BB(4) = v5
+        mm.BB(5) = v6
+        mm.BB(6) = v7
+        mm.BB(7) = v8
+
+
+        For i = 0 To 7
+            mm.BB(i) = translate_to(mm.BB(i), speedtree_matrix_list(tree).matrix)
+        Next
 
     End Sub
 

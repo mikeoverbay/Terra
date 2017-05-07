@@ -34,6 +34,9 @@ Module modZlib
     Private totalEntriesToProcess As Integer = 0
     Private main_color_texture As String = ""
     Public colour_correct_tex_id As Integer
+    Public LIGHT_COUNT_ As Integer
+    Public WATER_LINE_ As Single
+    Public SmallLights_List_Id As Integer
     Public Function get_team_locations(ByRef name As String) As Boolean
         Dim ar = name.Split(".")
         Dim script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\scripts.pkg")
@@ -440,7 +443,7 @@ dont_grab_this:
         '====================================================
         'let the user know whats going on
         cnt = 0
-        frmMain.tb1.Text = "Extracting Data from .pkg files..."
+        tb1.Text = "Extracting Data from .pkg files..."
         'get all the chunks and cdata parts and save them
         For p = 0 To sec_list.Length - 2
             ReDim maplist(cnt).cdata(1)
@@ -591,39 +594,158 @@ dont_grab_this:
         Dim tm = sw.Elapsed
         Dim t = Format(tm.Seconds, "00")
         Dim mt = Format(tm.Minutes, "00")
-        frmMain.tb1.Text = "Load time " + mt + ":" + t + vbCrLf
-        frmMain.tb1.Text += "Reused Textures: " + saved_texture_loads.ToString + vbCrLf
-        frmMain.tb1.Text += "Reused Models: " + saved_model_loads.ToString + vbCrLf
-        frmMain.tb1.Text += "lod2 used: " + lod2_swap.ToString + _
+        tb1.Text = "Load time " + mt + ":" + t + vbCrLf
+        tb1.Text += "Reused Textures: " + saved_texture_loads.ToString + vbCrLf
+        tb1.Text += "Reused Models: " + saved_model_loads.ToString + vbCrLf
+        tb1.Text += "lod2 used: " + lod2_swap.ToString + _
                                         "   lod1 used: " + lod1_swap.ToString + _
                                         "   lod0 used: " + lod0_swap.ToString
 
-        'make_stars()
-
+        make_lights()
+        'For i = 0 To (light_count - 1) * 3 Step 3
+        '    sl_light_pos(i + 1) = get_Z_at_XY(sl_light_pos(i + 0), sl_light_pos(i + 2)) + 10.0
+        'Next
+        find_street_lights()
         frmMain.pb1.Focus()
         maploaded = True ' entire map is ready for display.
         frmMain.position_camera() ' this should cause a redraw
 
         frmMain.draw_scene()
     End Function
+    Public Sub find_street_lights()
+        Dim l_cnt As Integer = 0
+        LIGHT_COUNT_ = 0
+        make_lights()
+        For i = 0 To Model_Matrix_list.Length - 2
+            With Model_Matrix_list(i)
+                If l_cnt / 3 = light_count - 1 Then
+                    Return ' no slots left for lights
+                End If
+                If Model_Matrix_list(i).primitive_name IsNot Nothing Then
+
+                    If Model_Matrix_list(i).primitive_name.ToLower.Contains("env423_streetlamp") Then
+                        Dim v As vect3
+                        '1
+                        v.x = 0.0
+                        v.y = 3.7
+                        v.z = 0.5
+                        v = translate_to(v, .matrix)
+                        sl_light_pos(l_cnt) = v.x
+                        sl_light_pos(l_cnt + 1) = v.y
+                        sl_light_pos(l_cnt + 2) = v.z
+                        l_cnt += 3
+                        LIGHT_COUNT_ = l_cnt / 3
+
+                        '2
+                        v.x = 0.0
+                        v.y = 4.1
+                        v.z = 0.0
+                        v = translate_to(v, .matrix)
+                        sl_light_pos(l_cnt) = v.x
+                        sl_light_pos(l_cnt + 1) = v.y
+                        sl_light_pos(l_cnt + 2) = v.z
+                        l_cnt += 3
+                        LIGHT_COUNT_ = l_cnt / 3
+
+                        '3
+                        v.x = 0.0
+                        v.y = 3.7
+                        v.z = -0.5
+                        v = translate_to(v, .matrix)
+                        sl_light_pos(l_cnt) = v.x
+                        sl_light_pos(l_cnt + 1) = v.y
+                        sl_light_pos(l_cnt + 2) = v.z
+                        l_cnt += 3
+                        LIGHT_COUNT_ = l_cnt / 3
+                        Continue For
+
+                    End If
+                    sl_light_color(l_cnt + 0) = 1.0
+                    sl_light_color(l_cnt + 1) = 1.0
+                    sl_light_color(l_cnt + 2) = 0.7
+
+                    If Model_Matrix_list(i).primitive_name.ToLower.Contains("env413_streetlamp1") Then
+                        Dim v As vect3
+                        v.x = 0.0
+                        v.y = 2.99
+                        v.z = 0.0
+                        v = translate_to(v, .matrix)
+                        sl_light_pos(l_cnt) = v.x
+                        sl_light_pos(l_cnt + 1) = v.y
+                        sl_light_pos(l_cnt + 2) = v.z
+                        l_cnt += 3
+                        LIGHT_COUNT_ = l_cnt / 3
+                    End If
+                    If Model_Matrix_list(i).primitive_name.ToLower.Contains("env413_streetlamp2") Then
+                        Dim v As vect3
+                        v.x = .matrix(12)
+                        v.y = .matrix(13) + 2.9
+                        v.z = .matrix(14)
+                        sl_light_pos(l_cnt) = v.x
+                        sl_light_pos(l_cnt + 1) = v.y
+                        sl_light_pos(l_cnt + 2) = v.z
+                        l_cnt += 3
+                        LIGHT_COUNT_ = l_cnt / 3
+                    End If
+                    If Model_Matrix_list(i).primitive_name.ToLower.Contains("env413_streetlamp3") Then
+                        Dim v As vect3
+                        v.x = 0
+                        v.y = 4.45
+                        v.z = -0.5
+                        v = translate_to(v, .matrix)
+                        sl_light_pos(l_cnt) = v.x
+                        sl_light_pos(l_cnt + 1) = v.y
+                        sl_light_pos(l_cnt + 2) = v.z
+                        l_cnt += 3
+                        LIGHT_COUNT_ = l_cnt / 3
+                    End If
+                    If Model_Matrix_list(i).primitive_name.ToLower.Contains("env413_streetlamp4") Then
+                        Dim v As vect3
+                        v.x = 0.1
+                        v.y = 2.9
+                        v.z = 0
+                        v = translate_to(v, .matrix)
+                        sl_light_pos(l_cnt) = v.x
+                        sl_light_pos(l_cnt + 1) = v.y
+                        sl_light_pos(l_cnt + 2) = v.z
+                        l_cnt += 3
+                        LIGHT_COUNT_ = l_cnt / 3
+                    End If
+                    '-------------------
+                End If 'name not nothing
+            End With
+        Next
+        Gl.glDeleteLists(SmallLights_List_Id, 1)
+        SmallLights_List_Id = Gl.glGenLists(1)
+        Gl.glNewList(SmallLights_List_Id, Gl.GL_COMPILE)
+
+        Gl.glBegin(Gl.GL_POINTS)
+        For i = 0 To LIGHT_COUNT_ * 3 Step 3
+            Gl.glTexCoord3f(sl_light_color(i + 0), sl_light_color(i + 1), sl_light_color(i + 2))
+            Gl.glVertex3f(sl_light_pos(1 + 0), sl_light_pos(i + 1), sl_light_pos(i + 2))
+        Next
+        Gl.glEnd()
+        Gl.glEndList()
+    End Sub
+
 
     Private Sub load_terrain(ByVal name As String)
         Dim dms As New MemoryStream
         Dim abs_name = Path.GetFileNameWithoutExtension(name)
-        Dim decalBin As Ionic.Zip.ZipEntry = active_pkg("spaces/" & abs_name & "/decals.bin")
-        decalBin.Extract(dms)
-        get_decal_bin(dms) 'gets the dominate texture map
+        'Dim decalBin As Ionic.Zip.ZipEntry = active_pkg("spaces/" & abs_name & "/decals.bin")
+        'decalBin.Extract(dms)
+        'get_decal_bin(dms) '
 
 
 
 
         get_map_extremes()
         Dim m_layers As Boolean = frmMain.m_high_rez_Terrain.Checked
+        tb1.text = "Getting Terrain Data..."
         If m_terrain_ Then
             terrain_loaded = True
             For map = 0 To test_count
                 'let the user know whats going on
-                frmMain.tb1.Text = "Getting Terrain Data ( " + map.ToString + " )"
                 Application.DoEvents()
                 Dim cms As New MemoryStream(maplist(map).cdata)
                 Dim cdata As New MemoryStream
@@ -685,17 +807,17 @@ dont_grab_this:
             'We need to get the Tangents BiTangents and Normals
             '
             'order IS important :)
-            frmMain.tb1.Text = "Creating the Terrain's Normals, Tangents and BiTangents."
+            tb1.text = "Creating the Terrain's Normals, Tangents and BiTangents."
             Application.DoEvents()
             createTBNs()
             'ReDim Preserve triangle_holder(triangle_count)
-            frmMain.tb1.Text = "Averging the surface normals..."
+            tb1.text = "Averging the surface normals..."
             Application.DoEvents()
             average_mesh_btns()
-            frmMain.tb1.Text = "Creating chunk display lists..."
+            tb1.text = "Creating chunk display lists..."
             Application.DoEvents()
             make_chunk_meshes() ' this  breaks the big mesh in to small chunk meshes
-            frmMain.tb1.Text = "Cleaning up memory..."
+            tb1.text = "Cleaning up memory..."
             Application.DoEvents()
             ReDim mesh(0) 'clear
             'ReDim triangle_holder(0) 'clear
@@ -714,7 +836,7 @@ dont_grab_this:
                     Dim found_ As Boolean = False
                     layer_uv_list = "" 'clear this
                     get_main_texture = True
-                    frmMain.tb1.Text = "Getting the main Terrain Texture.  This may take a while...."
+                    tb1.text = "Getting the main Terrain Texture.  This may take a while...."
                     Application.DoEvents()
                     Dim main_map As Ionic.Zip.ZipEntry = Nothing
                     main_map = active_pkg(main_color_texture)
@@ -737,8 +859,8 @@ dont_grab_this:
                     GC.Collect()
 
                     'This reads all the data from each chunks .cdata and extracts the layer and mixmap info.
+                    tb1.text = "Getting the Terrain layer information and mixmaps..."
                     For map = 0 To test_count
-                        frmMain.tb1.Text = "Getting the Terrain layer information and mixmaps (" + map.ToString + ")"
                         Application.DoEvents()
                         Dim cms As New MemoryStream(maplist(map).cdata)
                         Using ck As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(cms)
@@ -793,6 +915,7 @@ dont_grab_this:
             Models.models(0) = New primitive
             Models.model_count = Model_Matrix_list.Length - 2
             'make all the models.
+            tb1.text = "Loading the models..."
             For m = 0 To Model_Matrix_list.Length - 2
                 If True Then
                     'stuff we dont want on the map.
@@ -802,7 +925,6 @@ dont_grab_this:
                         GoTo skip_this
                     End If
                     frmMain.ProgressBar1.Value = m
-                    frmMain.tb1.Text = "Loading the models ( " + m.ToString + " )"
                     ReDim Preserve Models.Model_list(m + 1)
                     Models.Model_list(m) = Model_Matrix_list(m).primitive_name
                     Models.models(m) = New primitive
@@ -813,11 +935,11 @@ dont_grab_this:
                     ReDim Models.matrix(m).matrix(16)
                     Models.matrix(m).matrix = Model_Matrix_list(m).matrix
                     'some of the matrix has to be inverted because of Opengl/DirectX issues
-                    Models.matrix(m).matrix(1) *= -1.0
-                    Models.matrix(m).matrix(2) *= -1.0
-                    Models.matrix(m).matrix(4) *= -1.0
-                    Models.matrix(m).matrix(8) *= -1.0
-                    Models.matrix(m).matrix(12) *= -1.0
+                    'Models.matrix(m).matrix(1) *= -1.0
+                    'Models.matrix(m).matrix(2) *= -1.0
+                    'Models.matrix(m).matrix(4) *= -1.0
+                    'Models.matrix(m).matrix(8) *= -1.0
+                    'Models.matrix(m).matrix(12) *= -1.0
                     get_primitive(m, active_pkg)
                 Else
 
@@ -841,8 +963,8 @@ skip_this:
             treeCache(0) = New flora_
             ReDim Trees.Tree_list(speedtree_matrix_list.Length)
             'make all the trees and shrubs... 
+            tb1.text = "Loading the trees..."
             For tree = 0 To speedtree_matrix_list.Length - 2
-                frmMain.tb1.Text = "Loading the trees ( " + tree.ToString + " )"
                 frmMain.ProgressBar1.Value = tree
                 'same as with models.. we must invert some of the matrix.
                 speedtree_matrix_list(tree).matrix(1) *= -1.0
@@ -866,11 +988,12 @@ skip_this:
 
     Private Sub load_decals()
         If m_decals_ Then
+            tb1.text = "Populating the sections with decals...." 'talk to user
             decals_loaded = True
-            make_decals() ' this wont run ok in background thread for some reason.
+            make_new_decals()
             GC.Collect()
             GC.WaitForFullGCComplete()
-            build_decals() ' finish making the decals.. this involves projecting them on to the terrain and grabbing textures.
+            'build_decals() ' finish making the decals.. this involves projecting them on to the terrain and grabbing textures.
         End If
 
     End Sub
@@ -880,7 +1003,7 @@ skip_this:
 
         If m_sky_ Then
             sky_loaded = True
-            frmMain.tb1.Text = "Making Skydome..."
+            tb1.Text = "Making Skydome..."
             setupthedome()
             UVs_ON = True ' so that uvs will be created
             Dim sk As New MemoryStream
@@ -944,7 +1067,7 @@ skip_this:
 
     Private Sub get_minimap_tank_icons()
 
-        frmMain.tb1.Text = "Getting minimap tank Icons..."
+        tb1.Text = "Getting minimap tank Icons..."
         ' get the little tank icons for the minimap
         Dim gui = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
         Dim sp = "\gui\maps\icons\filters\tanks\"

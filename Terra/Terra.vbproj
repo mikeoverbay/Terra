@@ -40,8 +40,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>1.0.3.5</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.4.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -162,6 +162,12 @@
     <Import Include="Tao.Platform.Windows" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\FrmInfoWindow.Designer.vb">
+      <DependentUpon>FrmInfoWindow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmInfoWindow.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmLoadOptions.Designer.vb">
       <DependentUpon>frmLoadOptions.vb</DependentUpon>
     </Compile>
@@ -185,12 +191,6 @@
       <DependentUpon>frmTestView.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmTestView.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmBiasing.Designer.vb">
-      <DependentUpon>frmBiasing.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmBiasing.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmDebug.Designer.vb">
@@ -275,6 +275,7 @@
     <Compile Include="Modules\Globals.vb" />
     <Compile Include="Modules\modDecals.vb" />
     <Compile Include="Modules\ModDepthMap.vb" />
+    <Compile Include="Modules\modFrustum.vb" />
     <Compile Include="Modules\modOpenGL.vb" />
     <Compile Include="Forms\frmClient.Designer.vb">
       <DependentUpon>frmClient.vb</DependentUpon>
@@ -333,9 +334,6 @@
     <Compile Include="Visual Importer\vis_main.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\frmBiasing.resx">
-      <DependentUpon>frmBiasing.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmClient.resx">
       <DependentUpon>frmClient.vb</DependentUpon>
       <SubType>Designer</SubType>
@@ -351,6 +349,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmHelp.resx">
       <DependentUpon>frmHelp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmInfoWindow.resx">
+      <DependentUpon>FrmInfoWindow.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLayerUV.resx">
       <DependentUpon>frmLayerUV.vb</DependentUpon>
@@ -499,22 +500,22 @@
     <None Include="Resources\Stone06_NM.dds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\alphaTransparent_fragment.glsl">
+    <None Include="shaders\branchDef_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\alphaTransparent_vertex.glsl">
+    <None Include="shaders\branchDef_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\lowQualityTrees_fragment.glsl">
+    <None Include="shaders\buildingsDef_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\lowQualityTrees_vertex.glsl">
+    <None Include="shaders\buildingsDef_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\frond_fragment.glsl">
+    <None Include="shaders\colorMapper_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\frond_vertex.glsl">
+    <None Include="shaders\colorMapper_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\comp_fragment.glsl">
@@ -523,19 +524,58 @@
     <None Include="shaders\comp_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\decals_vertex.glsl">
+    <None Include="shaders\decalsNpassDef_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\leaf_fragment.glsl">
+    <None Include="shaders\decalsNpassef_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\leafcolored_fragment.glsl">
+    <None Include="shaders\dome_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\leafcolored_vertex.glsl">
+    <None Include="shaders\dome_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\leaf_vertex.glsl">
+    <None Include="shaders\frondDef_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\frondDel_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\FXAA_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\FXAA_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\gaussian_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\gaussian_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\leafcoloredDef_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\leafcoloredDef_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\leafDef_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\leafDef_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\lzTerrainDef_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\lzTerrainDef_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\normalOffset_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\normalOffset_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\normal_fragment.glsl">
@@ -547,28 +587,40 @@
     <None Include="shaders\normal_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\colorMapper_fragment.glsl">
+    <None Include="shaders\decalsCpassDef_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\colorMapper_vertex.glsl">
+    <None Include="shaders\decalsCpassDeff_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\shadowTest_fragment.glsl">
+    <None Include="shaders\shadow_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\shadowTest_vertex.glsl">
+    <None Include="shaders\shadow_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\tankDef_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\tankDef_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\terrainDef_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\terrainDef_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\deferred_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\deferred_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\toLinear_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\toLinear_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\shadowDepth_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\shadowDepth_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\A13_T34_hvy.american">
@@ -845,89 +897,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\splash.png" />
-    <None Include="shaders\branch_fragment.glsl">
+    <None Include="shaders\SSAO_fragment.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="shaders\branch_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\depth_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\depth_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\gaussian_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\gaussian_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\hell_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\hell_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\bump_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\bump_fragment.glsl">
+    <None Include="shaders\SSAO_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\control_090.png" />
     <None Include="Resources\control_270.png" />
-    <None Include="shaders\decals_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\render_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\render_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\write3D_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\write3D_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\fog_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\fog_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="decal_includer_files\00_tank_tutorial_decal_includers.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="decal_includer_files\01_karelia_decal_includers.txt" />
-    <Content Include="decal_includer_files\02_malinovka_decal_includers.txt" />
-    <Content Include="decal_includer_files\04_himmelsdorf_decal_includers.txt" />
-    <Content Include="decal_includer_files\05_prohorovka_decal_includers.txt" />
-    <Content Include="decal_includer_files\06_ensk_decal_includers.txt" />
-    <Content Include="decal_includer_files\07_lakeville_decal_includers.txt" />
-    <Content Include="decal_includer_files\100_thepit_decal_includers.txt" />
-    <Content Include="decal_includer_files\101_dday_decal_includers.txt" />
-    <Content Include="decal_includer_files\10_hills_decal_includers.txt" />
-    <Content Include="decal_includer_files\13_erlenberg_decal_includers.txt" />
-    <Content Include="decal_includer_files\14_siegfried_line_decal_includers.txt" />
-    <Content Include="decal_includer_files\18_cliff_decal_includers.txt" />
-    <Content Include="decal_includer_files\19_monastery_decal_includers.txt" />
-    <Content Include="decal_includer_files\28_desert_decal_includers.txt" />
-    <Content Include="decal_includer_files\29_el_hallouf_decal_includers.txt" />
-    <Content Include="decal_includer_files\31_airfield_decal_includers.txt" />
-    <Content Include="decal_includer_files\33_fjord_decal_includers.txt" />
-    <Content Include="decal_includer_files\34_Redshire_decal_includers.txt" />
-    <Content Include="decal_includer_files\36_fishing_bay_decal_includers.txt" />
-    <Content Include="decal_includer_files\37_caucasus_decal_includers.txt" />
-    <Content Include="decal_includer_files\38_mannerheim_line_decal_includers.txt" />
-    <Content Include="decal_includer_files\44_north_america_decal_includers.txt" />
-    <Content Include="decal_includer_files\45_north_america_decal_includers.txt" />
-    <Content Include="decal_includer_files\47_canada_a_decal_includers.txt" />
-    <Content Include="decal_includer_files\63_tundra_decal_includers.txt" />
-    <Content Include="decal_includer_files\83_kharkiv_decal_includers.txt" />
-    <Content Include="decal_includer_files\95_lost_city_decal_includers.txt" />
     <Content Include="light_settings\sothisfoldergetscreated.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -980,18 +957,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="zip\License.zlib.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\tank_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\tank_vertex.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\ss_fragment.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="shaders\ss_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\send_down.png" />

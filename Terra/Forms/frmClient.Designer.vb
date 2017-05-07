@@ -203,7 +203,7 @@ Partial Class frmClient
         Me.imHost_cb.TabIndex = 11
         Me.imHost_cb.Text = "CheckBox1"
         Me.imHost_cb.UseVisualStyleBackColor = True
-        Me.imHost_cb.Visible = False
+        Me.imHost_cb.visible = False
         '
         'client_name_tb
         '

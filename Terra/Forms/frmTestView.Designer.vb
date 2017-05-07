@@ -32,8 +32,10 @@ Partial Class frmTestView
         Me.half_scale = New System.Windows.Forms.RadioButton()
         Me.full_scale = New System.Windows.Forms.RadioButton()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.img_2 = New System.Windows.Forms.RadioButton()
-        Me.img_1 = New System.Windows.Forms.RadioButton()
+        Me.b_normal = New System.Windows.Forms.RadioButton()
+        Me.b_position = New System.Windows.Forms.RadioButton()
+        Me.b_color = New System.Windows.Forms.RadioButton()
+        Me.b_depth = New System.Windows.Forms.RadioButton()
         Me.w_label = New System.Windows.Forms.Label()
         Me.h_label = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
@@ -82,7 +84,7 @@ Partial Class frmTestView
         'sixtenth_scale
         '
         Me.sixtenth_scale.Appearance = System.Windows.Forms.Appearance.Button
-        Me.sixtenth_scale.ForeColor = System.Drawing.Color.White
+        Me.sixtenth_scale.ForeColor = System.Drawing.Color.Silver
         Me.sixtenth_scale.Location = New System.Drawing.Point(7, 135)
         Me.sixtenth_scale.Name = "sixtenth_scale"
         Me.sixtenth_scale.Size = New System.Drawing.Size(45, 23)
@@ -95,7 +97,7 @@ Partial Class frmTestView
         'eigth_scale
         '
         Me.eigth_scale.Appearance = System.Windows.Forms.Appearance.Button
-        Me.eigth_scale.ForeColor = System.Drawing.Color.White
+        Me.eigth_scale.ForeColor = System.Drawing.Color.Silver
         Me.eigth_scale.Location = New System.Drawing.Point(7, 106)
         Me.eigth_scale.Name = "eigth_scale"
         Me.eigth_scale.Size = New System.Drawing.Size(45, 23)
@@ -109,7 +111,7 @@ Partial Class frmTestView
         '
         Me.quater_scale.Appearance = System.Windows.Forms.Appearance.Button
         Me.quater_scale.Checked = True
-        Me.quater_scale.ForeColor = System.Drawing.Color.White
+        Me.quater_scale.ForeColor = System.Drawing.Color.Silver
         Me.quater_scale.Location = New System.Drawing.Point(7, 77)
         Me.quater_scale.Name = "quater_scale"
         Me.quater_scale.Size = New System.Drawing.Size(45, 23)
@@ -123,7 +125,7 @@ Partial Class frmTestView
         'half_scale
         '
         Me.half_scale.Appearance = System.Windows.Forms.Appearance.Button
-        Me.half_scale.ForeColor = System.Drawing.Color.White
+        Me.half_scale.ForeColor = System.Drawing.Color.Silver
         Me.half_scale.Location = New System.Drawing.Point(7, 48)
         Me.half_scale.Name = "half_scale"
         Me.half_scale.Size = New System.Drawing.Size(45, 23)
@@ -136,7 +138,7 @@ Partial Class frmTestView
         'full_scale
         '
         Me.full_scale.Appearance = System.Windows.Forms.Appearance.Button
-        Me.full_scale.ForeColor = System.Drawing.Color.White
+        Me.full_scale.ForeColor = System.Drawing.Color.Silver
         Me.full_scale.Location = New System.Drawing.Point(7, 19)
         Me.full_scale.Name = "full_scale"
         Me.full_scale.Size = New System.Drawing.Size(45, 23)
@@ -148,8 +150,10 @@ Partial Class frmTestView
         '
         'GroupBox2
         '
-        Me.GroupBox2.Controls.Add(Me.img_2)
-        Me.GroupBox2.Controls.Add(Me.img_1)
+        Me.GroupBox2.Controls.Add(Me.b_normal)
+        Me.GroupBox2.Controls.Add(Me.b_position)
+        Me.GroupBox2.Controls.Add(Me.b_color)
+        Me.GroupBox2.Controls.Add(Me.b_depth)
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.GroupBox2.ForeColor = System.Drawing.Color.White
         Me.GroupBox2.Location = New System.Drawing.Point(0, 241)
@@ -159,37 +163,65 @@ Partial Class frmTestView
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Selected Image"
         '
-        'img_2
+        'b_normal
         '
-        Me.img_2.Appearance = System.Windows.Forms.Appearance.Button
-        Me.img_2.AutoSize = True
-        Me.img_2.Location = New System.Drawing.Point(97, 14)
-        Me.img_2.Name = "img_2"
-        Me.img_2.Size = New System.Drawing.Size(62, 23)
-        Me.img_2.TabIndex = 1
-        Me.img_2.Tag = "2"
-        Me.img_2.Text = "ColorMap"
-        Me.img_2.UseVisualStyleBackColor = True
+        Me.b_normal.Appearance = System.Windows.Forms.Appearance.Button
+        Me.b_normal.ForeColor = System.Drawing.Color.Silver
+        Me.b_normal.Location = New System.Drawing.Point(239, 14)
+        Me.b_normal.Name = "b_normal"
+        Me.b_normal.Size = New System.Drawing.Size(70, 23)
+        Me.b_normal.TabIndex = 3
+        Me.b_normal.Tag = "4"
+        Me.b_normal.Text = "Normals"
+        Me.b_normal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.b_normal.UseVisualStyleBackColor = True
         '
-        'img_1
+        'b_position
         '
-        Me.img_1.Appearance = System.Windows.Forms.Appearance.Button
-        Me.img_1.AutoSize = True
-        Me.img_1.Checked = True
-        Me.img_1.Location = New System.Drawing.Point(11, 14)
-        Me.img_1.Name = "img_1"
-        Me.img_1.Size = New System.Drawing.Size(67, 23)
-        Me.img_1.TabIndex = 0
-        Me.img_1.TabStop = True
-        Me.img_1.Tag = "1"
-        Me.img_1.Text = "DepthMap"
-        Me.img_1.UseVisualStyleBackColor = True
+        Me.b_position.Appearance = System.Windows.Forms.Appearance.Button
+        Me.b_position.ForeColor = System.Drawing.Color.Silver
+        Me.b_position.Location = New System.Drawing.Point(163, 14)
+        Me.b_position.Name = "b_position"
+        Me.b_position.Size = New System.Drawing.Size(70, 23)
+        Me.b_position.TabIndex = 2
+        Me.b_position.Tag = "3"
+        Me.b_position.Text = "Positions"
+        Me.b_position.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.b_position.UseVisualStyleBackColor = True
+        '
+        'b_color
+        '
+        Me.b_color.Appearance = System.Windows.Forms.Appearance.Button
+        Me.b_color.ForeColor = System.Drawing.Color.Silver
+        Me.b_color.Location = New System.Drawing.Point(87, 14)
+        Me.b_color.Name = "b_color"
+        Me.b_color.Size = New System.Drawing.Size(70, 23)
+        Me.b_color.TabIndex = 1
+        Me.b_color.Tag = "2"
+        Me.b_color.Text = "Colors"
+        Me.b_color.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.b_color.UseVisualStyleBackColor = True
+        '
+        'b_depth
+        '
+        Me.b_depth.Appearance = System.Windows.Forms.Appearance.Button
+        Me.b_depth.Checked = True
+        Me.b_depth.ForeColor = System.Drawing.Color.Silver
+        Me.b_depth.Location = New System.Drawing.Point(11, 14)
+        Me.b_depth.Name = "b_depth"
+        Me.b_depth.Size = New System.Drawing.Size(70, 23)
+        Me.b_depth.TabIndex = 0
+        Me.b_depth.TabStop = True
+        Me.b_depth.Tag = "1"
+        Me.b_depth.Text = "Depth"
+        Me.b_depth.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.b_depth.UseVisualStyleBackColor = True
         '
         'w_label
         '
         Me.w_label.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.w_label.AutoSize = True
-        Me.w_label.ForeColor = System.Drawing.Color.White
+        Me.w_label.ForeColor = System.Drawing.Color.Silver
         Me.w_label.Location = New System.Drawing.Point(389, 201)
         Me.w_label.Name = "w_label"
         Me.w_label.Size = New System.Drawing.Size(38, 13)
@@ -200,7 +232,7 @@ Partial Class frmTestView
         '
         Me.h_label.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.h_label.AutoSize = True
-        Me.h_label.ForeColor = System.Drawing.Color.White
+        Me.h_label.ForeColor = System.Drawing.Color.Silver
         Me.h_label.Location = New System.Drawing.Point(386, 219)
         Me.h_label.Name = "h_label"
         Me.h_label.Size = New System.Drawing.Size(41, 13)
@@ -221,13 +253,12 @@ Partial Class frmTestView
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(480, 320)
         Me.Name = "frmTestView"
-        Me.Text = "Back Buffer Viewer"
+        Me.Text = "G-Buffer Texture Viewer"
         Me.TopMost = True
         Me.Panel1.ResumeLayout(False)
         CType(Me.pb3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
-        Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -241,8 +272,10 @@ Partial Class frmTestView
     Friend WithEvents full_scale As System.Windows.Forms.RadioButton
     Friend WithEvents pb3 As System.Windows.Forms.PictureBox
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
-    Friend WithEvents img_1 As System.Windows.Forms.RadioButton
+    Friend WithEvents b_depth As System.Windows.Forms.RadioButton
     Friend WithEvents w_label As System.Windows.Forms.Label
     Friend WithEvents h_label As System.Windows.Forms.Label
-    Friend WithEvents img_2 As System.Windows.Forms.RadioButton
+    Friend WithEvents b_color As System.Windows.Forms.RadioButton
+    Friend WithEvents b_position As System.Windows.Forms.RadioButton
+    Friend WithEvents b_normal As System.Windows.Forms.RadioButton
 End Class

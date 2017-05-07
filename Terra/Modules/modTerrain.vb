@@ -32,7 +32,7 @@ Module modTerrain
 #Region "Layer buidlng functions"
 
     Public Sub get_decal_bin(ByVal ms As MemoryStream)
-        'I can loat the data but I don't know how to use it.
+        'I can load the data but I don't know how to use it.
         'There are some numbers that look like chunk addresses
         'but even that's iffy.
         Dim enc As New System.Text.ASCIIEncoding
@@ -180,7 +180,6 @@ Module modTerrain
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
             Ilu.iluDeleteImage(texID)
-            post_depth_image_id = maplist(map).dominateId
             frmTestView.update_screen()
             'Stop
         Else
@@ -785,6 +784,7 @@ try_again:
     End Function
 
     Public Sub create_mixMaps()
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
             End
@@ -1381,8 +1381,39 @@ try_again:
         mesh(abs_loc) = v_copy
     End Sub
 
+    Private Sub get_translated_bb_terrain(ByRef BB() As vect3, ByVal map As Integer)
+        Dim v1, v2, v3, v4, v5, v6, v7, v8 As vect3
+        With maplist(map)
+            v1.z = .BB_Max.z : v2.z = .BB_Max.z : v3.z = .BB_Max.z : v4.z = .BB_Max.z
+            v5.z = .BB_Min.z : v6.z = .BB_Min.z : v7.z = .BB_Min.z : v8.z = .BB_Min.z
 
+            v1.x = .BB_Min.x : v6.x = .BB_Min.x : v7.x = .BB_Min.x : v4.x = .BB_Min.x
+            v5.x = .BB_Max.x : v8.x = .BB_Max.x : v3.x = .BB_Max.x : v2.x = .BB_Max.x
+
+            v4.y = .BB_Max.y : v7.y = .BB_Max.y : v8.y = .BB_Max.y : v3.y = .BB_Max.y
+            v6.y = .BB_Min.y : v5.y = .BB_Min.y : v1.y = .BB_Min.y : v2.y = .BB_Min.y
+        End With
+
+        BB(0) = v1
+        BB(1) = v2
+        BB(2) = v3
+        BB(3) = v4
+        BB(4) = v5
+        BB(5) = v6
+        BB(6) = v7
+        BB(7) = v8
+
+
+    End Sub
     Public Sub build_terra(ByVal map As Int32)
+
+        'good as place as any to set bounding box
+        maplist(map).BB_Max.x = maplist(map).location.x + 50
+        maplist(map).BB_Min.x = maplist(map).location.x - 50
+        maplist(map).BB_Max.z = maplist(map).location.y + 50
+        maplist(map).BB_Min.z = maplist(map).location.y - 50
+        get_translated_bb_terrain(maplist(map).BB, map)
+
         Dim w As UInt32 = heightMapSize 'bmp_w
         Dim h As UInt32 = heightMapSize 'bmp_h
         Dim uvScale = (1.0# / 64.0#)
@@ -1482,7 +1513,7 @@ try_again:
         vt3.map = map
         'add offsets
         Dim a, b, n As vect3
-        Dim tangent, biTangent As vect3
+        'Dim tangent, biTangent As vect3
         ' ComputeTangentBasis(vt1, vt2, vt3, tangent, biTangent)
 
         a.x = vt1.x - vt2.x
@@ -1514,20 +1545,20 @@ try_again:
 
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt1.u, vt1.v)
-        Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
-        Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
+        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt1.x, vt1.z, vt1.y)
 
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt2.u, vt2.v)
-        Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
-        Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
+        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
 
         Gl.glNormal3f(n.x, n.z, n.y)
         Gl.glTexCoord2f(vt3.u, vt3.v)
-        Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
-        Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
+        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
+        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
 
 
@@ -2059,6 +2090,7 @@ Endy:
     Private Sub ComputeTangentBasis(ByRef p0 As vertex_data, ByRef p1 As vertex_data, ByRef p2 As vertex_data, _
                            ByVal l1 As Integer, ByVal l2 As Integer, ByVal l3 As Integer, _
                            ByVal pt0 As vertex_data, ByVal pt1 As vertex_data, ByVal pt2 As vertex_data)
+
         Dim tangent, bitangent As Vector3D
         Dim n As Vector3D
 
@@ -2193,6 +2225,7 @@ Endy:
         Gl.glDisable(Gl.GL_DEPTH_TEST)
         'first we draw the entire color_map
         Dim e = Gl.glGetError
+        tb1.text = "Getting the Tarrain Textures..."
         For cnt = 0 To test_count
 
             Gl.glEnable(Gl.GL_TEXTURE_2D)
@@ -2215,7 +2248,6 @@ Endy:
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0) ' unbind main texture
 
 
-            frmMain.tb1.Text = "Getting the Tarrain Textures (" + cnt.ToString + ")"
             Application.DoEvents()
             Dim texID As Int32
             texID = Ilu.iluGenImage()
@@ -2269,6 +2301,7 @@ Endy:
     Public Function split_up_main_texture(ByVal sections_per_side As Integer, ByVal texture_id As Integer) As Boolean
         'If the hi rez map is not much bigger than the low rez map, 
         'we can just use the low rez for the color mix map;
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         If sections_per_side > 12 Then
             use_main_low_rez_texture(sections_per_side)
             Return True
@@ -2336,10 +2369,10 @@ Endy:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0) ' unbind main texture
 
         Dim cnt As Integer = 0
+        tb1.text = "Getting the Tarrain Textures...."
         For row = 0 To w - 1
             For col = 0 To w - 1
 
-                frmMain.tb1.Text = "Getting the Tarrain Textures (" + cnt.ToString + ")"
                 Application.DoEvents()
                 Dim x1 As Integer = (tex_width / 2) - (((maplist(cnt).location.x + 50) / 100) * sec_width)
                 Dim y1 As Integer = (tex_width / 2) - (((maplist(cnt).location.y - 50) / 100) * sec_width) - sec_width
@@ -2513,7 +2546,7 @@ Endy:
 
     Public Sub read_heights(ByVal r As MemoryStream, ByVal map As Int32)
         r.Position = 0
-
+        ReDim maplist(map).BB(16)
         Dim f = New BinaryReader(r)
         Dim magic = f.ReadUInt32()
         h_width = f.ReadUInt32
@@ -2522,6 +2555,8 @@ Endy:
         Dim version = f.ReadUInt32
         Dim h_min = f.ReadSingle
         Dim h_max = f.ReadSingle
+        maplist(map).BB_Max.y = h_max
+        maplist(map).BB_Min.y = h_min
         Dim crap = f.ReadUInt32
         Dim heaader = f.ReadUInt32
         Dim pos = r.Position
@@ -2786,7 +2821,7 @@ exit2:
             altitude = find_altitude(tr, tl, bl, w)
             Return altitude
         End If
-        'frmMain.tb1.Update()
+        'tb1.Update()
 domath:
         Return altitude
 

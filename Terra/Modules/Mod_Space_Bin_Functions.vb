@@ -14,6 +14,9 @@ Module Mod_Space_Bin_Functions
         Public primitive_name As String
         Public matrix() As Single
         Public mask As Boolean
+        Public BB_Min As vect3
+        Public BB_Max As vect3
+        Public BB() As vect3
     End Structure
 
     Public speedtree_matrix_list() As speedtree_matrix_list_
@@ -26,10 +29,8 @@ Module Mod_Space_Bin_Functions
         Public u_wrap As Single
         Public v_wrap As Single
         Public decal_data() As vertex_data
-        Public decal_count As Integer
         Public texture_id As Integer
         Public normal_id As Integer
-        Public depth_map_id As Integer
         Public display_id As Integer
         Public decal_texture As String
         Public decal_normal As String
@@ -37,23 +38,23 @@ Module Mod_Space_Bin_Functions
         Public good As Boolean
         Public offset As vect4
         Public priority As Integer
-        Public influence As Single
-        Public cam_pos As vect3
-        Public look_at As vect3
-        Public far_clip As vect3
-        Public near_clip As vect3
+        Public influence As Integer
         Public texture_matrix() As Single
         Public top_left As vect3
         Public top_right As vect3
         Public bot_left As vect3
         Public bot_right As vect3
-        Public cam_rotation As vect3
-        Public cam_location As vect3
+        Public lbl As vect3
+        Public lbr As vect3
+        Public ltl As vect3
+        Public ltr As vect3
+        Public rbl As vect3
+        Public rbr As vect3
+        Public rtl As vect3
+        Public rtr As vect3
+        Public BB() As vect3
+        Public visible As Boolean
         Public flags As UInteger
-        Public t_bias As Single
-        Public d_bias As Single
-        Public exclude As Boolean
-        Public old_bias As Single
     End Structure
 #End Region
 
@@ -395,8 +396,10 @@ Module Mod_Space_Bin_Functions
             BWWa.bwwa_t1(0).width = br.ReadSingle
             BWWa.bwwa_t1(0).height = br.ReadSingle
             water.IsWater = True
+            WATER_LINE_ = BWWa.bwwa_t1(0).position.y
         Catch ex As Exception
             water.IsWater = False
+            WATER_LINE_ = -500.0
         End Try
 
     End Sub
@@ -507,11 +510,13 @@ Module Mod_Space_Bin_Functions
         For k = 0 To 3
             br.ReadUInt32() ' no idea what these 4 uint32s are for
         Next
+        ms.Position = &H24
         BWT2.t_1_start = ms.Position
         BWT2.t_1_d_Length = br.ReadUInt32
         BWT2.t_1_entry_count = br.ReadUInt32
         Dim size As Integer = Sqrt(BWT2.t_1_entry_count)
         ReDim BWT2.location_table_1(BWT2.t_1_entry_count)
+        ReDim maplist(BWT2.t_1_entry_count + 1)
         For k = 0 To BWT2.t_1_entry_count - 1
             BWT2.location_table_1(k).key = br.ReadUInt32
             BWT2.location_table_1(k).location = br.ReadUInt32
@@ -551,36 +556,36 @@ Module Mod_Space_Bin_Functions
             sb.Append(vbCrLf)
         Next
         'Console.WriteLine(sb.ToString)
-        'For k = 0 To 6
-        '    br.ReadUInt32() '7 : no idea what these are
-        'Next
-        'BWT2.t_3_start = ms.Position
-        'BWT2.t_3_d_Length = br.ReadUInt32
-        'BWT2.t_3_entry_count = br.ReadUInt32
+        For k = 0 To 6
+            br.ReadUInt32() '7 : no idea what these are
+        Next
+        BWT2.t_3_start = ms.Position
+        BWT2.t_3_d_Length = br.ReadUInt32
+        BWT2.t_3_entry_count = br.ReadUInt32
 
-        'ReDim BWT2.location_table_3(BWT2.t_3_entry_count)
-        'For k = 0 To BWT2.t_3_entry_count - 1
-        '    BWT2.location_table_3(k).LX = br.ReadSingle
-        '    BWT2.location_table_3(k).min = br.ReadSingle
-        '    BWT2.location_table_3(k).LY = br.ReadSingle
-        '    BWT2.location_table_3(k).UX = br.ReadSingle
-        '    BWT2.location_table_3(k).max = br.ReadSingle
-        '    BWT2.location_table_3(k).UY = br.ReadSingle
-        'Next
-        'Dim index As UInt32 = 0
-        'For k = 0 To BWT2.t_2_entry_count - 1
-        '    index = BWT2.index_list_2(k).index
-        '    BWT2.sorted_table(k).LX = BWT2.location_table_3(index).LX
-        '    BWT2.sorted_table(k).min = BWT2.location_table_3(index).min
-        '    BWT2.sorted_table(k).LY = BWT2.location_table_3(index).LY
-        '    BWT2.sorted_table(k).UX = BWT2.location_table_3(index).UX
-        '    BWT2.sorted_table(k).max = BWT2.location_table_3(index).max
-        '    BWT2.sorted_table(k).UY = BWT2.location_table_3(index).UY
-        '    Console.Write("UX: " + BWT2.location_table_3(k).LX.ToString("0000.0") + vbTab)
-        '    Console.Write("UY: " + BWT2.location_table_3(k).LY.ToString("0000.0") + vbTab)
-        '    Console.Write("LX: " + BWT2.location_table_3(k).UX.ToString("0000.0") + vbTab)
-        '    Console.Write("LY: " + BWT2.location_table_3(k).UY.ToString("0000.0") + vbCrLf)
-        'Next
+        ReDim BWT2.location_table_3(BWT2.t_3_entry_count)
+        For k = 0 To BWT2.t_3_entry_count - 1
+            BWT2.location_table_3(k).LX = br.ReadSingle
+            BWT2.location_table_3(k).min = br.ReadSingle
+            BWT2.location_table_3(k).LY = br.ReadSingle
+            BWT2.location_table_3(k).UX = br.ReadSingle
+            BWT2.location_table_3(k).max = br.ReadSingle
+            BWT2.location_table_3(k).UY = br.ReadSingle
+        Next
+        Dim index As UInt32 = 0
+        For k = 0 To BWT2.t_2_entry_count - 1
+            index = BWT2.index_list_2(k).index
+            BWT2.sorted_table(k).LX = BWT2.location_table_3(index).LX
+            BWT2.sorted_table(k).min = BWT2.location_table_3(index).min
+            BWT2.sorted_table(k).LY = BWT2.location_table_3(index).LY
+            BWT2.sorted_table(k).UX = BWT2.location_table_3(index).UX
+            BWT2.sorted_table(k).max = BWT2.location_table_3(index).max
+            BWT2.sorted_table(k).UY = BWT2.location_table_3(index).UY
+            Console.Write("UX: " + BWT2.location_table_3(k).LX.ToString("0000.0") + vbTab)
+            Console.Write("UY: " + BWT2.location_table_3(k).LY.ToString("0000.0") + vbTab)
+            Console.Write("LX: " + BWT2.location_table_3(k).UX.ToString("0000.0") + vbTab)
+            Console.Write("LY: " + BWT2.location_table_3(k).UY.ToString("0000.0") + vbCrLf)
+        Next
 
         br.Close()
         ms.Dispose()
@@ -603,9 +608,6 @@ Module Mod_Space_Bin_Functions
             '    Stop
             'End If
             decal_matrix_list(k) = New decal_matrix_list_
-            decal_matrix_list(k).t_bias = default_terrain_bias
-            decal_matrix_list(k).d_bias = default_decal_bias
-            decal_matrix_list(k).exclude = False
             ReDim Preserve WGSD.Table_Entries(k).matrix(16)
             WGSD.Table_Entries(k).unknown_1 = br.ReadUInt32 'Unknown always 0?
             For i = 0 To 15
@@ -632,15 +634,15 @@ Module Mod_Space_Bin_Functions
             decal_matrix_list(k).offset.z = WGSD.Table_Entries(k).off_z
             decal_matrix_list(k).offset.w = WGSD.Table_Entries(k).off_w
 
-            'If decal_matrix_list(k).offset.x <> 0 Then
-            '    Stop
-            'End If
-            'If decal_matrix_list(k).offset.y <> 0 Then
-            '    Stop
-            'End If
-            'If decal_matrix_list(k).offset.z <> 0 Then
-            '    Stop
-            'End If
+            If decal_matrix_list(k).offset.x <> 0 Then
+                Stop
+            End If
+            If decal_matrix_list(k).offset.y <> 0 Then
+                Stop
+            End If
+            If decal_matrix_list(k).offset.z <> 0 Then
+                Stop
+            End If
             'If decal_matrix_list(k).offset.w <> 0 Then
             '    Stop
             'End If
@@ -667,8 +669,16 @@ Module Mod_Space_Bin_Functions
                 WGSD.Table_Entries(k).normalMap = "Stone06_NM.dds"
             End If
             decal_matrix_list(k).decal_normal = WGSD.Table_Entries(k).normalMap
-            decal_matrix_list(k).influence = CSng(WGSD.Table_Entries(k).flags And &HFF00) / 256.0
+            decal_matrix_list(k).influence = CInt((WGSD.Table_Entries(k).flags And &HFF00) / 256)
+            If decal_matrix_list(k).influence = 6 Then
+                decal_matrix_list(k).influence = 2
+            End If
+
             decal_matrix_list(k).priority = (WGSD.Table_Entries(k).flags And &HFF)
+            Dim d_type As Integer = (WGSD.Table_Entries(k).flags And &HF0000) / 65536
+            'If d_type <> 1 Then
+            '    Stop
+            'End If
             'Debug.WriteLine("ID:" + k.ToString)
             'Debug.WriteLine(decal_matrix_list(k).decal_texture)
             'Debug.WriteLine(decal_matrix_list(k).influence.ToString)

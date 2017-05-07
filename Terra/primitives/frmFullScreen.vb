@@ -7,7 +7,7 @@
 				If icon_scale < 3 Then
 					icon_scale = 3
 				End If
-				frmMain.tb1.Text = "Icon size: " + icon_scale.ToString
+				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
 				frmMain.draw_scene()
 				Return
@@ -17,7 +17,7 @@
 				If icon_scale > 100.0! Then
 					icon_scale = 100.0!
 				End If
-				frmMain.tb1.Text = "Icon size: " + icon_scale.ToString
+				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
 				frmMain.draw_scene()
 				Return
@@ -71,7 +71,7 @@
 			If minimap_size < 128.0! Then
 				minimap_size = 128.0!
 			End If
-			'frmMain.tb1.Text = "Minimap size: " + minimap_size.ToString
+			'tb1.Text = "Minimap size: " + minimap_size.ToString
 			My.Settings.minimap_size = minimap_size
 			frmMain.draw_scene()
 		End If

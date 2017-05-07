@@ -296,6 +296,9 @@ Module vis_main
         If material.Contains("d_me") Then
             Return True
         End If
+        If material.Contains("d_sto") Then
+            Return True
+        End If
         fn = fn.Replace("_processed", "")
         If dest_buildings.filename.Contains(fn) Then
             Dim indx = dest_buildings.filename.IndexOf(fn)
@@ -402,27 +405,25 @@ clouds:
         Models.models(mod_id).componets(currentP).bumped = False    ' this stops loading NormalMaps
 
         ' if we dont want bump mapped models.. lets not waste time loading them!!!
-        If frmMain.m_bump_map_models.Checked Then
-            model_bump_loaded = True
-            diff_pos = InStr(primStart, TheXML_String, "normalMap<")
-            If diff_pos > 0 Then
-                If diff_pos > primStart2 Then
-                    'diff_pos has locked on to the next primitiveGroups diffuseMap
-                    'because this group has NONE.. this means its a collision box
-                    'and we dont want to waste our time on these... :)
-                    Models.models(mod_id).componets(currentP).bumped = False
-                    Return True
-                End If
-                Dim tex1_pos = InStr(diff_pos, TheXML_String, "<Texture>") + "<texture>".Length
-                Dim tex1_Epos = InStr(tex1_pos, TheXML_String, "</Texture>")
-                Dim newS As String = ""
-                newS = Mid(TheXML_String, tex1_pos, tex1_Epos - tex1_pos)
-                'Dim ar = Models.models(mod_id).componets(currentP).color_name
-                Models.models(mod_id).componets(currentP).normal_name = newS
-                'Debug.Write(newS & vbCrLf)
-                Models.models(mod_id).componets(currentP).normal_Id = -1
-                Models.models(mod_id).componets(currentP).bumped = True
+        model_bump_loaded = True
+        diff_pos = InStr(primStart, TheXML_String, "normalMap<")
+        If diff_pos > 0 Then
+            If diff_pos > primStart2 Then
+                'diff_pos has locked on to the next primitiveGroups diffuseMap
+                'because this group has NONE.. this means its a collision box
+                'and we dont want to waste our time on these... :)
+                Models.models(mod_id).componets(currentP).bumped = False
+                Return True
             End If
+            Dim tex1_pos = InStr(diff_pos, TheXML_String, "<Texture>") + "<texture>".Length
+            Dim tex1_Epos = InStr(tex1_pos, TheXML_String, "</Texture>")
+            Dim newS As String = ""
+            newS = Mid(TheXML_String, tex1_pos, tex1_Epos - tex1_pos)
+            'Dim ar = Models.models(mod_id).componets(currentP).color_name
+            Models.models(mod_id).componets(currentP).normal_name = newS
+            'Debug.Write(newS & vbCrLf)
+            Models.models(mod_id).componets(currentP).normal_Id = -1
+            Models.models(mod_id).componets(currentP).bumped = True
         End If
         diff_pos = InStr(primStart, TheXML_String, "alphaReference<")
         If diff_pos > 0 Then

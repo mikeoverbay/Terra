@@ -7,7 +7,43 @@ Imports System.Net.Sockets
 Imports System.Threading
 Imports System.IO
 Module structures
+    Public tb1 As New tb1_
+    Public Class tb1_
+        Private str As String
+        Private vis As Boolean = True
 
+        Property Visible As Boolean
+            Get
+                Return vis
+            End Get
+            Set(value As Boolean)
+
+                If Not value Then
+                    FrmInfoWindow.Visible = False
+                    vis = False
+                Else
+                    vis = True
+                    FrmInfoWindow.Visible = True
+                End If
+
+            End Set
+
+        End Property
+        Property text As String
+            Get
+                Return str
+            End Get
+            Set(value As String)
+                'Return
+                str = value
+                If Me.vis Then
+                    FrmInfoWindow.tb1.Text = value
+                    Application.DoEvents()
+                End If
+            End Set
+        End Property
+
+    End Class
 
 
     Public shaders As shaders__
@@ -85,7 +121,7 @@ Module structures
         'This will be in the form of "n_a_n_n" 
         'team (1 or 2) _ (nation a,r,b,c,g) _ (index) _ button index
         Public id As String
-        Public track_displaylist As Integer
+        Public tank_displaylist As Integer
         Public type As Integer
         Public name As String
         Public comment As String
@@ -96,7 +132,6 @@ Module structures
         Public models() As primitive
         Public matrix() As matrix_
         Public model_count As UInt32
-
     End Structure
 
     Public Trees As Tree_s
@@ -199,7 +234,14 @@ Module structures
         Dim tree_id() As Integer
         Dim matrix_list() As matrix_
         Dim tree_cnt As Integer
-
+        Public BB() As BB_
+        Public D_BB As BB_
+    End Structure
+    Public Structure BB_
+        Public BB_Min As vect3
+        Public BB_Max As vect3
+        Public BB() As vect3
+        Public visible As Boolean
     End Structure
     Public Structure f_indices
         Public indices() As Integer
@@ -310,6 +352,10 @@ Module structures
         Public heights_avg As Single
         Public seamCallId As Integer
         Public has_holes As Integer
+        Public BB_Max As vect3
+        Public BB_Min As vect3
+        Public BB() As vect3
+        Public visible As Boolean
     End Structure
 
     Public Structure transformStruct
@@ -372,6 +418,7 @@ Module structures
         Public multi_textured() As Boolean
         Public color_name() As String
         Public color2_name() As String
+        Public pass2 As Boolean
     End Structure
     Public Structure vect4
         Public x As Double

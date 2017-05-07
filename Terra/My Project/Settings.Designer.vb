@@ -416,7 +416,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("60")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("50")>  _
         Public Property s_model_level() As Integer
             Get
                 Return CType(Me("s_model_level"),Integer)
@@ -639,6 +639,30 @@ Namespace My
             End Get
             Set
                 Me("m_sky") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property m_small_lights() As Boolean
+            Get
+                Return CType(Me("m_small_lights"),Boolean)
+            End Get
+            Set
+                Me("m_small_lights") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property m_FXAA() As Boolean
+            Get
+                Return CType(Me("m_FXAA"),Boolean)
+            End Get
+            Set
+                Me("m_FXAA") = value
             End Set
         End Property
     End Class

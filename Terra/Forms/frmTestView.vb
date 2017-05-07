@@ -15,11 +15,13 @@
         AddHandler eigth_scale.CheckedChanged, AddressOf CheckedChanged
         AddHandler sixtenth_scale.CheckedChanged, AddressOf CheckedChanged
 
-        AddHandler img_1.CheckedChanged, AddressOf image_changed
-        AddHandler img_2.CheckedChanged, AddressOf image_changed
+        AddHandler b_depth.CheckedChanged, AddressOf image_changed
+        AddHandler b_color.CheckedChanged, AddressOf image_changed
+        AddHandler b_position.CheckedChanged, AddressOf image_changed
+        AddHandler b_normal.CheckedChanged, AddressOf image_changed
         frmMain.pb2.Parent = Me.pb3
         frmMain.pb2.BringToFront()
-        image_id = CInt(img_1.Tag)
+        image_id = CInt(b_depth.Tag)
         update_screen()
     End Sub
 
@@ -57,13 +59,17 @@
         'select image and shader by selected radio button
         Select Case image_id
             Case 1
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, post_depth_image_id)
-                'Gl.glUseProgram(shader_list.toLinear_shader)
+                Gl.glUseProgram(shader_list.toLinear_shader)
+                Gl.glUniform1i(toLinear_tex, 0)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
             Case 2
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, post_color_image_id)
-                Gl.glUseProgram(shader_list.lowQualityTrees_shader)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
             Case 3
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
             Case 4
+                Gl.glUseProgram(shader_list.normalOffset_shader)
+                Gl.glUniform1i(normalOffset_normal, 0)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
             Case 5
 
         End Select
@@ -72,8 +78,8 @@
         Gl.glGetTexLevelParameteriv(Gl.GL_TEXTURE_2D, 0, Gl.GL_TEXTURE_HEIGHT, height)
         h_label.Text = "Height:" + height.ToString("0000")
         w_label.Text = "Width:" + width.ToString("0000")
-        width *= image_scale * 4.0
-        height *= image_scale * 4.0
+        width *= image_scale
+        height *= image_scale
         Gl.glBegin(Gl.GL_QUADS)
 
         Gl.glTexCoord2f(0.0, 1.0)
@@ -90,6 +96,7 @@
         Gl.glEnd()
 
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glUseProgram(0)
 
         Gdi.SwapBuffers(pb3_hDC) ' swap back to front
 
@@ -109,4 +116,5 @@
         update_screen()
 
     End Sub
+
 End Class

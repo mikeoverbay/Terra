@@ -117,16 +117,86 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="pb2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>66, 147</value>
+  </data>
+  <data name="pb2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 100</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="pb2.TabIndex" type="System.Int32, mscorlib">
+    <value>33</value>
+  </data>
+  <data name="&gt;&gt;pb2.Name" xml:space="preserve">
+    <value>pb2</value>
+  </data>
+  <data name="&gt;&gt;pb2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pb2.Parent" xml:space="preserve">
+    <value>pb1</value>
+  </data>
+  <data name="&gt;&gt;pb2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pb4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>290, 147</value>
+  </data>
+  <data name="pb4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 100</value>
+  </data>
+  <data name="pb4.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="&gt;&gt;pb4.Name" xml:space="preserve">
+    <value>pb4</value>
+  </data>
+  <data name="&gt;&gt;pb4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pb4.Parent" xml:space="preserve">
+    <value>pb1</value>
+  </data>
+  <data name="&gt;&gt;pb4.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="pb1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pb1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 25</value>
+  </data>
+  <data name="pb1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="pb1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>990, 670</value>
+  </data>
+  <data name="pb1.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
+  </data>
+  <data name="&gt;&gt;pb1.Name" xml:space="preserve">
+    <value>pb1</value>
+  </data>
+  <data name="&gt;&gt;pb1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pb1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pb1.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="ProgressBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>
   <data name="ProgressBar1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ProgressBar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>1, 25</value>
   </data>
   <data name="ProgressBar1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
@@ -134,12 +204,8 @@
   <data name="ProgressBar1.Size" type="System.Drawing.Size, System.Drawing">
     <value>990, 23</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="ProgressBar1.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>
-  </data>
-  <data name="ProgressBar1.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
   </data>
   <data name="&gt;&gt;ProgressBar1.Name" xml:space="preserve">
     <value>ProgressBar1</value>
@@ -148,10 +214,10 @@
     <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ProgressBar1.Parent" xml:space="preserve">
-    <value>pb1</value>
+    <value>$this</value>
   </data>
   <data name="&gt;&gt;ProgressBar1.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="font_holder.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -184,67 +250,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;font_holder.Parent" xml:space="preserve">
-    <value>pb1</value>
+    <value>$this</value>
   </data>
   <data name="&gt;&gt;font_holder.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pb1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 25</value>
-  </data>
-  <data name="pb1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="pb1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>990, 570</value>
-  </data>
-  <data name="pb1.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
-  </data>
-  <data name="&gt;&gt;pb1.Name" xml:space="preserve">
-    <value>pb1</value>
-  </data>
-  <data name="&gt;&gt;pb1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pb1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pb1.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tb1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="tb1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 595</value>
-  </data>
-  <data name="tb1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="tb1.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="tb1.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
-    <value>Both</value>
-  </data>
-  <data name="tb1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>990, 100</value>
-  </data>
-  <data name="tb1.TabIndex" type="System.Int32, mscorlib">
-    <value>31</value>
-  </data>
-  <data name="&gt;&gt;tb1.Name" xml:space="preserve">
-    <value>tb1</value>
-  </data>
-  <data name="&gt;&gt;tb1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tb1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tb1.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>0</value>
   </data>
   <metadata name="OpenFileDialog2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -255,6 +264,9 @@
   <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>698, 17</value>
   </metadata>
+  <data name="mainMenu.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="m_load_map.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 22</value>
   </data>
@@ -315,20 +327,11 @@
   <data name="m_developer.Text" xml:space="preserve">
     <value>Developer Mode</value>
   </data>
-  <data name="m_edit_biasing.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
-  </data>
-  <data name="m_edit_biasing.Text" xml:space="preserve">
-    <value>Edit Biasing</value>
-  </data>
-  <data name="m_edit_biasing.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="m_post_effect_viewer.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 22</value>
   </data>
   <data name="m_post_effect_viewer.Text" xml:space="preserve">
-    <value>Post Effect Viewer</value>
+    <value>G-Buffer Viewer</value>
   </data>
   <data name="m_post_effect_viewer.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -343,7 +346,7 @@
     <value>False</value>
   </data>
   <data name="m_file.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 23</value>
+    <value>37, 20</value>
   </data>
   <data name="m_file.Text" xml:space="preserve">
     <value>&amp;File</value>
@@ -356,6 +359,18 @@
   </data>
   <data name="ToolStripMenuItem13.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 6</value>
+  </data>
+  <data name="m_small_lights.Size" type="System.Drawing.Size, System.Drawing">
+    <value>214, 22</value>
+  </data>
+  <data name="m_small_lights.Text" xml:space="preserve">
+    <value>Small Lights</value>
+  </data>
+  <data name="m_FXAA.Size" type="System.Drawing.Size, System.Drawing">
+    <value>214, 22</value>
+  </data>
+  <data name="m_FXAA.Text" xml:space="preserve">
+    <value>FXAA Anti Aliasing</value>
   </data>
   <data name="m_show_tank_names.Size" type="System.Drawing.Size, System.Drawing">
     <value>197, 22</value>
@@ -405,36 +420,6 @@
   <data name="ToolStripMenuItem8.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 6</value>
   </data>
-  <data name="m_200.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
-  </data>
-  <data name="m_200.Text" xml:space="preserve">
-    <value>200 Meters</value>
-  </data>
-  <data name="m_400.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
-  </data>
-  <data name="m_400.Text" xml:space="preserve">
-    <value>400 Meters</value>
-  </data>
-  <data name="m_700.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
-  </data>
-  <data name="m_700.Text" xml:space="preserve">
-    <value>700 Meters</value>
-  </data>
-  <data name="m_1000.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
-  </data>
-  <data name="m_1000.Text" xml:space="preserve">
-    <value>1200 Meters</value>
-  </data>
-  <data name="ViewDistanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>197, 22</value>
-  </data>
-  <data name="ViewDistanceToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;View Distance</value>
-  </data>
   <data name="m_map_border.Size" type="System.Drawing.Size, System.Drawing">
     <value>197, 22</value>
   </data>
@@ -467,12 +452,6 @@
   </data>
   <data name="m_high_rez_Terrain.Text" xml:space="preserve">
     <value>Hi Rez Terrain</value>
-  </data>
-  <data name="m_bump_map_models.Size" type="System.Drawing.Size, System.Drawing">
-    <value>197, 22</value>
-  </data>
-  <data name="m_bump_map_models.Text" xml:space="preserve">
-    <value>Bump Map Models</value>
   </data>
   <data name="ToolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 6</value>
@@ -576,14 +555,8 @@
   <data name="m_Orbit_Light.Text" xml:space="preserve">
     <value>Orbiting Light</value>
   </data>
-  <data name="m_hell_mode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
-  </data>
-  <data name="m_hell_mode.Text" xml:space="preserve">
-    <value>Hell Mode</value>
-  </data>
   <data name="m_settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 23</value>
+    <value>61, 20</value>
   </data>
   <data name="m_settings.Text" xml:space="preserve">
     <value>&amp;Settings</value>
@@ -619,19 +592,19 @@
     <value>Join &amp;Remote as Host</value>
   </data>
   <data name="m_session.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 23</value>
+    <value>58, 20</value>
   </data>
   <data name="m_session.Text" xml:space="preserve">
     <value>Sess&amp;ion</value>
   </data>
   <data name="m_layout_mode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 23</value>
+    <value>88, 20</value>
   </data>
   <data name="m_layout_mode.Text" xml:space="preserve">
     <value>Team Layout</value>
   </data>
   <data name="m_reset_tanks.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 23</value>
+    <value>86, 20</value>
   </data>
   <data name="m_reset_tanks.Text" xml:space="preserve">
     <value>Reset Layout</value>
@@ -640,7 +613,7 @@
     <value>False</value>
   </data>
   <data name="m_show_chat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 23</value>
+    <value>72, 20</value>
   </data>
   <data name="m_show_chat.Text" xml:space="preserve">
     <value>Hide Chat</value>
@@ -649,7 +622,7 @@
     <value>False</value>
   </data>
   <data name="m_render_to_bitmap.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 23</value>
+    <value>111, 20</value>
   </data>
   <data name="m_render_to_bitmap.Text" xml:space="preserve">
     <value>Render to Bitmap</value>
@@ -657,17 +630,20 @@
   <data name="m_comment.AutoSize" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
+  <data name="m_comment.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 9pt</value>
+  </data>
   <data name="m_comment.MaxLength" type="System.Int32, mscorlib">
     <value>64</value>
   </data>
   <data name="m_comment.Size" type="System.Drawing.Size, System.Drawing">
-    <value>150, 23</value>
+    <value>150, 14</value>
   </data>
   <data name="m_comment.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="m_clear_tank_comments.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 23</value>
+    <value>137, 20</value>
   </data>
   <data name="m_clear_tank_comments.Text" xml:space="preserve">
     <value>Clear Tank Comments</value>
@@ -676,40 +652,43 @@
     <value>False</value>
   </data>
   <data name="m_minizoom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 23</value>
+    <value>72, 20</value>
   </data>
   <data name="m_minizoom.Text" xml:space="preserve">
     <value>Mini-Map</value>
   </data>
   <data name="m_mini_down.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 23</value>
+    <value>28, 20</value>
   </data>
   <data name="m_find_Item_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 23</value>
+    <value>71, 20</value>
   </data>
   <data name="m_find_Item_menu.Text" xml:space="preserve">
     <value>Dev Tools</value>
   </data>
+  <data name="m_find_Item_menu.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="m_edit_shaders.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 23</value>
+    <value>78, 20</value>
   </data>
   <data name="m_edit_shaders.Text" xml:space="preserve">
     <value>Edit Shader</value>
   </data>
   <data name="HelpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 23</value>
+    <value>44, 20</value>
   </data>
   <data name="HelpToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Help</value>
   </data>
   <data name="m_mini_up.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 23</value>
+    <value>28, 20</value>
   </data>
   <data name="mainMenu.Location" type="System.Drawing.Point, System.Drawing">
     <value>1, 1</value>
   </data>
   <data name="mainMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>990, 27</value>
+    <value>990, 24</value>
   </data>
   <data name="mainMenu.TabIndex" type="System.Int32, mscorlib">
     <value>41</value>
@@ -724,32 +703,11 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mainMenu.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <metadata name="FolderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>159, 17</value>
   </metadata>
-  <data name="pb2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>433, 160</value>
-  </data>
-  <data name="pb2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 100</value>
-  </data>
-  <data name="pb2.TabIndex" type="System.Int32, mscorlib">
-    <value>33</value>
-  </data>
-  <data name="&gt;&gt;pb2.Name" xml:space="preserve">
-    <value>pb2</value>
-  </data>
-  <data name="&gt;&gt;pb2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pb2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pb2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <metadata name="Timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>472, 17</value>
   </metadata>
@@ -2186,12 +2144,6 @@
   <data name="&gt;&gt;m_developer.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;m_edit_biasing.Name" xml:space="preserve">
-    <value>m_edit_biasing</value>
-  </data>
-  <data name="&gt;&gt;m_edit_biasing.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;m_post_effect_viewer.Name" xml:space="preserve">
     <value>m_post_effect_viewer</value>
   </data>
@@ -2221,6 +2173,18 @@
   </data>
   <data name="&gt;&gt;ToolStripMenuItem13.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_small_lights.Name" xml:space="preserve">
+    <value>m_small_lights</value>
+  </data>
+  <data name="&gt;&gt;m_small_lights.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_FXAA.Name" xml:space="preserve">
+    <value>m_FXAA</value>
+  </data>
+  <data name="&gt;&gt;m_FXAA.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_g_settings.Name" xml:space="preserve">
     <value>m_g_settings</value>
@@ -2282,36 +2246,6 @@
   <data name="&gt;&gt;ToolStripMenuItem8.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ViewDistanceToolStripMenuItem.Name" xml:space="preserve">
-    <value>ViewDistanceToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;ViewDistanceToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_200.Name" xml:space="preserve">
-    <value>m_200</value>
-  </data>
-  <data name="&gt;&gt;m_200.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_400.Name" xml:space="preserve">
-    <value>m_400</value>
-  </data>
-  <data name="&gt;&gt;m_400.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_700.Name" xml:space="preserve">
-    <value>m_700</value>
-  </data>
-  <data name="&gt;&gt;m_700.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_1000.Name" xml:space="preserve">
-    <value>m_1000</value>
-  </data>
-  <data name="&gt;&gt;m_1000.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;m_map_border.Name" xml:space="preserve">
     <value>m_map_border</value>
   </data>
@@ -2346,12 +2280,6 @@
     <value>m_high_rez_Terrain</value>
   </data>
   <data name="&gt;&gt;m_high_rez_Terrain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_bump_map_models.Name" xml:space="preserve">
-    <value>m_bump_map_models</value>
-  </data>
-  <data name="&gt;&gt;m_bump_map_models.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ToolStripSeparator5.Name" xml:space="preserve">
@@ -2460,12 +2388,6 @@
     <value>m_Orbit_Light</value>
   </data>
   <data name="&gt;&gt;m_Orbit_Light.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_hell_mode.Name" xml:space="preserve">
-    <value>m_hell_mode</value>
-  </data>
-  <data name="&gt;&gt;m_hell_mode.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_session.Name" xml:space="preserve">

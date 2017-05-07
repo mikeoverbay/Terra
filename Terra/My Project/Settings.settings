@@ -93,7 +93,7 @@
       <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="s_model_level" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">60</Value>
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="lidgren_pw" Type="System.String" Scope="User">
       <Value Profile="(Default)">dec7th_1941</Value>
@@ -147,6 +147,12 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="m_sky" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="m_small_lights" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="m_FXAA" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

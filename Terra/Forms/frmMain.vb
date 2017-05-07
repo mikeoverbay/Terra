@@ -85,14 +85,22 @@ Public Class frmMain
     Public pfc As New PrivateFontCollection
     Public update_thread As New Thread(AddressOf screen_updater)
     Public mouse_update_thread As New Thread(AddressOf check_mouse)
-    Public M_FLY As Boolean = False
+    'Public M_FLY As Boolean = False
     Public Shared d_counter As Integer = 0
     Dim clip_distance As Integer
-    Public view_mode As Boolean = False
     Dim M_current As New vect2
     Public pb2_mouse_down As Boolean = False
     Private welcome_screen As Integer
 #End Region
+
+    Private Sub frmMain_ClientSizeChanged(sender As Object, e As EventArgs) Handles Me.ClientSizeChanged
+        If Me.WindowState = FormWindowState.Maximized Then
+            If _STARTED Then
+                G_Buffer.init()
+            End If
+            update_screen()
+        End If
+    End Sub
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Dim nonInvariantCulture As CultureInfo = New CultureInfo("en-US")
@@ -118,6 +126,7 @@ Public Class frmMain
         Il.ilInit()
         Ilu.iluInit()
         Ilut.ilutInit()
+        gl_busy = False
         EnableOpenGL()
         make_shaders()
         set_shader_variables() ' now that we have shaders, we need the uniforms.
@@ -150,8 +159,7 @@ Public Class frmMain
           "Example:   C:\Games\World of Tanks\" + vbCrLf + _
           "and than restart Terra!", MsgBoxStyle.Exclamation, "Path not set.")
             m_set_path.PerformClick()
-            init_terra()
-            Return
+            Application.Restart()
         End Try
         script_pkg.Dispose()
         ms.Dispose()
@@ -177,10 +185,14 @@ Public Class frmMain
 fail_path:
         'make_compus() 'this sets up the compus model and texture
         pfc.AddFontFile("tiny.ttf")
+        'pb4.Parent = FrmInfoWindow
+        pb2.Parent = Me
+        pb4.Visible = False
+        pb2.Visible = False
         Me.Show()
         Me.Update()
         _STARTED = True
-        AddHandler m_layout_mode.CheckedChanged, AddressOf edit_mode_cb_CheckedChanged
+
         icon_scale = My.Settings.icon_scale
 
         m_find_Item_menu.Visible = False
@@ -191,16 +203,25 @@ fail_path:
         Application.DoEvents()
         Me.Update()
         set_menu_strip_checkboxes()
-        add_view_distance_menu_events()
 
         'map_holder.Visible = True
         'frmTanks.Show()
         draw_scene()
         draw_scene()
-        tb1.Text = "Getting Tank Data"
         Application.DoEvents()
         Application.DoEvents()
-
+        FrmInfoWindow.Visible = True
+        position_info_window()
+        tb1.Visible = True
+        Application.DoEvents()
+        Application.DoEvents()
+        Application.DoEvents()
+        Application.DoEvents()
+        '-------------------------------------------------
+        ' This has to be before any textures are created.
+        'It sets the first texture to start deleting from!
+        flush_data()
+        '-------------------------------------------------
         get_tank_list() ' get the tanks and add them to the GUI
 
         tb1.Text = "Getting Map Images"
@@ -208,7 +229,6 @@ fail_path:
         Application.DoEvents()
         Application.DoEvents()
         Application.DoEvents()
-        tb1.SelectionLength = 0
         Packet_in.tankId = -1
         Packet_out.tankId = -1
         Packet_in.comment = ""
@@ -218,8 +238,7 @@ fail_path:
         frmTanks.Hide()
         make_locations() ' setup tank location data and clear displaylist
         make_map_buttons()
-        tb1.Text = "Welcome to Terra!"
-        tb1.SelectionLength = 0
+        tb1.text = "Welcome to Terra!"
         Application.DoEvents()
         'open up our huge virual file for access.
         triangle_holder.open((15 * 15) * (4096 * 6))
@@ -231,132 +250,7 @@ fail_path:
         ' frmChat.Show()
         SHOW_MAPS = True
     End Sub
-    Private Sub init_terra()
-        'let everything dependent on OpenGL know its started.
-        GAME_PATH = My.Settings.game_path
-        _STARTED = True
-        If My.Settings.vr_1200 = True Then
-            Far_Clip = 1200
-        End If
-        If My.Settings.vr_900 = True Then
-            Far_Clip = 600
-        End If
-        If My.Settings.vr_700 = True Then
-            Far_Clip = 400
-        End If
-        If My.Settings.vr_400 = True Then
-            Far_Clip = 200
-        End If
-        'setup custom font
-        pfc.AddFontFile("tiny.ttf")
-        '---------------------------------
-        'this will create a list of everything in the game that can be destroyed.
-        'I will use this to find the undamaged state of any object.
-        'the material name is for the object that is intact
-        Dim script_pkg As Ionic.Zip.ZipFile = Nothing
-        Dim ms As New MemoryStream
-        Try
-            script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\scripts.pkg")
-            Dim script As Ionic.Zip.ZipEntry = script_pkg("\scripts\destructibles.xml")
-            script.Extract(ms)
-            ms.Position = 0
-            Dim bdata As Byte()
-            Dim br As BinaryReader = New BinaryReader(ms)
-            bdata = br.ReadBytes(br.BaseStream.Length)
-            Dim des As MemoryStream = New MemoryStream(bdata, 0, bdata.Length)
-            des.Write(bdata, 0, bdata.Length)
-            openXml_stream(des, "destructibles.xml")
-            des.Close()
-            des.Dispose()
-        Catch ex As Exception
-            script_pkg.Dispose()
-            ms.Dispose()
-            If frmSplash.Visible Then
-                frmSplash.TopMost = False
-            End If
-            MsgBox("Im sorry. I STILL can't find the World of Tanks Folder." + vbCrLf + _
-          "Try setting the Path under File on the menu." + vbCrLf + _
-          "Example:   C:\Games\World of Tanks\" + vbCrLf + _
-          "and than restart Terra!", MsgBoxStyle.Exclamation, "Path not set.")
-            GoTo fail_path
-        End Try
-        script_pkg.Dispose()
-        ms.Dispose()
-        Dim matName, entry As DataTable
-        matName = xmldataset.Tables("matName")
-        entry = xmldataset.Tables("entry")
-        Dim q = From fname_ In entry.AsEnumerable _
-                  Join mName In matName On fname_("entry_Id") Equals _
-                  mName("entry_Id") _
-             Select _
-                  filename = fname_.Field(Of String)("filename"), _
-                  mat = mName.Field(Of String)("matName_Text")
 
-        dest_buildings.filename = New List(Of String)
-        dest_buildings.matName = New List(Of String)
-        For Each it In q
-            If InStr(it.filename, "bld_Construc") = 0 Then
-                dest_buildings.filename.Add(it.filename.Replace("model", "visual").ToLower)
-                dest_buildings.matName.Add(it.mat.ToLower)
-            End If
-        Next
-        matName.Dispose()
-        entry.Dispose()
-        '---------------------------------------
-fail_path:
-        'make_compus() 'this sets up the compus model and texture
-        Me.Show()
-        Me.Update()
-        _STARTED = True
-        AddHandler m_layout_mode.CheckedChanged, AddressOf edit_mode_cb_CheckedChanged
-        icon_scale = My.Settings.icon_scale
-
-        m_find_Item_menu.Visible = False
-        m_edit_shaders.Visible = False
-
-        Application.DoEvents()
-        Application.DoEvents()
-        Application.DoEvents()
-        Me.Update()
-        set_menu_strip_checkboxes()
-        add_view_distance_menu_events()
-
-        'map_holder.Visible = True
-        'frmTanks.Show()
-        tb1.Text = "Getting Tank Data"
-        Application.DoEvents()
-        Application.DoEvents()
-
-        get_tank_list() ' get the tanks and add them to the GUI
-
-        tb1.Text = "Getting Map Images"
-        Application.DoEvents()
-        Application.DoEvents()
-        Application.DoEvents()
-        Application.DoEvents()
-        tb1.Text = "Welcome to Terra!"
-        tb1.SelectionLength = 0
-        Application.DoEvents()
-        Packet_in.tankId = -1
-        Packet_out.tankId = -1
-        Packet_in.comment = ""
-        Packet_out.comment = ""
-
-        m_comment.AllowDrop = True
-        frmTanks.Hide()
-        make_locations() ' setup tank location data and clear displaylist
-        make_map_buttons()
-
-        'open up our huge virual file for access.
-        triangle_holder.open((15 * 15) * (4096 * 6))
-
-        Timer1.Enabled = True
-        frmSplash.Close()
-        testing = True
-        'frmDebug.Show()
-        ' frmChat.Show()
-        SHOW_MAPS = True
-    End Sub
     Private Sub set_frmLoadOptions()
         m_terrain_ = My.Settings.m_load_terrain
         m_trees_ = My.Settings.m_load_trees
@@ -370,17 +264,7 @@ fail_path:
 
 
     Private Sub Form1_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-        If EDIT_INCULDERS Then
-            Dim answer = MsgBox("You are editing the decal Incuders..." + vbCrLf + _
-                                 "Do you wish to save the file?", MsgBoxStyle.YesNoCancel, "Warning!!!")
-            If answer = MsgBoxResult.Cancel Then
-                e.Cancel = True
-                Return
-            End If
-            If answer = MsgBoxResult.Yes Then
-                File.WriteAllText(Application.StartupPath + "\decal_includer_files\" + JUST_MAP_NAME + "_decal_includers.txt", decal_includers_string)
-            End If
-        End If
+      
         m_fly_map.Checked = False
         m_Orbit_Light.Checked = False
         If maploaded Then
@@ -447,12 +331,8 @@ fail_path:
         '    draw_scene()
         'End If
         '====================================================================
-        If e.KeyCode = Keys.A Then
-            d_counter -= 1
-            If d_counter < 0 Then
-                d_counter = decal_matrix_list.Length - 1
-            End If
-            draw_scene()
+        If e.KeyCode = Keys.F Then
+          
         End If
         If e.KeyCode = Keys.S Then
             d_counter += 1
@@ -462,12 +342,6 @@ fail_path:
             draw_scene()
         End If
         If e.KeyCode = Keys.Q Then
-            If view_mode Then
-                view_mode = False
-            Else
-                view_mode = True
-            End If
-            draw_scene()
         End If
         '====================================================================
         If e.KeyCode = Keys.D1 Then
@@ -487,9 +361,13 @@ fail_path:
         End If
         If e.KeyCode = Keys.F1 Then
             m_info_window.PerformClick()
+            Application.DoEvents()
+            Application.DoEvents()
         End If
         If e.KeyCode = Keys.F2 Then
             m_show_status.PerformClick()
+            Application.DoEvents()
+            Application.DoEvents()
         End If
         If e.KeyCode = Keys.F3 Then
             m_Orbit_Light.PerformClick()
@@ -497,8 +375,9 @@ fail_path:
         If e.KeyCode = Keys.F4 Then
             m_fly_map.PerformClick()
         End If
-        If e.KeyCode = Keys.H Then
-            m_hell_mode.PerformClick()
+        If e.KeyCode = Keys.F5 And m_small_lights.Checked Then
+            find_street_lights()
+            update_screen()
         End If
         If e.KeyCode = Keys.L Then
             m_lighting.PerformClick()
@@ -615,20 +494,15 @@ fail_path:
         End If
     End Sub
     Private Sub frmMain_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
-        pb1.Width = Me.ClientSize.Width
-        If m_info_window.Checked Then
-            pb1.Height = Me.ClientSize.Height - mainMenu.Height - tb1.Height - 2
-        Else
-            pb1.Height = Me.ClientSize.Height - mainMenu.Height
-        End If
-        pb1.Location = New System.Drawing.Point(0, mainMenu.Height + 1)
-
-
+     
 
         npb.Update()
         Application.DoEvents()
         If _STARTED Then
             'make_post_FBO_and_Textures()
+        End If
+        If Me.WindowState = FormWindowState.Maximized Or Me.WindowState = FormWindowState.Normal Then
+            position_info_window()
         End If
         If Not SHOW_MAPS Then
             draw_scene()
@@ -638,47 +512,44 @@ fail_path:
 
     End Sub
     Private Sub frmMain_ResizeEnd(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.ResizeEnd
-        pb1.Width = Me.ClientSize.Width
-        If m_info_window.Checked Then
-            pb1.Height = Me.ClientSize.Height - mainMenu.Height - tb1.Height - 2
-        Else
-            pb1.Height = Me.ClientSize.Height - mainMenu.Height
-        End If
-        pb1.Location = New System.Drawing.Point(0, mainMenu.Height + 1)
-
-
 
         npb.Update()
         Application.DoEvents()
         If _STARTED Then
-            'make_post_FBO_and_Textures()
+            G_Buffer.init()
         End If
         If Not SHOW_MAPS Then
-            draw_scene()
+            update_screen()
         Else
             draw_maps()
         End If
-        If pb1.Parent.Name = Me.Name Then
-            pb1_screen_location = pb1.PointToScreen(New System.Drawing.Point)
-        End If
+        Try
+            If pb1.Parent.Name = Me.Name Then
+                pb1_screen_location = pb1.PointToScreen(New System.Drawing.Point)
+            End If
+        Catch ex As Exception
 
+        End Try
+        position_info_window()
 
     End Sub
     Private Sub frmMain_Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles Me.Paint
         npb.Invalidate()
     End Sub
+
+    Private Sub position_info_window()
+        Dim w = (Me.Width - Me.ClientSize.Width) / 2
+        Dim l = -FrmInfoWindow.Height + ((Me.Location.Y + Me.Height) - w)
+        Dim b = (Me.ClientSize.Width - FrmInfoWindow.Width) / 2
+        FrmInfoWindow.Location = New Point(Me.Location.X + b + w, l)
+    End Sub
     Private Sub set_menu_strip_checkboxes()
-        m_1000.Checked = My.Settings.vr_1200
-        m_700.Checked = My.Settings.vr_900
-        m_400.Checked = My.Settings.vr_700
-        m_200.Checked = My.Settings.vr_400
 
         m_low_quality_trees.Checked = My.Settings.low_q_trees
         m_load_lod.Checked = My.Settings.lod0
         m_load_details.Checked = My.Settings.load_extra
         m_low_quality_textures.Checked = My.Settings.txt_256
         m_high_rez_Terrain.Checked = My.Settings.hi_rez_terra
-        m_bump_map_models.Checked = My.Settings.m_bump_map_models
         m_show_uv2.Checked = My.Settings.m_show_uv2
         m_show_cursor.Checked = False
         'may as well set the levels here
@@ -688,100 +559,25 @@ fail_path:
         lighting_model_level = My.Settings.s_model_level / 100.0!
         gamma_level = (My.Settings.s_gamma / 100.0!) * 2.0!
     End Sub
-    Private Sub add_view_distance_menu_events()
-        AddHandler m_200.Click, AddressOf set_radio
-        AddHandler m_400.Click, AddressOf set_radio
-        AddHandler m_700.Click, AddressOf set_radio
-        AddHandler m_1000.Click, AddressOf set_radio
-
-
-    End Sub
-    Private Sub set_radio(ByVal sender As ToolStripMenuItem, ByVal e As System.EventArgs)
-        'Sets up the menut items like radio buttons'
-        'Only one in the collection can be checked.
-        If sender.Text = "200 Meters" Then
-            If Not sender.Checked Then
-                sender.Checked = True
-                Far_Clip = 200
-                Return
-            Else
-                sender.Checked = True
-                m_1000.Checked = False
-                m_700.Checked = False
-                m_400.Checked = False
-                Far_Clip = 200
-                draw_scene()
-                Return
-            End If
-        End If
-        '-----------------------------------
-        If sender.Text = "400 Meters" Then
-            If Not sender.Checked Then
-                sender.Checked = True
-                Far_Clip = 400
-                Return
-            Else
-                sender.Checked = True
-                m_1000.Checked = False
-                m_700.Checked = False
-                m_200.Checked = False
-                Far_Clip = 400
-                draw_scene()
-                Return
-            End If
-        End If
-        '-----------------------------------
-        If sender.Text = "700 Meters" Then
-            If Not sender.Checked Then
-                sender.Checked = True
-                Far_Clip = 700
-                Return
-            Else
-                sender.Checked = True
-                m_1000.Checked = False
-                m_400.Checked = False
-                m_200.Checked = False
-                Far_Clip = 700
-                draw_scene()
-                Return
-            End If
-        End If
-        '-----------------------------------
-        If sender.Text = "1200 Meters" Then
-            sender.Checked = True
-            If Not sender.Checked Then
-                Far_Clip = 1000
-                Return
-            Else
-                sender.Checked = True
-                m_700.Checked = False
-                m_400.Checked = False
-                m_200.Checked = False
-                Far_Clip = 1200
-                draw_scene()
-                Return
-            End If
-        End If
-    End Sub
 
     Public Sub make_locations()
         ReDim locations.team_1(15)
         ReDim locations.team_2(15)
         For u = 0 To 14
             locations.team_1(u) = New t_l
-            If locations.team_1(u).track_displaylist > 0 Then
-                Gl.glDeleteLists(locations.team_1(u).track_displaylist, 1)
+            If locations.team_1(u).tank_displaylist > 0 Then
+                Gl.glDeleteLists(locations.team_1(u).tank_displaylist, 1)
             End If
-            locations.team_1(u).track_displaylist = -1
+            locations.team_1(u).tank_displaylist = -1
             locations.team_1(u).id = ""
             locations.team_1(u).comment = ""
             locations.team_1(u).name = ""
 
             locations.team_2(u) = New t_l
-            If locations.team_2(u).track_displaylist > 0 Then
-                Gl.glDeleteLists(locations.team_2(u).track_displaylist, 1)
+            If locations.team_2(u).tank_displaylist > 0 Then
+                Gl.glDeleteLists(locations.team_2(u).tank_displaylist, 1)
             End If
-            locations.team_2(u).track_displaylist = -1
+            locations.team_2(u).tank_displaylist = -1
             locations.team_2(u).id = ""
             locations.team_2(u).comment = ""
             locations.team_2(u).name = ""
@@ -1441,24 +1237,22 @@ nope:
         Array.Sort(tank)
     End Sub
     Friend Function get_tank(ByVal name As String, ByRef tank As t_l) As Integer
-        'If Not maploaded Then Return 0
+        If Not maploaded Then Return 0
         Dim path = Application.StartupPath & "\tanks\" & name
         Dim f_ = System.IO.File.Open(path, FileMode.Open, FileAccess.Read)
         Dim v(3) As Single
         Dim n(3) As Single
         Dim uv(2) As Single
         Dim b As New BinaryReader(f_)
-        'Dim dump() = b.ReadBytes(1000)
         Dim poly_count As UInt32 = b.ReadUInt32
 
-        'get tracks polys
-        If Gl.glIsList(tank.track_displaylist) Then
-            Gl.glDeleteLists(tank.track_displaylist, 1)
+        If tank.tank_displaylist > 0 Then
+            Gl.glDeleteLists(tank.tank_displaylist, 1)
         End If
         Dim ID = Gl.glGenLists(1)
         Gl.glNewList(ID, Gl.GL_COMPILE)
 
-        tank.track_displaylist = ID
+        tank.tank_displaylist = ID
         Gl.glBegin(Gl.GL_TRIANGLES)
         Dim cnt As Integer = 0 ' for debug
         'start pushing vertices
@@ -1479,6 +1273,37 @@ nope:
         Next
         Gl.glEnd()
         Gl.glEndList()
+        ''outline tank
+        'b.BaseStream.Position = 0
+        'poly_count = b.ReadUInt32
+
+        'If tank.track_displaylistAdj > 0 Then
+        '    Gl.glDeleteLists(tank.track_displaylistAdj, 1)
+        'End If
+        'ID = Gl.glGenLists(1)
+        'Gl.glNewList(ID, Gl.GL_COMPILE)
+
+        'tank.track_displaylistAdj = ID
+        'Gl.glBegin(Gl.GL_TRIANGLES_ADJACENCY_EXT)
+        'cnt = 0 ' for debug
+        ''start pushing vertices
+        'For c As UInt32 = 0 To poly_count - 1
+
+        '    v(0) = -b.ReadSingle
+        '    v(1) = b.ReadSingle
+        '    v(2) = b.ReadSingle
+        '    n(0) = -b.ReadSingle
+        '    n(1) = b.ReadSingle
+        '    n(2) = b.ReadSingle
+        '    'uv(0) = -b.ReadSingle
+        '    'uv(1) = b.ReadSingle
+        '    Gl.glNormal3fv(n)
+        '    'Gl.glTexCoord2fv(uv)
+        '    Gl.glVertex3fv(v)
+        '    cnt += 1
+        'Next
+        'Gl.glEnd()
+        'Gl.glEndList()
         Gl.glFinish()
 
         '----------------------------
@@ -1657,7 +1482,7 @@ nope:
                 Packet_out.Tr = Cam_X_angle + PI
             End If
             tankID = b_index
-            draw_scene()
+            update_screen()
         Else
             frmTanks.SplitContainer1.Panel2.Controls(b_index).Font = sender.font
             frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = sender.text
@@ -1741,8 +1566,7 @@ nope:
                 Packet_out.Tr = Cam_X_angle + PI
             End If
             tankID = b_index + 100
-            draw_scene()
-
+            update_screen()
         End If
         old_tankID = tankID
         Packet_out.tankId = tankID
@@ -1764,8 +1588,12 @@ nope:
 #Region "Screen Pick methods"
 
     Public Function GetOGLPos_trees(ByVal x As Integer, ByVal y As Integer) As Integer
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
-        Gl.glDisable(Gl.GL_FOG)
+        If Not m_trees_ Then
+            Return False
+        End If
+        If frmTanks.Visible Then
+            Return False
+        End If
         seek_scene_trees()
         Dim viewport(4) As Integer
         Dim pixel() As Byte = {0, 0, 0, 0}
@@ -1774,36 +1602,19 @@ nope:
         Dim type = pixel(3)
         Dim index As UInt32 = (CUInt(pixel(1) * 256) + pixel(2))
         Dim cacheId = pixel(0) - 1
-        If index > 0 Then
+        If index > 0 And pixel(0) > 0 Then
             index = index - 1
-            tb1.Text = treeCache(cacheId).name
+            tb1.text = treeCache(cacheId).name
             Return True
         End If
         Application.DoEvents()
-        tb1.Text = "Nothing...."
+        tb1.text = "Nothing...."
         Application.DoEvents()
         Return False
     End Function
     Public Sub seek_scene_trees()
 
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-
-        Gl.glDisable(Gl.GL_LIGHTING)
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glDisable(Gl.GL_ALPHA_TEST)
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        ResizeGL()
-        ViewPerspective()   ' set 3d view mode
         'set_eyes()
-        Gl.glDisable(Gl.GL_CULL_FACE)
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Dim red, blue, green As Byte
         If maploaded Then   ' cant let this try and draw shit that isnt there yet!!!
             If m_show_trees.Checked And m_trees_ Then
@@ -1811,32 +1622,35 @@ nope:
                     If mode = 0 Then
                         Gl.glUseProgram(0)
                     Else
-                        Gl.glUseProgram(shader_list.leafcolored_shader)
+                        Gl.glUseProgram(shader_list.leafcoloredDef_shader)
                     End If
                     For k = 0 To treeCache.Length - 1
                         With treeCache(k)
 
                             For i = 0 To treeCache(k).tree_cnt - 1
-                                red = k + 1
-                                green = CByte((i + 1 And &HFF00) >> 8)
-                                blue = CByte(i + 1 And &HFF)
-                                Gl.glColor4ub(CByte(red), CByte(green), CByte(blue), CByte(0))
-                                'Gl.glColor3f(0.6, 0.6, 0.6)
-                                Gl.glPushMatrix()
-                                Gl.glMultMatrixf(.matrix_list(i).matrix)
-                                If mode = 0 Then
-                                    If .branch_displayID > 0 Then
-                                        Gl.glCallList(.branch_displayID)
+                                If treeCache(k).BB(i).visible Then
+
+                                    red = k + 1
+                                    green = CByte((i + 1 And &HFF00) >> 8)
+                                    blue = CByte(i + 1 And &HFF)
+                                    Gl.glColor4ub(CByte(red), CByte(green), CByte(blue), CByte(0))
+                                    'Gl.glColor3f(0.6, 0.6, 0.6)
+                                    Gl.glPushMatrix()
+                                    Gl.glMultMatrixf(.matrix_list(i).matrix)
+                                    If mode = 0 Then
+                                        If .branch_displayID > 0 Then
+                                            Gl.glCallList(.branch_displayID)
+                                        End If
+                                        If .frond_displayID > 0 Then
+                                            Gl.glCallList(.frond_displayID)
+                                        End If
+                                    Else
+                                        If .leaf_displayID > 0 Then
+                                            Gl.glCallList(.leaf_displayID)
+                                        End If
                                     End If
-                                    If .frond_displayID > 0 Then
-                                        Gl.glCallList(.frond_displayID)
-                                    End If
-                                Else
-                                    If .leaf_displayID > 0 Then
-                                        Gl.glCallList(.leaf_displayID)
-                                    End If
+                                    Gl.glPopMatrix()
                                 End If
-                                Gl.glPopMatrix()
                             Next
                         End With
 
@@ -1854,8 +1668,12 @@ nope:
     End Sub
 
     Public Function GetOGLPos_Decals(ByVal x As Integer, ByVal y As Integer) As Integer
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
-        Gl.glDisable(Gl.GL_FOG)
+        If Not m_decals_ Then
+            Return False
+        End If
+        If frmTanks.Visible Then
+            Return False
+        End If
         seek_scene_decals()
         Dim viewport(4) As Integer
         Dim pixel() As Byte = {0, 0, 0, 0}
@@ -1869,89 +1687,23 @@ nope:
                 With decal_matrix_list(index)
 
                     d_counter = index
-                    Dim str As String = "Decal Index: " + index.ToString("0000") + _
-                    vbCrLf + "Terrain Bias:" + .t_bias.ToString("0.00") + _
-                    " Decal Bias: " + .t_bias.ToString("0.00") + " Excluded:" + .exclude.ToString
-                    tb1.Text = str
-                    If EDIT_INCULDERS Then
-                        Dim s = "-" + index.ToString("0000")
-                        TERRAIN_BIAS = .t_bias
-                        DECAL_BIAS = .d_bias
-                        EXCLUDED = .exclude
-                        If decal_includers_string.Contains(s) Then
-                            Dim newlist As List(Of String) = frmBiasing.results_tb.Lines.ToList
-                            Dim cnt = 0
-                            For Each line In newlist
-                                If line.Contains(s) Then
-                                    newlist.RemoveAt(cnt)
-                                    frmBiasing.results_tb.Lines = newlist.ToArray
-                                    tb1.Text += " (Removed)"
-                                    frmBiasing.info_tb.Text = "Decal -" + index.ToString("0000") + " (Removed)"
-                                    decal_includers_string = frmBiasing.results_tb.Text
-                                    Exit For
-                                End If
-                                cnt += 1
-                            Next
-                        Else
-                            TERRAIN_BIAS = .t_bias
-                            DECAL_BIAS = .d_bias
-                            EXCLUDED = .exclude
-                            decal_matrix_list(index).old_bias = DECAL_BIAS
-                            If frmBiasing.Visible Then
-                                Application.DoEvents()
 
-                                frmBiasing.terrain_clip.Value = CInt((TERRAIN_BIAS / 15.0) * 1000.0)
-                                frmBiasing.terrain_clip.PerformLayout()
-                                frmBiasing.terrain_clip.Invalidate()
-                                Application.DoEvents()
-                                frmBiasing.decal_clip.Value = CInt((DECAL_BIAS / 15.0) * 1000.0)
-                                frmBiasing.decal_clip.PerformLayout()
-                                frmBiasing.decal_clip.Invalidate()
-                                Application.DoEvents()
-                                frmBiasing.exclude_chk_box.Checked = .exclude
-                                frmBiasing.exclude_chk_box.Invalidate()
-                                Application.DoEvents()
-                            End If
-                            s = "-" + index.ToString("0000") + ":" + .t_bias.ToString("0.00") + ":" + .d_bias.ToString("0.00") + ":" + .exclude.ToString + vbCrLf
-                            decal_includers_string += s
-                            tb1.Text += " (Added)"
-                            frmBiasing.info_tb.Text = "Decal -" + index.ToString("0000") + " (Added)"
-                        End If
-                    End If
-
-                    decal_includers_string = decal_includers_string.Replace(vbCrLf + vbCrLf, vbCrLf)
-                    frmBiasing.results_tb.Text = decal_includers_string
-                    'get_decal_bias_settings()
+                    tb1.text = "Index:" + index.ToString("0000") + " " + decal_matrix_list(index).decal_texture + vbCrLf + "flags:" _
+                        + decal_matrix_list(index).flags.ToString("X") + vbCrLf + "Influence:" + decal_matrix_list(index).influence.ToString("000")
                 End With
                 Application.DoEvents()
                 Return True
             End If
         Else
         End If
-        tb1.Text = "Nothing...."
+        tb1.text = "Nothing...."
         Application.DoEvents()
         Return False
     End Function
     Public Sub seek_scene_decals()
 
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-
-        Gl.glDisable(Gl.GL_LIGHTING)
-        Gl.glDisable(Gl.GL_BLEND)
-
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        ResizeGL()
-        ViewPerspective()   ' set 3d view mode
         'set_eyes()
 
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Dim red, blue, green, type As Byte
         type = 0
         '        '---------------------------------
@@ -1996,29 +1748,54 @@ nope:
 
 
     Public Sub GetOGLPos(ByVal x As Integer, ByVal y As Integer)
-        'ResizeGL()
+        timeout = 11
+        Thread.Sleep(5)
         stopGL = True
+        Application.DoEvents()
+        autoEventScreen.Reset()
         While gl_busy
-            Application.DoEvents()
         End While
-        Gl.glPushMatrix()
-        If GetOGLPos_Decals(x, y) Then
-            Gl.glPopMatrix()
-            stopGL = False
-            draw_scene()
-            'draw_scene()
-            Return
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
         End If
-        Gl.glPopMatrix()
-        Gl.glPushMatrix()
-        If GetOGLPos_trees(x, y) Then
-            Gl.glPopMatrix()
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glDrawBuffer(Gl.GL_BACK)
+        Gl.glFinish()
+        ResizeGL()
+        ViewPerspective()   ' set 3d view mode
+
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        Gl.glActiveTexture(Gl.GL_TEXTURE1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Gl.glDisable(Gl.GL_MULTISAMPLE)
+        Gl.glDisable(Gl.GL_FOG)
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glDisable(Gl.GL_ALPHA_TEST)
+        Gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F)
+
+        Gl.glFinish()
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        If GetOGLPos_Decals(x, y) Then
             stopGL = False
             draw_scene()
             Return
         End If
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glDisable(Gl.GL_FOG)
+        If GetOGLPos_trees(x, y) Then
+            stopGL = False
+            draw_scene()
+            Return
+        End If
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         seek_scene()
         Dim viewport(4) As Integer
         Dim pixel() As Byte = {0, 0, 0, 0}
@@ -2091,67 +1868,23 @@ nope:
 
         Else
             If type = 0 Then
-                If index > 0 Then
+                If index > 0 And index < Model_Matrix_list.Length Then
                     index = index - 1
                     _SELECTED_model = index + 1
-                    tb1.Text = "Index: " + index.ToString("0000") + _
-                    vbCrLf + "Model: " + vbCrLf
-                    frmBiasing.info_tb.Text = "Model Index: " + index.ToString("0000")
-                    If EDIT_INCULDERS Then
-
-                        Dim s = "+" + index.ToString + vbCrLf
-                        If decal_includers_string.Contains(s) Then
-                            decal_includers_string = decal_includers_string.Replace(s, "")
-                            tb1.Text += " (Removed)"
-                            frmBiasing.info_tb.Text += " (Removed)"
-                            Model_Matrix_list(index).mask = False
-                        Else
-                            decal_includers_string += s
-                            tb1.Text += " (Added)"
-                            frmBiasing.info_tb.Text += " (Added)"
-                            Model_Matrix_list(index).mask = True
-                        End If
-                        decal_includers_string = decal_includers_string.Replace(vbCrLf + vbCrLf, vbCrLf)
-                        frmBiasing.results_tb.Text = decal_includers_string
-                        check_decal_include_strings()
-                    Else
-                        tb1.Text = index.ToString("0000") + " : " + Model_Matrix_list(index).primitive_name
-
-                    End If
+                    tb1.text = index.ToString("0000") + " : " + Model_Matrix_list(index).primitive_name
                     Application.DoEvents()
                 End If
             Else
                 _SELECTED_model = 0
-                tb1.Text = "Nothing...."
+                tb1.text = "Nothing...."
                 Application.DoEvents()
             End If
-
-
-
         End If
-        Gl.glPopMatrix()
         stopGL = False
         draw_scene()
     End Sub
     Public Sub seek_scene()
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-
-        Gl.glDisable(Gl.GL_LIGHTING)
-        Gl.glDisable(Gl.GL_BLEND)
-
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        ResizeGL()
-        ViewPerspective()   ' set 3d view mode
         'set_eyes()
-
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-
         Dim red, blue, green, type As Byte
         type = 100
         '        '---------------------------------
@@ -2165,17 +1898,20 @@ nope:
                     For model As UInt32 = 0 To Models.matrix.Length - 1
                         green = 0 : blue = 0 : type = 0
                         For k = 0 To Models.models(model)._count - 1
-                            If Models.models(model).componets(k).callList_ID > 0 Then
+                            If Models.models(model).visible Then
 
-                                Gl.glPushMatrix()
-                                Gl.glMultMatrixf(Models.matrix(model).matrix)
-                                red = 0
-                                Dim model_ = model + 1
-                                green = CByte((model_ And &HFF00) >> 8)
-                                blue = CByte(model_ And &HFF)
-                                Gl.glColor4ub(CByte(red), CByte(green), CByte(blue), CByte(type))
-                                Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                                Gl.glPopMatrix()
+                                If Models.models(model).componets(k).callList_ID > 0 Then
+
+                                    Gl.glPushMatrix()
+                                    Gl.glMultMatrixf(Models.matrix(model).matrix)
+                                    red = 0
+                                    Dim model_ = model + 1
+                                    green = CByte((model_ And &HFF00) >> 8)
+                                    blue = CByte(model_ And &HFF)
+                                    Gl.glColor4ub(CByte(red), CByte(green), CByte(blue), CByte(type))
+                                    Gl.glCallList(Models.models(model).componets(k).callList_ID)
+                                    Gl.glPopMatrix()
+                                End If
                             End If
                         Next
                     Next
@@ -2185,7 +1921,7 @@ nope:
                 '                ' cant let this try and draw shit that isnt there yet!!!
                 Dim cv = 57.2957795
                 For i = 0 To 14
-                    If locations.team_1(i).track_displaylist > -1 Then
+                    If locations.team_1(i).tank_displaylist > -1 Then
                         Gl.glPushMatrix()
                         Gl.glTranslatef(locations.team_1(i).loc_x, get_Z_at_XY(locations.team_1(i).loc_x, locations.team_1(i).loc_z), locations.team_1(i).loc_z)
                         Dim rot = locations.team_1(i).rot_y
@@ -2198,12 +1934,12 @@ nope:
                         green = 0
                         blue = 0
                         Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
-                        Gl.glCallList(locations.team_1(i).track_displaylist)
+                        Gl.glCallList(locations.team_1(i).tank_displaylist)
                         Gl.glPopMatrix()
                     End If
                 Next
                 For i = 0 To 14
-                    If locations.team_2(i).track_displaylist > -1 Then
+                    If locations.team_2(i).tank_displaylist > -1 Then
                         Gl.glPushMatrix()
                         Gl.glTranslatef(locations.team_2(i).loc_x, get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z), locations.team_2(i).loc_z)
                         Dim rot = locations.team_2(i).rot_y
@@ -2219,7 +1955,7 @@ nope:
                         green = 0
                         blue = i + 1
                         Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
-                        Gl.glCallList(locations.team_2(i).track_displaylist)
+                        Gl.glCallList(locations.team_2(i).tank_displaylist)
                         Gl.glPopMatrix()
                     End If
                 Next
@@ -2253,7 +1989,9 @@ nope:
         ResizeGL()
         ViewOrtho()
         'gl_busy = True
-        If stopGL Then Return
+        If stopGL Then
+            Return
+        End If
         If stopGL Then Return
         If stopGL Then Return
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
@@ -2320,7 +2058,7 @@ nope:
             End If
         Next
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        vi = -15
+        vi = -30
         While map < map_texture_ids.Length - 2
             If pb1.Width = 0 Then
                 Exit While
@@ -2372,7 +2110,7 @@ dont_draw:
             Next
             vi += -space_x + ms_y
         End While
-        vi = -15
+        vi = -30
         map = 0
         While map < map_texture_ids.Length - 2
             If pb1.Width = 0 Then
@@ -2486,7 +2224,7 @@ skip:
         Dim v_pos As Integer = 0
         Dim vi, hi As Single
 
-        vi = -15
+        vi = -30
 
         Gl.glBegin(Gl.GL_QUADS)
         While True
@@ -2530,6 +2268,7 @@ skip:
 
     End Sub
     Public Sub gl_pick_map(ByVal x As Integer, ByVal y As Integer)
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
             'MessageBox.Show("Unable to make rendering context current")
             Return
@@ -2573,100 +2312,6 @@ skip:
 #End Region
 
 
-    Public Sub draw_little_window(decal As Integer)
-        If Not maploaded Then
-            Return
-        End If
-        'Return
-        Gl.glPushMatrix()
-        Gl.glTranslatef(0.0, 0.0, 200.0)
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
-        Gl.glDisable(Gl.GL_LIGHTING)
-        'Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-        Dim e = Gl.glGetError
-
-        Gl.glColor3f(0.5, 0.5, 0.5)
-
-        '---
-        '============================================
-        'draw textures
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, coMapID)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, minimap_textureid)
-        Gl.glBegin(Gl.GL_QUADS)
-        '---
-        Dim gridS = frmBiasing.SB_SIZE
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(0, -gridS, 0.0)
-        Gl.glEnd()
-
-
-        '---
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, coMapID2)
-        Gl.glBegin(Gl.GL_QUADS)
-
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS + gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS + gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-        Gl.glEnd()
-
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        '============================================
-        Gl.glColor3f(1.0, 1.0, 0.0)
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
-        'draw outline
-        Gl.glBegin(Gl.GL_QUADS)
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(0, -gridS, 0.0)
-
-        '---
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS + gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS + gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-
-        Gl.glEnd()
-        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
-
-        Gl.glPopMatrix()
-
-    End Sub
 
 
 
@@ -2674,10 +2319,107 @@ skip:
 
 
 
-    Private Sub start_drawing()
+
+    Private Sub draw_light_sphear()
+        If m_Orbit_Light.Checked Then
+            '---------------------------------
+            'draw the sphere as our sun
+            '---------------------------------
+            'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)
+            Gl.glDisable(Gl.GL_LIGHTING)
+            Gl.glDisable(Gl.GL_BLEND)
+            Gl.glPushMatrix()
+            Gl.glTranslatef(position(0), position(1), position(2))
+            Gl.glColor4f(1.0, 1.0, 0.0, 1.0)
+            glutSolidSphere(4.0, 8, 8)
+            Gl.glPopMatrix()
+            Gl.glEnable(Gl.GL_LIGHTING)
+        End If
+    End Sub
+    Private Sub setup_fog()
+        'Gl.glEnable(Gl.GL_FOG)
+        'fog is currently disabled in all shaders.
+        'Im working towards adding this in deferred rendering
+        Dim fmode As Integer = Gl.GL_EXP2
+        Gl.glFogi(Gl.GL_FOG_MODE, fmode)
+        Dim fogcolor() As Single = {0.6, 0.6, 0.65}
+
+        Gl.glFogfv(Gl.GL_FOG_COLOR, fogcolor)
+        Gl.glFogf(Gl.GL_FOG_DENSITY, lighting_fog_level * 0.8)
+        Gl.glHint(Gl.GL_FOG_HINT, Gl.GL_NICEST)
+        Gl.glFogf(Gl.GL_FOG_START, 1.0)
+        Gl.glFogf(Gl.GL_FOG_END, 2.0)
+    End Sub
+    Private Sub draw_base_rings()
+        If Not m_bases_ Then
+            Return
+        End If
+        If maploaded And SHOW_RINGS Then
+            Gl.glColor3f(0.5, 0.0, 0.0)
+            Gl.glCallList(ringDisplayID_1)
+
+            Gl.glColor3f(0.0, 0.7, 0.0)
+            Gl.glCallList(ringDisplayID_2)
+        End If
 
     End Sub
-    Private Sub draw_terrain()
+
+    Private Sub draw_dome()
+        If Not m_sky_ Then
+            'Gl.glPointSize(1.0)
+            'Gl.glDisable(Gl.GL_LIGHTING)
+            'Gl.glDisable(Gl.GL_DEPTH_TEST)
+            'Gl.glColor3f(0.7, 0.7, 1.0)
+            'Gl.glPushMatrix()
+            'Gl.glTranslatef(eyeX, eyeY - 1.0, eyeZ)
+            'Gl.glCallList(stars_display_id)
+            'Gl.glPopMatrix()
+            'Gl.glEnable(Gl.GL_DEPTH_TEST)
+            'Gl.glEnable(Gl.GL_LIGHTING)
+            Return
+        End If
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+        Dim c = lighting_ambient + 0.95
+        Gl.glColor3f(c, c, c)
+        'Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+
+        Gl.glPushMatrix()
+        'Position to get best view of sky while loading a map.
+        'otherwise. translate to camera position position.
+        If Not maploaded Then
+            u_Cam_Y_angle = -0.15
+            u_Cam_X_angle = 0.0
+            Gl.glTranslatef(eyeX, eyeY - 8.0, eyeZ - 6.0)
+            Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
+        Else
+            Gl.glTranslatef(eyeX, eyeY - 1.0, eyeZ)
+            Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
+
+        End If
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glEnable(Gl.GL_TEXTURE_2D)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, skydometextureID)
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glUseProgram(shader_list.dome_shader)
+        Gl.glUniform1i(dome_colormap, 0)
+        Gl.glCallList(skydomelist)
+        Gl.glPopMatrix()
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        '---------------------------------
+
+        Gl.glUseProgram(0)
+
+        Gl.glEnable(Gl.GL_CULL_FACE)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        Gl.glEnable(Gl.GL_LIGHTING)
+
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
+
+    End Sub
+
+    Private Sub draw_g_terrain()
         If Not m_terrain_ Then
             Return
         End If
@@ -2699,128 +2441,98 @@ skip:
             End If
             Gl.glColor3f(0.8, 0.8, 0.8)
             Dim u, v As vect4
+
             For i = 0 To test_count
+                If maplist(i).visible Then
 
-                If Not m_high_rez_Terrain.Checked Or Not hz_loaded Or m_hell_mode.Checked Then
-                    'low rez terrain.
-                    If m_hell_mode.Checked Then
-                        Gl.glUseProgram(shader_list.hell_shader)
+                    If Not m_high_rez_Terrain.Checked Or Not hz_loaded Then
+                        'low rez terrain
+                        Gl.glUseProgram(shader_list.lzTerrainDef_shader)
+                        Gl.glUniform1i(c_address2, 0)
 
+                        rendermode = True
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
                     Else
-                        Gl.glUseProgram(shader_list.ss_shader)
+                        'hi rez terrain.
+                        Gl.glUseProgram(shader_list.terrainDef_shader)
 
+
+                        u = map_layers(i).layers(1).uP
+                        Gl.glUniform4f(layer0U, u.x, u.y, u.z, u.w)
+                        u = map_layers(i).layers(2).uP
+                        Gl.glUniform4f(layer1U, u.x, u.y, u.z, u.w)
+                        u = map_layers(i).layers(3).uP
+                        Gl.glUniform4f(layer2U, u.x, u.y, u.z, u.w)
+                        u = map_layers(i).layers(4).uP
+                        Gl.glUniform4f(layer3U, u.x, u.y, u.z, u.w)
+
+                        v = map_layers(i).layers(1).vP
+                        Gl.glUniform4f(layer0V, v.x, v.y, v.z, v.w)
+                        v = map_layers(i).layers(2).vP
+                        Gl.glUniform4f(layer1V, v.x, v.y, v.z, v.w)
+                        v = map_layers(i).layers(3).vP
+                        Gl.glUniform4f(layer2V, v.x, v.y, v.z, v.w)
+                        v = map_layers(i).layers(4).vP
+                        Gl.glUniform4f(layer3V, v.x, v.y, v.z, v.w)
+
+                        Gl.glUniform1i(main_texture, map_layers(i).main_texture)
+
+                        Gl.glUniform3f(c_position, eyeX, eyeY, eyeZ) 'must have this for distance calculations
+
+                        Gl.glUniform1i(render_has_holes, maplist(i).has_holes)
+
+                        Gl.glUniform1i(render_hole_texture, 0)
+                        Gl.glUniform1i(layer_1, 1)
+                        Gl.glUniform1i(layer_2, 2)
+                        Gl.glUniform1i(layer_3, 3)
+                        Gl.glUniform1i(layer_4, 4)
+                        Gl.glUniform1i(n_layer_1, 5)
+                        Gl.glUniform1i(n_layer_2, 6)
+                        Gl.glUniform1i(n_layer_3, 7)
+                        Gl.glUniform1i(n_layer_4, 8)
+                        Gl.glUniform1i(mixtexture, 9)
+                        Gl.glUniform1i(c_address, 10)
+
+                        ' bind all the textures
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).HolesId)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE1)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).text_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE2)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).text_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE3)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).text_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE4)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).text_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 5)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 6)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).norm_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 7)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 8)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).norm_id)
+                        'bind the mix layer. 
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 9)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).mix_texture_Id)
+                        'bind lowrez colormap
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 10)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
                     End If
-                    Gl.glUniform1f(a_address2, lighting_ambient)
-                    Gl.glUniform1f(t_address2, lighting_terrain_texture * sun_multiplier)
-                    Gl.glUniform1i(c_address2, 0)
-                    Gl.glUniform1i(n_address2, 1)
-                    Gl.glUniform1f(gamma_2, gamma_level * 0.75)
-                    Gl.glUniform1f(gray_level_2, gray_level)
-
-                 
-                    rendermode = True
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
-                    Gl.glActiveTexture(Gl.GL_TEXTURE1)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).normMapID)
-                Else
-
-                    'hi rez terrain.
-                    Gl.glUseProgram(shader_list.render_shader)
-                    'Dim er = Gl.glGetError
-                    'sr = Glu.gluErrorString(er)
-                    'Gl.glUniform1i(used_layers, map_layers(i).used_layers)
-                    u = map_layers(i).layers(1).uP
-                    Gl.glUniform4f(layer0U, u.x, u.y, u.z, u.w)
-                    u = map_layers(i).layers(2).uP
-                    Gl.glUniform4f(layer1U, u.x, u.y, u.z, u.w)
-                    u = map_layers(i).layers(3).uP
-                    Gl.glUniform4f(layer2U, u.x, u.y, u.z, u.w)
-                    u = map_layers(i).layers(4).uP
-                    Gl.glUniform4f(layer3U, u.x, u.y, u.z, u.w)
-
-                    v = map_layers(i).layers(1).vP
-                    Gl.glUniform4f(layer0V, v.x, v.y, v.z, v.w)
-                    v = map_layers(i).layers(2).vP
-                    Gl.glUniform4f(layer1V, v.x, v.y, v.z, v.w)
-                    v = map_layers(i).layers(3).vP
-                    Gl.glUniform4f(layer2V, v.x, v.y, v.z, v.w)
-                    v = map_layers(i).layers(4).vP
-                    Gl.glUniform4f(layer3V, v.x, v.y, v.z, v.w)
-
-                    Gl.glUniform1i(main_texture, map_layers(i).main_texture)
-                    'lighting variables
-                    Gl.glUniform1f(a_address, lighting_ambient)
-                    Gl.glUniform1f(t_address, lighting_terrain_texture * sun_multiplier)
-                    Gl.glUniform1f(gray_level_1, gray_level)
-
-                    Gl.glUniform3f(c_position, eyeX, eyeY, eyeZ)
-                    Gl.glUniform1i(n_address, 1)
-                    Gl.glUniform1f(gamma, gamma_level * 0.75)
-                    Gl.glUniform1i(render_has_holes, maplist(i).has_holes)
-                  
-                    'er = Gl.glGetError
-                    'bind the lowrez normal map
-                    Gl.glUniform1i(render_hole_texture, 0)
-                    Gl.glUniform1i(layer_1, 1)
-                    Gl.glUniform1i(layer_2, 2)
-                    Gl.glUniform1i(layer_3, 3)
-                    Gl.glUniform1i(layer_4, 4)
-                    Gl.glUniform1i(n_layer_1, 5)
-                    Gl.glUniform1i(n_layer_2, 6)
-                    Gl.glUniform1i(n_layer_3, 7)
-                    Gl.glUniform1i(n_layer_4, 8)
-                    Gl.glUniform1i(mixtexture, 9)
-                    Gl.glUniform1i(c_address, 10)
-                    'Gl.glUniform1i(color_correct_addy, 11)
-
-                    ' bind all the textures
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).HolesId)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE1)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).text_id)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE2)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).text_id)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE3)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).text_id)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE4)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).text_id)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 5)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 6)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).norm_id)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 7)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id)
-
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 8)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).norm_id)
-                    'er = Gl.glGetError
-                    'sr = Glu.gluErrorString(er)
-                    'bind the mix layer. 
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 9)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).mix_texture_Id)
-                    'bind lowrez colormap
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 10)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
-
-                    'Gl.glActiveTexture(Gl.GL_TEXTURE0 + 11)
-                    'Gl.glBindTexture(Gl.GL_TEXTURE_2D, colour_correct_tex_id)
-
-                    'er = Gl.glGetError
-                    'sr = Glu.gluErrorString(er)
+                    Gl.glCallList(maplist(i).calllist_Id)
                 End If
-                Gl.glCallList(maplist(i).calllist_Id)
-                'Gl.glCallList(maplist(i).seamCallId)
-                Gl.glUseProgram(0)
             Next
-            For patato = 0 To 10
+            Gl.glUseProgram(0)
+            For patato = 0 To 4
                 Gl.glActiveTexture(Gl.GL_TEXTURE0 + patato)
                 Gl.glEnable(Gl.GL_TEXTURE_2D)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
@@ -2828,20 +2540,20 @@ skip:
             Next
         End If
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        'Gl.glEnable(Gl.GL_TEXTURE_2D)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        'Gl.glDisable(Gl.GL_TEXTURE_2D)
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         If m_show_chunks.Checked And maploaded Then
             Gl.glDisable(Gl.GL_TEXTURE_2D)
             Gl.glColor3f(0.4, 0.4, 0.4)
             For i = 0 To test_count
-                Gl.glCallList(maplist(i).seamCallId)
+                If maplist(i).visible Then
+                    Gl.glCallList(maplist(i).seamCallId)
+                End If
             Next
         End If
         '---------------------------------------------------------------------------------
         'draw the map sections and seams WIRE
-        If maploaded And m_wire_terrain.Checked And Not m_hell_mode.Checked Then
+        If maploaded And m_wire_terrain.Checked Then
             bump_out_ = Gl.glGetUniformLocation(shader_list.comp_shader, "amount")
             Gl.glUseProgram(shader_list.comp_shader)
             'Gl.glUniform3f(phong_cam_pos, eyeX, eyeY, eyeZ)
@@ -2852,26 +2564,28 @@ skip:
             Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
             Gl.glPolygonOffset(1.0, 1.0)
             For i = 0 To test_count
-                Gl.glCallList(maplist(i).calllist_Id)
-                'Gl.glCallList(maplist(i).seamCallId)
+                If maplist(i).visible Then
+                    Gl.glCallList(maplist(i).calllist_Id)
+                End If
             Next
             Gl.glDisable(Gl.GL_POLYGON_OFFSET_LINE)
             Gl.glPolygonOffset(0.0, 0.0)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(0.3, 0.3, 0.3)
             For i = 0 To test_count
-                Gl.glCallList(maplist(i).calllist_Id)
-                'Gl.glCallList(maplist(i).seamCallId)
+                If maplist(i).visible Then
+                    Gl.glCallList(maplist(i).calllist_Id)
+                End If
             Next
             Gl.glUseProgram(0)
             If normal_mode > 0 Then
-                'Gl.glDisable(Gl.GL_DEPTH_TEST)
                 Gl.glUseProgram(shader_list.normal_shader)
                 Gl.glUniform1i(view_normal_mode_, normal_mode)
                 Gl.glUniform1f(normal_length_, 0.2)
                 For i = 0 To test_count
-                    Gl.glCallList(maplist(i).calllist_Id)
-                    'Gl.glCallList(maplist(i).seamCallId)
+                    If maplist(i).visible Then
+                        Gl.glCallList(maplist(i).calllist_Id)
+                    End If
                 Next
                 Gl.glUseProgram(0)
                 Gl.glEnable(Gl.GL_DEPTH_TEST)
@@ -2895,7 +2609,8 @@ skip:
         '---------------------------------------------------------------------------------
 
     End Sub
-    Private Sub draw_models()
+
+    Private Sub draw_g_models(ByVal pass As Boolean)
         If Not m_models_ Then
             Return
         End If
@@ -2919,12 +2634,14 @@ skip:
             'Dim e2 = Gl.glGetError
 
             For model As UInt32 = 0 To Models.matrix.Length - 1
-                For k = 0 To Models.models(model)._count - 1
-                    Gl.glPushMatrix()
-                    Gl.glMultMatrixf(Models.matrix(model).matrix)
-                    Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                    Gl.glPopMatrix()
-                Next
+                If Models.models(model).pass2 = pass And Models.models(model).visible Then
+                    For k = 0 To Models.models(model)._count - 1
+                        Gl.glPushMatrix()
+                        Gl.glMultMatrixf(Models.matrix(model).matrix)
+                        Gl.glCallList(Models.models(model).componets(k).callList_ID)
+                        Gl.glPopMatrix()
+                    Next
+                End If
             Next
             Gl.glDisable(Gl.GL_POLYGON_OFFSET_FILL)
             Gl.glPolygonOffset(0.0, 0.0)
@@ -2932,12 +2649,14 @@ skip:
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(0.3, 0.3, 0.3)
             For model As UInt32 = 0 To Models.matrix.Length - 1
-                For k = 0 To Models.models(model)._count - 1
-                    Gl.glPushMatrix()
-                    Gl.glMultMatrixf(Models.matrix(model).matrix)
-                    Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                    Gl.glPopMatrix()
-                Next
+                If Models.models(model).pass2 = pass And Models.models(model).visible Then
+                    For k = 0 To Models.models(model)._count - 1
+                        Gl.glPushMatrix()
+                        Gl.glMultMatrixf(Models.matrix(model).matrix)
+                        Gl.glCallList(Models.models(model).componets(k).callList_ID)
+                        Gl.glPopMatrix()
+                    Next
+                End If
             Next
             Gl.glUseProgram(0)
             'Gl.glColor3f(0.5, 0.5, 0.5)
@@ -2946,12 +2665,14 @@ skip:
                 Gl.glUniform1i(view_normal_mode_, normal_mode)
                 Gl.glUniform1f(normal_length_, 0.3)
                 For model As UInt32 = 0 To Models.matrix.Length - 1
-                    For k = 0 To Models.models(model)._count - 1
-                        Gl.glPushMatrix()
-                        Gl.glMultMatrixf(Models.matrix(model).matrix)
-                        Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                        Gl.glPopMatrix()
-                    Next
+                    If Models.models(model).pass2 = pass And Models.models(model).visible Then
+                        For k = 0 To Models.models(model)._count - 1
+                            Gl.glPushMatrix()
+                            Gl.glMultMatrixf(Models.matrix(model).matrix)
+                            Gl.glCallList(Models.models(model).componets(k).callList_ID)
+                            Gl.glPopMatrix()
+                        Next
+                    End If
                 Next
                 Gl.glUseProgram(0)
             End If
@@ -2959,38 +2680,31 @@ skip:
         End If
         '---------------------------------------------------------------------------------
         If maploaded And m_show_models.Checked _
-                    And Not m_hell_mode.Checked _
                     And Not m_wire_models.Checked _
                     Then ' cant let this try and draw shit that isnt there yet!!!
             Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
             ' Gl.glColor3f(lighting_model_level, lighting_model_level, lighting_model_level)
-            If m_bump_map_models.Checked And model_bump_loaded Then
-                'Gl.glDisable(Gl.GL_LIGHTING)
-                Gl.glDisable(Gl.GL_TEXTURE_2D)
-                Gl.glUseProgram(shader_list.bump_shader)
-               
-                Gl.glUniform1i(c_address3, 0)
-                Gl.glUniform1i(n_address3, 1)
-                Gl.glUniform1i(colormap2, 2)
-                ' Gl.glUniform3f(c_position3, eyeX, eyeY, eyeZ)
-                Gl.glUniform1f(t_address3, lighting_model_level)
-                Gl.glUniform1f(gray_level_3, gray_level)
-                Gl.glUniform1f(gamma_3, gamma_level)
-                Gl.glUniform1f(model_ambient, lighting_ambient)
+            'Gl.glDisable(Gl.GL_LIGHTING)
+            Gl.glDisable(Gl.GL_TEXTURE_2D)
+            Gl.glUseProgram(shader_list.buildingsDef_shader)
 
-                Dim uv2s As Boolean
-                For model As UInt32 = 0 To Models.matrix.Length - 1
+            Gl.glUniform1i(c_address3, 0)
+            Gl.glUniform1i(n_address3, 1)
+            Gl.glUniform1i(colormap2, 2)
+            Dim uv2s As Boolean
+            For model As UInt32 = 0 To Models.matrix.Length - 1
+                If Models.models(model).pass2 = pass And Models.models(model).visible Then
+
                     If Models.matrix(model).matrix IsNot Nothing Then
 
                         Gl.glPushMatrix()
-                        Gl.glMultMatrixf(Models.matrix(model).matrix)
+                        'Gl.glMultMatrixf(Models.matrix(model).matrix)
+                        Gl.glUniformMatrix4fv(bld_matrix, 1, Gl.GL_FALSE, Models.matrix(model).matrix)
                         For k = 0 To Models.models(model)._count - 1
 
                             Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                            Gl.glEnable(Gl.GL_TEXTURE_2D)
                             Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).color_id)
                             Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                            Gl.glEnable(Gl.GL_TEXTURE_2D)
                             Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).normal_Id)
                             uv2s = Models.models(model).componets(k).multi_textured
                             If (Not m_show_uv2.Checked) Or (Not uv2s_loaded) Then
@@ -2998,7 +2712,6 @@ skip:
                             End If
                             If uv2s Then
                                 Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                                Gl.glEnable(Gl.GL_TEXTURE_2D)
                                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).color2_Id)
                                 Gl.glUniform1i(is_multi_textured, 1)
                             Else
@@ -3025,76 +2738,30 @@ skip:
                         Next
                         Gl.glPopMatrix()
                     End If
-                Next
-                Gl.glUseProgram(0)
-            Else
-                Gl.glUseProgram(0)
-                Gl.glEnable(Gl.GL_LIGHTING)
-                Gl.glColor3f(lighting_model_level, lighting_model_level, lighting_model_level)
-                'Gl.glEnable(Gl.GL_ALPHA_TEST)
-                Gl.glAlphaFunc(Gl.GL_GREATER, 0.3)
-
-                Gl.glActiveTexture(Gl.GL_TEXTURE3)
-                Gl.glDisable(Gl.GL_TEXTURE_2D)
-                ' Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-
-                Gl.glActiveTexture(Gl.GL_TEXTURE2)
-                Gl.glDisable(Gl.GL_TEXTURE_2D)
-                'Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-
-                Gl.glActiveTexture(Gl.GL_TEXTURE1)
-                Gl.glDisable(Gl.GL_TEXTURE_2D)
-                'Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-
-                Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                Gl.glEnable(Gl.GL_TEXTURE_2D)
-
-                For model As UInt32 = 0 To Models.matrix.Length - 1
-                    If Models.matrix(model).matrix IsNot Nothing Then
-                        Gl.glPushMatrix()
-                        Gl.glMultMatrixf(Models.matrix(model).matrix)
-                        'Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                        For k = 0 To Models.models(model)._count - 1
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).color_id)
-                            'If Models.models(model).componets(k).multi_textured Then
-                            '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                            '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).color2_Id)
-                            '    Gl.glEnable(Gl.GL_TEXTURE_2D)
-                            'Else
-                            '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                            '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-                            '    Gl.glEnable(Gl.GL_TEXTURE_2D)
-                            'End If
-                            Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                        Next
-                        Gl.glPopMatrix()
-                    End If
-                Next
-            End If
-            Gl.glDisable(Gl.GL_ALPHA_TEST)
-            Gl.glDisable(Gl.GL_TEXTURE_2D)
-            Gl.glActiveTexture(Gl.GL_TEXTURE3)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glActiveTexture(Gl.GL_TEXTURE2)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glActiveTexture(Gl.GL_TEXTURE1)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+                End If
+            Next
+            Gl.glUseProgram(0)
         End If
         '---------------------------------------------------------------------------------
-        Gl.glUseProgram(0)
+        Gl.glDisable(Gl.GL_ALPHA_TEST)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        Gl.glActiveTexture(Gl.GL_TEXTURE3)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
 
     End Sub
-    Private Sub draw_trees()
+
+    Private Sub draw_g_trees()
         If Not m_trees_ Then
             Return
         End If
         'Gl.glFrontFace(Gl.GL_CCW)
-        If maploaded And m_wire_trees.Checked And m_show_trees.Checked And Not m_hell_mode.Checked Then
+        If maploaded And m_wire_trees.Checked And m_show_trees.Checked Then
             'Gl.glEnable(Gl.GL_LIGHTING)
             'draw as soild
             Dim e1 = Gl.glGetError
@@ -3112,7 +2779,7 @@ skip:
                     Gl.glUseProgram(shader_list.comp_shader)
                     Gl.glUniform1f(bump_out_, 0.0)
                 Else
-                    Gl.glUseProgram(shader_list.leafcolored_shader)
+                    Gl.glUseProgram(shader_list.leafcoloredDef_shader)
                 End If
 
                 For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
@@ -3149,7 +2816,7 @@ skip:
                 Gl.glMultMatrixf(Trees.matrix(i).matrix)
                 If Trees.flora(i).branch_displayID > 0 Then
                     Gl.glCallList(Trees.flora(i).branch_displayID)
-               
+
                 End If
                 If Trees.flora(i).frond_displayID > 0 Then
                     Gl.glCallList(Trees.flora(i).frond_displayID)
@@ -3158,7 +2825,7 @@ skip:
 
             Next
             Gl.glUseProgram(0)
-            Gl.glUseProgram(shader_list.leafcolored_shader)
+            Gl.glUseProgram(shader_list.leafcoloredDef_shader)
             For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
                 Gl.glPushMatrix()
                 Gl.glMultMatrixf(Trees.matrix(i).matrix)
@@ -3177,49 +2844,34 @@ skip:
         'draw trees 
         If maploaded And m_show_trees.Checked _
             And Not m_wire_trees.Checked _
-            And Not m_hell_mode.Checked And Not m_low_quality_trees.Checked Then
+            And Not m_low_quality_trees.Checked Then
 
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
             Gl.glDisable(Gl.GL_CULL_FACE)
 
 
             If Trees.flora IsNot Nothing Then
-                Dim rad As Single
                 For k = 0 To treeCache.Length - 2
                     For mode = 0 To 2
                         Select Case mode
 
                             Case 0 ' branchs
-                                Gl.glUseProgram(shader_list.branch_shader)
-                               
+                                Gl.glUseProgram(shader_list.branchDef_shader)
+
                                 Gl.glUniform1i(branch_color_map_id, 0)
                                 Gl.glUniform1i(branch_normalmap_map_id, 1)
-                                Gl.glUniform3f(branch_eye_pos_id, eyeX, eyeZ, eyeY)
-                                Gl.glUniform1f(branch_tex_level_id, lighting_model_level)
-                                Gl.glUniform1f(branch_gray_level_id, gray_level)
-                                Gl.glUniform1f(branch_gamma_level_id, gamma_level)
-                                Gl.glUniform1f(branch_ambient_level_id, lighting_ambient)
+
                             Case 1 ' fronds
-                                Gl.glUseProgram(shader_list.frond_shader)
-                               
+                                Gl.glUseProgram(shader_list.frondDef_shader)
+
                                 Gl.glUniform1i(frond_color_map_id, 0)
                                 Gl.glUniform1i(frond_normal_map_id, 1)
-                                Gl.glUniform3f(frond_eye_pos_id, eyeX, eyeZ, eyeY)
-                                Gl.glUniform1f(frond_tex_level_id, lighting_model_level)
-                                Gl.glUniform1f(frond_gray_level_id, gray_level)
-                                Gl.glUniform1f(frond_gamma_level_id, gamma_level)
-                                Gl.glUniform1f(frond_ambient_level_id, lighting_ambient)
 
                             Case 2 'leaves
-                                Gl.glUseProgram(shader_list.leaf_shader)
-                               
+                                Gl.glUseProgram(shader_list.leafDef_shader)
+
                                 Gl.glUniform1i(leaf_color_map_id, 0)
                                 Gl.glUniform1i(leaf_normal_map_id, 1)
-                                'Gl.glUniform3f(leaf_eye_pos_id, eyeX, eyeZ, eyeY)
-                                Gl.glUniform1f(leaf_tex_level_id, lighting_model_level)
-                                Gl.glUniform1f(leaf_gray_level_id, gray_level)
-                                Gl.glUniform1f(leaf_gamma_level_id, gamma_level)
-                                Gl.glUniform1f(leaf_ambient_level_id, lighting_ambient)
                                 Gl.glDisable(Gl.GL_CULL_FACE)
 
                         End Select
@@ -3246,44 +2898,42 @@ skip:
 
                             End Select
                             For i As UInt32 = 0 To .tree_cnt - 1
+                                If treeCache(k).BB(i).visible Then
 
-                                Gl.glPushMatrix()
-                                Gl.glMultMatrixf(.matrix_list(i).matrix)
-                                Dim l As vect3
-                                l.x = Trees.matrix(i).matrix(12)
-                                l.y = Trees.matrix(i).matrix(13)
-                                l.z = Trees.matrix(i).matrix(14)
-                                l.x -= eyeX
-                                l.y -= eyeY
-                                l.z -= eyeZ
-                                rad = (l.x ^ 2) + (l.y ^ 2) + (l.z ^ 2)
+                                    Gl.glPushMatrix()
+                                    'Gl.glMultMatrixf(.matrix_list(i).matrix)
 
-                                Gl.glDisable(Gl.GL_CULL_FACE)
-                                If mode = 0 Then
-                                    If .branch_displayID > 0 Then
-                                        Gl.glCallList(.branch_displayID)
+                                    Gl.glDisable(Gl.GL_CULL_FACE)
+                                    If mode = 0 Then
+                                        If .branch_displayID > 0 Then
+                                            Gl.glUniformMatrix4fv(branch_matrix_id, 1, Gl.GL_FALSE, .matrix_list(i).matrix)
+                                            Gl.glCallList(.branch_displayID)
+                                        End If
                                     End If
-                                End If
 
-                                If mode = 1 Then
-                                    If .frond_displayID > 0 Then
-                                        Gl.glCallList(.frond_displayID)
+                                    If mode = 1 Then
+                                        If .frond_displayID > 0 Then
+                                            Gl.glUniformMatrix4fv(frond_matrix_id, 1, Gl.GL_FALSE, .matrix_list(i).matrix)
+                                            Gl.glCallList(.frond_displayID)
+                                        End If
                                     End If
-                                End If
 
-                                If mode = 2 Then
-                                    If .leaf_displayID > 0 Then
-                                        Gl.glCallList(.leaf_displayID)
+                                    If mode = 2 Then
+                                        If .leaf_displayID > 0 Then
+                                            Gl.glUniformMatrix4fv(leaf_matrix_id, 1, Gl.GL_FALSE, .matrix_list(i).matrix)
+                                            Gl.glMultMatrixf(.matrix_list(i).matrix)
+                                            Gl.glCallList(.leaf_displayID)
+                                        End If
                                     End If
+                                    Gl.glPopMatrix()
                                 End If
-                                Gl.glPopMatrix()
                             Next
                             Gl.glUseProgram(0)
                         End With
                     Next
                 Next
-        End If
-        Gl.glUseProgram(0)
+            End If
+            Gl.glUseProgram(0)
             Gl.glEnable(Gl.GL_LIGHTING)
         End If
 
@@ -3315,209 +2965,299 @@ skip:
 
 
     End Sub
-    Private Sub draw_decals()
+
+    Private Sub draw_g_decals_terrain_pass(ByVal influence As Integer)
+
         If Not m_decals_ Then
             Return
         End If
-        Gl.glFrontFace(Gl.GL_CCW)
+        Dim width, height As Integer
+        width = pb1.Width + pb1.Width Mod 1
+        height = pb1.Height + pb1.Height Mod 1
+        Gl.glFrontFace(Gl.GL_CW)
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Gl.glDisable(Gl.GL_CULL_FACE)
-        Gl.glDisable(Gl.GL_ALPHA_TEST)
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
         Gl.glDepthMask(Gl.GL_FALSE)
-        'draw decals
+        Gl.glUseProgram(shader_list.decalsCpassDef_shader)
+        Gl.glUniform1i(prjd_depthmap, 0)
+        Gl.glUniform1i(prjd_color, 1)
+        Gl.glUniform1i(prjd_normal, 2)
+        'Gl.glUniform2f(prjd_FOV, width, heigth)
+        Gl.glEnable(Gl.GL_BLEND)
+        Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
+        Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE_MINUS_SRC_ALPHA)
+        Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+
+
+        For k = 0 To decal_matrix_list.Length - 1
+            With decal_matrix_list(k)
+                If decal_matrix_list(k).influence = influence Then
+
+                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                        Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
+                        Gl.glUniform3f(prjd_topright, .rtr.x, .rtr.y, .rtr.z)
+                        Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
+                        Gl.glUniform2f(prjd_uv_wrap, .u_wrap, .v_wrap)
+                        Gl.glUniform1i(prjd_influence, CInt(.influence))
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
+
+                        Gl.glCallList(decal_matrix_list(k).display_id)
+                    End If
+                End If
+            End With
+        Next
+        Gl.glUseProgram(0)
+        '====================================================================================
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
+        Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT)
+        'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        'ResizeGL()
+        'ViewPerspective()
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        Gl.glClearColor(0.0F, 0.0F, 0.4F, 0.0F)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
+        Gl.glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, Gl.GL_COLOR_BUFFER_BIT, Gl.GL_NEAREST)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        'Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, 0)
+
+        Gl.glUseProgram(shader_list.decalsNpassDef_shader)
+        Gl.glUniform1i(decal_color_map_id, 2)
+        Gl.glUniform1i(decal_normal_map_id, 3)
+        Gl.glUniform1i(decal_normal_in_id, 1)
+        Gl.glUniform1i(decal_depthmap_id, 0)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+
+        For k = 0 To decal_matrix_list.Length - 1
+            With decal_matrix_list(k)
+                If decal_matrix_list(k).influence = influence Then
+
+                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                        Gl.glUniformMatrix4fv(decal_matrix_id, 1, Gl.GL_FALSE, .matrix)
+                        Gl.glUniform3f(decal_tr_id, .rtr.x, .rtr.y, .rtr.z)
+                        Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
+                        Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
+                        Gl.glUniform1i(decal_influence, .influence)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
+
+                        Gl.glCallList(decal_matrix_list(k).display_id)
+                    End If
+                End If
+            End With
+        Next
+        Gl.glUseProgram(0)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        'Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, width, height, 0)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+        Dim e2 = Gl.glGetError
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        'Gdi.SwapBuffers(pb1_hDC)
+        'Thread.Sleep(20)
+        '====================================================================================
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+        'Gl.glBindFramebufferEXT(Gl.GL_DRAW_FRAMEBUFFER_EXT, gBufferFBO)
+        G_Buffer.attachFOBtextures()
+        Dim e1 = Gl.glGetError
+        If m_wire_decals.Checked Then
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
+            Gl.glColor3f(1.0, 1.0, 1.0)
+            For k = 0 To decal_matrix_list.Length - 1
+                With decal_matrix_list(k)
+
+                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                        Gl.glPushMatrix()
+                        Gl.glMultMatrixf(.matrix)
+                        Gl.glCallList(decal_matrix_list(k).display_id)
+                        Gl.glPopMatrix()
+                    End If
+                End With
+            Next
+        End If
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glDisable(Gl.GL_CULL_FACE)
-        '-------- decals
-        If maploaded And m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
-            If Not view_mode Then
-                'ViewPerspective_d()
-            End If
-
-            Gl.glUseProgram(shader_list.comp_shader)
-            Gl.glUniform1f(bump_out_, 0.02)
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glColor3f(0.2, 0.05, 0.0)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-
-            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
-            'Gl.glPolygonOffset(-5.0, 1.0)
-
-            For k = 0 To decal_matrix_list.Length - 1
-                If decal_matrix_list(k).good Then
-                    Gl.glCallList(decal_matrix_list(k).display_id)
-                End If
-            Next
-
-            'Gl.glDisable(Gl.GL_POLYGON_OFFSET_LINE)
-            'Gl.glPolygonOffset(0.0, 0.0)
-
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-            Gl.glColor3f(0.3, 0.3, 0.3)
-            Gl.glUniform1f(bump_out_, 0.015)
-
-            For k = 0 To decal_matrix_list.Length - 1
-                If decal_matrix_list(k).good Then
-                    Gl.glCallList(decal_matrix_list(k).display_id)
-                End If
-            Next
-            Gl.glUseProgram(0)
-            If normal_mode > 0 Then
-                Gl.glColor3f(0.5, 0.5, 0.5)
-                Gl.glUseProgram(shader_list.normal_shader)
-                Gl.glUniform1i(view_normal_mode_, normal_mode)
-                Gl.glUniform1f(normal_length_, 0.1)
-                For k = 0 To decal_matrix_list.Length - 1
-                    If decal_matrix_list(k).good Then
-                        Gl.glCallList(decal_matrix_list(k).display_id)
-                    End If
-                Next
-                Gl.glUseProgram(0)
-            End If
-        End If
-        If maploaded And Not m_wire_decals.Checked And m_show_decals.Checked And Not m_hell_mode.Checked Then
-            If Not view_mode Then
-                ViewPerspective_d()
-            End If
-            Gl.glDisable(Gl.GL_CULL_FACE)
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glColor3f(0.5, 0.5, 0.5)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            Gl.glDepthMask(Gl.GL_FALSE)
-
-            Gl.glUseProgram(shader_list.decals_shader)
-          
-            Gl.glUniform1i(decal_color_map_id, 0)
-            Gl.glUniform1i(decal_normal_map_id, 1)
-            Gl.glUniform3f(decal_cam_position_id, eyeX, eyeY, eyeZ)
-            Gl.glUniform1f(decal_tex_level_id, lighting_model_level)
-            Gl.glUniform1f(decal_gray_level_id, gray_level)
-            Gl.glUniform1f(decal_gamma_level_id, gamma_level)
-            Gl.glUniform1f(decal_ambient, lighting_ambient)
-            ''''''''''''''''''''''''''''''''''''''''''''''''''
-            'Gl.glEnable(Gl.GL_POLYGON_OFFSET_FILL)
-            'Gl.glPolygonOffset(-5.0, -5.0)
-            Gl.glEnable(Gl.GL_BLEND)
-            Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
-            Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE)
-            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-
-            For k = 0 To decal_matrix_list.Length - 1
-                If decal_matrix_list(k).good Then
-                    Gl.glUniform1f(decal_u_wrap, decal_matrix_list(k).u_wrap)
-                    Gl.glUniform1f(decal_v_wrap, decal_matrix_list(k).v_wrap)
-                    Gl.glUniform1f(decal_influence, decal_matrix_list(k).influence)
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
-
-                    Gl.glCallList(decal_matrix_list(k).display_id)
-                End If
-            Next
-            Gl.glUseProgram(0)
-
-            'Gl.glDisable(Gl.GL_POLYGON_OFFSET_FILL)
-            Gl.glEnable(Gl.GL_DEPTH_TEST)
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        End If
-        If Not view_mode Then
-            ViewPerspective()
-
-        End If
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Gl.glDisable(Gl.GL_BLEND)
         Gl.glDepthMask(Gl.GL_TRUE)
-        '---------------------------------------------------------------------------------
-        'decal editing junk
-        If maploaded And EDIT_INCULDERS Then
-            If Not view_mode Then
-                ViewPerspective_d()
-            End If
-            Gl.glDisable(Gl.GL_LIGHTING)
 
-            For k = 0 To decal_matrix_list.Length - 1
-                Dim m = decal_matrix_list(k).matrix
-                If decal_matrix_list(k).good Then
-                    With decal_matrix_list(k)
-                        If k = d_counter Then
-                            If frmBiasing.SHOW_SELECT_MESH Then
+        Return
 
-                                Gl.glLineWidth(1.0)
-                                Gl.glUseProgram(shader_list.comp_shader)
-                                Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
-                                Gl.glLineWidth(1.0)
-                                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-                                Gl.glUniform1f(bump_out_, 0.015)
-                                Gl.glCallList(decal_matrix_list(d_counter).display_id)
-                                Gl.glUseProgram(0)
-                            End If
-                            Gl.glColor4f(1.0, 0.0, 0.0, 1.0)
-
-                            Gl.glPushMatrix()
-                            Gl.glMultMatrixf(decal_matrix_list(k).matrix)
-                            glutWireCube(1.0)
-                            Gl.glPopMatrix()
-
-                            Gl.glBegin(Gl.GL_LINES)
-                            Gl.glVertex3f(.near_clip.x + m(12), .near_clip.y + m(13), .near_clip.z + m(14))
-                            Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
-                            Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
-                            Gl.glEnd()
-                            Gl.glLineWidth(2.0)
-                        Else
-                            Gl.glLineWidth(2.0)
-                            Gl.glColor4f(0.0, 1.0, 0.0, 1.0)
-
-                            Gl.glPushMatrix()
-                            Gl.glMultMatrixf(decal_matrix_list(k).matrix)
-                            glutWireCube(1.0)
-                            Gl.glPopMatrix()
-                            Gl.glBegin(Gl.GL_LINE_STRIP)
-                            Gl.glVertex3f(.top_left.x, .top_left.y, .top_left.z)
-                            Gl.glVertex3f(.top_right.x, .top_right.y, .top_right.z)
-                            Gl.glVertex3f(.bot_right.x, .bot_right.y, .bot_right.z)
-                            Gl.glVertex3f(.bot_left.x, .bot_left.y, .bot_left.z)
-                            Gl.glVertex3f(.top_left.x, .top_left.y, .top_left.z)
-                            Gl.glEnd()
-
-                            Gl.glBegin(Gl.GL_LINES)
-                            Gl.glVertex3f(.near_clip.x + m(12), .near_clip.y + m(13), .near_clip.z + m(14))
-                            Gl.glColor4f(1.0, 1.0, 1.0, 1.0)
-                            Gl.glVertex3f(.far_clip.x + m(12), .far_clip.y + m(13), .far_clip.z + m(14))
-                            Gl.glEnd()
-                        End If
-                    End With
-                End If
-            Next
-            Gl.glEnable(Gl.GL_LIGHTING)
-            Gl.glLineWidth(1.0)
-        End If
 
     End Sub
-    Private Sub draw_tanks(ByRef cp() As Single, ByVal model_view() As Double, ByVal projection() As Double, ByVal viewport() As Integer, ByVal sx As Single, ByVal sy As Single, ByVal sz As Single)
+    Private Sub draw_g_decals_all_pass(ByVal influence As Integer)
+
+        If Not m_decals_ Then
+            Return
+        End If
+        Dim width, height As Integer
+        width = pb1.Width + pb1.Width Mod 1
+        height = pb1.Height + pb1.Height Mod 1
         Gl.glFrontFace(Gl.GL_CW)
-        Gl.glEnable(Gl.GL_LIGHTING)
-        Dim tdl As Integer = 0
-        If maploaded And Not m_hell_mode.Checked Then
-            If tankID > -1 And m_show_tank_comments.Checked Then
-                m_comment.Visible = True
-                m_clear_tank_comments.Visible = True
-                m_comment.AllowDrop = True
-            Else
-                m_comment.Visible = False
-                m_clear_tank_comments.Visible = False
-            End If
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glDepthMask(Gl.GL_FALSE)
+        Gl.glUseProgram(shader_list.decalsCpassDef_shader)
+        Gl.glUniform1i(prjd_depthmap, 0)
+        Gl.glUniform1i(prjd_color, 1)
+        Gl.glUniform1i(prjd_normal, 2)
+        'Gl.glUniform2f(prjd_FOV, width, heigth)
+        Gl.glEnable(Gl.GL_BLEND)
+        Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
+        Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE_MINUS_SRC_ALPHA)
+        Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+
+
+        For k = 0 To decal_matrix_list.Length - 1
+            With decal_matrix_list(k)
+                If decal_matrix_list(k).influence <> influence Then
+
+                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                        Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
+                        Gl.glUniform3f(prjd_topright, .rtr.x, .rtr.y, .rtr.z)
+                        Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
+                        Gl.glUniform2f(prjd_uv_wrap, .u_wrap, .v_wrap)
+                        Gl.glUniform1i(prjd_influence, CInt(.influence))
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
+
+                        Gl.glCallList(decal_matrix_list(k).display_id)
+                    End If
+                End If
+            End With
+        Next
+        Gl.glUseProgram(0)
+        '====================================================================================
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
+        Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT)
+        'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        'ResizeGL()
+        'ViewPerspective()
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        Gl.glClearColor(0.0F, 0.0F, 0.4F, 0.0F)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, Gl.GL_COLOR_BUFFER_BIT, Gl.GL_NEAREST)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, 0)
+
+        Gl.glUseProgram(shader_list.decalsNpassDef_shader)
+        Gl.glUniform1i(decal_color_map_id, 2)
+        Gl.glUniform1i(decal_normal_map_id, 3)
+        Gl.glUniform1i(decal_normal_in_id, 1)
+        Gl.glUniform1i(decal_depthmap_id, 0)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+
+        For k = 0 To decal_matrix_list.Length - 1
+            With decal_matrix_list(k)
+                If decal_matrix_list(k).influence <> influence Then
+
+                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                        Gl.glUniformMatrix4fv(decal_matrix_id, 1, Gl.GL_FALSE, .matrix)
+                        Gl.glUniform3f(decal_tr_id, .rtr.x, .rtr.y, .rtr.z)
+                        Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
+                        Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
+                        Gl.glUniform1i(decal_influence, .influence)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
+
+                        Gl.glCallList(decal_matrix_list(k).display_id)
+                    End If
+                End If
+            End With
+        Next
+        Gl.glUseProgram(0)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+        Dim e2 = Gl.glGetError
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        'Gdi.SwapBuffers(pb1_hDC)
+        'Thread.Sleep(20)
+        '====================================================================================
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+        'Gl.glBindFramebufferEXT(Gl.GL_DRAW_FRAMEBUFFER_EXT, gBufferFBO)
+        Dim e1 = Gl.glGetError
+
+        G_Buffer.attachFOBtextures()
+        If m_wire_decals.Checked Then
+
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
+            Gl.glColor3f(1.0, 1.0, 1.0)
+            For k = 0 To decal_matrix_list.Length - 1
+                With decal_matrix_list(k)
+
+                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                        Gl.glPushMatrix()
+                        Gl.glMultMatrixf(.matrix)
+                        Gl.glCallList(decal_matrix_list(k).display_id)
+                        Gl.glPopMatrix()
+                    End If
+                End With
+            Next
+        End If
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glDepthMask(Gl.GL_TRUE)
+
+        Return
+
+
+    End Sub
+
+    Private Sub draw_g_tanks(ByRef cp() As Single, ByVal model_view() As Double, ByVal projection() As Double, ByVal viewport() As Integer, ByVal sx As Single, ByVal sy As Single, ByVal sz As Single)
+        Dim mat(16) As Single
+        'Gl.glFinish()
+        Gl.glFrontFace(Gl.GL_CW)
+        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        If maploaded Then
             Dim cv = 57.2957795
+            Gl.glUseProgram(shader_list.tankDef_shader)
             For i = 0 To 14
-                Gl.glUseProgram(shader_list.tank_shader)
-                If locations.team_1(i).track_displaylist > -1 Then
+                Gl.glColor3f(0.4!, 0.0!, 0.0!)
+                If locations.team_1(i).tank_displaylist > -1 Then
                     Gl.glPushMatrix()
                     ReDim locations.team_1(i).scrn_coords(3)
                     Dim y_ = get_Z_at_XY(locations.team_1(i).loc_x, locations.team_1(i).loc_z)
@@ -3537,45 +3277,21 @@ skip:
                     Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
                     Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
                     Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
-                    tdl = locations.team_1(i).track_displaylist
-                    Gl.glColor3f(0.4!, 0.0!, 0.0!)
+
+
+                    Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
+                    Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
                     If tankID = i Then
-                        Gl.glColor3f(0.4!, 0.0!, 0.0!)
-                        Gl.glClearStencil(0)
-                        Gl.glClear(Gl.GL_STENCIL_BUFFER_BIT)
-
-                        ' Render the mesh into the stencil buffer.
-
-                        Gl.glEnable(Gl.GL_STENCIL_TEST)
-
-                        Gl.glStencilFunc(Gl.GL_ALWAYS, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glCallList(tdl)
-
-                        ' Render the thick wireframe version.
-
-                        Gl.glStencilFunc(Gl.GL_NOTEQUAL, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glLineWidth(10)
-                        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
-                        Gl.glColor3f(1.0!, 1.0!, 0.0!)
-
-                        Gl.glCallList(tdl)
-                        Gl.glDisable(Gl.GL_STENCIL_TEST)
-
-                    Else
-                        Gl.glCallList(tdl)
+                        Gl.glColor3f(0.5, 0.5, 0.0)
                     End If
+                    Gl.glCallList(locations.team_1(i).tank_displaylist)
                     Gl.glPopMatrix()
                 End If
-                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
             Next
             For i = 0 To 14
-                If locations.team_2(i).track_displaylist > -1 Then
+                Gl.glColor3f(0.0, 0.3, 0.0)
+                If locations.team_2(i).tank_displaylist > -1 Then
                     Gl.glPushMatrix()
-                    Gl.glColor3f(0.0, 0.3, 0.0)
                     ReDim locations.team_2(i).scrn_coords(3)
                     Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
                     Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
@@ -3594,218 +3310,38 @@ skip:
                     Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
                     Gl.glRotatef(rz, 0.0, 0.0, 1.0)
                     Gl.glRotatef(rx, -1.0, 0.0, 0.0)
-                    tdl = locations.team_2(i).track_displaylist
-                    If tankID - 100 = i Then
-                        Gl.glClearStencil(0)
-                        Gl.glClear(Gl.GL_STENCIL_BUFFER_BIT)
 
-                        ' Render the mesh into the stencil buffer.
-
-                        Gl.glEnable(Gl.GL_STENCIL_TEST)
-
-                        Gl.glStencilFunc(Gl.GL_ALWAYS, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glCallList(tdl)
-
-                        ' Render the thick wireframe version.
-
-                        Gl.glStencilFunc(Gl.GL_NOTEQUAL, 1, -1)
-                        Gl.glStencilOp(Gl.GL_KEEP, Gl.GL_KEEP, Gl.GL_REPLACE)
-
-                        Gl.glLineWidth(6)
-                        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_LINE)
-                        Gl.glColor3f(1.0!, 1.0!, 0.0!)
-
-                        Gl.glCallList(tdl)
-                        Gl.glDisable(Gl.GL_STENCIL_TEST)
-
-                    Else
-                        Gl.glCallList(tdl)
+                    Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
+                    Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
+                    If tankID = i Then
+                        Gl.glColor3f(0.5, 0.5, 0.0)
                     End If
+                    Gl.glCallList(locations.team_2(i).tank_displaylist)
                     Gl.glPopMatrix()
                 End If
-                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
             Next
         End If
         Gl.glUseProgram(0)
 
     End Sub
-    Private Sub draw_dome()
-        If Not m_sky_ Then
-            'Gl.glPointSize(1.0)
-            'Gl.glDisable(Gl.GL_LIGHTING)
-            'Gl.glDisable(Gl.GL_DEPTH_TEST)
-            'Gl.glColor3f(0.7, 0.7, 1.0)
-            'Gl.glPushMatrix()
-            'Gl.glTranslatef(eyeX, eyeY - 1.0, eyeZ)
-            'Gl.glCallList(stars_display_id)
-            'Gl.glPopMatrix()
-            'Gl.glEnable(Gl.GL_DEPTH_TEST)
-            'Gl.glEnable(Gl.GL_LIGHTING)
-            Return
-        End If
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
-        If mini_map_loaded Then
-            Dim c = lighting_ambient + 0.5
-            Gl.glColor3f(c, c, c)
-            'Gl.glDisable(Gl.GL_LIGHTING)
-            Gl.glDisable(Gl.GL_DEPTH_TEST)
-
-            Gl.glPushMatrix()
-            'Position to get best view of sky while loading a map.
-            'otherwise. translate to camera position position.
-            If Not maploaded Then
-                u_Cam_Y_angle = -0.15
-                u_Cam_X_angle = 0.0
-                Gl.glTranslatef(eyeX, eyeY - 8.0, eyeZ - 6.0)
-                Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
-            Else
-                Gl.glTranslatef(eyeX, eyeY - 1.0, eyeZ)
-                Gl.glRotatef(90.0, 0.0, 1.0, 0.0)
-
-            End If
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            'Gl.glColor4f(0.6, 0.6, 0.6, 0.5)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, skydometextureID)
-            Gl.glDisable(Gl.GL_CULL_FACE)
-            Gl.glCallList(skydomelist)
 
 
-            Gl.glEnable(Gl.GL_CULL_FACE)
-            Gl.glDisable(Gl.GL_TEXTURE_2D)
-            Gl.glEnable(Gl.GL_DEPTH_TEST)
-            Gl.glEnable(Gl.GL_LIGHTING)
-
-            Gl.glPopMatrix()
-        End If
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
-
-    End Sub
-    Private Sub draw_light_sphear()
-        If m_Orbit_Light.Checked And Not m_hell_mode.Checked Then
-            '---------------------------------
-            'draw the sphere as our sun
-            '---------------------------------
-            'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)
-            Gl.glDisable(Gl.GL_LIGHTING)
-            Gl.glPushMatrix()
-            Gl.glTranslatef(position(0), position(1), position(2))
-            Gl.glColor3f(1.0, 1.0, 0.0)
-            glutSolidSphere(4.0, 8, 8)
-            Gl.glPopMatrix()
-            Gl.glEnable(Gl.GL_LIGHTING)
-        End If
-    End Sub
-    Private Sub setup_fog()
-        'Gl.glEnable(Gl.GL_FOG)
-        'fog is currently disabled in all shaders.
-        'Im working towards adding this in deferred rendering
-        Dim fmode As Integer = Gl.GL_EXP2
-        Gl.glFogi(Gl.GL_FOG_MODE, fmode)
-        Dim fogcolor() As Single = {0.6, 0.6, 0.65}
-
-        Gl.glFogfv(Gl.GL_FOG_COLOR, fogcolor)
-        Gl.glFogf(Gl.GL_FOG_DENSITY, lighting_fog_level * 0.8)
-        Gl.glHint(Gl.GL_FOG_HINT, Gl.GL_NICEST)
-        Gl.glFogf(Gl.GL_FOG_START, 1.0)
-        Gl.glFogf(Gl.GL_FOG_END, 2.0)
-    End Sub
-    Private Sub draw_base_rings()
-        If Not m_bases_ Then
-            Return
-        End If
-        If maploaded And Not m_hell_mode.Checked And SHOW_RINGS Then
-            Gl.glColor3f(0.5, 0.0, 0.0)
-            Gl.glCallList(ringDisplayID_1)
-
-            Gl.glColor3f(0.0, 0.7, 0.0)
-            Gl.glCallList(ringDisplayID_2)
-        End If
-
-    End Sub
-    Private Sub setup_view()
-        If Not view_mode Then
-
-            ViewPerspective()   ' set 3d view mode
-            'Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
-            'set_eyes()
-        Else
-            '========================================================================
-            If maploaded Then
-                Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position)
-
-                Dim c_ As vect3 = decal_matrix_list(d_counter).cam_pos
-                Dim l_ As vect3 = decal_matrix_list(d_counter).look_at
-                Dim tl = decal_matrix_list(d_counter).top_left
-                Dim tr = decal_matrix_list(d_counter).top_right
-                Dim bl = decal_matrix_list(d_counter).bot_left
-                Dim br = decal_matrix_list(d_counter).bot_right
-                Dim c_rot = decal_matrix_list(d_counter).cam_rotation
-                Dim c_pos = decal_matrix_list(d_counter).cam_location
-                Dim near = decal_matrix_list(d_counter).near_clip
-                Dim far = decal_matrix_list(d_counter).far_clip
-                Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
-                Gl.glLoadIdentity() 'Reset The Matrix
-                Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
-                Gl.glLoadIdentity() 'Reset The Matrix
-
-                Glu.gluLookAt(c_.x, c_.y, c_.z, l_.x, l_.y, l_.z, c_rot.x, c_rot.y, c_rot.z)
-                Dim m(16) As Single
-                Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, m)
-                tl = translate_to(tl, m)
-                tr = translate_to(tr, m)
-                bl = translate_to(bl, m)
-                br = translate_to(br, m)
-                'l_ = translate_to(l_, m)
-                Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
-                Gl.glLoadIdentity() 'Reset The Mat4rix
-                With decal_matrix_list(d_counter)
-                    Dim scale = pb1.Height / pb1.Width
-                    'Gl.glOrtho(-lr, lr, (-lr) * Scale(), (lr) * Scale(), -5, 40) 'Select Ortho Mode
-                    Gl.glOrtho(br.x / scale, tl.x / scale, bl.y, tr.y, -Abs(get_length_vect3(near) * .t_bias), Abs(get_length_vect3(far) * .t_bias)) 'Select Ortho Mode
-                End With
-                Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
-                Gl.glLoadIdentity() 'Reset The Matrix
-                Glu.gluLookAt(c_.x, c_.y, c_.z, l_.x, l_.y, l_.z, c_rot.x, c_rot.y, c_rot.z)
-
-                look_point_X = c_pos.x
-                look_point_Z = c_pos.z
-            End If
-
-            'Gl.glOrtho(-128, 128, (-128) * scale, (128) * scale, -300.0, 500.0) 'Select Ortho Mode
-
-        End If
-
-    End Sub
-
-    Public Sub draw_scene()
-        'Application.DoEvents()
-        If stopGL Then Return
-        gl_busy = True
-        If Not _STARTED Then Return
-        If SHOW_MAPS Then
-            gl_pick_map(mouse.X, mouse.Y)
-            Return
-        End If
-        If Not maploaded Then
-            Return
-        End If
-
-        swat1.Restart()
-        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
-            MessageBox.Show("Unable to make rendering context current")
-            End
-        End If
+    Dim terrain_time, model_time, decal_time, tree_time, cull_time, total_time As Long
+    Dim sample_cnt As Integer = 0
+    Public Shared worldMatrix(16), viewMatrix(16), projection_s(16), modelMatrix(16) As Single
+    Public Sub draw_to_gBuffer()
         Dim model_view(16) As Double
         Dim projection(16) As Double
         Dim viewport(4) As Integer
         Dim cp(2) As Single
         Dim sx, sy, sz As Single
-
-        'Gl.glEnable(Gl.GL_FRAMEBUFFER_SRGB_EXT) 'improves colors
+        Dim width, height As Integer
+        width = pb1.Width + pb1.Width Mod 1
+        height = pb1.Height + pb1.Height Mod 1
+        swat1.Restart()
+        setup_fog()
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+        G_Buffer.attachFOBtextures()
 
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
 
@@ -3813,35 +3349,37 @@ skip:
         Gl.glFrontFace(Gl.GL_CW)
         Gl.glCullFace(Gl.GL_BACK)
         Gl.glLineWidth(1)
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
+        Gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
         Gl.glDisable(Gl.GL_BLEND)
         Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
-        ResizeGL()
         Gl.glDisable(Gl.GL_NORMALIZE)
+        Gl.glDisable(Gl.GL_MULTISAMPLE)
 
-        '========================================================================
-        'Gl.glEnable(Gl.GL_CULL_FACE)
-        Gl.glEnable(Gl.GL_COLOR_MATERIAL)
-        '----------------------------------------------------
-        Gl.glDisable(Gl.GL_SMOOTH)
-        '----------------------------------------------------
-        Dim diffusen As Single = 0.9!
-        Dim diffuse() As Single = {diffusen, diffusen, diffusen}
-        Dim global_ambient() As Single = {0.99F, 0.99F, 0.99F, 1.0F}
-        '---------------------------------
-        Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, global_ambient)
-
-        Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, diffuse)
-        Gl.glMateriali(Gl.GL_FRONT, Gl.GL_SHININESS, 95)
-        '----------------------------------------------------
-        setup_view()
-        '---------------------------------
-        ' this gets the point on the screen for chunkIDs
-        '---------------------------------
+        ResizeGL()
+        ViewPerspective()
+        '---------------------------------------------------------------------------------
+        '------------- cull objects
+        swat2.Restart()
+        ExtractFrustum()
+        check_terrain_visible()
+        check_models_visible() 'not sure if this is the best place for this
+        check_trees_visible()
+        check_decals_visible()
+        If frmStats.Visible Then
+            cull_time += swat2.ElapsedMilliseconds
+            frmStats.rt_culled_count.Text = culled_count.ToString("0000")
+        End If
+        '---------------------------------------------------------------------------------
+        Gl.glGetFloatv(Gl.GL_MODELVIEW, worldMatrix)
+        Gl.glPushMatrix()
         Gl.glGetDoublev(Gl.GL_MODELVIEW_MATRIX, model_view)
         Gl.glGetDoublev(Gl.GL_PROJECTION_MATRIX, projection)
+        'Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, projection_s)
+        Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, modelMatrix)
         Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
+        '---------------------------------------------------------------------------------
+        'If show chunk ids, get the locations
         If m_show_chuckIds.Checked Then
             For i = 0 To maplist.Length - 1
                 ReDim maplist(i).scr_coords(3)
@@ -3854,72 +3392,97 @@ skip:
                 maplist(i).scr_coords(2) = sz
             Next
         End If
-        '---------------------------------
-        'Draw SkyDome
-        If sky_loaded Then
-            draw_dome()
-        End If
-
-        '---------------------------------
-        'Draw the lights location
-        draw_light_sphear()
-        '---------------------------------
-        'Fog
-        setup_fog()
         '---------------------------------------------------------------------------------
+        G_Buffer.attach_color_only()
+        draw_dome()
+        G_Buffer.attachFOBtextures()
+
         '---------------------------------------------------------------------------------
         'Terrain
         swat2.Restart()
         If terrain_loaded Then
-            draw_terrain()
+            draw_g_terrain()
         End If
         If frmStats.Visible = True Then
-            frmStats.rt_terrian.Text = swat2.ElapsedMilliseconds.ToString
+            terrain_time += swat2.ElapsedMilliseconds
         End If
+        'Decals have to be drawn in 2 passes. 1st pass (type 2) decals are drawn only on terrain
+        'so we first render the terrain, draw the type 2 decals than draw everything else
+        'and than draw decals that are not type 2. This lets them draw on everything in the scene.
+        'There are other decal types like 16 that should be drawn only on buildings BUT
+        'this is too expensive in render time. I may look in to a combiner method later on.
         '---------------------------------------------------------------------------------
-        'Models
+        'Decals that are ONLY drawn on the terrain.. Type 2
+        swat2.Restart()
+        If m_decals_ And m_show_decals.Checked Then
+            G_Buffer.get_depth_buffer(width, height)
+            If decals_loaded And m_show_decals.Checked Then
+                draw_g_decals_terrain_pass(2) 'terrain only decal' 2 is terrain only
+            End If
+        End If
+        If frmStats.Visible = True Then
+            decal_time += swat2.ElapsedMilliseconds
+        End If
+
+        '---------------------------------------------------------------------------------
+        'Models bulidings only
         swat2.Restart()
         If models_loaded Then
-            draw_models()
+            draw_g_models(False)
+        End If
+        If frmStats.Visible = True Then
+            model_time += swat2.ElapsedMilliseconds
+        End If
+
+        '---------------------------------------------------------------------------------
+        '---------------------------------------------------------------------------------
+        '---------------------------------------------------------------------------------
+        'Decals that are draw on everything that are not Type 2
+        swat2.Restart()
+        If m_decals_ And m_show_decals.Checked Then
+            G_Buffer.get_depth_buffer(width, height)
+            If decals_loaded And m_show_decals.Checked Then
+                draw_g_decals_all_pass(2) 'draw on anything
+            End If
         End If
 
         If frmStats.Visible = True Then
-            frmStats.rt_models.Text = swat2.ElapsedMilliseconds.ToString
+            decal_time += swat2.ElapsedMilliseconds
         End If
+
+
+        '---------------------------------------------------------------------------------
+        'Models everything but buildings
+        swat2.Restart()
+        If models_loaded Then
+            draw_g_models(True)
+        End If
+        If frmStats.Visible = True Then
+            model_time += swat2.ElapsedMilliseconds
+        End If
+
         '---------------------------------------------------------------------------------
         'Trees
         swat2.Restart()
         If trees_loaded Then
-            draw_trees()
+            draw_g_trees()
         End If
 
         If frmStats.Visible = True Then
-            frmStats.rt_trees.Text = swat2.ElapsedMilliseconds.ToString
-        End If
-        '---------------------------------------------------------------------------------
-        'Decals
-        swat2.Restart()
-        If decals_loaded Then
-            draw_decals()
-            ViewPerspective()
+            tree_time += swat2.ElapsedMilliseconds
         End If
 
-        If frmStats.Visible = True Then
-            frmStats.rt_decals.Text = swat2.ElapsedMilliseconds.ToString
-        End If
-
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         '---------------------------------------------------------------------------------
         'Tanks
-        draw_tanks(cp, model_view, projection, viewport, sx, sy, sz)
+        draw_g_tanks(cp, model_view, projection, viewport, sx, sy, sz)
+
+        'only needed for SSAO and I cant get it to work!
+        'G_Buffer.get_depth_buffer(width, height)
+
+
+        Gl.glDisable(Gl.GL_LIGHTING)
         '---------------------------------------------------------------------------------
-        'Base locations
-        If bases_laoded Then
-            draw_base_rings()
-        End If
-        '---------------------------------------------------------------------------------
-        If m_show_cursor.Checked And Not m_hell_mode.Checked Then
+        If m_show_cursor.Checked Then
             Gl.glDisable(Gl.GL_LIGHTING)
             Gl.glColor3f(1.0, 1.0, 0.0)
             If Not NetData Then
@@ -3928,12 +3491,43 @@ skip:
                 draw_cursor(Packet_in.Ex, Packet_in.Ez)
             End If
         End If
-        Gl.glEnable(Gl.GL_LIGHTING)
+        'Gl.glEnable(Gl.GL_LIGHTING)
         '------------------------------------
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
 
+        'Attach only the color buffer' Only gColor will be writen to.
+        G_Buffer.attach_color_only()
+        'debug only
+        'Gl.glColor3f(1.0, 1.0, 0.0)
+        'For model As UInt32 = 0 To Models.matrix.Length - 1
+        '    If Models.matrix(model).matrix IsNot Nothing Then
+        '        Gl.glBegin(Gl.GL_POINTS)
+        '        For k = 0 To 7
+        '            Gl.glVertex3f(Model_Matrix_list(model).BB(k).x, Model_Matrix_list(model).BB(k).y, Model_Matrix_list(model).BB(k).z)
+        '        Next
+        '        Gl.glEnd()
+        '    End If
+        'Next
+        Gl.glPointSize(4)
+        Gl.glColor3f(1.0, 1.0, 0.0)
+        Gl.glBegin(Gl.GL_POINTS)
+        Dim v As vect3
+        For i = 0 To LIGHT_COUNT_ * 3 Step 3
+            v.x = sl_light_pos(i + 0)
+            v.y = sl_light_pos(i + 1)
+            v.z = sl_light_pos(i + 2)
+            'Gl.glVertex3f(v.x, v.y, v.z)
+        Next
+        Gl.glEnd()
+        'Draw the lights location
+        draw_light_sphear()
+
+        'Base locations
+        If bases_laoded Then
+            draw_base_rings()
+        End If
         'Draw the water. IF there is water....
-        If water.IsWater And maploaded And m_show_water.Checked And Not m_hell_mode.Checked And m_water_ And water_loaded Then
+        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
             Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
             Gl.glFrontFace(Gl.GL_CW)
             Gl.glEnable(Gl.GL_LIGHTING)
@@ -3944,7 +3538,7 @@ skip:
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
             Gl.glPushMatrix()
             Gl.glEnable(Gl.GL_BLEND)
-            Gl.glColor4f(0.1, 0.1, 0.2, 0.5)
+            Gl.glColor4f(0.1, 0.1, 0.5, 0.4)
             Gl.glTranslatef(-water.position.x, -0.1, water.position.z)
             Gl.glRotatef(-water.orientation * 57.2957795, 0.0, 1.0, 0.0)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
@@ -3957,18 +3551,12 @@ skip:
             Gl.glDisable(Gl.GL_FOG)
             Gl.glFrontFace(Gl.GL_CCW)
         End If
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
 
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_BLEND)
-        Gl.glDisable(Gl.GL_STENCIL_TEST)
-        '---------------------------------------------------------------------------------
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        '---------------------------------------------------------------------------------
-        '---------------------------------------------------------------------------------
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        '---------------------------------
-        'draw_XZ_grid()
-        '---------------------------------
+
+
         Gl.glDisable(Gl.GL_LIGHTING)
         Gl.glColor3f(1.0, 1.0, 1.0)
 
@@ -3998,23 +3586,217 @@ skip:
             Gl.glEnd()
         End If
 
+        '---------------------------------------------------------------------------------
 
-        '======================== test
-        Gl.glEnable(Gl.GL_LIGHTING)
+        Gl.glFlush() ' needed?
 
-        '======================== end test
-        Gl.glDisable(Gl.GL_FRAMEBUFFER_SRGB_EXT)
-        '---------------------------------
-        'copy_to_post_map()
-        '---------------------------------
-
-        'all below is 2D ortho stuff
-        '---------------------------------
+        Gl.glPopMatrix()
+        'Dim e6 = Gl.glGetError
+        'Dim e5 = Gl.glGetError
         ViewOrtho()
-        Gl.glFrontFace(Gl.GL_CCW)
-        '==========================
-        'draw_post_test()
-        '==========================
+        Gl.glFrontFace(Gl.GL_CW)
+
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        'G_Buffer.getsize(width, heigth)
+        Gl.glDisable(Gl.GL_LIGHTING)
+        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+        Gl.glEnable(Gl.GL_CULL_FACE)
+        Gl.glDisable(Gl.GL_TEXTURE_2D)
+        Gl.glUseProgram(0)
+        Gl.glDisable(Gl.GL_BLEND)
+        '----------------------------------------------------------------------------------------------
+        'SSAO pass
+        'can't get this to work!! GRRRRR
+        GoTo skip_SSAO
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        Dim Status = Gl.glCheckFramebufferStatusEXT(Gl.GL_FRAMEBUFFER_EXT)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
+        Gl.glUseProgram(shader_list.SSAO_shader)
+        Gl.glUniform1i(ss_gNormal, 0)
+        Gl.glUniform1i(ss_gDepthMap, 1)
+        Gl.glUniform1i(ss_noise, 2)
+        Gl.glUniform2f(ss_screen_size, CSng(width), CSng(height))
+        Gl.glUniform3fv(ss_kernel, 64, randomFloats)
+
+        Gl.glUniformMatrix4fv(ss_prj_matrix, 1, 0, projection_s)
+        Gl.glUniformMatrix4fv(ss_mdl_Matrix, 1, 0, modelMatrix)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
+
+        Gl.glBegin(Gl.GL_QUADS)
+        '---
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+
+        Gl.glUseProgram(0)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gSSAO)
+        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, width, height, 0)
+        Dim e = Gl.glGetError
+        'Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+
+
+skip_SSAO:
+        '----------------------------------------------------------------------------------------------
+        'Lighting pass.
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        Gl.glClearColor(0.0, 0.3, 0.3, 0.0)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+
+        Gl.glUseProgram(shader_list.deferred_shader)
+
+        Gl.glUniform1i(deferred_gcolor, 0)
+        Gl.glUniform1i(deferred_gnormal, 1)
+        Gl.glUniform1i(deferred_gposition, 2)
+        Gl.glUniform1i(deferred_depthmap, 3)
+        Gl.glUniform3fv(deferred_light_position, 1, position)
+        Gl.glUniform3f(deferred_cam_position, eyeX, eyeY, eyeZ)
+        Gl.glUniform1f(deferred_bright, lighting_terrain_texture)
+        Gl.glUniform1f(deferred_gray, gray_level)
+        Gl.glUniform1f(deferred_spec, lighting_model_level)
+        Gl.glUniform1f(deferred_ambient, lighting_ambient)
+        Gl.glUniform1f(deferred_gamma, gamma_level)
+        Gl.glUniform1f(deferred_mapHeight, z_max)
+        If m_small_lights.Checked Then ' lights on?
+            Gl.glUniform3fv(deferred_lights_pos, LIGHT_COUNT_, sl_light_pos)
+            Gl.glUniform3fv(deferred_lights_color, LIGHT_COUNT_, sl_light_color)
+            Gl.glUniform1i(deferred_light_count, LIGHT_COUNT_)
+        Else
+            Gl.glUniform1i(deferred_light_count, 0) ' send zero light count if off
+        End If
+
+        Gl.glUniform1f(deferred_water_line, WATER_LINE_)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+
+
+        Gl.glBegin(Gl.GL_QUADS)
+        '---
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+
+        Gl.glUseProgram(0)
+
+        '----------------------------------------------------------------------------------------------
+        If m_FXAA.Checked Then
+            'FXAA pass.
+            Gl.glReadBuffer(Gl.GL_BACK)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+            Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+
+            Gl.glUseProgram(shader_list.FXAA_shader)
+
+            Gl.glUniform1i(fxaa_texture_in, 0)
+            Gl.glUniform1f(fxaa_rt_h, height)
+            Gl.glUniform1f(fxaa_rt_w, width)
+
+
+            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+
+
+            Gl.glBegin(Gl.GL_QUADS)
+            '---
+
+            Gl.glTexCoord2f(0.0, 1.0)
+            Gl.glVertex3f(0, 0, 0.0)
+
+            Gl.glTexCoord2f(1.0, 1.0)
+            Gl.glVertex3f(width, 0, 0.0)
+
+            Gl.glTexCoord2f(1.0, 0.0)
+            Gl.glVertex3f(width, -height, 0.0)
+
+            Gl.glTexCoord2f(0.0, 0.0)
+            Gl.glVertex3f(0, -height, 0.0)
+            Gl.glEnd()
+
+            Gl.glUseProgram(0)
+        End If
+
+        'unbind all used textures
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        '----------------------------------------------------------------------------------------------
+
+        draw_ortho_stuff()
+        Gdi.SwapBuffers(pb1_hDC)
+
+        '---------------------------------------------------------------------------------
+        If frmStats.Visible = True Then
+            total_time += swat1.ElapsedMilliseconds
+            sample_cnt += 1
+            If sample_cnt > 20 Then
+                sample_cnt = 0
+                cull_time /= 20
+                terrain_time /= 20
+                model_time /= 20
+                tree_time /= 20
+                decal_time /= 20
+                total_time /= 20
+                frmStats.rt_cull.Text = cull_time.ToString("00")
+                frmStats.rt_terrian.Text = terrain_time.ToString("00")
+                frmStats.rt_models.Text = model_time.ToString("00")
+                frmStats.rt_trees.Text = tree_time.ToString("00")
+                frmStats.rt_decals.Text = decal_time.ToString("00")
+                frmStats.rt_total.Text = total_time.ToString("00")
+                cull_time = 0
+                terrain_time = 0
+                model_time = 0
+                tree_time = 0
+                decal_time = 0
+                total_time = 0
+            End If
+        End If
+        '---------------------------------------------------------------------------------
+        If frmTestView.Visible Then
+            frmTestView.update_screen()
+        End If
+        '---------------------------------------------------------------------------------
+        autoEventScreen.Set()
+    End Sub
+
+    Private Sub draw_ortho_stuff()
         Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_CULL_FACE)
         Gl.glDisable(Gl.GL_LIGHTING)
@@ -4022,20 +3804,9 @@ skip:
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
 
 
-        If maploaded And EDIT_INCULDERS Then
-            For k = 0 To decal_matrix_list.Length - 1
-                With decal_matrix_list(k)
-                    If k = d_counter Then
-                        If decal_matrix_list(k).good Then
-                            draw_little_window(k)
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-                        End If
-                    End If
-                End With
-            Next
-        End If
 
-        If Not m_hell_mode.Checked And m_show_status.Checked Then
+
+        If m_show_status.Checked Then
             If maploaded And m_show_chuckIds.Checked Then
                 For i = 0 To maplist.Length - 2
                     If maplist(i).scr_coords(2) < 1.0 Then
@@ -4046,12 +3817,12 @@ skip:
             End If
             If maploaded And m_show_tank_names.Checked Then
                 For i = 0 To 14
-                    If locations.team_1(i).track_displaylist > -1 Then
+                    If locations.team_1(i).tank_displaylist > -1 Then
                         If locations.team_1(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_1(i).scrn_coords(0) - ((locations.team_1(i).name.Length / 2) * 8), locations.team_1(i).scrn_coords(1) - pb1.Height, locations.team_1(i).name, 1.0, 0.0, 0.0, 1.0)
                         End If
                     End If
-                    If locations.team_2(i).track_displaylist > -1 Then
+                    If locations.team_2(i).tank_displaylist > -1 Then
                         If locations.team_2(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_2(i).scrn_coords(0) - ((locations.team_2(i).name.Length / 2) * 8), locations.team_2(i).scrn_coords(1) - pb1.Height, locations.team_2(i).name, 0.0, 1.0, 0.0, 1.0)
                         End If
@@ -4061,12 +3832,12 @@ skip:
             End If
             If maploaded And m_show_tank_comments.Checked Then
                 For i = 0 To 14
-                    If locations.team_1(i).track_displaylist > -1 Then
+                    If locations.team_1(i).tank_displaylist > -1 Then
                         If locations.team_1(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_1(i).scrn_coords(0) - ((locations.team_1(i).comment.Length / 2) * 8), locations.team_1(i).scrn_coords(1) - pb1.Height - 15, locations.team_1(i).comment, 1.0, 1.0, 1.0, 1.0)
                         End If
                     End If
-                    If locations.team_2(i).track_displaylist > -1 Then
+                    If locations.team_2(i).tank_displaylist > -1 Then
                         If locations.team_2(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_2(i).scrn_coords(0) - ((locations.team_2(i).comment.Length / 2) * 8), locations.team_2(i).scrn_coords(1) - pb1.Height - 15, locations.team_2(i).comment, 1.0, 1.0, 1.0, 1.0)
                         End If
@@ -4106,16 +3877,31 @@ skip:
                 glutPrint(10, 8 - pb1.Height, str.ToString, 0.0, 1.0, 0.0, 1.0)
             End If
         End If
-        If frmStats.Visible = True Then
-            frmStats.rt_total.Text = swat1.ElapsedMilliseconds.ToString
-        End If
         'Gl.glFinish()
-        Gdi.SwapBuffers(pb1_hDC)
-        If frmTestView.Visible Then
-            frmTestView.update_screen()
+
+    End Sub
+
+    Public Sub draw_scene()
+        'Application.DoEvents()
+        If stopGL Then Return
+        gl_busy = True
+        If Not _STARTED Then Return
+        If SHOW_MAPS Then
+            gl_pick_map(mouse.X, mouse.Y)
+            gl_busy = False
+            Return
         End If
-        autoEventScreen.Set()
+        If Not maploaded Then
+            Return
+        End If
+        If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
+            MessageBox.Show("Unable to make rendering context current")
+            End
+        End If
+        draw_to_gBuffer()
         gl_busy = False
+        Return
+ 
     End Sub
 
     Public Sub draw_minimap()
@@ -4265,7 +4051,7 @@ skip:
 
         For t1 = 0 To 14
             Gl.glColor3f(0.9!, 0.0!, 0.0!)
-            If locations.team_1(t1).track_displaylist > -1 Then
+            If locations.team_1(t1).tank_displaylist > -1 Then
                 Dim lx = (((locations.team_1(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' + (ic_x * scale)
                 Dim ly = (((locations.team_1(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, tank_mini_icons(locations.team_1(t1).type))
@@ -4285,7 +4071,7 @@ skip:
                 Gl.glEnd()
             End If
             Gl.glColor3f(0.0!, 0.9!, 0.0!)
-            If locations.team_2(t1).track_displaylist > -1 Then
+            If locations.team_2(t1).tank_displaylist > -1 Then
                 Dim lx = (((locations.team_2(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_x * scale)
                 Dim ly = (((locations.team_2(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
 
@@ -4479,7 +4265,7 @@ skip:
 
         For t1 = 0 To 14
             Gl.glColor3f(0.9!, 0.0!, 0.0!)
-            If locations.team_1(t1).track_displaylist > -1 Then
+            If locations.team_1(t1).tank_displaylist > -1 Then
                 Dim lx = (((locations.team_1(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' + (ic_x * scale)
                 Dim ly = (((locations.team_1(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
                 'glutPrint(lx - ((locations.team_1(t1).name.Length / 2) * 8), ly - Psize, locations.team_1(t1).name, 1.0, 0.0, 0.0, 1.0)
@@ -4501,7 +4287,7 @@ skip:
                 Gl.glEnd()
             End If
             Gl.glColor3f(0.0!, 0.9!, 0.0!)
-            If locations.team_2(t1).track_displaylist > -1 Then
+            If locations.team_2(t1).tank_displaylist > -1 Then
                 Dim lx = (((locations.team_2(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_x * scale)
                 Dim ly = (((locations.team_2(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
                 'glutPrint(lx - ((locations.team_2(t1).name.Length / 2) * 8), ly - Psize, locations.team_2(t1).name, 0.0, 1.0, 0.0, 1.0)
@@ -4539,7 +4325,7 @@ skip:
             glutPrintBox((2) + uc.x, (-K * scale) + uc.y + (xy / 2), letters(i), 1.0!, 1.0!, 0.0!, 1.0!)
         Next
         For t1 = 0 To 14
-            If locations.team_1(t1).track_displaylist > -1 Then
+            If locations.team_1(t1).tank_displaylist > -1 Then
                 Dim lx = (((locations.team_1(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' + (ic_x * scale)
                 Dim ly = (((locations.team_1(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
                 glutPrint(lx - ((locations.team_1(t1).name.Length / 2) * 8) + 2, -ly - 2, locations.team_1(t1).name, 0.0, 0.0, 0.0, 0.3)
@@ -4547,7 +4333,7 @@ skip:
                 glutPrint(lx - ((locations.team_1(t1).name.Length / 2) * 8), -ly, locations.team_1(t1).name, 1.0, 1.0, 1.0, 1.0)
 
             End If
-            If locations.team_2(t1).track_displaylist > -1 Then
+            If locations.team_2(t1).tank_displaylist > -1 Then
                 Dim lx = (((locations.team_2(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_x * scale)
                 Dim ly = (((locations.team_2(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
                 glutPrint(lx - ((locations.team_2(t1).name.Length / 2) * 8) + 2, -ly - 2, locations.team_2(t1).name, 0.0, 0.0, 0.0, 0.3)
@@ -4820,6 +4606,39 @@ skip:
 
 #Region "pb1 mouse and other functions"
 
+    Private Sub pb1_PreviewKeyDown(sender As Object, e As PreviewKeyDownEventArgs) Handles pb1.PreviewKeyDown
+        If e.KeyCode = Keys.F Then
+            If pb1.Parent.Name = frmFullScreen.Name Then
+                pb1.Parent = Nothing
+                frmFullScreen.WindowState = FormWindowState.Normal
+                Me.Controls.Add(pb1)
+                pb1.Size = old_pb1_size
+                pb1.Location = pb1_form_location
+                pb1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right Or AnchorStyles.Top
+                frmFullScreen.Visible = False
+                frmFullScreen.Location = pb1_screen_location
+                G_Buffer.init()
+                pb1.Focus()
+                update_screen()
+            Else
+                If pb1.Parent.Name = Me.Name Then
+                    pb1_screen_location = pb1.PointToScreen(New System.Drawing.Point)
+                    pb1_form_location = pb1.Location
+                    old_pb1_size = pb1.Size
+                    pb1.Parent = Nothing
+                    frmFullScreen.Visible = True
+                    frmFullScreen.WindowState = FormWindowState.Maximized
+                    'frmFullScreen.WindowState = FormWindowState.Normal
+                    frmFullScreen.TopMost = True
+                    frmFullScreen.Controls.Add(pb1)
+                    pb1.Dock = DockStyle.Fill
+                    frmFullScreen.Location = pb1_screen_location
+                    G_Buffer.init()
+                    update_screen()
+                End If
+            End If
+        End If
+    End Sub
     Private Sub pb1_MouseDoubleClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles pb1.MouseDoubleClick
         If Not _STARTED Then Return
         Return
@@ -4856,9 +4675,6 @@ skip:
         'let the user cancel loading a map"
         If block_mouse Then Return
 
-        If view_mode Then
-            Return
-        End If
         If SHOW_MAPS Then
             If e.Button = Forms.MouseButtons.Left Then
                 If selected_map_hit = 0 And maploaded Then
@@ -4884,7 +4700,7 @@ skip:
                     Dim a1 = p_name.Split(":")
                     p_name = a1(0)
                     Dim FileName = GAME_PATH & "\res\packages\" & p_name
-                    tb1.Text = "loading map: " + r_name + vbCrLf
+                    tb1.text = "loading map: " + r_name + vbCrLf
                     Me.Text = r_name
                     View_Radius = -150
                     look_point_X = 0.0 : look_point_Y = 0.0 : look_point_Z = 0.0
@@ -4965,7 +4781,7 @@ skip:
             mouse.Y = e.Y
         End If
         If e.Button = Forms.MouseButtons.Middle Then
-      
+
             GetOGLPos(e.X, e.Y)
         End If
     End Sub
@@ -5008,7 +4824,7 @@ skip:
             Return
         End If
         If Not SHOW_MAPS Then
-            draw_scene()
+            'draw_scene()
         Else
             gl_pick_map(mouse.X, mouse.Y)
 
@@ -5184,12 +5000,14 @@ no_move_xz:
         Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z)  'maplist(map).heights(rxp, ryp) ' + 1
         look_point_Y = Z_Cursor ' + 5
     End Sub
-
+    Dim first_unused_texture As Integer = 0
     Public Sub flush_data()
         M_DOWN = False
         'let the user know whats going on
         'Try
-        tb1.Text = "Removing Previous map Data.."
+        If first_unused_texture > 0 Then
+            tb1.text = "Removing Previous map Data.."
+        End If
 
         Dim er = Gl.glGetError
         Dim top As Integer = 0
@@ -5204,9 +5022,14 @@ no_move_xz:
         '    Gl.glGetIntegerv(Gl.GL_TEXTURE_BINDING_2D, t_id)
         '    'Console.WriteLine("bound id" + t_id.ToString)
         'Next
-
+        'Im so tired of having to change the starting texture to delete from, I'm automating it!
+        If first_unused_texture = 0 Then
+            Dim ft As Integer
+            Gl.glGenTextures(1, ft)
+            first_unused_texture = ft
+        End If
         Try
-            For i = 3 To 3000
+            For i = first_unused_texture To 3000
                 Gl.glDeleteTextures(1, i)
                 'Il.ilBindImage(i)
                 'Ilu.iluDeleteImage(i)
@@ -5304,751 +5127,6 @@ no_move_xz:
         draw_scene()
     End Sub
 
-#Region "menu clicks"
-
-
-
-    Private Sub show_water_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub show_sectors_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub show_cursor_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub show_models_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub show_trees_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub edit_mode_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        'If Not maploaded Then
-        '    sender.checked = False
-        '    Return
-        'End If
-        If m_layout_mode.Checked Then
-            m_reset_tanks.Visible = True
-            frmTanks.Show()
-
-        Else
-            m_reset_tanks.Visible = False
-            frmTanks.Close()
-        End If
-    End Sub
-
-    Private Sub m_load_map_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_load_map.Click
-        m_comment.Text = ""
-        m_comment.Visible = False
-        SHOW_MAPS = True
-        gl_pick_map(0, 0)
-        gl_pick_map(0, 0)
-        ' map_holder.Visible = True
-        ' map_holder.Focus()
-    End Sub
-
-    Private Sub m_show_models_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_models.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-    End Sub
-
-    Private Sub m_Ambient_level_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-
-    End Sub
-
-    Private Sub m_show_trees_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_trees.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-    End Sub
-
-    Private Sub m_show_water_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_water.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-    End Sub
-
-    Private Sub m_show_cursor_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_cursor.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-    End Sub
-
-    Private Sub m_show_map_grid_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_map_grid.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-
-    End Sub
-
-    Private Sub m_show_chunks_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_chunks.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-
-    End Sub
-
-    Private Sub m_lighting_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_lighting.Click
-        If Not maploaded Then Return
-        frmLighting.Visible = True
-        get_light_settings()
-    End Sub
-
-    Private Sub HelpToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HelpToolStripMenuItem.Click
-        frmHelp.Show()
-    End Sub
-
-    Private Sub m_low_quality_trees_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_low_quality_trees.Click
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-    End Sub
-
-    Private Sub m_reset_tanks_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_reset_tanks.Click
-        frmTanks.TopMost = False
-        If MsgBox("Are you sure?", MsgBoxStyle.YesNo, "Reset Assignments.") = MsgBoxResult.Yes Then
-            frmTanks.TopMost = True
-            make_locations()
-            team_setup_selected_tank = ""
-            If ImHost And Not frmClient.server_dead Then
-                frmClient.resetClients()
-            End If
-            tankID = -1
-            frmTanks.make_btns()
-            'draw_minimap()
-            draw_scene()
-        End If
-    End Sub
-
-    Private Sub m_show_fog_Click(sender As Object, e As EventArgs)
-        If Not _STARTED Then
-            Return
-        End If
-        draw_scene()
-    End Sub
-
-    Private Sub m_host_session_Click(sender As Object, e As EventArgs) Handles m_host_session.Click
-        ImHost = True
-        frmServer.Visible = True
-        m_host_session.Enabled = False
-        m_join_session.Enabled = False
-        m_join_server_as_host.Enabled = False
-    End Sub
-
-    Private Sub m_join_session_Click(sender As Object, e As EventArgs) Handles m_join_session.Click
-        ImHost = False
-        m_join_session.Enabled = False
-        m_host_session.Enabled = False
-        m_join_server_as_host.Enabled = False
-        frmClient.Visible = True
-        frmClient.echo_window_tb.Text = ""
-        frmClient.diag_tb.Text = ""
-        frmClient.TopMost = True
-        m_show_chat.Visible = True
-        m_show_chat.Checked = True
-        m_show_chat.Text = "Hide Chat"
-
-    End Sub
-
-    Private Sub m_set_path_Click(sender As Object, e As EventArgs) Handles m_set_path.Click
-        If FolderBrowserDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
-            GAME_PATH = FolderBrowserDialog1.SelectedPath
-            My.Settings.game_path = GAME_PATH
-            My.Settings.Save()
-        End If
-    End Sub
-
-    Private Sub m_save_Click(sender As Object, e As EventArgs) Handles m_save.Click
-        If Not maploaded Then
-            MsgBox("Nothing to save.", MsgBoxStyle.Exclamation, "load a map. place some tanks.")
-            Return
-        End If
-        If SaveFileDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
-            Dim s As String = SaveFileDialog1.FileName
-            s = s.Replace(".tra", "")
-            Dim fs As New FileStream(s + ".tra", FileMode.OpenOrCreate, FileAccess.Write)
-            Dim bw As New BinaryWriter(fs)
-            Dim btn As New Button
-            bw.Write(load_map_name)
-            For i = 0 To 14
-                btn = frmTanks.SplitContainer1.Panel1.Controls(i)
-                bw.Write(locations.team_1(i).comment)
-                bw.Write(locations.team_1(i).id)    ' this is a string
-                bw.Write(locations.team_1(i).loc_x)
-                bw.Write(locations.team_1(i).loc_z)
-                bw.Write(locations.team_1(i).rot_y)
-            Next
-            For i = 0 To 14
-                btn = frmTanks.SplitContainer1.Panel2.Controls(i)
-                bw.Write(locations.team_2(i).comment)
-                bw.Write(locations.team_2(i).id)    ' this is a string
-                bw.Write(locations.team_2(i).loc_x)
-                bw.Write(locations.team_2(i).loc_z)
-                bw.Write(locations.team_2(i).rot_y)
-            Next
-            fs.Close()
-            bw.Close()
-
-        End If
-    End Sub
-
-    Private Sub m_load_Click(sender As Object, e As EventArgs) Handles m_load.Click
-        If OpenFileDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
-            maploaded = False
-            m_comment.Text = ""
-            m_comment.Visible = False
-            flush_data()
-            Dim fs As New FileStream(OpenFileDialog1.FileName, FileMode.Open, FileAccess.Read)
-            Dim br As New BinaryReader(fs)
-            Dim btn As New Button
-            frmTanks.Visible = True
-            While Not frmTanks.Visible
-
-            End While
-            load_map_name = br.ReadString
-            tankID = -1
-            Dim ma = load_map_name.Split(".")
-            For Each n In loadmaplist
-                If n.name.Contains(ma(0)) Then
-                    Me.Text = n.realname
-                    Exit For
-                End If
-            Next
-            JUST_MAP_NAME = Path.GetFileNameWithoutExtension(OpenFileDialog1.FileName)
-            open_pkg(load_map_name)
-            Dim txt As String = ""
-            For i = 0 To 29
-                uTank.comment = br.ReadString
-                uTank.id = br.ReadString
-                uTank.loc_x = br.ReadSingle
-                uTank.loc_z = br.ReadSingle
-                uTank.rot_y = br.ReadSingle
-                net_button_update()
-                Application.DoEvents()
-            Next
-            fs.Close()
-            br.Close()
-            br.Dispose()
-            tankID = -1
-            Packet_out.tankId = -1
-
-            m_reset_tanks.Visible = False
-            frmTanks.Visible = False
-            position_camera()
-            draw_scene()
-        End If
-
-
-    End Sub
-    Public Sub net_button_update()
-        If uTank.id.Length = 0 Then
-            Return
-        End If
-        Dim Id, team, b_index As Integer
-        Dim ar = uTank.id.Split("_")
-        If ar.Length > 2 Then
-            team = CInt(ar(0))
-            Id = CInt(ar(2))
-            b_index = CInt(ar(3))
-        Else
-            Return ' there is no data for this button
-        End If
-        If team = 1 Then
-            If locations.team_1(b_index).id = uTank.id Then
-                Return ' we dont want to update tanks that are already updated
-            End If
-            frmTanks.SplitContainer1.Panel1.Controls(b_index).Font = _
-                            New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackColor = Color.DarkRed
-            locations.team_1(b_index).loc_x = uTank.loc_x
-            locations.team_1(b_index).loc_z = uTank.loc_z
-            locations.team_1(b_index).rot_y = uTank.rot_y
-            locations.team_1(b_index).comment = uTank.comment
-            Select Case ar(1)
-                Case "A"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                            = a_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = a_tanks(Id).gui_string
-                    locations.team_1(b_index).name = a_tanks(Id).gui_string
-                    get_tank(a_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = _
-                        team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = a_tanks(Id).sortorder
-                Case "R"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = r_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = r_tanks(Id).gui_string
-                    locations.team_1(b_index).name = r_tanks(Id).gui_string
-                    get_tank(r_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = r_tanks(Id).sortorder
-                Case "G"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = g_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = g_tanks(Id).gui_string
-                    locations.team_1(b_index).name = g_tanks(Id).gui_string
-                    get_tank(g_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = g_tanks(Id).sortorder
-                Case "B"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = b_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = b_tanks(Id).gui_string
-                    locations.team_1(b_index).name = b_tanks(Id).gui_string
-                    get_tank(b_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = b_tanks(Id).sortorder
-                Case "F"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = f_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = f_tanks(Id).gui_string
-                    locations.team_1(b_index).name = f_tanks(Id).gui_string
-                    get_tank(f_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = f_tanks(Id).sortorder
-                Case "C"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = c_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = c_tanks(Id).gui_string
-                    locations.team_1(b_index).name = c_tanks(Id).gui_string
-                    get_tank(c_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = c_tanks(Id).sortorder
-                Case "J"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = j_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = j_tanks(Id).gui_string
-                    locations.team_1(b_index).name = j_tanks(Id).gui_string
-                    get_tank(j_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = j_tanks(Id).sortorder
-            End Select
-        Else
-            If locations.team_2(b_index).id = uTank.id Then
-                Return ' we dont want to update tanks that are already updated
-            End If
-            frmTanks.SplitContainer1.Panel2.Controls(b_index).Font = _
-                    New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackColor = Color.Green
-            locations.team_2(b_index).loc_x = uTank.loc_x
-            locations.team_2(b_index).loc_z = uTank.loc_z
-            locations.team_2(b_index).rot_y = uTank.rot_y
-            locations.team_2(b_index).comment = uTank.comment
-            Select Case ar(1)
-                Case "A"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = a_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = a_tanks(Id).gui_string
-                    locations.team_2(b_index).name = a_tanks(Id).gui_string
-                    get_tank(a_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = a_tanks(Id).sortorder
-                Case "R"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = r_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = r_tanks(Id).gui_string
-                    locations.team_2(b_index).name = r_tanks(Id).gui_string
-                    get_tank(r_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = r_tanks(Id).sortorder
-                Case "G"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = g_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = g_tanks(Id).gui_string
-                    locations.team_2(b_index).name = g_tanks(Id).gui_string
-                    get_tank(g_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = g_tanks(Id).sortorder
-                Case "B"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = b_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = b_tanks(Id).gui_string
-                    locations.team_2(b_index).name = b_tanks(Id).gui_string
-                    get_tank(b_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = b_tanks(Id).sortorder
-                Case "F"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = f_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = f_tanks(Id).gui_string
-                    locations.team_2(b_index).name = f_tanks(Id).gui_string
-                    get_tank(f_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = f_tanks(Id).sortorder
-                Case "C"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = c_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = c_tanks(Id).gui_string
-                    locations.team_2(b_index).name = c_tanks(Id).gui_string
-                    get_tank(c_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = c_tanks(Id).sortorder
-                Case "J"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = j_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = j_tanks(Id).gui_string
-                    locations.team_2(b_index).name = j_tanks(Id).gui_string
-                    get_tank(j_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = j_tanks(Id).sortorder
-            End Select
-
-        End If
-    End Sub
-
-    Private Sub m_show_chat_Click(sender As Object, e As EventArgs) Handles m_show_chat.Click
-        If m_show_chat.Checked Then
-            m_show_chat.Text = "Hide Chat"
-            frmClient.Visible = True
-        Else
-            m_show_chat.Text = "Show Chat"
-            frmClient.Visible = False
-        End If
-    End Sub
-
-    Private Sub m_info_window_Click(sender As Object, e As EventArgs) Handles m_info_window.Click
-        If m_info_window.Checked Then
-            tb1.Visible = True
-            pb1.Height = Me.ClientSize.Height - tb1.Height - mainMenu.Height - 2
-            pb1.Width = Me.ClientSize.Width
-            pb1.Location = New Point(0, mainMenu.Height + 1)
-            draw_scene()
-        Else
-            tb1.Visible = False
-            pb1.Height = Me.ClientSize.Height - mainMenu.Height
-            pb1.Width = Me.ClientSize.Width
-            pb1.Location = New Point(0, mainMenu.Height + 1)
-            draw_scene()
-        End If
-    End Sub
-
-    Private Sub m_show_chuckIds_Click(sender As Object, e As EventArgs) Handles m_show_chuckIds.Click
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_map_border_Click(sender As Object, e As EventArgs) Handles m_map_border.Click
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_fly_map_CheckedChanged(sender As Object, e As EventArgs) Handles m_fly_map.CheckedChanged
-        Cam_X_angle += angle_offset
-        'If m_fly_map.Checked Then
-        '	Timer2.Enabled = True
-        'Else
-        '	angle_offset = 0
-        '	If Not m_Orbit_Light.Checked Then
-        '		Timer2.Enabled = False
-        '	End If
-        'End If
-        If m_fly_map.Checked Then
-            M_FLY = True
-        Else
-            M_FLY = False
-        End If
-    End Sub
-
-
-    Private Sub m_join_server_as_host_Click(sender As Object, e As EventArgs) Handles m_join_server_as_host.Click
-        ImHost = True
-        m_host_session.Enabled = False
-        m_join_session.Enabled = False
-        m_join_server_as_host.Enabled = False
-        If ImHost Then
-            frmClient.Visible = True
-            frmClient.imHost_cb.Checked = True
-            m_show_chat.Visible = True
-            m_show_chat.Checked = True
-            m_show_chat.Text = "Hide Chat"
-        Else
-            'better never be here connecting as a client ;)
-        End If
-
-    End Sub
-
-    Private Sub m_show_tank_names_Click(sender As Object, e As EventArgs) Handles m_show_tank_names.Click
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_comment_DragDrop(sender As Object, e As Forms.DragEventArgs) Handles m_comment.DragDrop
-        m_comment.Text = e.Data.GetData(System.Windows.Forms.DataFormats.Text)
-    End Sub
-
-    Private Sub m_comment_DragEnter(sender As Object, e As Forms.DragEventArgs) Handles m_comment.DragEnter
-        e.Effect = Forms.DragDropEffects.Copy
-
-    End Sub
-
-    Private Sub m_comment_KeyDown(sender As Object, e As KeyEventArgs) Handles m_comment.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            Return
-        End If
-    End Sub
-
-    Private Sub m_comment_TextChanged(sender As Object, e As EventArgs) Handles m_comment.TextChanged
-        If maploaded And tankID > -1 Then
-            If tankID < 100 Then
-                locations.team_1(tankID).comment = m_comment.Text
-                Packet_out.comment = m_comment.Text
-            Else
-                locations.team_2(tankID - 100).comment = m_comment.Text
-                Packet_out.comment = m_comment.Text
-            End If
-            draw_scene()
-        End If
-    End Sub
-
-    Private Sub m_show_tank_comments_Click(sender As Object, e As EventArgs) Handles m_show_tank_comments.Click
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_comment_Click(sender As Object, e As EventArgs) Handles m_comment.Click
-
-    End Sub
-
-    Private Sub m_comment_MouseEnter(sender As Object, e As EventArgs) Handles m_comment.MouseEnter
-        m_comment.Focus()
-    End Sub
-
-    Private Sub m_render_to_bitmap_Click(sender As Object, e As EventArgs) Handles m_render_to_bitmap.Click
-        If Not maploaded Then
-            Return
-        End If
-        FrmRenderMap.Visible = True
-    End Sub
-
-    Private Sub Find_Item_menu_Click(sender As Object, e As EventArgs) Handles m_find_Item_menu.Click
-        frmFind.Show()
-        frmFind.TopMost = True
-    End Sub
-
-    <DllImport("user32.dll")> _
-    Private Shared Function GetDC(ByVal hWnd As IntPtr) As IntPtr
-
-    End Function
-
-    <DllImport("user32.dll")> _
-    Private Shared Function ReleaseDC(ByVal hWnd As IntPtr, ByVal hDC As IntPtr) As Integer
-    End Function
-    <DllImport("gdi32.dll")> _
-    Private Shared Function GetPixel(ByVal hDC As IntPtr, ByVal x As Integer, ByVal y As Integer) As UInteger
-
-    End Function
-    <DllImport("gdi32.dll")> _
-    Private Shared Function SetPixel(ByVal hDC As IntPtr, ByVal x As Integer, ByVal y As Integer, ByVal color As Integer) As Integer
-    End Function
-
-    Private Sub m_high_rez_Terrain_CheckedChanged(sender As Object, e As EventArgs) Handles m_high_rez_Terrain.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        If m_high_rez_Terrain.Checked Then
-            If Not hz_loaded Then
-                MsgBox("You will need to load a map!" + vbCrLf + "Maps are not loaded as high rez unless this is checked first.", MsgBoxStyle.Critical, "Reload Map.")
-
-            End If
-        End If
-        My.Settings.hi_rez_terra = m_high_rez_Terrain.Checked
-        draw_scene()
-    End Sub
-
-    Private Sub m_BumpMap_CheckedChanged(sender As Object, e As EventArgs)
-        If Not _STARTED Then
-            Return
-        End If
-        My.Settings.m_bumpMap = m_high_rez_Terrain.Checked
-
-    End Sub
-
-    Private Sub m_hell_mode_CheckedChanged(sender As Object, e As EventArgs) Handles m_hell_mode.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        If m_hell_mode.Checked Then
-            m_Orbit_Light.Checked = True
-        Else
-            m_Orbit_Light.CheckState = False
-            draw_scene()
-        End If
-    End Sub
-
-    Private Sub m_developer_CheckedChanged(sender As Object, e As EventArgs) Handles m_developer.CheckedChanged
-        'Warn user than show developer tools.
-        If Not _STARTED Then
-            Return
-        End If
-        If m_developer.Checked Then
-            m_edit_shaders.Visible = True
-            m_find_Item_menu.Visible = True
-            m_edit_biasing.Visible = True
-            m_post_effect_viewer.Visible = True
-            m_load_options.Visible = True
-        Else
-            m_edit_shaders.Visible = False
-            m_find_Item_menu.Visible = False
-            m_edit_biasing.Visible = False
-            m_post_effect_viewer.Visible = False
-            m_load_options.Visible = False
-        End If
-    End Sub
-
-    Private Sub m_bump_map_models_CheckedChanged(sender As Object, e As EventArgs) Handles m_bump_map_models.CheckedChanged
-        If Not _STARTED Then
-            Return
-        End If
-        If m_bump_map_models.Checked And Not model_bump_loaded Then
-            MsgBox("There are no NormalMaps loaded!" + _
-                      vbCrLf + "You will need to reload a map.", _
-                        MsgBoxStyle.Exclamation, "No NormalMaps Loaded..")
-        End If
-        draw_scene()
-    End Sub
-
-
-    Private Sub m_clear_tank_comments_Click(sender As Object, e As EventArgs) Handles m_clear_tank_comments.Click
-        If MsgBox("Are you sure you want to" + vbCrLf + _
-                     "clear all tank comments?", MsgBoxStyle.YesNo, "Clear Comments.") = MsgBoxResult.No Then
-            Return
-        Else
-            For i = 0 To 15
-                locations.team_1(i).comment = ""
-                locations.team_2(i).comment = ""
-                m_comment.Text = ""
-            Next
-            draw_scene()
-        End If
-    End Sub
-
-    Private Sub m_show_uv2_CheckedChanged(sender As Object, e As EventArgs) Handles m_show_uv2.CheckedChanged
-        If Not _STARTED Then Return
-        If m_show_uv2.Checked And Not uv2s_loaded Then
-            MsgBox("There are no UV2 Textures loaded." + vbCrLf + "You will need to reload a map.", MsgBoxStyle.Exclamation, "No UV2 Textures..")
-        End If
-        My.Settings.m_show_uv2 = m_show_uv2.Checked
-        draw_scene()
-    End Sub
-
-    Private Sub m_exit_Click(sender As Object, e As EventArgs) Handles m_exit.Click
-        Me.Close()
-    End Sub
-
-    Private Sub m_show_minimap_Click(sender As Object, e As EventArgs) Handles m_show_minimap.Click
-        If Not _STARTED Then Return
-        m_minizoom.Checked = m_show_minimap.Checked
-        draw_scene()
-    End Sub
-
-    Private Sub m_mini_up_Click(sender As Object, e As EventArgs) Handles m_mini_up.Click
-        If Not _STARTED Then Return
-        minimap_size += 32.0!
-        If minimap_size > 640.0! Then
-            minimap_size = 640.0!
-        End If
-        'tb1.Text = "Minimap size: " + minimap_size.ToString
-        My.Settings.minimap_size = minimap_size
-        draw_scene()
-
-    End Sub
-
-
-    Private Sub m_minizoom_Click(sender As Object, e As EventArgs) Handles m_minizoom.Click
-        If Not _STARTED Then Return
-        m_show_minimap.Checked = m_minizoom.Checked
-        draw_scene()
-    End Sub
-
-    Private Sub m_show_status_Click(sender As Object, e As EventArgs) Handles m_show_status.Click
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_wire_decals_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_decals.CheckedChanged
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_wire_terrain_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_terrain.CheckedChanged
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_wire_trees_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_trees.CheckedChanged
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_wire_models_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_models.CheckedChanged
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-    Private Sub m_show_decals_CheckedChanged(sender As Object, e As EventArgs) Handles m_show_decals.CheckedChanged
-        If Not _STARTED Then Return
-        draw_scene()
-    End Sub
-
-
-    Private Sub m_edit_biasing_Click(sender As Object, e As EventArgs) Handles m_edit_biasing.Click
-        If Not frmBiasing.Visible Then
-            frmBiasing.Show()
-        End If
-    End Sub
-
-    Private Sub m_post_effect_viewer_Click(sender As Object, e As EventArgs) Handles m_post_effect_viewer.Click
-        frmTestView.Visible = True
-    End Sub
-
-    Private Sub m_render_stats_Click(sender As Object, e As EventArgs) Handles m_render_stats.Click
-        frmStats.Show()
-    End Sub
-
-
-    Private Sub m_map_info_Click(sender As Object, e As EventArgs) Handles m_map_info.Click
-        frmMapInfo.Show()
-    End Sub
-
-
-    Private Sub m_load_options_Click(sender As Object, e As EventArgs) Handles m_load_options.Click
-        frmLoadOptions.Show()
-    End Sub
-
-#End Region
 
 #Region "pb2 functions"
     Private Sub pb2_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles pb2.MouseDoubleClick
@@ -6480,24 +5558,24 @@ no_move_xz:
 
     End Sub
     Private mouse_moved As Boolean = False
-    Dim activity As Boolean = True
+    Public activity As Boolean = True
+    Dim timeout As Integer
     Private Sub screen_updater()
         'This will run for the duration that Terra! is open.
         'Its in a closed loop
         Dim swat As New Stopwatch
-        Dim timeout As Integer
         While _STARTED
             If mouse_moved Then
                 swat.Start()
                 activity = True
                 timeout = 0
             End If
-            activity = fly(activity)
-            If activity Then
+            If activity And Not stopGL Then
+                timeout = fly(timeout)
                 'If we need to update the screen, lets caclulate draw times and update the timer.
                 If swat.ElapsedMilliseconds >= 1000 Then
                     timeout += 1
-                    If timeout = 10 Then
+                    If timeout >= 10 Then
                         activity = False
                         screen_totaled_draw_time = 0
                         swat.Stop()
@@ -6516,7 +5594,7 @@ no_move_xz:
                 End If
                 autoEventScreen.WaitOne(300)
             End If
-            Thread.Sleep(5)
+            Thread.Sleep(3)
         End While
     End Sub
 
@@ -6554,6 +5632,8 @@ no_move_xz:
             old_light_position.x = position(0)
             old_light_position.y = position(1)
             old_light_position.z = position(2)
+            timeout = 0
+            activity = True
         Else
             'position(0) = old_light_position.x
             'position(1) = old_light_position.y
@@ -6561,14 +5641,16 @@ no_move_xz:
         End If
     End Sub
     Dim lx_light, ly_light, lz_light As Single
-    Public Function fly(ByVal activity As Boolean) As Boolean
+    Public Function fly(ByVal time_out As Integer) As Integer
         'Dim swat As New Stopwatch
         'While m_fly_map.Checked Or m_Orbit_Light.Checked
-
+        If stopGL Then
+            Return False
+        End If
         'scale = 700.0
         If m_fly_map.Checked And maploaded Then
-            FLY_ = True
-            activity = True
+            'FLY_ = True
+            time_out = 0
             view_rot += 0.002
             look_point_X = Cos(view_rot) * MAP_BB_UR.x - 50.0
             look_point_Z = Sin(view_rot) * MAP_BB_UR.x - 50.0
@@ -6579,7 +5661,7 @@ no_move_xz:
             look_point_Y = cam_y
             angle_offset = -view_rot - (PI * 0.1)
 
-          
+
             If view_rot > 2 * PI Then
                 view_rot -= (2 * PI)
             End If
@@ -6588,11 +5670,12 @@ no_move_xz:
             angle_offset = 0
         End If
         If m_Orbit_Light.Checked And maploaded Then
-            activity = True
+            time_out = 0
             'scale = 1000.0
             light_rot += 0.015
-            lx_light = Cos(light_rot) * (MAP_BB_UR.x * 0.75)
-            lz_light = Sin(light_rot) * (MAP_BB_UR.x * 0.75)
+            Dim radius As Single = MAP_BB_UR.x
+            lx_light = Cos(light_rot) * radius
+            lz_light = Sin(light_rot) * radius
             ly_light = 400.0 'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z) ' + 1
             'ly_light = get_Z_at_XY(lx_light, lz_light) + 150.0
             position(0) = lx_light 'u_look_point_X - lx
@@ -6607,7 +5690,7 @@ no_move_xz:
         Else
 
         End If
-        Return activity
+        Return time_out
 
     End Function
 
@@ -6624,6 +5707,740 @@ no_move_xz:
         mouse_update_thread.Start()
     End Sub
 #End Region
+#Region "menu clicks"
+
+
+
+    Private Sub show_water_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub show_sectors_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub show_cursor_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub show_models_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub show_trees_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+
+
+    Private Sub m_layout_mode_CheckedChanged(sender As Object, e As EventArgs) Handles m_layout_mode.CheckedChanged
+        If Not _STARTED Then Return
+        stopGL = True
+        While gl_busy
+            Application.DoEvents()
+        End While
+        If m_layout_mode.Checked Then
+            m_comment.Visible = True
+            m_clear_tank_comments.Visible = True
+            m_comment.AllowDrop = True
+            m_reset_tanks.Visible = True
+            frmTanks.Show()
+        Else
+            m_comment.Visible = False
+            m_clear_tank_comments.Visible = False
+            m_reset_tanks.Visible = False
+            frmTanks.Close()
+        End If
+        stopGL = False
+    End Sub
+
+    Private Sub m_load_map_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_load_map.Click
+        m_comment.Text = ""
+        m_comment.Visible = False
+        SHOW_MAPS = True
+        gl_pick_map(0, 0)
+        gl_pick_map(0, 0)
+        ' map_holder.Visible = True
+        ' map_holder.Focus()
+    End Sub
+
+    Private Sub m_show_models_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_models.CheckedChanged
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+    End Sub
+
+    Private Sub m_Ambient_level_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+
+    End Sub
+
+    Private Sub m_show_trees_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_trees.CheckedChanged
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+    End Sub
+
+    Private Sub m_show_water_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_water.CheckedChanged
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+    End Sub
+
+    Private Sub m_show_cursor_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_cursor.CheckedChanged
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+    End Sub
+
+    Private Sub m_show_map_grid_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_map_grid.CheckedChanged
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+
+    End Sub
+
+    Private Sub m_show_chunks_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_chunks.CheckedChanged
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+
+    End Sub
+
+    Private Sub m_lighting_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_lighting.Click
+        If Not maploaded Then Return
+        frmLighting.Visible = True
+        get_light_settings()
+    End Sub
+
+    Private Sub HelpToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HelpToolStripMenuItem.Click
+        frmHelp.Show()
+    End Sub
+
+    Private Sub m_low_quality_trees_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_low_quality_trees.Click
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+    End Sub
+
+    Private Sub m_reset_tanks_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_reset_tanks.Click
+        frmTanks.TopMost = False
+        If MsgBox("Are you sure?", MsgBoxStyle.YesNo, "Reset Assignments.") = MsgBoxResult.Yes Then
+            frmTanks.TopMost = True
+            make_locations()
+            team_setup_selected_tank = ""
+            If ImHost And Not frmClient.server_dead Then
+                frmClient.resetClients()
+            End If
+            tankID = -1
+            frmTanks.make_btns()
+            'draw_minimap()
+            draw_scene()
+        End If
+    End Sub
+
+    Private Sub m_show_fog_Click(sender As Object, e As EventArgs)
+        If Not _STARTED Then
+            Return
+        End If
+        draw_scene()
+    End Sub
+
+    Private Sub m_host_session_Click(sender As Object, e As EventArgs) Handles m_host_session.Click
+        ImHost = True
+        frmServer.Visible = True
+        m_host_session.Enabled = False
+        m_join_session.Enabled = False
+        m_join_server_as_host.Enabled = False
+    End Sub
+
+    Private Sub m_join_session_Click(sender As Object, e As EventArgs) Handles m_join_session.Click
+        ImHost = False
+        m_join_session.Enabled = False
+        m_host_session.Enabled = False
+        m_join_server_as_host.Enabled = False
+        frmClient.Visible = True
+        frmClient.echo_window_tb.Text = ""
+        frmClient.diag_tb.Text = ""
+        frmClient.TopMost = True
+        m_show_chat.Visible = True
+        m_show_chat.Checked = True
+        m_show_chat.Text = "Hide Chat"
+
+    End Sub
+
+    Private Sub m_set_path_Click(sender As Object, e As EventArgs) Handles m_set_path.Click
+        If FolderBrowserDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
+            GAME_PATH = FolderBrowserDialog1.SelectedPath
+            My.Settings.game_path = GAME_PATH
+            My.Settings.Save()
+        End If
+    End Sub
+
+    Private Sub m_save_Click(sender As Object, e As EventArgs) Handles m_save.Click
+        If Not maploaded Then
+            MsgBox("Nothing to save.", MsgBoxStyle.Exclamation, "load a map. place some tanks.")
+            Return
+        End If
+        If SaveFileDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
+            Dim s As String = SaveFileDialog1.FileName
+            s = s.Replace(".tra", "")
+            Dim fs As New FileStream(s + ".tra", FileMode.OpenOrCreate, FileAccess.Write)
+            Dim bw As New BinaryWriter(fs)
+            Dim btn As New Button
+            bw.Write(load_map_name)
+            For i = 0 To 14
+                btn = frmTanks.SplitContainer1.Panel1.Controls(i)
+                bw.Write(locations.team_1(i).comment)
+                bw.Write(locations.team_1(i).id)    ' this is a string
+                bw.Write(locations.team_1(i).loc_x)
+                bw.Write(locations.team_1(i).loc_z)
+                bw.Write(locations.team_1(i).rot_y)
+            Next
+            For i = 0 To 14
+                btn = frmTanks.SplitContainer1.Panel2.Controls(i)
+                bw.Write(locations.team_2(i).comment)
+                bw.Write(locations.team_2(i).id)    ' this is a string
+                bw.Write(locations.team_2(i).loc_x)
+                bw.Write(locations.team_2(i).loc_z)
+                bw.Write(locations.team_2(i).rot_y)
+            Next
+            fs.Close()
+            bw.Close()
+
+        End If
+    End Sub
+
+    Private Sub m_load_Click(sender As Object, e As EventArgs) Handles m_load.Click
+        If OpenFileDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
+            maploaded = False
+            m_comment.Text = ""
+            m_comment.Visible = False
+            flush_data()
+            Dim fs As New FileStream(OpenFileDialog1.FileName, FileMode.Open, FileAccess.Read)
+            Dim br As New BinaryReader(fs)
+            Dim btn As New Button
+            frmTanks.Visible = True
+            While Not frmTanks.Visible
+
+            End While
+            load_map_name = br.ReadString
+            tankID = -1
+            Dim ma = load_map_name.Split(".")
+            For Each n In loadmaplist
+                If n.name.Contains(ma(0)) Then
+                    Me.Text = n.realname
+                    Exit For
+                End If
+            Next
+            JUST_MAP_NAME = Path.GetFileNameWithoutExtension(OpenFileDialog1.FileName)
+            open_pkg(load_map_name)
+            Dim txt As String = ""
+            For i = 0 To 29
+                uTank.comment = br.ReadString
+                uTank.id = br.ReadString
+                uTank.loc_x = br.ReadSingle
+                uTank.loc_z = br.ReadSingle
+                uTank.rot_y = br.ReadSingle
+                net_button_update()
+                Application.DoEvents()
+            Next
+            fs.Close()
+            br.Close()
+            br.Dispose()
+            tankID = -1
+            Packet_out.tankId = -1
+
+            m_reset_tanks.Visible = False
+            frmTanks.Visible = False
+            position_camera()
+            draw_scene()
+        End If
+
+
+    End Sub
+    Public Sub net_button_update()
+        If uTank.id.Length = 0 Then
+            Return
+        End If
+        Dim Id, team, b_index As Integer
+        Dim ar = uTank.id.Split("_")
+        If ar.Length > 2 Then
+            team = CInt(ar(0))
+            Id = CInt(ar(2))
+            b_index = CInt(ar(3))
+        Else
+            Return ' there is no data for this button
+        End If
+        If team = 1 Then
+            If locations.team_1(b_index).id = uTank.id Then
+                Return ' we dont want to update tanks that are already updated
+            End If
+            frmTanks.SplitContainer1.Panel1.Controls(b_index).Font = _
+                            New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
+            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackColor = Color.DarkRed
+            locations.team_1(b_index).loc_x = uTank.loc_x
+            locations.team_1(b_index).loc_z = uTank.loc_z
+            locations.team_1(b_index).rot_y = uTank.rot_y
+            locations.team_1(b_index).comment = uTank.comment
+            Select Case ar(1)
+                Case "A"
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                            = a_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = a_tanks(Id).gui_string
+                    locations.team_1(b_index).name = a_tanks(Id).gui_string
+                    get_tank(a_tanks(Id).file_name, locations.team_1(b_index))
+                    locations.team_1(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = _
+                        team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_1(b_index).type = a_tanks(Id).sortorder
+                Case "R"
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                    = r_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = r_tanks(Id).gui_string
+                    locations.team_1(b_index).name = r_tanks(Id).gui_string
+                    get_tank(r_tanks(Id).file_name, locations.team_1(b_index))
+                    locations.team_1(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_1(b_index).type = r_tanks(Id).sortorder
+                Case "G"
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                    = g_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = g_tanks(Id).gui_string
+                    locations.team_1(b_index).name = g_tanks(Id).gui_string
+                    get_tank(g_tanks(Id).file_name, locations.team_1(b_index))
+                    locations.team_1(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_1(b_index).type = g_tanks(Id).sortorder
+                Case "B"
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                    = b_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = b_tanks(Id).gui_string
+                    locations.team_1(b_index).name = b_tanks(Id).gui_string
+                    get_tank(b_tanks(Id).file_name, locations.team_1(b_index))
+                    locations.team_1(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_1(b_index).type = b_tanks(Id).sortorder
+                Case "F"
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                    = f_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = f_tanks(Id).gui_string
+                    locations.team_1(b_index).name = f_tanks(Id).gui_string
+                    get_tank(f_tanks(Id).file_name, locations.team_1(b_index))
+                    locations.team_1(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_1(b_index).type = f_tanks(Id).sortorder
+                Case "C"
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                    = c_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = c_tanks(Id).gui_string
+                    locations.team_1(b_index).name = c_tanks(Id).gui_string
+                    get_tank(c_tanks(Id).file_name, locations.team_1(b_index))
+                    locations.team_1(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_1(b_index).type = c_tanks(Id).sortorder
+                Case "J"
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                    = j_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = j_tanks(Id).gui_string
+                    locations.team_1(b_index).name = j_tanks(Id).gui_string
+                    get_tank(j_tanks(Id).file_name, locations.team_1(b_index))
+                    locations.team_1(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_1(b_index).type = j_tanks(Id).sortorder
+            End Select
+        Else
+            If locations.team_2(b_index).id = uTank.id Then
+                Return ' we dont want to update tanks that are already updated
+            End If
+            frmTanks.SplitContainer1.Panel2.Controls(b_index).Font = _
+                    New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
+            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackColor = Color.Green
+            locations.team_2(b_index).loc_x = uTank.loc_x
+            locations.team_2(b_index).loc_z = uTank.loc_z
+            locations.team_2(b_index).rot_y = uTank.rot_y
+            locations.team_2(b_index).comment = uTank.comment
+            Select Case ar(1)
+                Case "A"
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                    = a_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = a_tanks(Id).gui_string
+                    locations.team_2(b_index).name = a_tanks(Id).gui_string
+                    get_tank(a_tanks(Id).file_name, locations.team_2(b_index))
+                    locations.team_2(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_2(b_index).type = a_tanks(Id).sortorder
+                Case "R"
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                    = r_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = r_tanks(Id).gui_string
+                    locations.team_2(b_index).name = r_tanks(Id).gui_string
+                    get_tank(r_tanks(Id).file_name, locations.team_2(b_index))
+                    locations.team_2(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_2(b_index).type = r_tanks(Id).sortorder
+                Case "G"
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                    = g_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = g_tanks(Id).gui_string
+                    locations.team_2(b_index).name = g_tanks(Id).gui_string
+                    get_tank(g_tanks(Id).file_name, locations.team_2(b_index))
+                    locations.team_2(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_2(b_index).type = g_tanks(Id).sortorder
+                Case "B"
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                    = b_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = b_tanks(Id).gui_string
+                    locations.team_2(b_index).name = b_tanks(Id).gui_string
+                    get_tank(b_tanks(Id).file_name, locations.team_2(b_index))
+                    locations.team_2(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_2(b_index).type = b_tanks(Id).sortorder
+                Case "F"
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                    = f_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = f_tanks(Id).gui_string
+                    locations.team_2(b_index).name = f_tanks(Id).gui_string
+                    get_tank(f_tanks(Id).file_name, locations.team_2(b_index))
+                    locations.team_2(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_2(b_index).type = f_tanks(Id).sortorder
+                Case "C"
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                    = c_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = c_tanks(Id).gui_string
+                    locations.team_2(b_index).name = c_tanks(Id).gui_string
+                    get_tank(c_tanks(Id).file_name, locations.team_2(b_index))
+                    locations.team_2(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_2(b_index).type = c_tanks(Id).sortorder
+                Case "J"
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                    = j_tanks(Id).image
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = j_tanks(Id).gui_string
+                    locations.team_2(b_index).name = j_tanks(Id).gui_string
+                    get_tank(j_tanks(Id).file_name, locations.team_2(b_index))
+                    locations.team_2(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                    locations.team_2(b_index).type = j_tanks(Id).sortorder
+            End Select
+
+        End If
+    End Sub
+
+    Private Sub m_show_chat_Click(sender As Object, e As EventArgs) Handles m_show_chat.Click
+        If m_show_chat.Checked Then
+            m_show_chat.Text = "Hide Chat"
+            frmClient.Visible = True
+        Else
+            m_show_chat.Text = "Show Chat"
+            frmClient.Visible = False
+        End If
+    End Sub
+
+    Private Sub m_info_window_Click(sender As Object, e As EventArgs) Handles m_info_window.Click
+        If m_info_window.Checked Then
+            FrmInfoWindow.Visible = True
+            pb1.Focus()
+        Else
+            FrmInfoWindow.Visible = False
+            pb1.Focus()
+        End If
+    End Sub
+
+    Private Sub m_show_chuckIds_Click(sender As Object, e As EventArgs) Handles m_show_chuckIds.Click
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_map_border_Click(sender As Object, e As EventArgs) Handles m_map_border.Click
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_fly_map_CheckedChanged(sender As Object, e As EventArgs) Handles m_fly_map.CheckedChanged
+        Cam_X_angle += angle_offset
+        If m_fly_map.Checked Then
+            timeout = 0
+            activity = True
+        End If
+    End Sub
+
+
+    Private Sub m_join_server_as_host_Click(sender As Object, e As EventArgs) Handles m_join_server_as_host.Click
+        ImHost = True
+        m_host_session.Enabled = False
+        m_join_session.Enabled = False
+        m_join_server_as_host.Enabled = False
+        If ImHost Then
+            frmClient.Visible = True
+            frmClient.imHost_cb.Checked = True
+            m_show_chat.Visible = True
+            m_show_chat.Checked = True
+            m_show_chat.Text = "Hide Chat"
+        Else
+            'better never be here connecting as a client ;)
+        End If
+
+    End Sub
+
+    Private Sub m_show_tank_names_Click(sender As Object, e As EventArgs) Handles m_show_tank_names.Click
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_comment_DragDrop(sender As Object, e As Forms.DragEventArgs) Handles m_comment.DragDrop
+        m_comment.Text = e.Data.GetData(System.Windows.Forms.DataFormats.Text)
+    End Sub
+
+    Private Sub m_comment_DragEnter(sender As Object, e As Forms.DragEventArgs) Handles m_comment.DragEnter
+        e.Effect = Forms.DragDropEffects.Copy
+
+    End Sub
+
+    Private Sub m_comment_KeyDown(sender As Object, e As KeyEventArgs) Handles m_comment.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            Return
+        End If
+    End Sub
+
+    Private Sub m_comment_TextChanged(sender As Object, e As EventArgs) Handles m_comment.TextChanged
+        If maploaded And tankID > -1 Then
+            If tankID < 100 Then
+                locations.team_1(tankID).comment = m_comment.Text
+                Packet_out.comment = m_comment.Text
+            Else
+                locations.team_2(tankID - 100).comment = m_comment.Text
+                Packet_out.comment = m_comment.Text
+            End If
+            draw_scene()
+        End If
+    End Sub
+
+    Private Sub m_show_tank_comments_Click(sender As Object, e As EventArgs) Handles m_show_tank_comments.Click
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_comment_Click(sender As Object, e As EventArgs) Handles m_comment.Click
+
+    End Sub
+
+    Private Sub m_comment_MouseEnter(sender As Object, e As EventArgs) Handles m_comment.MouseEnter
+        m_comment.Focus()
+    End Sub
+
+    Private Sub m_render_to_bitmap_Click(sender As Object, e As EventArgs) Handles m_render_to_bitmap.Click
+        If Not maploaded Then
+            Return
+        End If
+        FrmRenderMap.Visible = True
+    End Sub
+
+    Private Sub Find_Item_menu_Click(sender As Object, e As EventArgs) Handles m_find_Item_menu.Click
+        frmFind.Show()
+        frmFind.TopMost = True
+    End Sub
+
+    <DllImport("user32.dll")> _
+    Private Shared Function GetDC(ByVal hWnd As IntPtr) As IntPtr
+
+    End Function
+
+    <DllImport("user32.dll")> _
+    Private Shared Function ReleaseDC(ByVal hWnd As IntPtr, ByVal hDC As IntPtr) As Integer
+    End Function
+    <DllImport("gdi32.dll")> _
+    Private Shared Function GetPixel(ByVal hDC As IntPtr, ByVal x As Integer, ByVal y As Integer) As UInteger
+
+    End Function
+    <DllImport("gdi32.dll")> _
+    Private Shared Function SetPixel(ByVal hDC As IntPtr, ByVal x As Integer, ByVal y As Integer, ByVal color As Integer) As Integer
+    End Function
+
+    Private Sub m_high_rez_Terrain_CheckedChanged(sender As Object, e As EventArgs) Handles m_high_rez_Terrain.CheckedChanged
+        If Not _STARTED Then
+            Return
+        End If
+        If m_high_rez_Terrain.Checked Then
+            If Not hz_loaded Then
+                MsgBox("You will need to load a map!" + vbCrLf + "Maps are not loaded as high rez unless this is checked first.", MsgBoxStyle.Critical, "Reload Map.")
+
+            End If
+        End If
+        My.Settings.hi_rez_terra = m_high_rez_Terrain.Checked
+        draw_scene()
+    End Sub
+
+    Private Sub m_BumpMap_CheckedChanged(sender As Object, e As EventArgs)
+        If Not _STARTED Then
+            Return
+        End If
+        My.Settings.m_bumpMap = m_high_rez_Terrain.Checked
+
+    End Sub
+
+
+    Private Sub m_developer_CheckedChanged(sender As Object, e As EventArgs) Handles m_developer.CheckedChanged
+        'Warn user than show developer tools.
+        If Not _STARTED Then
+            Return
+        End If
+        If m_developer.Checked Then
+            m_edit_shaders.Visible = True
+            m_find_Item_menu.Visible = True
+            m_post_effect_viewer.Visible = True
+            m_load_options.Visible = True
+        Else
+            m_edit_shaders.Visible = False
+            m_find_Item_menu.Visible = False
+            m_post_effect_viewer.Visible = False
+            m_load_options.Visible = False
+        End If
+    End Sub
+
+
+
+    Private Sub m_clear_tank_comments_Click(sender As Object, e As EventArgs) Handles m_clear_tank_comments.Click
+        If MsgBox("Are you sure you want to" + vbCrLf + _
+                     "clear all tank comments?", MsgBoxStyle.YesNo, "Clear Comments.") = MsgBoxResult.No Then
+            Return
+        Else
+            For i = 0 To 15
+                locations.team_1(i).comment = ""
+                locations.team_2(i).comment = ""
+                m_comment.Text = ""
+            Next
+            draw_scene()
+        End If
+    End Sub
+
+    Private Sub m_show_uv2_CheckedChanged(sender As Object, e As EventArgs) Handles m_show_uv2.CheckedChanged
+        If Not _STARTED Then Return
+        If m_show_uv2.Checked And Not uv2s_loaded Then
+            MsgBox("There are no UV2 Textures loaded." + vbCrLf + "You will need to reload a map.", MsgBoxStyle.Exclamation, "No UV2 Textures..")
+        End If
+        My.Settings.m_show_uv2 = m_show_uv2.Checked
+        draw_scene()
+    End Sub
+
+    Private Sub m_exit_Click(sender As Object, e As EventArgs) Handles m_exit.Click
+        Me.Close()
+    End Sub
+
+    Private Sub m_show_minimap_Click(sender As Object, e As EventArgs) Handles m_show_minimap.Click
+        If Not _STARTED Then Return
+        m_minizoom.Checked = m_show_minimap.Checked
+        update_screen()
+    End Sub
+
+    Private Sub m_mini_up_Click(sender As Object, e As EventArgs) Handles m_mini_up.Click
+        If Not _STARTED Then Return
+        minimap_size += 32.0!
+        If minimap_size > 640.0! Then
+            minimap_size = 640.0!
+        End If
+        'tb1.Text = "Minimap size: " + minimap_size.ToString
+        My.Settings.minimap_size = minimap_size
+        update_screen()
+
+    End Sub
+
+
+    Private Sub m_minizoom_Click(sender As Object, e As EventArgs) Handles m_minizoom.Click
+        If Not _STARTED Then Return
+        m_show_minimap.Checked = m_minizoom.Checked
+        update_screen()
+    End Sub
+    Private Sub m_mini_down_Click(sender As Object, e As EventArgs) Handles m_mini_down.Click
+        If Not _STARTED Then Return
+        minimap_size -= 32.0!
+        If minimap_size <= 160.0! Then
+            minimap_size = 160.0!
+        End If
+        My.Settings.minimap_size = minimap_size
+        update_screen()
+    End Sub
+
+    Private Sub m_show_status_Click(sender As Object, e As EventArgs) Handles m_show_status.Click
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_wire_decals_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_decals.CheckedChanged
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_wire_terrain_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_terrain.CheckedChanged
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_wire_trees_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_trees.CheckedChanged
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_wire_models_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_models.CheckedChanged
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+    Private Sub m_show_decals_CheckedChanged(sender As Object, e As EventArgs) Handles m_show_decals.CheckedChanged
+        If Not _STARTED Then Return
+        draw_scene()
+    End Sub
+
+
+
+    Private Sub m_post_effect_viewer_Click(sender As Object, e As EventArgs) Handles m_post_effect_viewer.Click
+        frmTestView.Visible = True
+    End Sub
+
+    Private Sub m_render_stats_Click(sender As Object, e As EventArgs) Handles m_render_stats.Click
+        frmStats.Show()
+    End Sub
+
+
+    Private Sub m_map_info_Click(sender As Object, e As EventArgs) Handles m_map_info.Click
+        frmMapInfo.Show()
+    End Sub
+
+    Private Sub m_load_options_Click(sender As Object, e As EventArgs) Handles m_load_options.Click
+        frmLoadOptions.Show()
+    End Sub
+
+    Private Sub m_FXAA_CheckedChanged(sender As Object, e As EventArgs) Handles m_FXAA.CheckedChanged
+        If Not _STARTED Then Return
+        update_screen()
+    End Sub
+
+    Private Sub m_small_lights_CheckedChanged(sender As Object, e As EventArgs) Handles m_small_lights.CheckedChanged
+        If Not _STARTED Then Return
+        If LIGHT_COUNT_ = 0 Then
+            make_lights()
+            If maploaded Then
+                find_street_lights()
+            End If
+        End If
+        update_screen()
+    End Sub
+
+#End Region
+
 
 End Class
 

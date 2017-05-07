@@ -17,8 +17,8 @@
     Public Structure primitive
         Public _count As Integer
         Public componets() As Model_Section
-
-
+        Public pass2 As Boolean 'Used to render buildings only on first pass. Its decal rendering logic.
+        Public visible As Boolean
     End Structure
     Public Structure Model_Section
         Public callList_ID As Int32

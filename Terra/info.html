@@ -5,7 +5,7 @@ body,td,th {
 	color: #FFFFFF;
 }
 body {
-	background-color: #333333;
+	background-color: #202020;
 }
 .style1 {
 	font-size: 18px;
@@ -32,6 +32,10 @@ a:active {
 .style14 {
 	font-family: Terminal;
 	font-size: 12px;
+}
+.style15 {
+	color: #0099FF;
+	font-size: 18px;
 }
 -->
 </style>
@@ -78,18 +82,36 @@ W : Water on/off<br />
 M : Models on/off<br />
 T : Trees on/off<br />
 D : Decals on/off<br />
-H : Hell Mode<br />
+F : Full Scren mode on/off.
+<br />
 </span></p>
-<p class="style14"> 1 : Decals as wire models <br />
-  2 : Models as wire models<br />
-  3 : Trees as wire models<br />
-  4 : Terrain as wire model</p>
+<p class="style14">You may need to turn Ambient up to see these clear. <br />
+  1 : Decal bounding boxes.<br />
+  2 : Models as wire models.<br />
+  3 : Trees as wire models. Does not draw leaf cards. <br />
+4 : Terrain as wire model.</p>
 <p><span class="style14">F1 : Hide Info Window <br />
   F2 : Rotale Light<br />
   F3 : Fly Mode</span><br />
-  <br />
-</p>
-<p>Double clicking the main render window will put Terra! in full screen mode. Double click again to restore to normal mode. </p>
+  <br /> 
+  <span class="style15">Terra has undergone a complete rewrite of the rendering process.</span><br />
+  Before, everything was done doing what is known as &quot;Forward rendering&quot;.<br />
+  Now.. it is done using &quot;<a href="https://gamedevelopment.tutsplus.com/articles/forward-rendering-vs-deferred-rendering--gamedev-12342">Deferred Rendering</a>&quot;. The advantage of this method is<br />
+the lighting caculations are done only on the pixels that are visible on the screen.<br />
+This saves a lot of time and speeds things up drastically. Also, you can have many<br />
+lights in the scene. As of now, there is only one.. the Sun light position.<br />
+I added FXAA anti-aliasing to the final stage and the results are acceptable.<br />
+There are newer and better versions of FXAA coming out so in time this will be improved.<br />
+The down side to Deferred Rendering is the memory the buffers use. This is the first version<br />
+of the new rendering pipeline and will be improved as time allows.<br />
+Decals are now projected and use NO mesh what so ever to render them.<br />
+They are painted directly
+  on the screen. This is a farily complicated process because<br />
+  they must be blended and the normal maps
+  have to be blended as well.<br />
+  This requires 2 full buffer reads per render loop.<br />
+  My GTX 660 Ti has no problem handling this but slower low memory cards<br />
+might choke on the bandwidth required. </p>
 <p><span class="style6">When you first start up Terra!, you may need to set the path to the World of Tanks root folder.<br />
   </span>You can do this under the File menu item. After you navigate to the folder &quot;World of Tanks&quot; and click OK, Terra! will close.<br />
 This is because many of the GUI items need to load in order for Terra! to run correctly. Terra! will remember this path so you wont need to set it every time you start Terra! </p>
@@ -132,7 +154,9 @@ So the basic process of creating a team goes like this.<br />
   5. Move the cursor to where you want the next tank (SHIFT + MOUSE DRAG) and pick the next open team position, select the tank for it and .. keep repeating this until all your tanks are placed where you like them. If you don't like where a tank is, move it by selecting it and moving and rotating it to how you like. You can reset the layout by clicking.. Oddly enough.. the Reset Layout menu item.. This will ask you if you are 100% sure as it can NOT be undone. Once you have your teams the way you like, Save it.. I would use names like &quot;Air Field-Plan A&quot;  or &quot;Fjords Setup 1&quot; or.. you could even include a date. <br />
   <span class="style6">NOTE:</span> The engine does not care where you place a tank.. Be aware that in the game, there are places tanks can NEVER get to so placing tanks on top of a mountain may look cool, in the real world of tanks, a tank could never make it there.<br />
 </p>
-<p><span class="style6">WANs, LANs and Sessions.</span><span class="style6"><br />
+<p><span class="style6">WANs, LANs and Sessions.<br />
+</span><span class="style6">All of this has proven to be problematic and near useless.<br />
+  I should remove it all at some point. <br />
 </span>Terra! has a build in server which allows your Clan mates to participate in the design process.<br />
 The Server and Client base code is from a man with the name of Lidgren. It is a fantastic DLL which makes multi-client supported servers much easier to implement. <br />
   <span class="style6">To host a session</span>, click 'Host a Session' from the Session menu item.<br />
@@ -146,7 +170,7 @@ Although this window is small, there is a tremendous amount of code behind it. <
   You will need to know your WAN in order for others to connect to Terra!.When people connect to you, they will enter your WAN IP. Port forwarding will pass the port to your computer and the connection will be made. <br />
   LAN addresses always look like this: 192.168.xx.xx. Don't get this confused with WAN addresses. The Host server will listen on the IP that says 'Your WAN IP'. If this address is not correct, the host will be listening but not on your actual IP and so.. it wont be able to detect any in coming connection request.<br />
   Terra! will remember what you put in the setup boxes so you wont need to do it every time.. However.. If your IP changes for what ever reason, Terra! has no way of knowing this and you will need to update the IP box. You will also notice there is a box for a password. The Server will reject any connection attempt that does not match this password. Keep the password simple.. Its just to stop anyone from accidentally logging in using port 1956. You will also see there is a Diagnostics button. This will show some info while the server is running such as.. the ping for each client that has connected and any strange errors that might show up. Once you have everything setup.. Click the Start Button....<br />
-  The server will Minimize to the task bar and the client chat window will appear. If you are connecting to some one else's computer, Put the IP of that computer in the 'Host to connect to' box. If you are hosting a session.. put in this IP: 127.0.0.1 &lt;-- this is the loop back address and will save network bandwidth. You can of course use the WAN or LAN IP for the local server though I don't recommend it. <span class="style6">If you are joining a session.. you need the IP of the computer you are connecting to and the password that was assigned.</span></p>
+The server will Minimize to the task bar and the client chat window will appear. If you are connecting to some one else's computer, Put the IP of that computer in the 'Host to connect to' box. If you are hosting a session.. put in this IP: 127.0.0.1 &lt;-- this is the loop back address and will save network bandwidth. You can of course use the WAN or LAN IP for the local server though I don't recommend it. <span class="style6">If you are joining a session.. you need the IP of the computer you are connecting to and the password that was assigned.</span></p>
 <p>You can setup a remote server by downloading and installing the server on your VPS or any computer you chose. Setup its IP.. Password and start it.<br />
 To connect to the remote server as the host, use &quot;Join Remote as Host&quot; from the Session drop down menu. You may need to setup port forwarding if this server is part of your LAN. </p>
 <p>If you are the one Hosting a Session, your name will be Red in the client list.. Other wise, it will be Black.<br />
@@ -170,7 +194,6 @@ Tao OpenGL</a> : Wrapper for .NET : This project is dead.. I use it because it a
   Except for the tank models, all data is loaded either at the start of Terra! or when a map is selected.<br />
   The Tank's are from the game data but I changed their data format to speed load times. (Terra! doesn't need textures on the tanks or bump mapping. It would slow down the load time of tanks and use far too much memory. Be sides.. I like the 'plastic' board game look they have..).<br />
 </p>
-<p>Also I would like to thank a member of the tanking community, <a hovercard-ref="member" hovercard-id="Junior_g99p" href="http://forum.worldoftanks.com/index.php?/user/junior-g99p-649847/" title="" id="anonymous_element_4"><span itemprop="name">Junior_g99p</span></a> for helping me figure out how to use the matrix numbers correctly!</p>
 <p>You can email me at <a href="mailto: thecooltool@hotmail.com?subject=Terra! Comments and Questions">thecooltool@hotmail.com</a><br />
   Don't change the subject.. My email rules use it to route it to the correct folder.</p>
 <p>Thanks and please email me with good or bad comments</p>

@@ -37,7 +37,7 @@ void main()
             EmitVertex();
             EndPrimitive();
         //biTangent
-            color = vec4(0.0,1.0,1.0,1.0);
+            color = vec4(0.0,0.0,1.0,1.0);
             sumV = (gl_PositionIn[0] + gl_PositionIn[1] + gl_PositionIn[2]) / 3.0;
             sumN.xyz = (b[0].xyz + b[1].xyz + b[2].xyz) / 3.0;
             sumN.w = 0.0;
@@ -70,7 +70,7 @@ void main()
             EndPrimitive();
         }
         // biTangent
-        color = vec4(0.0,0.5,1.0,1.0);
+            color = vec4(0.0,0.0,1.0,1.0);
         for(int i = 0; i < gl_VerticesIn; ++i)
         {
             gl_Position = gl_ModelViewProjectionMatrix * gl_PositionIn[i];

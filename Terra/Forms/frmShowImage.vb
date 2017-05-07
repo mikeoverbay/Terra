@@ -32,7 +32,7 @@ Public Class frmShowImage
         End If
         Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
         GC.Collect()
-        frmMain.pb2.Visible = False
+        frmMain.pb2.visible = False
         frmMain.pb2.Parent = frmMain
         frmMain.pb2.Dock = DockStyle.None
         frmMain.pb2.Anchor = AnchorStyles.None
@@ -59,7 +59,7 @@ Public Class frmShowImage
         old_width = frmMain.pb2.Width
         old_location = frmMain.pb2.Location
         frmMain.pb2.Parent = SPC.Panel1
-        frmMain.pb2.Visible = True
+        frmMain.pb2.visible = True
         frmMain.pb2.Width = SPC.Panel1.Width
         frmMain.pb2.Height = SPC.Panel1.Height - 25
         frmMain.pb2.Location = New Point(0, 0)

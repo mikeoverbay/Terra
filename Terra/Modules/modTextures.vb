@@ -187,7 +187,7 @@ Module modTextures
             Il.ilGetData()) '  Texture specification 
             Gl.glFinish()
 
-            'frmMain.pb2.Visible = True
+            'frmMain.pb2.visible = True
             'frmMain.pb2.SendToBack()
             frmMain.pb2.Height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
             frmMain.pb2.Width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
@@ -197,6 +197,8 @@ Module modTextures
             'GC.Collect()
             'GC.WaitForFullGCComplete()
             ' has to run on vertical and horz
+            Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+
             If Not (Wgl.wglMakeCurrent(pb2_hDC, pb2_hRC)) Then
                 MessageBox.Show("Unable to make rendering context current")
                 End

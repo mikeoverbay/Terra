@@ -31,13 +31,11 @@ Module Globals
     Public bias() As Single = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0}
     Public position() As Single = {600.0, 350.0, 600.0, 0.0}
     Public angle_offset As Single
-    Public FLY_ As Boolean = False
+    'Public FLY_ As Boolean = False
     Public swat2 As New Stopwatch
-    Public EDIT_INCULDERS As Boolean = False
     Public drawbuffer0() = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_NONE}
     Public drawbuffer1() = {Gl.GL_NONE, Gl.GL_COLOR_ATTACHMENT1_EXT}
     Public attachstatus(5) As Integer
-    Public decal_includers_string As String
 
     Public MV(16) As Single
     Public lightProject(16) As Single
@@ -300,6 +298,8 @@ Module Globals
     Public pb2_hRC As System.IntPtr
     Public pb3_hDC As System.IntPtr
     Public pb3_hRC As System.IntPtr
+    Public pb4_hDC As System.IntPtr
+    Public pb4_hRC As System.IntPtr
     Public _ZOOM As Single = 5.0F
     Public _VERTICAL As Single = 0.0F
     Public _ROTATION As Single = 3.1415926

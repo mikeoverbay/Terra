@@ -6,7 +6,7 @@ Public Class frmTanks
 	Private Sub frmTanks_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 		e.Cancel = True
 		frmMain.m_layout_mode.Checked = False
-		Me.Visible = False
+		Me.visible = False
 		tankID = -1
 		For i = 0 To SplitContainer1.Panel1.Controls.Count - 1
 			If SplitContainer1.Panel1.Controls(i).Text.Length > 0 Then
@@ -18,7 +18,7 @@ Public Class frmTanks
 				SplitContainer1.Panel2.Controls(i).BackColor = Color.Green
 			End If
 		Next
-		frmMain.draw_scene()
+        frmMain.update_screen()
 	End Sub
 
 	Private Sub frmTanks_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
@@ -29,7 +29,7 @@ Public Class frmTanks
 				If icon_scale < 3 Then
 					icon_scale = 3
 				End If
-				frmMain.tb1.Text = "Icon size: " + icon_scale.ToString
+				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
 				frmMain.draw_scene()
 				Return
@@ -39,7 +39,7 @@ Public Class frmTanks
 				If icon_scale > 100.0! Then
 					icon_scale = 100.0!
 				End If
-				frmMain.tb1.Text = "Icon size: " + icon_scale.ToString
+				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
 				frmMain.draw_scene()
 				Return
@@ -50,7 +50,7 @@ Public Class frmTanks
 			If minimap_size < 128.0! Then
 				minimap_size = 128.0!
 			End If
-			frmMain.tb1.Text = "Minimap size: " + minimap_size.ToString
+			tb1.Text = "Minimap size: " + minimap_size.ToString
 			My.Settings.minimap_size = minimap_size
 			frmMain.draw_scene()
 		End If
@@ -59,7 +59,7 @@ Public Class frmTanks
 			If minimap_size > 900.0! Then
 				minimap_size = 900.0!
 			End If
-			frmMain.tb1.Text = "Minimap size: " + minimap_size.ToString
+			tb1.Text = "Minimap size: " + minimap_size.ToString
 			My.Settings.minimap_size = minimap_size
 			frmMain.draw_scene()
 		End If
@@ -87,11 +87,11 @@ Public Class frmTanks
 	Private Sub frmTanks_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
 		If move_mod Then
 			move_mod = False
-			frmMain.draw_scene()
+            frmMain.update_screen()
 		End If
 		If z_move Then
 			z_move = False
-			frmMain.draw_scene()
+            frmMain.update_screen()
 		End If
 	End Sub
 
@@ -105,80 +105,83 @@ Public Class frmTanks
 		SplitContainer1.Panel1.Controls.Clear()
 		SplitContainer1.Panel2.Controls.Clear()
 
-		Dim ww = SplitContainer1.Panel1.Width - 6
-		Dim t = a_tanks(0).image.Width
-		Dim l As New Label
-		Dim fnt As New Font(frmMain.pfc.Families(0), 6, FontStyle.Regular)
+        Dim ww = SplitContainer1.Panel1.Width - 6
+        If a_tanks(0).image Is Nothing Then
+            Return
+        End If
+        Dim t = a_tanks(0).image.Width
+        Dim l As New Label
+        Dim fnt As New Font(frmMain.pfc.Families(0), 6, FontStyle.Regular)
 
-		For i = 0 To 14
-			Dim butt As New Button
-			butt.FlatStyle = FlatStyle.Flat
-			butt.FlatAppearance.BorderSize = 2
-			butt.FlatAppearance.BorderColor = Color.DarkRed
-			butt.Font = fnt
-			Dim m = ww / t
-			butt.Width = t * m
-			butt.Height = a_tanks(0).image.Height * m
-			butt.Tag = "1_" & i.ToString
-			butt.Text = ""
-			butt.BackgroundImage = My.Resources.open_slot
-			butt.BackgroundImageLayout = ImageLayout.Stretch
-			butt.TextAlign = ContentAlignment.TopRight
-			butt.ForeColor = Color.White
-			butt.Font = frmMain.m_layout_mode.Font
-			Dim lbl As New Label
-			lbl.Width = butt.Width
-			lbl.Height = butt.Height - 3
-			lbl.BackColor = Color.Transparent
-			lbl.Font = butt.Font
-			lbl.ForeColor = Color.Red 'dont matter.. it will show as gray cuz its disabled.
-			lbl.TextAlign = ContentAlignment.BottomLeft
-			lbl.Text = CStr(i + 1)
-			lbl.Enabled = False
-			butt.Controls.Add(lbl)
-			AddHandler butt.MouseClick, AddressOf Me.team_button_click
-			AddHandler butt.GotFocus, AddressOf butt_got_focus
-			AddHandler butt.LostFocus, AddressOf butt_lost_focusR
-			SplitContainer1.Panel1.Controls.Add(butt)
-			butt.Location = (New System.Drawing.Point(3, i * butt.Height))
-		Next
-		For i = 0 To 14
-			Dim butt As New Button
-			butt.FlatStyle = FlatStyle.Flat
-			butt.FlatAppearance.BorderSize = 2
-			butt.FlatAppearance.BorderColor = Color.Green
-			butt.Font = fnt
-			Dim m = ww / t
-			butt.Width = t * m
-			butt.Height = a_tanks(0).image.Height * m
-			butt.Tag = "2_" & i.ToString
-			butt.Text = ""
-			butt.BackgroundImage = My.Resources.open_slot
-			butt.BackgroundImageLayout = ImageLayout.Stretch
-			butt.TextAlign = ContentAlignment.TopRight
-			butt.ForeColor = Color.White
-			butt.Font = frmMain.m_layout_mode.Font
-			Dim lbl As New Label
-			lbl.Width = butt.Width
-			lbl.Height = butt.Height - 3
-			lbl.BackColor = Color.Transparent
-			lbl.Font = butt.Font
-			lbl.ForeColor = Color.Red 'dont matter.. it will show as gray cuz its disabled.
-			lbl.TextAlign = ContentAlignment.BottomLeft
-			lbl.Text = CStr(i + 1)
-			lbl.Enabled = False
-			butt.Controls.Add(lbl)
-			AddHandler butt.MouseClick, AddressOf Me.team_button_click
-			AddHandler butt.GotFocus, AddressOf butt_got_focus
-			AddHandler butt.LostFocus, AddressOf butt_lost_focusG
-			SplitContainer1.Panel2.Controls.Add(butt)
-			butt.Location = (New System.Drawing.Point(2, i * butt.Height))
-		Next
-		Dim wo = Me.Height - Me.ClientSize.Height
-		Dim h = a_tanks(0).image.Height * (ww / t)
-		Me.Height = (15 * h) + wo
+        For i = 0 To 14
+            Dim butt As New Button
+            butt.FlatStyle = FlatStyle.Flat
+            butt.FlatAppearance.BorderSize = 2
+            butt.FlatAppearance.BorderColor = Color.DarkRed
+            butt.Font = fnt
+            Dim m = ww / t
+            butt.Width = t * m
+            butt.Height = a_tanks(0).image.Height * m
+            butt.Tag = "1_" & i.ToString
+            butt.Text = ""
+            butt.BackgroundImage = My.Resources.open_slot
+            butt.BackgroundImageLayout = ImageLayout.Stretch
+            butt.TextAlign = ContentAlignment.TopRight
+            butt.ForeColor = Color.White
+            butt.Font = frmMain.m_layout_mode.Font
+            Dim lbl As New Label
+            lbl.Width = butt.Width
+            lbl.Height = butt.Height - 3
+            lbl.BackColor = Color.Transparent
+            lbl.Font = butt.Font
+            lbl.ForeColor = Color.Red 'dont matter.. it will show as gray cuz its disabled.
+            lbl.TextAlign = ContentAlignment.BottomLeft
+            lbl.Text = CStr(i + 1)
+            lbl.Enabled = False
+            butt.Controls.Add(lbl)
+            AddHandler butt.MouseClick, AddressOf Me.team_button_click
+            AddHandler butt.GotFocus, AddressOf butt_got_focus
+            AddHandler butt.LostFocus, AddressOf butt_lost_focusR
+            SplitContainer1.Panel1.Controls.Add(butt)
+            butt.Location = (New System.Drawing.Point(3, i * butt.Height))
+        Next
+        For i = 0 To 14
+            Dim butt As New Button
+            butt.FlatStyle = FlatStyle.Flat
+            butt.FlatAppearance.BorderSize = 2
+            butt.FlatAppearance.BorderColor = Color.Green
+            butt.Font = fnt
+            Dim m = ww / t
+            butt.Width = t * m
+            butt.Height = a_tanks(0).image.Height * m
+            butt.Tag = "2_" & i.ToString
+            butt.Text = ""
+            butt.BackgroundImage = My.Resources.open_slot
+            butt.BackgroundImageLayout = ImageLayout.Stretch
+            butt.TextAlign = ContentAlignment.TopRight
+            butt.ForeColor = Color.White
+            butt.Font = frmMain.m_layout_mode.Font
+            Dim lbl As New Label
+            lbl.Width = butt.Width
+            lbl.Height = butt.Height - 3
+            lbl.BackColor = Color.Transparent
+            lbl.Font = butt.Font
+            lbl.ForeColor = Color.Red 'dont matter.. it will show as gray cuz its disabled.
+            lbl.TextAlign = ContentAlignment.BottomLeft
+            lbl.Text = CStr(i + 1)
+            lbl.Enabled = False
+            butt.Controls.Add(lbl)
+            AddHandler butt.MouseClick, AddressOf Me.team_button_click
+            AddHandler butt.GotFocus, AddressOf butt_got_focus
+            AddHandler butt.LostFocus, AddressOf butt_lost_focusG
+            SplitContainer1.Panel2.Controls.Add(butt)
+            butt.Location = (New System.Drawing.Point(2, i * butt.Height))
+        Next
+        Dim wo = Me.Height - Me.ClientSize.Height
+        Dim h = a_tanks(0).image.Height * (ww / t)
+        Me.Height = (15 * h) + wo
 
-	End Sub
+    End Sub
 	Private Sub butt_lost_focusR(ByVal sender As Object, ByVal e As EventArgs)
 		'sender.BackColor = Color.Red
 	End Sub
@@ -192,24 +195,24 @@ Public Class frmTanks
 		Dim s As String = sender.tag
 		Dim ar() = s.Split("_")
 		SyncLock packet_lock
-			If ar.Length = 2 Then
-				team_setup_selected_tank = s
-				tankID = -1
-				SyncLock packet_lock
-					Packet_out.tankId = -1
-				End SyncLock
+            If ar.Length = 2 Then
+                team_setup_selected_tank = s
+                tankID = -1
+                SyncLock packet_lock
+                    Packet_out.tankId = -1
+                End SyncLock
+                frmMain.update_screen()
 
-				frmMain.draw_scene()
-				If old_tankID > -1 Then
-					If old_tankID >= 100 Then
-						SplitContainer1.Panel2.Controls(old_tankID - 100).BackColor = Color.Green
-					Else
-						SplitContainer1.Panel1.Controls(old_tankID).BackColor = Color.DarkRed
-					End If
-				End If
-				old_tankID = tankID
-				Return ' no tank assigned yet
-			End If
+                If old_tankID > -1 Then
+                    If old_tankID >= 100 Then
+                        SplitContainer1.Panel2.Controls(old_tankID - 100).BackColor = Color.Green
+                    Else
+                        SplitContainer1.Panel1.Controls(old_tankID).BackColor = Color.DarkRed
+                    End If
+                End If
+                old_tankID = tankID
+                Return ' no tank assigned yet
+            End If
 			team_setup_selected_tank = s
 			Dim team As Integer = ar(0).ToString
 			Dim nation As String = ar(1)
@@ -271,21 +274,21 @@ Public Class frmTanks
 			End SyncLock
 
 		End SyncLock
-		frmMain.draw_scene()
-		If frmMain.m_show_minimap.Checked Then
-			frmMain.draw_minimap()
-		End If
+        frmMain.update_screen()
+        'If frmMain.m_show_minimap.Checked Then
+        '	frmMain.draw_minimap()
+        'End If
 
 	End Sub
 
 	Public Sub prev_nation()
-		Me.Panel1.Controls.Item(current_nation).Visible = False
+		Me.Panel1.Controls.Item(current_nation).visible = False
 		If current_nation = 0 Then
 			current_nation = 6
 		Else
 			current_nation -= 1
 		End If
-		Me.Panel1.Controls.Item(current_nation).Visible = True
+		Me.Panel1.Controls.Item(current_nation).visible = True
 		Application.DoEvents()
 		Me.Panel1.Update()
 		frmMain.update_npb()
@@ -293,13 +296,13 @@ Public Class frmTanks
 		Threading.Thread.Sleep(50)
 	End Sub
 	Public Sub next_nation()
-		Me.Panel1.Controls.Item(current_nation).Visible = False
+		Me.Panel1.Controls.Item(current_nation).visible = False
 		If current_nation = 6 Then
 			current_nation = 0
 		Else
 			current_nation += 1
 		End If
-		Me.Panel1.Controls.Item(current_nation).Visible = True
+		Me.Panel1.Controls.Item(current_nation).visible = True
 		Application.DoEvents()
 		Me.Panel1.Update()
 		frmMain.update_npb()

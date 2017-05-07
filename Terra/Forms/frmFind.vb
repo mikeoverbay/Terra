@@ -45,9 +45,9 @@
     End Sub
 
     Private Sub show_img_btn_Click(sender As Object, e As EventArgs) Handles show_img_btn.Click
-        Me.Visible = False
+        Me.visible = False
         frmShowImage.Show()
-        Me.Visible = True
+        Me.visible = True
         Me.Close()
     End Sub
 

@@ -3,45 +3,224 @@ Imports System.Math
 Imports System
 Imports Tao.OpenGl
 Imports Tao.FreeGlut
-'=========================================================================
-' So far I cant use this.
-' I can't figure out a way to deal with the normal mixing of the terrain
-'=========================================================================
 
 Module modDeferred
-    Public GBUFFER As GBuffer_
+    Public G_Buffer As New GBuffer_
+    Public ssaoFBO, gBufferFBO, gBufferNormalFBO, gBufferColorFBO, gBufferPositionFBO, ssaoColorBuffer As Integer
+    Public gPosition, gNormal, gColor As Integer
+    Public gDepth As Integer
+    Public gDepthTexture As Integer
+    Public NoiseTexture As Integer
+    Public gSSAO As Integer
+    Public noise(16 * 4) As Single
+    Public randomFloats(64 * 3) As Single
     Public Class GBuffer_
-        Enum GBUFFER_TEXTURE_TYPE As Integer
-            GBUFFER_TEXTURE_TYPE_POSITION
-            GBUFFER_TEXTURE_TYPE_DIFFUSE
-            GBUFFER_TEXTURE_TYPE_NORMAL
-            GBUFFER_TEXTURE_TYPE_TEXCOORD
-            GBUFFER_NUM_TEXTURES
-        End Enum
+        'Private color_normal_buffers_only() As Integer = {Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
+        Private color_buffer_only() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT}
+        Private attacments() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
+        Public Sub shut_down()
+            delete_textures_and_fob_objects()
+        End Sub
+        Public Sub make_kernel()
+            Dim ran As New Random
 
-        Public Function init(windowWidth As Integer, windowHeight As Integer) As Boolean
+            For i = 0 To (64 * 3) - 1 Step 3
+                randomFloats(i + 0) = CSng(ran.NextDouble * 2.0 - 1.0)
+                randomFloats(i + 1) = CSng(ran.NextDouble * 2.0 - 1.0)
+                randomFloats(i + 2) = CSng(ran.NextDouble)
+
+                Dim scale As Single = CSng(i) / 64.0!
+                scale = lerp(0.1, 1.0, scale * scale)
+                randomFloats(i + 0) *= scale
+                randomFloats(i + 1) *= scale
+                randomFloats(i + 2) *= scale
+
+            Next
+        End Sub
+        Private Function lerp(ByVal a As Single, ByVal b As Single, ByVal f As Single)
+            Return a + f * (b - a)
+        End Function
+        Private Sub delete_textures_and_fob_objects()
+            Dim e As Integer
+            If gSSAO > 0 Then
+                Gl.glDeleteTextures(1, gSSAO)
+            End If
+            If gDepthTexture > 0 Then
+                Gl.glDeleteTextures(1, gDepthTexture)
+                e = Gl.glGetError
+            End If
+            If gPosition > 0 Then
+                Gl.glDeleteTextures(1, gPosition)
+                e = Gl.glGetError
+            End If
+            If gNormal > 0 Then
+                Gl.glDeleteTextures(1, gNormal)
+                e = Gl.glGetError
+            End If
+            If gColor > 0 Then
+                Gl.glDeleteTextures(1, gColor)
+                e = Gl.glGetError
+            End If
+            If ssaoColorBuffer > 0 Then
+                Gl.glDeleteTextures(1, ssaoColorBuffer)
+                e = Gl.glGetError
+            End If
+            If gDepth > 0 Then
+                Gl.glDeleteRenderbuffersEXT(1, gDepth)
+                e = Gl.glGetError
+            End If
+            If gBufferFBO > 0 Then
+                Gl.glDeleteFramebuffersEXT(1, gBufferFBO)
+                e = Gl.glGetError
+            End If
+            If ssaoFBO > 0 Then
+                Gl.glDeleteFramebuffersEXT(1, ssaoFBO)
+                e = Gl.glGetError
+            End If
+        End Sub
+        Public Sub getsize(ByRef w As Integer, ByRef h As Integer)
+            frmMain.pb1.Width = frmMain.ClientSize.Width
+            frmMain.pb1.Height = frmMain.ClientSize.Height - frmMain.mainMenu.Height
+            frmMain.pb1.Location = New System.Drawing.Point(0, frmMain.mainMenu.Height + 1)
+            Dim w1, h1 As Integer
+            w1 = frmMain.pb1.Width
+            h1 = frmMain.pb1.Height
+            w = w1 + (w1 Mod 1)
+            h = h1 + (h1 Mod 1)
+        End Sub
+        Private Sub create_textures_and_Fbo()
+            Dim SCR_WIDTH, SCR_HEIGHT As Integer
+            getsize(SCR_WIDTH, SCR_HEIGHT)
+            'depth buffer
+
+            'If NoiseTexture = 0 Then
+            '    make_kernel()
+            '    Dim rnd As New Random
+            '    For i = 0 To (16 * 3) - 1 Step 3
+            '        noise(i + 0) = CSng(rnd.NextDouble * 2.0 - 1.0)
+            '        noise(i + 1) = CSng(rnd.NextDouble * 2.0 - 1.0)
+            '        noise(i + 2) = 0.0
+            '    Next
+            '    Gl.glGenTextures(1, NoiseTexture)
+            '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
+            '    Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB16F_ARB, 4, 4, 0, Gl.GL_RGB, Gl.GL_FLOAT, noise)
+            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
+            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
+
+            'End If
+            Dim e1 = Gl.glGetError
+
+            'Gl.glGenTextures(1, gSSAO)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gSSAO)
+            'Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RED, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_R, Gl.GL_UNSIGNED_BYTE, Nothing)
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            'Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            'Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+
+            Gl.glGenTextures(1, gDepthTexture)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE16F_ARB, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_LUMINANCE, Gl.GL_FLOAT, Nothing)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+            Dim e2 = Gl.glGetError
+
+            ' - Position color buffer
+            Gl.glGenTextures(1, gPosition)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB16F_ARB, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_RGB, Gl.GL_FLOAT, Nothing)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+
+            ' - Normal + Specular color buffer
+            Gl.glGenTextures(1, gNormal)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, Nothing)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+
+            ' - Color color buffer
+            Gl.glGenTextures(1, gColor)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, Nothing)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+            Dim e3 = Gl.glGetError
+
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+
+        End Sub
+        Public Sub attachFOBtextures()
+            ' Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Gl.glDrawBuffers(3, attacments)
+            'Dim er = Gl.glGetError
+        End Sub
+        Public Sub attachShadowTexture()
+            Gl.glDrawBuffers(1, color_buffer_only)
+        End Sub
+        Public Sub detachShadowTexture()
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, 0, 0)
+        End Sub
+
+        Public Sub detachFBOtextures()
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, 0, 0)
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_TEXTURE_2D, 0, 0)
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_TEXTURE_2D, 0, 0)
+        End Sub
+        Public Sub attach_color_only()
+            Gl.glDrawBuffers(1, color_buffer_only)
+        End Sub
+        Public Function init() As Boolean
+            stopGL = True
+            Threading.Thread.Sleep(50)
+            Dim SCR_WIDTH, SCR_HEIGHT As Integer
+            getsize(SCR_WIDTH, SCR_HEIGHT)
+
+            Gl.glBindFramebufferEXT(Gl.GL_DRAW_FRAMEBUFFER_EXT, 0)
+            Dim e1 = Gl.glGetError
+
+            delete_textures_and_fob_objects()
+            'Create the gBuffer textures
+            create_textures_and_Fbo()
+            Dim e2 = Gl.glGetError
 
             'Create the FBO
-            Gl.glGenFramebuffersEXT(1, deferred_fob)
-            Gl.glBindFramebufferEXT(Gl.GL_DRAW_BUFFER, deferred_fob)
-            'Create the gBuffer textures
-            Gl.glGenTextures(defTextures.Length - 1, defTextures)
-            Gl.glGenTextures(1, defDepthtexture)
+            Gl.glGenFramebuffersEXT(1, gBufferFBO)
+            Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+            Dim e3 = Gl.glGetError
 
-            'Setup textures and attach to color_frambuffers
-            For i = 0 To defTextures.Length - 1
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, defTextures(i))
-                Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA32F_ARB, windowWidth, windowHeight, 0, Gl.GL_RGB, Gl.GL_FLOAT, 0)
-                Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT + i, Gl.GL_TEXTURE_2D, defTextures(i), 0)
-            Next
+            Gl.glGenRenderbuffersEXT(1, gDepth)
+            Gl.glBindRenderbufferEXT(Gl.GL_RENDERBUFFER_EXT, gDepth)
+            Gl.glRenderbufferStorageEXT(Gl.GL_RENDERBUFFER_EXT, Gl.GL_DEPTH_COMPONENT24, SCR_WIDTH, SCR_HEIGHT)
+            Gl.glFramebufferRenderbufferEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_DEPTH_ATTACHMENT_EXT, Gl.GL_RENDERBUFFER_EXT, gDepth)
+            Dim e4 = Gl.glGetError
 
-            'Attach depthtexture
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, defDepthtexture)
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_DEPTH_COMPONENT32, windowWidth, windowHeight, 0, Gl.GL_RGB, Gl.GL_FLOAT, 0)
-            Dim DrawBuffers() As Integer = {Gl.GL_FRAMEBUFFER_EXT, Gl.GL_DEPTH_ATTACHMENT_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT}
+
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, gColor, 0)
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_TEXTURE_2D, gNormal, 0)
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_TEXTURE_2D, gPosition, 0)
+            Dim e5 = Gl.glGetError
 
             'attach draw buffers
-            Gl.glDrawBuffers(drawbuffer0.Length - 1, DrawBuffers)
+            Gl.glDrawBuffers(3, attacments)
+
+            'attach draw buffers
             Dim Status = Gl.glCheckFramebufferStatusEXT(Gl.GL_FRAMEBUFFER_EXT)
 
             If Status <> Gl.GL_FRAMEBUFFER_COMPLETE_EXT Then
@@ -49,14 +228,21 @@ Module modDeferred
                 Return False
             End If
 
-            'restore fbo to stock
-            Gl.glBindFramebufferEXT(Gl.GL_DRAW_FRAMEBUFFER_EXT, 0)
+
+            Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+            stopGL = False
             Return True
         End Function
+ 
+        Public Sub get_depth_buffer(ByVal w As Integer, ByVal h As Integer)
+            Dim e1 = Gl.glGetError
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+            Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_DEPTH_COMPONENT24, 0, 0, w, h, 0)
+            Dim e2 = Gl.glGetError
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
 
-        Private deferred_fob As UInteger
-        Private defTextures(GBUFFER_TEXTURE_TYPE.GBUFFER_NUM_TEXTURES) As UInteger
-        Private defDepthtexture As UInteger
+        End Sub
+
     End Class
 
 
@@ -64,233 +250,6 @@ Module modDeferred
 
     End Sub
 
-    Public Sub make_shadow_map()
-        If Not maploaded Then
-            Return
-        End If
-        'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, fboID)
-        attach_texture_to_FBO(coMapID)
-        'Gl.glDrawBuffers(2, drawbuffer0(0))
-        'check status
-        Dim er = Gl.glGetError
-        'ResizeGL()
-        'lightTransform()
-        'lightTransform_preview()
-        Gl.glColorMask(Gl.GL_TRUE, Gl.GL_TRUE, Gl.GL_TRUE, Gl.GL_TRUE)
-        Gl.glClearColor(0.0F, 0.0F, 0.0F, 1.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        'Gl.glColorMask(Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE)
-        Gl.glDepthFunc(Gl.GL_LEQUAL)
-        Gl.glFrontFace(Gl.GL_CW)
-        Gl.glCullFace(Gl.GL_FRONT)
-        Gl.glLineWidth(1)
-        'ViewPerspective()
-        'terra
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        'Gl.glEnable(Gl.GL_LIGHTING)
-        Gl.glColor4f(1.0, 1.0, 1.0, 0.0)
-        Gl.glCullFace(Gl.GL_FRONT)
-        Gl.glDisable(Gl.GL_CULL_FACE)
-
-        ' Gl.glUseProgram(depth_shader)
-        Gl.glUseProgram(shader_list.depth_shader)
-        For i = 0 To test_count
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
-            Gl.glCallList(maplist(i).calllist_Id)
-            Gl.glCallList(maplist(i).seamCallId)
-
-        Next
-        Gl.glCullFace(Gl.GL_FRONT)
-        'models
-        For model As UInt32 = 0 To Models.matrix.Length - 1
-            For k = 0 To Models.models(model)._count - 1
-                Gl.glPushMatrix()
-                Gl.glMultMatrixf(Models.matrix(model).matrix)
-                Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                Gl.glPopMatrix()
-            Next
-        Next
-
-        'trees
-        'For map = 0 To test_count
-        '    If maplist(map).flora IsNot Nothing Then
-        '        For i As UInt32 = 0 To maplist(map).flora_count
-        '            Dim mapL As vect3 = maplist(map).location
-        '            Gl.glPushMatrix()
-        '            Gl.glTranslatef(mapL.x + 50, mapL.z, mapL.y - 50)
-
-        '            'Gl.glDisable(Gl.GL_CULL_FACE)
-        '            If maplist(map).flora(i).branch_displayID > 0 Then
-        '                Gl.glCallList(maplist(map).flora(i).branch_displayID)
-        '            Else
-        '            End If
-        '            If maplist(map).flora(i).frond_displayID > 0 Then
-        '                Gl.glCallList(maplist(map).flora(i).frond_displayID)
-        '            End If
-        '            If maplist(map).flora(i).leaf_displayID > 0 Then
-        '                Gl.glCallList(maplist(map).flora(i).leaf_displayID)
-        '            End If
-
-        '            Gl.glPopMatrix()
-        '        Next
-
-        '    End If
-        'Next
-        ' must save the matrix!
-        Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, MV)
-        Gl.glGetFloatv(Gl.GL_PROJECTION_MATRIX, lightProject)
-
-        Gl.glMatrixMode(Gl.GL_TEXTURE)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 7)
-
-        Gl.glLoadIdentity()
-        Gl.glLoadMatrixf(bias)
-
-        ' concatating all matrices into one.
-        Gl.glMultMatrixf(lightProject)
-        Gl.glMultMatrixf(MV)
-        'Gl.glPopMatrix()
-        ' Go back to normal matrix mode
-        Gl.glMatrixMode(Gl.GL_MODELVIEW)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        er = Gl.glGetError
-        Gl.glUseProgram(0)
-        blur_shadow(0)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, coMapID)
-        'Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D) ' this makes no sense
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        er = Gl.glGetError
-        'attache_texture(0)
-        ' switch back to window-system-provided framebuffer
-        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        Gl.glDrawBuffer(Gl.GL_BACK)
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Thread.Sleep(5)
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Gl.glPushMatrix()
-
-    End Sub
-    Public Sub blur_shadow(ByVal texture_id As Integer)
-
-        'Dim uc As vect2
-        'Dim lc As vect2
-        Dim comap, si As Integer
-        'frmMain.pb2.Location = New Point(0, 0)
-        'frmMain.pb2.BringToFront()
-        'frmMain.pb2.Visible = True
-
-        'lc.x = smrs
-        'lc.y = -smrs    ' top to bottom is negitive ' may wanna change this!
-        'uc.x = 0.0
-        'uc.y = 0.0
-
-        '---------------------------------------------------------
-        '1st render/blur vert coMapID to coMapID2
-        attach_texture_to_FBO(coMapID2)
-        Dim e5 = Gl.glGetError
-
-        Gl.glViewport(0, 0, smrs, smrs)
-        Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
-        Gl.glLoadIdentity() 'Reset The Matrix
-        Dim e3 = Gl.glGetError
-        Gl.glOrtho(0, smrs, -smrs, 0.0, 100.0, -100.0)    'Select Ortho Mode
-        Dim e2 = Gl.glGetError
-        ' TODO: use create a real furstum for this!
-        'Gl.glOrtho(Frustum(4).x, Frustum(5).x, Frustum(0).y, Frustum(6).y, -1500, 1500.0) 'Select Ortho Mode
-        Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
-        Gl.glLoadIdentity() 'Reset The Matrix
-
-
-        Gl.glDisable(Gl.GL_LIGHTING)
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glDisable(Gl.GL_DEPTH_TEST)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
-
-
-
-        comap = Gl.glGetUniformLocation(shader_list.gaussian_shader, "s_texture")
-        si = Gl.glGetUniformLocation(shader_list.gaussian_shader, "blurScale")
-        Gl.glUseProgram(shader_list.gaussian_shader)
-        'set switch
-        Gl.glUniform3f(si, 1.0 / smrs, 0.0, 0.0)
-
-        Gl.glUniform1i(comap, 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, texture_id)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, minimap_textureid)
-        Dim e = Gl.glGetError
-
-        Dim gridS = smrs
-        Gl.glBegin(Gl.GL_QUADS)
-        '---
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(-0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(-0, -gridS, 0.0)
-        Gl.glEnd()
-        'Gl.glUseProgram(0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        e = Gl.glGetError
-        'Gdi.SwapBuffers(pb1_hDC)
-        '-------------------------------------------------------------
-        ' 2nd. horzonal. render/blur horz coMapID2 in to coMapID
-
-        attach_texture_to_FBO(texture_id)
-        'attache_texture(0)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-
-
-        Gl.glUseProgram(shader_list.gaussian_shader)
-        'set switch
-        Gl.glUniform3f(si, 0.0, 1.0 \ smrs, 0.0)
-
-
-        Gl.glUniform1i(comap, 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, utility_texture)
-        e = Gl.glGetError
-
-        Gl.glBegin(Gl.GL_QUADS)
-        '---
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(-0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(gridS, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(gridS, -gridS, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(-0, -gridS, 0.0)
-        Gl.glEnd()
-
-        Gl.glUseProgram(0)
-
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        Gl.glDrawBuffer(Gl.GL_BACK)
-        '--------------------
-
-        'frmMain.pb2.Visible = False
-        'frmMain.pb2.SendToBack()
-
-    End Sub
-
+ 
 
 End Module

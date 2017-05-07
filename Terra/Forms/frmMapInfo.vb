@@ -102,8 +102,8 @@
 
     End Sub
     Private Sub show_texture(ByVal id As Integer)
-        If Not frmShowImage.Visible Then
-            frmShowImage.Visible = True
+        If Not frmShowImage.visible Then
+            frmShowImage.visible = True
             While Not frmShowImage.ready_to_render
                 Application.DoEvents()
             End While
