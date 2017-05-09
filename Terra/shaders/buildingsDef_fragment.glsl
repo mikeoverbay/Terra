@@ -5,6 +5,7 @@
 layout (location = 0) out vec4 gColor;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gPosition;
+layout (location = 3) out vec4 gFlag;
 
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
@@ -14,6 +15,7 @@ uniform int is_bumped;
 uniform int is_multi_textured;
 uniform int alphaRef;
 uniform int alphaTestEnable;
+uniform int flag;
 in vec2 TC1;
 in vec2 TC2;
 in vec4 Vertex;
@@ -59,4 +61,5 @@ void main(void) {
     }
     gNormal.w = 0.35;
     gPosition = Vertex;
+    gFlag = vec4((flag)/255.0);
 }

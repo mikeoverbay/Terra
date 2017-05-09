@@ -418,7 +418,10 @@ Module structures
         Public multi_textured() As Boolean
         Public color_name() As String
         Public color2_name() As String
-        Public pass2 As Boolean
+        Public isBuilding As Boolean
+        Public matrix() As matrix_
+        Public model_id() As Integer
+        Public model_count As Integer
     End Structure
     Public Structure vect4
         Public x As Double

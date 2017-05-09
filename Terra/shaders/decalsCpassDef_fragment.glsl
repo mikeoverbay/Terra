@@ -1,14 +1,15 @@
 ﻿//Decals color pass.
 
 #version 330 compatibility
+#extension GL_EXT_gpu_shader4 : enable
 
 layout (location = 0) out vec4 gColor;
-layout (location = 1) out vec4 gNormal;
+//layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gPosition;
-
+uniform sampler2D gFlag;
 uniform sampler2D depthMap;
+//uniform sampler2D normal_in;
 uniform sampler2D colorMap;
-uniform sampler2D normalMap;
 uniform vec2 uv_wrap;
 uniform int influence;
 
@@ -19,6 +20,7 @@ in vec4 positionSS; // screen space
 in vec4 positionWS; // world space
 in mat4 invd_mat; // inverse decal matrix
 in mat4 matPrjInv; // inverse projection matrix
+in int flag;
 
 void clip(vec3 v){
     if (v.x > tr.x || v.x < bl.x ) { discard; }
@@ -43,7 +45,18 @@ void main(){
     a_table[30] = 1.5;
     // Calculate UVs
     vec2 UV = postProjToScreen(positionSS);
-
+    /*==================================================*/
+      int flag = int(texture2D(gFlag, UV.xy).x * 255);
+     if (flag != 64) {
+        if (influence == 2) { discard;}
+        }
+     if (flag == 96) {
+        if (influence != 2) { discard;}
+        }
+     if (flag != 128) {
+        if (influence == 16) { discard;}
+        }
+    /*==================================================*/
     // sample the Depth from the Depthsampler
     float Depth = texture2D(depthMap, UV).x * 2.0 - 1.0;
 
@@ -59,21 +72,18 @@ void main(){
     WorldPosition.w = 1.0f;
     // trasform to decal original and size.
     // 1 x 1 x 1
-    gPosition = WorldPosition;//save this before next transform
+    gPosition = WorldPosition; //save this before next transform
     WorldPosition = invd_mat * WorldPosition;
 
     clip (WorldPosition.xyz);
-
-
+    /*==================================================*/
     //Get texture UVs
     WorldPosition.xy += 0.5;
     WorldPosition.y *= -1.0;
+
     vec4 color = texture2D(colorMap, WorldPosition.xy*uv_wrap.xy);
     color.a *= a_table[influence];
     if (color.a < 0.05) { discard; }
-    //vec4 bump = texture2D(normalMap, WorldPosition.xy*uv_wrap.xy);
     gColor = color;
-    //gAlbedoSpec += vec4 (0.5, 0.1 ,0.1, 1.0);
-    //gNormal = bump*0.5+0.5;
 
     }

@@ -104,7 +104,15 @@ fing_loop:
                 ReDim Preserve Models.models(model_ID).componets(mc)
                 Models.models(model_ID)._count = mc
                 saved_model_loads += 1
-                Models.models(model_ID).pass2 = loaded_models.stack(addy).pass2
+                loaded_models.stack(addy).model_count += 1
+                Dim mdl_cnt As Integer = loaded_models.stack(addy).model_count
+                ReDim Preserve loaded_models.stack(addy).matrix(mdl_cnt)
+                ReDim Preserve loaded_models.stack(addy).model_id(mdl_cnt)
+                loaded_models.stack(addy).model_id(mdl_cnt - 1) = model_ID
+                loaded_models.stack(addy).matrix(mdl_cnt - 1) = New matrix_
+                ReDim loaded_models.stack(addy).matrix(mdl_cnt - 1).matrix(16)
+                loaded_models.stack(addy).matrix(mdl_cnt - 1).matrix = Model_Matrix_list(model_ID).matrix
+                Models.models(model_ID).isBuilding = loaded_models.stack(addy).isBuilding
                 For i = 0 To mc - 1
                     Models.models(model_ID).componets(i).callList_ID = _
                               loaded_models.stack(addy).dispId(i)
@@ -223,9 +231,9 @@ fing_loop:
         'this is used to determine what the decals is drawn on.
         If a11(1).ToLower.Contains("building") Or a11(1).ToLower.Contains("installations") Or _
             a11(2).ToLower.Contains("portwall") Or a11(2).ToLower.Contains("bridge") Then
-            Models.models(model_ID).pass2 = False
+            Models.models(model_ID).isBuilding = True
         Else
-            Models.models(model_ID).pass2 = True
+            Models.models(model_ID).isBuilding = False
         End If
         make_prim_list(model_ID)
         ms.Close()
@@ -1038,15 +1046,22 @@ dont_save_this:
         Dim v0 = convert_vertex(Md.vertices(i + 0))
         Dim v1 = convert_vertex(Md.vertices(i + 1))
         Dim v2 = convert_vertex(Md.vertices(i + 2))
-        Dim uv0, uv1, uv2 As vect2
+        'compute new normal
+        Dim n As Vector3D = CrossProduct(v0 - v2, v1 - v2)
+        Dim uv0, uv1, uv2 As Vector3D
         uv0.x = Md.UVs(i + 0).u
-        uv0.y = Md.UVs(i + 0).v
+        uv0.Y = Md.UVs(i + 0).v
+        uv0.Z = 1.0
         uv1.x = Md.UVs(i + 1).u
         uv1.y = Md.UVs(i + 1).v
-        uv2.x = Md.UVs(i + 2).u
+        uv1.Z = 1.0
+        uv2.X = Md.UVs(i + 2).u
         uv2.y = Md.UVs(i + 2).v
-
-
+        uv2.Z = 1.0
+        'compute uv-wraping normal
+        Dim flip As Double = 0.0
+        Dim uvn As Vector3D = CrossProduct(uv0 - uv2, uv1 - uv2)
+        flip = DotProduct(uvn, n)
         Dim deltaPos1 = v1 - v0
         Dim deltaPos2 = v2 - v0
         Dim deltaUV1 As vect2
@@ -1063,10 +1078,12 @@ dont_save_this:
         bitangent = f * (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)
         tangent.Normalize()
         bitangent.Normalize()
-
-        't1 = CrossProduct(bitangent, n1)
-        't2 = CrossProduct(bitangent, n1)
-        't3 = CrossProduct(bitangent, n1)
+        If flip < 0.0 Then
+            bitangent *= -1.0
+        End If
+        t1 = CrossProduct(bitangent, n1)
+        t2 = CrossProduct(bitangent, n1)
+        t3 = CrossProduct(bitangent, n1)
 
         t1 = tangent - (Vector3D.DotProduct(t1, n1) * n1)
         t2 = tangent - (Vector3D.DotProduct(t2, n1) * n2)
@@ -1190,7 +1207,17 @@ dont_save_this:
             'Add this model to the list of loaded models so we dont load it again.
             For i = 0 To Models.models(id)._count - 1
                 Nmods = loaded_models._count
-                loaded_models.stack(Nmods).pass2 = Models.models(id).pass2
+                loaded_models.stack(Nmods).isBuilding = Models.models(id).isBuilding
+                ReDim loaded_models.stack(Nmods).matrix(0)
+                ReDim loaded_models.stack(Nmods).model_id(0)
+                loaded_models.stack(Nmods).model_id(0) = id
+                loaded_models.stack(Nmods).matrix(0) = New matrix_
+                ReDim loaded_models.stack(Nmods).matrix(0).matrix(16)
+                Try
+                    loaded_models.stack(Nmods).matrix(0).matrix = Models.matrix(id).matrix
+                Catch ex As Exception
+                End Try
+                loaded_models.stack(Nmods).model_count = 1
                 If Models.models(id).componets(i)._count > 0 Then
 
                     Dim cl = Gl.glGenLists(1)

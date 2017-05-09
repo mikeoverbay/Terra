@@ -91,6 +91,8 @@ Public Class frmMain
     Dim M_current As New vect2
     Public pb2_mouse_down As Boolean = False
     Private welcome_screen As Integer
+    Private old_window_state As Integer
+    Private old_window_size As New Point(0, 0)
 #End Region
 
     Private Sub frmMain_ClientSizeChanged(sender As Object, e As EventArgs) Handles Me.ClientSizeChanged
@@ -242,7 +244,9 @@ fail_path:
         Application.DoEvents()
         'open up our huge virual file for access.
         triangle_holder.open((15 * 15) * (4096 * 6))
-
+        old_window_state = Me.WindowState
+        old_window_size.X = Me.Width
+        old_window_size.Y = Me.Height
         Timer1.Enabled = True
         frmSplash.Close()
         testing = True
@@ -501,9 +505,17 @@ fail_path:
         If _STARTED Then
             'make_post_FBO_and_Textures()
         End If
-        If Me.WindowState = FormWindowState.Maximized Or Me.WindowState = FormWindowState.Normal Then
-            position_info_window()
+        If old_window_state <> Me.WindowState Then
+            old_window_state = Me.WindowState
+            If _STARTED Then
+                If Me.WindowState <> FormWindowState.Minimized Then
+                    G_Buffer.init()
+                    position_info_window()
+                End If
+            End If
         End If
+        'If Me.WindowState = FormWindowState.Maximized Or Me.WindowState = FormWindowState.Normal Then
+        'End If
         If Not SHOW_MAPS Then
             draw_scene()
         Else
@@ -515,9 +527,13 @@ fail_path:
 
         npb.Update()
         Application.DoEvents()
-        If _STARTED Then
-            G_Buffer.init()
+        If Me.Width <> old_window_size.X Or Me.Height <> old_window_size.Y Then
+            old_window_size.X = Me.Width : old_window_size.Y = Me.Height
+            If _STARTED Then
+                G_Buffer.init()
+            End If
         End If
+
         If Not SHOW_MAPS Then
             update_screen()
         Else
@@ -2634,7 +2650,7 @@ skip:
             'Dim e2 = Gl.glGetError
 
             For model As UInt32 = 0 To Models.matrix.Length - 1
-                If Models.models(model).pass2 = pass And Models.models(model).visible Then
+                If Models.models(model).visible Then
                     For k = 0 To Models.models(model)._count - 1
                         Gl.glPushMatrix()
                         Gl.glMultMatrixf(Models.matrix(model).matrix)
@@ -2649,7 +2665,7 @@ skip:
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(0.3, 0.3, 0.3)
             For model As UInt32 = 0 To Models.matrix.Length - 1
-                If Models.models(model).pass2 = pass And Models.models(model).visible Then
+                If Models.models(model).visible Then
                     For k = 0 To Models.models(model)._count - 1
                         Gl.glPushMatrix()
                         Gl.glMultMatrixf(Models.matrix(model).matrix)
@@ -2665,7 +2681,7 @@ skip:
                 Gl.glUniform1i(view_normal_mode_, normal_mode)
                 Gl.glUniform1f(normal_length_, 0.3)
                 For model As UInt32 = 0 To Models.matrix.Length - 1
-                    If Models.models(model).pass2 = pass And Models.models(model).visible Then
+                    If Models.models(model).visible Then
                         For k = 0 To Models.models(model)._count - 1
                             Gl.glPushMatrix()
                             Gl.glMultMatrixf(Models.matrix(model).matrix)
@@ -2692,53 +2708,63 @@ skip:
             Gl.glUniform1i(n_address3, 1)
             Gl.glUniform1i(colormap2, 2)
             Dim uv2s As Boolean
-            For model As UInt32 = 0 To Models.matrix.Length - 1
-                If Models.models(model).pass2 = pass And Models.models(model).visible Then
+            For model As UInt32 = 0 To loaded_models.stack.Length - 2
+                'If Models.models(model).visible Then
+                '    If Models.matrix(model).matrix IsNot Nothing Then
 
-                    If Models.matrix(model).matrix IsNot Nothing Then
+                Gl.glPushMatrix()
+                'Gl.glMultMatrixf(Models.matrix(model).matrix)
+                For k = 0 To loaded_models.stack(model)._count - 1
+                    With loaded_models.stack(model)
 
-                        Gl.glPushMatrix()
-                        'Gl.glMultMatrixf(Models.matrix(model).matrix)
-                        Gl.glUniformMatrix4fv(bld_matrix, 1, Gl.GL_FALSE, Models.matrix(model).matrix)
-                        For k = 0 To Models.models(model)._count - 1
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, .textId(k))
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, .normID(k))
+                        uv2s = .multi_textured(k)
+                        If (Not m_show_uv2.Checked) Or (Not uv2s_loaded) Then
+                            uv2s = False    ' this stops showing the 2nd uv2 textures 
+                        End If
+                        If uv2s Then
+                            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, .text2Id(k))
+                            Gl.glUniform1i(is_multi_textured, 1)
+                        Else
+                            Gl.glUniform1i(is_multi_textured, 0)
+                        End If
 
-                            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).color_id)
-                            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).normal_Id)
-                            uv2s = Models.models(model).componets(k).multi_textured
-                            If (Not m_show_uv2.Checked) Or (Not uv2s_loaded) Then
-                                uv2s = False    ' this stops showing the 2nd uv2 textures 
-                            End If
-                            If uv2s Then
-                                Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                                Gl.glBindTexture(Gl.GL_TEXTURE_2D, Models.models(model).componets(k).color2_Id)
-                                Gl.glUniform1i(is_multi_textured, 1)
+                        If .bumped(k) Then
+                            Gl.glUniform1i(is_bumped3, 1)
+                        Else
+                            Gl.glUniform1i(is_bumped3, 0)
+                        End If
+
+                        If .GAmap(k) Then
+                            Gl.glUniform1i(is_GAmap, 1)      ' tell shader if this is a bumped model
+                        Else
+                            Gl.glUniform1i(is_GAmap, 0)     ' tell shader if this is a bumped model
+
+                        End If
+                        Gl.glUniform1i(alphaRef, .alphaRef(k))
+                        Gl.glUniform1i(alphaTestEnable, .alphaTestEnable(k))
+                    End With
+
+                    For i = 0 To loaded_models.stack(model).model_count - 1
+                        If Models.models(loaded_models.stack(model).model_id(i)).visible Then
+                            If Models.models(loaded_models.stack(model).model_id(i)).isBuilding Then
+                                Gl.glUniform1i(bld_flag, 128)
                             Else
-                                Gl.glUniform1i(is_multi_textured, 0)
+                                Gl.glUniform1i(bld_flag, 96)
                             End If
+                            Gl.glUniformMatrix4fv(bld_matrix, 1, Gl.GL_FALSE, loaded_models.stack(model).matrix(i).matrix)
+                            Gl.glCallList(loaded_models.stack(model).dispId(k))
+                        End If
 
-                            If Models.models(model).componets(k).bumped Then
-                                Gl.glUniform1i(is_bumped3, 1)
-                            Else
-                                Gl.glUniform1i(is_bumped3, 0)
-                            End If
-
-                            If Models.models(model).componets(k).GAmap Then
-                                Gl.glUniform1i(is_GAmap, 1)      ' tell shader if this is a bumped model
-                            Else
-                                Gl.glUniform1i(is_GAmap, 0)     ' tell shader if this is a bumped model
-
-                            End If
-                            Gl.glUniform1i(alphaRef, Models.models(model).componets(k).alphaRef)
-                            Gl.glUniform1i(alphaTestEnable, Models.models(model).componets(k).alphaTestEnable)
-
-
-                            Gl.glCallList(Models.models(model).componets(k).callList_ID)
-                        Next
-                        Gl.glPopMatrix()
-                    End If
-                End If
+                    Next
+                Next
+                Gl.glPopMatrix()
+                '       End If
+                ' End If
             Next
             Gl.glUseProgram(0)
         End If
@@ -2828,9 +2854,9 @@ skip:
             Gl.glUseProgram(shader_list.leafcoloredDef_shader)
             For i As UInt32 = 0 To speedtree_matrix_list.Length - 2
                 Gl.glPushMatrix()
-                Gl.glMultMatrixf(Trees.matrix(i).matrix)
-
                 If Trees.flora(i).leaf_displayID > 0 Then
+                    Gl.glUniformMatrix4fv(leafColored_matrix, 1, 0, Trees.matrix(i).matrix)
+                    Gl.glMultMatrixf(Trees.matrix(i).matrix)
                     Gl.glCallList(Trees.flora(i).leaf_displayID)
                 End If
                 Gl.glPopMatrix()
@@ -2966,11 +2992,13 @@ skip:
 
     End Sub
 
-    Private Sub draw_g_decals_terrain_pass(ByVal influence As Integer)
+    Private Sub draw_g_decals()
 
         If Not m_decals_ Then
             Return
         End If
+        G_Buffer.attach_color_and_postion_only()
+
         Dim width, height As Integer
         width = pb1.Width + pb1.Width Mod 1
         height = pb1.Height + pb1.Height Mod 1
@@ -2981,7 +3009,8 @@ skip:
         Gl.glUseProgram(shader_list.decalsCpassDef_shader)
         Gl.glUniform1i(prjd_depthmap, 0)
         Gl.glUniform1i(prjd_color, 1)
-        Gl.glUniform1i(prjd_normal, 2)
+        'Gl.glUniform1i(prjd_normal_in, 3)
+        Gl.glUniform1i(prjd_flagmap, 2)
         'Gl.glUniform2f(prjd_FOV, width, heigth)
         Gl.glEnable(Gl.GL_BLEND)
         Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
@@ -2991,163 +3020,28 @@ skip:
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
 
-
-        For k = 0 To decal_matrix_list.Length - 1
-            With decal_matrix_list(k)
-                If decal_matrix_list(k).influence = influence Then
-
-                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
-                        Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
-                        Gl.glUniform3f(prjd_topright, .rtr.x, .rtr.y, .rtr.z)
-                        Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
-                        Gl.glUniform2f(prjd_uv_wrap, .u_wrap, .v_wrap)
-                        Gl.glUniform1i(prjd_influence, CInt(.influence))
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
-
-                        Gl.glCallList(decal_matrix_list(k).display_id)
-                    End If
-                End If
-            End With
-        Next
-        Gl.glUseProgram(0)
-        '====================================================================================
-        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
-        Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT)
-        'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        'ResizeGL()
-        'ViewPerspective()
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glDisable(Gl.GL_DEPTH_TEST)
-        Gl.glClearColor(0.0F, 0.0F, 0.4F, 0.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT Or Gl.GL_STENCIL_BUFFER_BIT)
-        Gl.glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, Gl.GL_COLOR_BUFFER_BIT, Gl.GL_NEAREST)
-        Gl.glReadBuffer(Gl.GL_BACK)
-        'Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, 0)
-
-        Gl.glUseProgram(shader_list.decalsNpassDef_shader)
-        Gl.glUniform1i(decal_color_map_id, 2)
-        Gl.glUniform1i(decal_normal_map_id, 3)
-        Gl.glUniform1i(decal_normal_in_id, 1)
-        Gl.glUniform1i(decal_depthmap_id, 0)
-
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
-
-        For k = 0 To decal_matrix_list.Length - 1
-            With decal_matrix_list(k)
-                If decal_matrix_list(k).influence = influence Then
-
-                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
-                        Gl.glUniformMatrix4fv(decal_matrix_id, 1, Gl.GL_FALSE, .matrix)
-                        Gl.glUniform3f(decal_tr_id, .rtr.x, .rtr.y, .rtr.z)
-                        Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
-                        Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
-                        Gl.glUniform1i(decal_influence, .influence)
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
-
-                        Gl.glCallList(decal_matrix_list(k).display_id)
-                    End If
-                End If
-            End With
-        Next
-        Gl.glUseProgram(0)
-        Gl.glReadBuffer(Gl.GL_BACK)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
-        'Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, width, height, 0)
-        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
-        Dim e2 = Gl.glGetError
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        'Gdi.SwapBuffers(pb1_hDC)
-        'Thread.Sleep(20)
-        '====================================================================================
-        Gl.glEnable(Gl.GL_DEPTH_TEST)
-        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
-        'Gl.glBindFramebufferEXT(Gl.GL_DRAW_FRAMEBUFFER_EXT, gBufferFBO)
-        G_Buffer.attachFOBtextures()
-        Dim e1 = Gl.glGetError
-        If m_wire_decals.Checked Then
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
-            Gl.glColor3f(1.0, 1.0, 1.0)
-            For k = 0 To decal_matrix_list.Length - 1
-                With decal_matrix_list(k)
-
-                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
-                        Gl.glPushMatrix()
-                        Gl.glMultMatrixf(.matrix)
-                        Gl.glCallList(decal_matrix_list(k).display_id)
-                        Gl.glPopMatrix()
-                    End If
-                End With
-            Next
-        End If
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glDisable(Gl.GL_BLEND)
-        Gl.glDepthMask(Gl.GL_TRUE)
-
-        Return
-
-
-    End Sub
-    Private Sub draw_g_decals_all_pass(ByVal influence As Integer)
-
-        If Not m_decals_ Then
-            Return
-        End If
-        Dim width, height As Integer
-        width = pb1.Width + pb1.Width Mod 1
-        height = pb1.Height + pb1.Height Mod 1
-        Gl.glFrontFace(Gl.GL_CW)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        Gl.glDisable(Gl.GL_CULL_FACE)
-        Gl.glDepthMask(Gl.GL_FALSE)
-        Gl.glUseProgram(shader_list.decalsCpassDef_shader)
-        Gl.glUniform1i(prjd_depthmap, 0)
-        Gl.glUniform1i(prjd_color, 1)
-        Gl.glUniform1i(prjd_normal, 2)
-        'Gl.glUniform2f(prjd_FOV, width, heigth)
-        Gl.glEnable(Gl.GL_BLEND)
-        Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
-        Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE_MINUS_SRC_ALPHA)
-        Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
 
 
         For k = 0 To decal_matrix_list.Length - 1
             With decal_matrix_list(k)
-                If decal_matrix_list(k).influence <> influence Then
+                'If decal_matrix_list(k).influence <> influence Then
 
-                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
-                        Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
-                        Gl.glUniform3f(prjd_topright, .rtr.x, .rtr.y, .rtr.z)
-                        Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
-                        Gl.glUniform2f(prjd_uv_wrap, .u_wrap, .v_wrap)
-                        Gl.glUniform1i(prjd_influence, CInt(.influence))
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
+                If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                    Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
+                    Gl.glUniform3f(prjd_topright, .rtr.x, .rtr.y, .rtr.z)
+                    Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
+                    Gl.glUniform2f(prjd_uv_wrap, .u_wrap, .v_wrap)
+                    Gl.glUniform1i(prjd_influence, CInt(.influence))
+                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
 
-                        Gl.glCallList(decal_matrix_list(k).display_id)
-                    End If
+                    Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
+                'End If
             End With
         Next
         Gl.glUseProgram(0)
@@ -3167,10 +3061,10 @@ skip:
         Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, 0)
 
         Gl.glUseProgram(shader_list.decalsNpassDef_shader)
-        Gl.glUniform1i(decal_color_map_id, 2)
-        Gl.glUniform1i(decal_normal_map_id, 3)
-        Gl.glUniform1i(decal_normal_in_id, 1)
         Gl.glUniform1i(decal_depthmap_id, 0)
+        Gl.glUniform1i(decal_normal_in_id, 1)
+        Gl.glUniform1i(decal_normal_map_id, 3)
+        Gl.glUniform1i(decal_color_map_id, 2)
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
@@ -3179,22 +3073,22 @@ skip:
 
         For k = 0 To decal_matrix_list.Length - 1
             With decal_matrix_list(k)
-                If decal_matrix_list(k).influence <> influence Then
+                'If decal_matrix_list(k).influence <> influence Then
 
-                    If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
-                        Gl.glUniformMatrix4fv(decal_matrix_id, 1, Gl.GL_FALSE, .matrix)
-                        Gl.glUniform3f(decal_tr_id, .rtr.x, .rtr.y, .rtr.z)
-                        Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
-                        Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
-                        Gl.glUniform1i(decal_influence, .influence)
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
+                If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                    Gl.glUniformMatrix4fv(decal_matrix_id, 1, Gl.GL_FALSE, .matrix)
+                    Gl.glUniform3f(decal_tr_id, .rtr.x, .rtr.y, .rtr.z)
+                    Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
+                    Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
+                    Gl.glUniform1i(decal_influence, .influence)
+                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
+                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
 
-                        Gl.glCallList(decal_matrix_list(k).display_id)
-                    End If
+                    Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
+                'End If
             End With
         Next
         Gl.glUseProgram(0)
@@ -3406,24 +3300,6 @@ skip:
         If frmStats.Visible = True Then
             terrain_time += swat2.ElapsedMilliseconds
         End If
-        'Decals have to be drawn in 2 passes. 1st pass (type 2) decals are drawn only on terrain
-        'so we first render the terrain, draw the type 2 decals than draw everything else
-        'and than draw decals that are not type 2. This lets them draw on everything in the scene.
-        'There are other decal types like 16 that should be drawn only on buildings BUT
-        'this is too expensive in render time. I may look in to a combiner method later on.
-        '---------------------------------------------------------------------------------
-        'Decals that are ONLY drawn on the terrain.. Type 2
-        swat2.Restart()
-        If m_decals_ And m_show_decals.Checked Then
-            G_Buffer.get_depth_buffer(width, height)
-            If decals_loaded And m_show_decals.Checked Then
-                draw_g_decals_terrain_pass(2) 'terrain only decal' 2 is terrain only
-            End If
-        End If
-        If frmStats.Visible = True Then
-            decal_time += swat2.ElapsedMilliseconds
-        End If
-
         '---------------------------------------------------------------------------------
         'Models bulidings only
         swat2.Restart()
@@ -3433,32 +3309,23 @@ skip:
         If frmStats.Visible = True Then
             model_time += swat2.ElapsedMilliseconds
         End If
-
         '---------------------------------------------------------------------------------
-        '---------------------------------------------------------------------------------
-        '---------------------------------------------------------------------------------
-        'Decals that are draw on everything that are not Type 2
+        'I changed how decals are drawn on what objects.
+        'I use a texture and set its colors based on what the object is being drawn.
+        'flags for decals
+        '64 = terrain
+        '96 = buildings
+        '128 = everything but buildings
         swat2.Restart()
         If m_decals_ And m_show_decals.Checked Then
             G_Buffer.get_depth_buffer(width, height)
             If decals_loaded And m_show_decals.Checked Then
-                draw_g_decals_all_pass(2) 'draw on anything
+                draw_g_decals()
             End If
         End If
 
         If frmStats.Visible = True Then
             decal_time += swat2.ElapsedMilliseconds
-        End If
-
-
-        '---------------------------------------------------------------------------------
-        'Models everything but buildings
-        swat2.Restart()
-        If models_loaded Then
-            draw_g_models(True)
-        End If
-        If frmStats.Visible = True Then
-            model_time += swat2.ElapsedMilliseconds
         End If
 
         '---------------------------------------------------------------------------------
@@ -3495,7 +3362,7 @@ skip:
         '------------------------------------
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
 
-        'Attach only the color buffer' Only gColor will be writen to.
+        'Attach only the color buffer'
         G_Buffer.attach_color_only()
         'debug only
         'Gl.glColor3f(1.0, 1.0, 0.0)
@@ -3646,7 +3513,7 @@ skip:
 
         Gl.glUseProgram(0)
         Gl.glReadBuffer(Gl.GL_BACK)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gSSAO)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
         Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, width, height, 0)
         Dim e = Gl.glGetError
         'Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)

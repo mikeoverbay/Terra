@@ -11,13 +11,14 @@ Module modDeferred
     Public gDepth As Integer
     Public gDepthTexture As Integer
     Public NoiseTexture As Integer
-    Public gSSAO As Integer
+    Public gFlag As Integer
     Public noise(16 * 4) As Single
     Public randomFloats(64 * 3) As Single
     Public Class GBuffer_
         'Private color_normal_buffers_only() As Integer = {Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
         Private color_buffer_only() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT}
-        Private attacments() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
+        Private attacments() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT}
+        Private attacments_CandP() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
         Public Sub shut_down()
             delete_textures_and_fob_objects()
         End Sub
@@ -42,8 +43,8 @@ Module modDeferred
         End Function
         Private Sub delete_textures_and_fob_objects()
             Dim e As Integer
-            If gSSAO > 0 Then
-                Gl.glDeleteTextures(1, gSSAO)
+            If gFlag > 0 Then
+                Gl.glDeleteTextures(1, gFlag)
             End If
             If gDepthTexture > 0 Then
                 Gl.glDeleteTextures(1, gDepthTexture)
@@ -88,7 +89,7 @@ Module modDeferred
             w = w1 + (w1 Mod 1)
             h = h1 + (h1 Mod 1)
         End Sub
-        Private Sub create_textures_and_Fbo()
+        Private Sub create_textures()
             Dim SCR_WIDTH, SCR_HEIGHT As Integer
             getsize(SCR_WIDTH, SCR_HEIGHT)
             'depth buffer
@@ -112,14 +113,14 @@ Module modDeferred
             'End If
             Dim e1 = Gl.glGetError
 
-            'Gl.glGenTextures(1, gSSAO)
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gSSAO)
-            'Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RED, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_R, Gl.GL_UNSIGNED_BYTE, Nothing)
-            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
-            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
-            'Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            'Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
-            'Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glGenTextures(1, gFlag)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, Nothing)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
 
             Gl.glGenTextures(1, gDepthTexture)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
@@ -168,8 +169,11 @@ Module modDeferred
         Public Sub attachFOBtextures()
             ' Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glDrawBuffers(3, attacments)
+            Gl.glDrawBuffers(4, attacments)
             'Dim er = Gl.glGetError
+        End Sub
+        Public Sub attach_color_and_postion_only()
+            Gl.glDrawBuffers(2, attacments_CandP)
         End Sub
         Public Sub attachShadowTexture()
             Gl.glDrawBuffers(1, color_buffer_only)
@@ -182,6 +186,7 @@ Module modDeferred
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, 0, 0)
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_TEXTURE_2D, 0, 0)
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_TEXTURE_2D, 0, 0)
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT, Gl.GL_TEXTURE_2D, 0, 0)
         End Sub
         Public Sub attach_color_only()
             Gl.glDrawBuffers(1, color_buffer_only)
@@ -197,7 +202,7 @@ Module modDeferred
 
             delete_textures_and_fob_objects()
             'Create the gBuffer textures
-            create_textures_and_Fbo()
+            create_textures()
             Dim e2 = Gl.glGetError
 
             'Create the FBO
@@ -215,10 +220,11 @@ Module modDeferred
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, gColor, 0)
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_TEXTURE_2D, gNormal, 0)
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_TEXTURE_2D, gPosition, 0)
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT, Gl.GL_TEXTURE_2D, gFlag, 0)
             Dim e5 = Gl.glGetError
 
             'attach draw buffers
-            Gl.glDrawBuffers(3, attacments)
+            Gl.glDrawBuffers(4, attacments)
 
             'attach draw buffers
             Dim Status = Gl.glCheckFramebufferStatusEXT(Gl.GL_FRAMEBUFFER_EXT)

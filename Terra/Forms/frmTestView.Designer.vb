@@ -38,6 +38,7 @@ Partial Class frmTestView
         Me.b_depth = New System.Windows.Forms.RadioButton()
         Me.w_label = New System.Windows.Forms.Label()
         Me.h_label = New System.Windows.Forms.Label()
+        Me.b_flags = New System.Windows.Forms.RadioButton()
         Me.Panel1.SuspendLayout()
         CType(Me.pb3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
@@ -150,6 +151,7 @@ Partial Class frmTestView
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.b_flags)
         Me.GroupBox2.Controls.Add(Me.b_normal)
         Me.GroupBox2.Controls.Add(Me.b_position)
         Me.GroupBox2.Controls.Add(Me.b_color)
@@ -239,6 +241,19 @@ Partial Class frmTestView
         Me.h_label.TabIndex = 4
         Me.h_label.Text = "Height:"
         '
+        'b_flags
+        '
+        Me.b_flags.Appearance = System.Windows.Forms.Appearance.Button
+        Me.b_flags.ForeColor = System.Drawing.Color.Silver
+        Me.b_flags.Location = New System.Drawing.Point(315, 14)
+        Me.b_flags.Name = "b_flags"
+        Me.b_flags.Size = New System.Drawing.Size(70, 23)
+        Me.b_flags.TabIndex = 4
+        Me.b_flags.Tag = "5"
+        Me.b_flags.Text = "Flags"
+        Me.b_flags.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.b_flags.UseVisualStyleBackColor = True
+        '
         'frmTestView
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -278,4 +293,5 @@ Partial Class frmTestView
     Friend WithEvents b_color As System.Windows.Forms.RadioButton
     Friend WithEvents b_position As System.Windows.Forms.RadioButton
     Friend WithEvents b_normal As System.Windows.Forms.RadioButton
+    Friend WithEvents b_flags As System.Windows.Forms.RadioButton
 End Class

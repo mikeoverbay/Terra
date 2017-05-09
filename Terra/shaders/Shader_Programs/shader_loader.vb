@@ -45,19 +45,17 @@ Module shader_loader
     Public render_has_holes, render_hole_texture As Integer
     Public c_address, n_address, a_address, t_address, c_position As Integer
     Public c_address2, n_address2, a_address2, t_address2 As Integer
-    Public c_address3, n_address3, a_address3, t_address3 As Integer
+    Public a_address3, t_address3 As Integer
     Public a_address5 As Integer
 
 
     Public n_address6, f_address6, a_address6, t_address6 As Integer
     Public layer_1, layer_2, layer_3, layer_4, n_layer_1, n_layer_2, n_layer_3, n_layer_4 As Integer
-    Public main_texture, is_bumped, is_multi_textured, colormap2, gamma, gamma_2 As Integer
-    Public gamma_3, branch_gamma_level_id, gamma_6, c_position3, branch_eye_pos_id, is_bumped3, is_bumped4, is_bumped5 As Integer
+    Public main_texture, is_bumped, gamma, gamma_2 As Integer
+    Public gamma_3, branch_gamma_level_id, gamma_6, c_position3, branch_eye_pos_id, is_bumped4, is_bumped5 As Integer
     Public layer0U, layer1U, layer2U, layer3U As Integer
     Public layer0V, layer1V, layer2V, layer3V As Integer
     Public gray_level_1, gray_level_2, gray_level_3, gray_level_6, branch_gray_level_id As Integer
-    Public is_GAmap, alphaRef, alphaTestEnable, tangent, binormal As Integer
-    Public bld_matrix As Integer
     Public u_mat1, u_mat2 As Integer
     Public mixtexture As Integer
     Public sun_lock As Boolean = False
@@ -383,6 +381,8 @@ Module shader_loader
         normal_length_ = Gl.glGetUniformLocation(shader_list.normal_shader, "l_length")
     End Sub
 
+    Public is_GAmap, alphaRef, alphaTestEnable, is_multi_textured As Integer
+    Public n_address3, bld_matrix, c_address3, colormap2, is_bumped3, bld_flag As Integer
     Private Sub set_buldingsDef_variables()
         c_address3 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "colorMap")
         colormap2 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "colorMap_2")
@@ -393,6 +393,7 @@ Module shader_loader
         alphaRef = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "alphaRef")
         alphaTestEnable = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "alphaTestEnable")
         bld_matrix = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "matrix")
+        bld_flag = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "flag")
     End Sub
 
     Public branch_color_map_id, branch_normalmap_map_id, branch_matrix_id As Integer
@@ -416,13 +417,18 @@ Module shader_loader
         leaf_matrix_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "matrix")
     End Sub
 
+    Public leafColored_matrix As Integer
+    Private Sub set_leafColored_variables()
+        leafColored_matrix = Gl.glGetUniformLocation(shader_list.leafcoloredDef_shader, "matrix")
+    End Sub
+
     Private Sub set_colorMapper_variables()
         colorMapper_mask_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "mask")
         colorMapper_colorMap_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "colorMap")
     End Sub
 
     Public decal_color_map_id, decal_normal_map_id, decal_normal_in_id, _
-    decal_depthmap_id, decal_bl_id, decal_tr_id, decal_matrix_id As Integer
+    decal_depthmap_id, decal_bl_id, decal_tr_id, decal_matrix_id, decal_flag, decal_flagmap As Integer
     Private Sub set_decalsNpassDef_variables()
         decal_color_map_id = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "colorMap")
         decal_normal_map_id = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "normalMap")
@@ -434,18 +440,24 @@ Module shader_loader
 
         decal_uv_wrap = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "uv_wrap")
         decal_influence = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "influence")
+        'decal_flag = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "flag")
+        decal_flagmap = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "gFlag")
     End Sub
 
-    Public prjd_color, prjd_normal, prjd_depthmap, prjd_matrix, prjd_topright, prjd_bottomleft, prjd_uv_wrap, prjd_influence As Integer
+    Public prjd_color, prjd_normal, prjd_depthmap, prjd_matrix, prjd_topright, _
+        prjd_bottomleft, prjd_uv_wrap, prjd_influence, prjd_normal_in, prjd_flag, prjd_flagmap As Integer
     Private Sub set_decalsCpassDef_variables()
         prjd_color = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "colorMap")
         prjd_normal = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "normalMap")
         prjd_depthmap = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "depthMap")
+        prjd_normal_in = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "normal_in")
         prjd_matrix = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "decal_matrix")
         prjd_topright = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "tr")
         prjd_bottomleft = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "bl")
         prjd_uv_wrap = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "uv_wrap")
         prjd_influence = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "influence")
+        prjd_flag = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "flag")
+        prjd_flagmap = Gl.glGetUniformLocation(shader_list.decalsCpassDef_shader, "gFlag")
     End Sub
 
     Public toLinear_tex As Integer
@@ -502,6 +514,7 @@ Module shader_loader
         set_branchDef_variables()
         set_frondDef_variables()
         set_leafDef_variables()
+        set_leafColored_variables()
         set_colorMapper_variables()
         set_lzTerrainDef_variables()
         set_decalsNpassDef_variables()

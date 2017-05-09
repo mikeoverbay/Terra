@@ -19,6 +19,7 @@
         AddHandler b_color.CheckedChanged, AddressOf image_changed
         AddHandler b_position.CheckedChanged, AddressOf image_changed
         AddHandler b_normal.CheckedChanged, AddressOf image_changed
+        AddHandler b_flags.CheckedChanged, AddressOf image_changed
         frmMain.pb2.Parent = Me.pb3
         frmMain.pb2.BringToFront()
         image_id = CInt(b_depth.Tag)
@@ -71,6 +72,7 @@
                 Gl.glUniform1i(normalOffset_normal, 0)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
             Case 5
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
 
         End Select
 
@@ -117,4 +119,7 @@
 
     End Sub
 
+    Private Sub b_flags_CheckedChanged(sender As Object, e As EventArgs) Handles b_flags.CheckedChanged
+        update_screen()
+    End Sub
 End Class
