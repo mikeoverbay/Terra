@@ -6,12 +6,14 @@ Module modFrustum
 
     Public culled_count As Integer
     Public Sub check_terrain_visible()
+        If Not m_terrain_ And Not terrain_loaded Then Return
         For i = 0 To test_count
             maplist(i).visible = CubeInFrustum(maplist(i).BB)
         Next
     End Sub
 
     Public Sub check_decals_visible()
+        If Not m_decals_ And Not decals_loaded Then Return
         For i = 0 To decal_matrix_list.Length - 1
             If decal_matrix_list(i).good Then
                 decal_matrix_list(i).visible = CubeInFrustum(decal_matrix_list(i).BB)
@@ -19,11 +21,13 @@ Module modFrustum
         Next
     End Sub
     Public Sub check_models_visible()
+        If Not m_models_ And Not models_loaded Then Return
         For model As UInt32 = 0 To Models.matrix.Length - 2
             Models.models(model).visible = CubeInFrustum(Model_Matrix_list(model).BB)
         Next
     End Sub
     Public Sub check_trees_visible()
+        If Not m_trees_ And Not trees_loaded Then Return
         For t = 0 To treeCache.Length - 2
             For tree As UInt32 = 0 To treeCache(t).tree_cnt - 1
                 treeCache(t).BB(tree).visible = CubeInFrustum(treeCache(t).BB(tree).BB)

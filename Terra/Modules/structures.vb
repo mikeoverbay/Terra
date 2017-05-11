@@ -301,13 +301,25 @@ Module structures
     End Structure
     Public water As New water_model_
     Public Structure water_model_
-        Public displayID As Integer
+        Public displayID_cube As Integer
+        Public displayID_plane As Integer
         Public textureID As Integer
+        Public normalID As Integer
         Public size_ As vect3
         Public position As vect3
         Public orientation As Single
         Public type As String
         Public IsWater As Boolean
+        Public lbl As vect3
+        Public lbr As vect3
+        Public ltl As vect3
+        Public ltr As vect3
+        Public rbl As vect3
+        Public rbr As vect3
+        Public rtl As vect3
+        Public rtr As vect3
+        Public BB() As vect3
+        Public matrix() As Single
     End Structure
 
     Public mapBoard(,) As Integer

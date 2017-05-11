@@ -19,6 +19,7 @@ Module modDeferred
         Private color_buffer_only() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT}
         Private attacments() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT}
         Private attacments_CandP() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
+        Private attacments_CandPandN() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
         Public Sub shut_down()
             delete_textures_and_fob_objects()
         End Sub
@@ -119,8 +120,8 @@ Module modDeferred
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
 
             Gl.glGenTextures(1, gDepthTexture)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
@@ -174,6 +175,9 @@ Module modDeferred
         End Sub
         Public Sub attach_color_and_postion_only()
             Gl.glDrawBuffers(2, attacments_CandP)
+        End Sub
+        Public Sub attach_color_and_postion_and_normal_only()
+            Gl.glDrawBuffers(3, attacments_CandPandN)
         End Sub
         Public Sub attachShadowTexture()
             Gl.glDrawBuffers(1, color_buffer_only)

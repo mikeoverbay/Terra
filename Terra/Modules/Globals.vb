@@ -14,7 +14,7 @@ Module Globals
     Public trees_loaded As Boolean
     Public decals_loaded As Boolean
     Public models_loaded As Boolean
-    Public bases_laoded As Boolean
+    Public bases_loaded As Boolean
     Public sky_loaded As Boolean
     Public water_loaded As Boolean
 
@@ -196,9 +196,7 @@ Module Globals
     Public MAP_BB_BL, MAP_BB_UR As vect2
     Public minimap_textureid As Integer
     Public minimsp_frameT_TextureId As Integer
-    Public ringDisplayID_1 As Integer
-    Public ringDisplayID_2 As Integer
-    Public sector_outlineID As Integer
+   Public sector_outlineID As Integer
     Public map_borderId As Integer
     Public team_1 As vect3
     Public team_2 As vect3

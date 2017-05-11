@@ -46,13 +46,15 @@ void main(void)
     vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Albedo * light_Color*1.5;
 
     vec3 lighting = Albedo * ambient_level * 3.0;
+    gl_FragColor.rgb = lighting;
     vec3 viewDir = normalize(viewPos - FragPos);
     float viewDistance = length(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(Normal, halfwayDir), 0.0), 90.0) * 0.3 * spec_level;
     vec3 specular = light_Color * spec * Specular;
-    gl_FragColor = correct(vec4(lighting + diffuse + specular, 1.0), 3.0 * bright_level);
-    
+    if (length(FragPos) > 0.0){ // so we dont effect the skydome!
+        gl_FragColor = correct(vec4(lighting + diffuse + specular, 1.0), 3.0 * bright_level);
+    }
  
     //gray level
     vec3 luma = vec3(0.299, 0.587, 0.114);

@@ -8,7 +8,9 @@ out vec4 color;
 void main()
 {
     color = gl_Color;
-    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-    n = gl_NormalMatrix * gl_Normal;
+    gl_Position = matrix * gl_Vertex;
+    gl_Position = gl_ModelViewProjectionMatrix * gl_Position;
+    n = (mat3(matrix)) * gl_Normal;
+    n.xz*=-1.0;
     Vertex =  (matrix) * gl_Vertex;
 }

@@ -1436,42 +1436,136 @@ jump_normal:
         water.position.y = BWWa.bwwa_t1(0).position.y
         water.position.z = BWWa.bwwa_t1(0).position.z
 
-        Dim left = -water.size_.x / 2.0
-        Dim right = water.size_.x / 2.0
-        Dim top = water.size_.z / 2.0
-        Dim bottom = -water.size_.z / 2.0
-        Dim y_plane As Single = water.position.y
-        water.displayID = Gl.glGenLists(1)
-        Gl.glNewList(water.displayID, Gl.GL_COMPILE)
-        Gl.glBegin(Gl.GL_TRIANGLES)
+        ReDim water.matrix(16)
+        'build the waters matrix;
+        Gl.glPushMatrix()
+        Gl.glLoadIdentity()
+        Gl.glMatrixMode(Gl.GL_MODELVIEW)
+        Gl.glTranslatef(-water.position.x, water.position.y, water.position.z)
+        Gl.glRotatef(-water.orientation * 57.2957795, 0.0, 1.0, 0.0)
+        Gl.glScalef(water.size_.x, 1.0, water.size_.z)
+
+        Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, water.matrix)
+        Gl.glPopMatrix()
+
+        get_water_corners()
         '-----------------------------------1
-
-        Gl.glNormal3f(0.0, 1.0, 0.0)
-        Gl.glTexCoord2f(10.0, 0.0)
-        Gl.glVertex3f(right, y_plane, bottom)
-
-        Gl.glNormal3f(0.0, 1.0, 0.0)
-        Gl.glTexCoord2f(10.0, 10.0)
-        Gl.glVertex3f(right, y_plane, top)
-
-        Gl.glNormal3f(0.0, 1.0, 0.0)
-        Gl.glTexCoord2f(0.0, 10.0)
-        Gl.glVertex3f(left, y_plane, top)
-        '------------------------------------2
-        Gl.glNormal3f(0.0, 1.0, 0.0)
-        Gl.glTexCoord2f(0.0, 10.0)
-        Gl.glVertex3f(left, y_plane, top)
-
-        Gl.glNormal3f(0.0, 1.0, 0.0)
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(left, y_plane, bottom)
-
-        Gl.glNormal3f(0.0, 1.0, 0.0)
-        Gl.glTexCoord2f(10.0, 0.0)
-        Gl.glVertex3f(right, y_plane, bottom)
-
+        water.displayID_cube = Gl.glGenLists(1)
+        Gl.glNewList(water.displayID_cube, Gl.GL_COMPILE)
+        Gl.glBegin(Gl.GL_QUADS)
+        make_water_box()
         Gl.glEnd()
         Gl.glEndList()
+        'make plane
+        water.displayID_plane = Gl.glGenLists(1)
+        Gl.glNewList(water.displayID_plane, Gl.GL_COMPILE)
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 6.0)
+        Gl.glNormal3f(0.0, 1.0, 0.0)
+        Gl.glVertex3f(-0.5, 0.0, 0.5)
+
+        Gl.glTexCoord2f(6.0, 6.0)
+        Gl.glNormal3f(0.0, 1.0, 0.0)
+        Gl.glVertex3f(0.5, 0.0, 0.5)
+
+        Gl.glTexCoord2f(6.0, 0.0)
+        Gl.glNormal3f(0.0, 1.0, 0.0)
+        Gl.glVertex3f(0.5, 0.0, -0.5)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glNormal3f(0.0, 1.0, 0.0)
+        Gl.glVertex3f(-0.5, 0.0, -0.5)
+        Gl.glEnd()
+        Gl.glEndList()
+
+
+    End Sub
+    Private Sub make_water_box()
+        With water
+            '1
+            Gl.glVertex3f(.lbr.x, .lbr.y, .lbr.z)
+            Gl.glVertex3f(.ltr.x, .ltr.y, .ltr.z)
+            Gl.glVertex3f(.rtr.x, .rtr.y, .rtr.z)
+            Gl.glVertex3f(.rbr.x, .rbr.y, .rbr.z)
+            '2
+            Gl.glVertex3f(.lbl.x, .lbl.y, .lbl.z)
+            Gl.glVertex3f(.ltl.x, .ltl.y, .ltl.z)
+            Gl.glVertex3f(.ltr.x, .ltr.y, .ltr.z)
+            Gl.glVertex3f(.lbr.x, .lbr.y, .lbr.z)
+            '3
+            Gl.glVertex3f(.rbl.x, .rbl.y, .rbl.z)
+            Gl.glVertex3f(.rtl.x, .rtl.y, .rtl.z)
+            Gl.glVertex3f(.ltl.x, .ltl.y, .ltl.z)
+            Gl.glVertex3f(.lbl.x, .lbl.y, .lbl.z)
+            '4
+            Gl.glVertex3f(.rbr.x, .rbr.y, .rbr.z)
+            Gl.glVertex3f(.rtr.x, .rtr.y, .rtr.z)
+            Gl.glVertex3f(.rtl.x, .rtl.y, .rtl.z)
+            Gl.glVertex3f(.rbl.x, .rbl.y, .rbl.z)
+            '5
+            Gl.glVertex3f(.rtr.x, .rtr.y, .rtr.z)
+            Gl.glVertex3f(.ltr.x, .ltr.y, .ltr.z)
+            Gl.glVertex3f(.ltl.x, .ltl.y, .ltl.z)
+            Gl.glVertex3f(.rtl.x, .rtl.y, .rtl.z)
+            '6
+            Gl.glVertex3f(.rbl.x, .rbl.y, .rbl.z)
+            Gl.glVertex3f(.lbl.x, .lbl.y, .lbl.z)
+            Gl.glVertex3f(.lbr.x, .lbr.y, .lbr.z)
+            Gl.glVertex3f(.rbr.x, .rbr.y, .rbr.z)
+
+
+        End With
+
+    End Sub
+    Private Sub get_water_corners()
+        With water
+            ReDim .BB(8)
+            ' left side -----------
+            .lbl.x = -0.5 'left bottom left
+            .lbl.y = -100.0
+            .lbl.z = -0.5
+            .BB(0) = .lbl
+            '
+            .lbr.x = 0.5 ' left bottom right
+            .lbr.y = -100.0
+            .lbr.z = -0.5
+            .BB(1) = .lbr
+            '
+            .ltl.x = -0.5 'left top left
+            .ltl.y = 0.0
+            .ltl.z = -0.5
+            .BB(2) = .ltl
+            '
+            .ltr.x = 0.5 ' left top right
+            .ltr.y = 0.0
+            .ltr.z = -0.5
+            .BB(3) = .ltr
+            ' right side ----------
+            .rbl.x = -0.5 ' right bottom left
+            .rbl.y = -100.0
+            .rbl.z = 0.5
+            .BB(4) = .rbl
+            '
+            .rbr.x = 0.5 ' right bottom right
+            .rbr.y = -100.0
+            .rbr.z = 0.5
+            .BB(5) = .rbr
+            '
+            .rtl.x = -0.5 ' right top left
+            .rtl.y = 0.0
+            .rtl.z = 0.5
+            .BB(6) = .rtl
+            '
+            .rtr.x = 0.5 ' right top right
+            .rtr.y = 0.0
+            .rtr.z = 0.5
+            .BB(7) = .rtr
+
+        End With
+        For i = 0 To 7
+            water.BB(i) = translate_to(water.BB(i), water.matrix)
+        Next
     End Sub
 
     Public Sub get_tree_branch_texture(ByVal diffuse As String, ByVal tree As Integer)
@@ -2476,37 +2570,75 @@ get_billboard_data:
         Gl.glEnd()
 
     End Sub
+    Public Sub draw_base_ring(ByVal x As Single, ByVal z As Single, ByVal base As Integer)
+
+        Dim radius, thickness As Single
+        radius = 50.0
+        thickness = 1.0
+        Gl.glUseProgram(shader_list.ring_Shader)
+        Gl.glUniform3f(ring_location, x, 0.0, z)
+        Gl.glUniform1f(ring_radius, radius)
+        Gl.glUniform1f(ring_thickness, thickness)
+        Gl.glUniform1i(ring_depthmap, 0)
+        If base = 1 Then
+            Gl.glColor4f(0.7, 0.0, 0.0, 0.7)
+        Else
+            Gl.glColor4f(0.0, 1.0, 0.0, 0.8)
+        End If
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        'draw_quad(radius + thickness)
+        Gl.glPushMatrix()
+        Gl.glTranslatef(0.0, get_Z_at_XY(x, z), 0.0)
+        Gl.glScalef(1.0, 0.05, 1.0)
+        glutSolidCube((radius + thickness) * 2.0)
+        Gl.glPopMatrix()
+        Gl.glUseProgram(0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+
+        Return
+
+
+
+    End Sub
     Public Sub draw_cursor(ByVal x As Single, ByVal z As Single)
-        Dim section = (PI * 2) / 30
-        Dim r1 As Single = 5.0 : Dim r2 As Single = 6.0
-        Dim yup As Double = 0.5
-        Dim x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4 As Single
+
+
+        Dim radius, thickness As Single
+        radius = 6.0
+        thickness = 1.0
+        Gl.glUseProgram(shader_list.ring_Shader)
+        Gl.glUniform3f(ring_location, x, 0.0, z)
+        Gl.glUniform1f(ring_radius, radius)
+        Gl.glUniform1f(ring_thickness, thickness)
+        Gl.glUniform1i(ring_depthmap, 0)
+        Gl.glEnable(Gl.GL_BLEND)
+        Gl.glColor4f(1.0, 1.0, 1.0, 0.6)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        'draw_quad(radius + thickness)
+        Gl.glPushMatrix()
+        Gl.glTranslatef(0.0, get_Z_at_XY(x, z), 0.0)
+        glutSolidCube((radius + thickness) * 2.0)
+        Gl.glPopMatrix()
+        Gl.glUseProgram(0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glDisable(Gl.GL_BLEND)
+        Return
+
+    End Sub
+    Public Sub draw_quad(ByVal size As Single)
         Gl.glBegin(Gl.GL_QUADS)
-        For i = 0 To PI * 2 Step section
-
-            x1 = Cos(i) * r1 + x : z1 = Sin(i) * r1 + z : y1 = get_Z_at_XY(x1, z1) + yup
-            x2 = Cos(i) * r2 + x : z2 = Sin(i) * r2 + z : y2 = get_Z_at_XY(x2, z2) + yup
-            x3 = Cos(i + section) * r1 + x : z3 = Sin(i + section) * r1 + z : y3 = get_Z_at_XY(x3, z3) + yup
-            x4 = Cos(i + section) * r2 + x : z4 = Sin(i + section) * r2 + z : y4 = get_Z_at_XY(x4, z4) + yup
-            Gl.glNormal3f(0.0, -1.0, 0.0)
-            'top
-            Gl.glVertex3f(x1, y1, z1)
-            Gl.glVertex3f(x2, y2, z2)
-            Gl.glVertex3f(x4, y4, z4)
-            Gl.glVertex3f(x3, y3, z3)
-            'outside face
-            Gl.glVertex3f(x4, y4, z4)
-            Gl.glVertex3f(x2, y2, z2)
-            Gl.glVertex3f(x2, y2 - 1, z2)
-            Gl.glVertex3f(x4, y4 - 1, z4)
-            'inside face
-            Gl.glVertex3f(x1, y1, z1)
-            Gl.glVertex3f(x3, y3, z3)
-            Gl.glVertex3f(x3, y3 - 1, z3)
-            Gl.glVertex3f(x1, y1 - 1, z1)
-        Next
+        Gl.glVertex3f(-size, 0.0, size)
+        Gl.glVertex3f(size, 0.0, size)
+        Gl.glVertex3f(size, 0.0, -size)
+        Gl.glVertex3f(-size, 0.0, -size)
         Gl.glEnd()
-
     End Sub
     Public Sub create_grid_marks()
         'Return

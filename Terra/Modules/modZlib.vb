@@ -196,7 +196,7 @@ Module modZlib
         trees_loaded = False
         decals_loaded = False
         models_loaded = False
-        bases_laoded = False
+        bases_loaded = False
         sky_loaded = False
         water_loaded = False
 
@@ -511,31 +511,21 @@ dont_grab_this:
 
         '-----------------------------------
         If m_bases_ Then
-            bases_laoded = True
-            'lets make the team rings here? OK.
-            ringDisplayID_1 = Gl.glGenLists(1)
-            Gl.glNewList(ringDisplayID_1, Gl.GL_COMPILE)
-            draw_ring(-team_1.x, team_1.z)
-            Gl.glEndList()
-            Gl.glFinish()
-
-            ringDisplayID_2 = Gl.glGenLists(1)
-            Gl.glNewList(ringDisplayID_2, Gl.GL_COMPILE)
-            draw_ring(-team_2.x, team_2.z)
-            Gl.glEndList()
-            Gl.glFinish()
-            '---------------------------------------
+            bases_loaded = True
         End If
-        'lets make the sector outlines
-        sector_outlineID = Gl.glGenLists(1)
-        Gl.glNewList(sector_outlineID, Gl.GL_COMPILE)
-        create_grid_marks()
-        Gl.glEndList()
-        'lets make the map outside border
-        map_borderId = Gl.glGenLists(1)
-        Gl.glNewList(map_borderId, Gl.GL_COMPILE)
-        make_map_boarder()
-        Gl.glEndList()
+        '======================================
+        'this is all done in the terrainMarkers_shader now.
+        ''lets make the sector outlines
+        'sector_outlineID = Gl.glGenLists(1)
+        'Gl.glNewList(sector_outlineID, Gl.GL_COMPILE)
+        'create_grid_marks()
+        'Gl.glEndList()
+        ''lets make the map outside border
+        'map_borderId = Gl.glGenLists(1)
+        'Gl.glNewList(map_borderId, Gl.GL_COMPILE)
+        'make_map_boarder()
+        'Gl.glEndList()
+        '======================================
 
 
         '**********************************************
@@ -564,6 +554,7 @@ dont_grab_this:
                 water.IsWater = True
                 build_water()
                 water.textureID = Load_DDS_File(Application.StartupPath + "\Resources\water2.dds")
+                water.normalID = Load_DDS_File(Application.StartupPath + "\Resources\water2_NM.dds")
                 GC.Collect()
             End If
         End If
@@ -609,7 +600,15 @@ dont_grab_this:
         frmMain.pb1.Focus()
         maploaded = True ' entire map is ready for display.
         frmMain.position_camera() ' this should cause a redraw
-
+        Dim radius As Single = MAP_BB_UR.x
+        Dim lx_light = Cos(0.707) * radius
+        Dim lz_light = Sin(0.707) * radius
+        Dim ly_light = 400.0 'Z_Cursor = get_Z_at_XY(look_point_X, look_point_Z) ' + 1
+        'ly_light = get_Z_at_XY(lx_light, lz_light) + 150.0
+        position(0) = lx_light 'u_look_point_X - lx
+        position(1) = ly_light 'u_look_point_Y + 10 'ly
+        position(2) = lz_light 'u_look_point_Z - lz
+        position(3) = 1.0
         frmMain.draw_scene()
     End Function
     Public Sub find_street_lights()
@@ -988,7 +987,7 @@ skip_this:
 
     Private Sub load_decals()
         If m_decals_ Then
-            tb1.text = "Populating the sections with decals...." 'talk to user
+            tb1.text = "Getting Decal textures and data...." 'talk to user
             decals_loaded = True
             make_new_decals()
             GC.Collect()

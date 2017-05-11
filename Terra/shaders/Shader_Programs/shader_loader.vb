@@ -7,6 +7,7 @@ Imports Tao.Platform.Windows
 Module shader_loader
     Public shader_list As New shader_list_
     Public Class shader_list_
+        Public ring_Shader As Integer
         Public alphaTransparent_shader As Integer
         Public lowQualityTrees_shader As Integer
         Public branchDef_shader As Integer
@@ -33,8 +34,10 @@ Module shader_loader
         Public lzTerrainDef_shader As Integer
         Public tankDef_shader As Integer
         Public terrainDef_shader As Integer
+        Public terrainMarkers_shader As Integer
         Public toLinear_shader As Integer
         Public trees_shader As Integer
+        Public wire_shader As Integer
         Public write3D_shader As Integer
     End Class
 #Region "variables"
@@ -427,6 +430,15 @@ Module shader_loader
         colorMapper_colorMap_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "colorMap")
     End Sub
 
+    Public ring_radius, ring_thickness, ring_location, ring_depthmap As Integer
+    Public Sub set_ring_variables()
+
+        ring_location = Gl.glGetUniformLocation(shader_list.ring_Shader, "ring_center")
+        ring_radius = Gl.glGetUniformLocation(shader_list.ring_Shader, "radius")
+        ring_thickness = Gl.glGetUniformLocation(shader_list.ring_Shader, "thickness")
+        ring_depthmap = Gl.glGetUniformLocation(shader_list.ring_Shader, "depthMap")
+    End Sub
+
     Public decal_color_map_id, decal_normal_map_id, decal_normal_in_id, _
     decal_depthmap_id, decal_bl_id, decal_tr_id, decal_matrix_id, decal_flag, decal_flagmap As Integer
     Private Sub set_decalsNpassDef_variables()
@@ -504,8 +516,20 @@ Module shader_loader
         normalOffset_normal = Gl.glGetUniformLocation(shader_list.normalOffset_shader, "normalMap")
     End Sub
 
-    Public Sub set_shader_variables()
+    Public tm_bb_tr, tm_bb_bl, tm_grid_size, tm_show_border, tm_show_grid, tm_show_chunks As Integer
+    Private Sub set_terrainMarkers_variables()
+        tm_bb_tr = Gl.glGetUniformLocation(shader_list.terrainMarkers_shader, "bb_tr")
+        tm_bb_bl = Gl.glGetUniformLocation(shader_list.terrainMarkers_shader, "bb_bl")
+        tm_grid_size = Gl.glGetUniformLocation(shader_list.terrainMarkers_shader, "g_size")
+        tm_show_border = Gl.glGetUniformLocation(shader_list.terrainMarkers_shader, "show_border")
+        tm_show_grid = Gl.glGetUniformLocation(shader_list.terrainMarkers_shader, "show_grid")
+        tm_show_chunks = Gl.glGetUniformLocation(shader_list.terrainMarkers_shader, "show_chunks")
 
+    End Sub
+
+
+    Public Sub set_shader_variables()
+        set_ring_variables()
         set_terrainDef_variables()
         set_deferredLighting_variables()
         set_comp_variables()
@@ -525,6 +549,7 @@ Module shader_loader
         set_dome_variables()
         set_shadow_variables()
         set_SSAO_variables()
+        set_terrainMarkers_variables()
         Return
 
         colorMapper_mask_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "mask")

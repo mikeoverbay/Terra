@@ -52,7 +52,7 @@
 
     Private Sub m_bases_CheckedChanged(sender As Object, e As EventArgs) Handles m_bases.CheckedChanged
         m_bases_ = m_bases.Checked
-        If Not bases_laoded And maploaded And m_bases_ Then
+        If Not bases_loaded And maploaded And m_bases_ Then
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then

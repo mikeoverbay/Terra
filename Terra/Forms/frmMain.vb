@@ -1289,86 +1289,8 @@ nope:
         Next
         Gl.glEnd()
         Gl.glEndList()
-        ''outline tank
-        'b.BaseStream.Position = 0
-        'poly_count = b.ReadUInt32
 
-        'If tank.track_displaylistAdj > 0 Then
-        '    Gl.glDeleteLists(tank.track_displaylistAdj, 1)
-        'End If
-        'ID = Gl.glGenLists(1)
-        'Gl.glNewList(ID, Gl.GL_COMPILE)
-
-        'tank.track_displaylistAdj = ID
-        'Gl.glBegin(Gl.GL_TRIANGLES_ADJACENCY_EXT)
-        'cnt = 0 ' for debug
-        ''start pushing vertices
-        'For c As UInt32 = 0 To poly_count - 1
-
-        '    v(0) = -b.ReadSingle
-        '    v(1) = b.ReadSingle
-        '    v(2) = b.ReadSingle
-        '    n(0) = -b.ReadSingle
-        '    n(1) = b.ReadSingle
-        '    n(2) = b.ReadSingle
-        '    'uv(0) = -b.ReadSingle
-        '    'uv(1) = b.ReadSingle
-        '    Gl.glNormal3fv(n)
-        '    'Gl.glTexCoord2fv(uv)
-        '    Gl.glVertex3fv(v)
-        '    cnt += 1
-        'Next
-        'Gl.glEnd()
-        'Gl.glEndList()
         Gl.glFinish()
-
-        '----------------------------
-        ' None of this turned out usable
-        ' It slows the drawing down, uses to much mem and
-        ' for the inprovment in looks, it aint worth it.
-        '----------------------------
-        ' get chassis texture
-        '    Dim t_size = b.ReadUInt64
-        '    If t_size = 0 Then GoTo read_hull
-        '    Dim imgl() = b.ReadBytes(t_size)
-        '    File.WriteAllBytes("c:\test.dds", imgl)
-        '    Dim t_ms As New MemoryStream(imgl)
-        '    tank.tracks_texId = get_texture(t_ms, False)
-        '    '---------------------------------------------------
-        'read_hull:
-        '    'get rest of the tanks polys
-        '    If Gl.glIsList(tank.hull_displaylist) Then
-        '      Gl.glDeleteLists(tank.hull_displaylist, 1)
-        '    End If
-        '    ID = Gl.glGenLists(1)
-        '    Gl.glNewList(ID, Gl.GL_COMPILE)
-        '    tank.hull_displaylist = ID
-        '    Gl.glBegin(Gl.GL_TRIANGLES)
-        '    poly_count = b.ReadUInt32
-
-        '    'start pushing vertices
-        '    For c As UInt32 = 0 To poly_count - 1
-        '      v(0) = -b.ReadSingle
-        '      v(1) = b.ReadSingle
-        '      v(2) = b.ReadSingle
-        '      n(0) = -b.ReadSingle
-        '      n(1) = b.ReadSingle
-        '      n(2) = b.ReadSingle
-        '      uv(0) = -b.ReadSingle
-        '      uv(1) = b.ReadSingle
-        '      Gl.glNormal3fv(n)
-        '      Gl.glTexCoord2fv(uv)
-        '      Gl.glVertex3fv(v)
-        '    Next
-        '    Gl.glEnd()
-        '    Gl.glEndList()
-        '    Gl.glFinish()
-        '    ' get chassis texture
-        '    t_size = b.ReadUInt64
-        '    Dim img2() = b.ReadBytes(t_size)
-        '    Dim t_ms2 As New MemoryStream(img2)
-        '    tank.hull_textId = get_texture(t_ms2, False)
-        '    '---------------------------------------------------
 
         b.Close()
         f_.Close()
@@ -2370,18 +2292,21 @@ skip:
         If Not m_bases_ Then
             Return
         End If
+        Gl.glDisable(Gl.GL_LIGHTING)
         If maploaded And SHOW_RINGS Then
-            Gl.glColor3f(0.5, 0.0, 0.0)
-            Gl.glCallList(ringDisplayID_1)
+            G_Buffer.attach_color_only()
+            Gl.glEnable(Gl.GL_BLEND)
+            draw_base_ring(-team_1.x, team_1.z, 1)
+            draw_base_ring(-team_2.x, team_2.z, 2)
+            Gl.glDisable(Gl.GL_BLEND)
 
-            Gl.glColor3f(0.0, 0.7, 0.0)
-            Gl.glCallList(ringDisplayID_2)
+            G_Buffer.attachFOBtextures()
         End If
 
     End Sub
 
     Private Sub draw_dome()
-        If Not m_sky_ Then
+        If Not m_sky_ And Not sky_loaded Then
             'Gl.glPointSize(1.0)
             'Gl.glDisable(Gl.GL_LIGHTING)
             'Gl.glDisable(Gl.GL_DEPTH_TEST)
@@ -2436,7 +2361,7 @@ skip:
     End Sub
 
     Private Sub draw_g_terrain()
-        If Not m_terrain_ Then
+        If Not m_terrain_ And Not terrain_loaded Then
             Return
         End If
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
@@ -2446,15 +2371,6 @@ skip:
 
         If maploaded And Not m_wire_terrain.Checked Then
             Gl.glDisable(Gl.GL_TEXTURE_2D)
-            Gl.glColor4f(0.6, 0.0, 0.0, 0.5)
-            If m_map_border.Checked Then
-                Gl.glColor3f(0.7, 0.0, 0.0)
-                Gl.glCallList(map_borderId)
-            End If
-            If m_show_map_grid.Checked Then
-                Gl.glColor3f(0.7, 0.7, 0.0)
-                Gl.glCallList(sector_outlineID)
-            End If
             Gl.glColor3f(0.8, 0.8, 0.8)
             Dim u, v As vect4
 
@@ -2557,16 +2473,6 @@ skip:
         End If
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        If m_show_chunks.Checked And maploaded Then
-            Gl.glDisable(Gl.GL_TEXTURE_2D)
-            Gl.glColor3f(0.4, 0.4, 0.4)
-            For i = 0 To test_count
-                If maplist(i).visible Then
-                    Gl.glCallList(maplist(i).seamCallId)
-                End If
-            Next
-        End If
         '---------------------------------------------------------------------------------
         'draw the map sections and seams WIRE
         If maploaded And m_wire_terrain.Checked Then
@@ -2622,12 +2528,52 @@ skip:
             Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
         End If
 
+
+        'draw grid, border and chunks if set to.
+        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        If m_show_chunks.Checked Or m_show_map_grid.Checked Or m_map_border.Checked And maploaded Then
+            G_Buffer.attach_color_only()
+            Gl.glDisable(Gl.GL_TEXTURE_2D)
+            'Gl.glColor3f(0.4, 0.4, 0.4)
+            Gl.glUseProgram(shader_list.terrainMarkers_shader)
+            Gl.glUniform2f(tm_bb_tr, MAP_BB_UR.x, MAP_BB_UR.y)
+            Gl.glUniform2f(tm_bb_bl, MAP_BB_BL.x, MAP_BB_BL.y)
+            Gl.glUniform1f(tm_grid_size, (MAP_BB_UR.x - MAP_BB_BL.x) / 10.0!)
+            'set whats drawn
+            If m_show_chunks.Checked Then
+                Gl.glUniform1i(tm_show_chunks, 1)
+            Else
+                Gl.glUniform1i(tm_show_chunks, 0)
+            End If
+            If m_map_border.Checked Then
+                Gl.glUniform1i(tm_show_border, 1)
+            Else
+                Gl.glUniform1i(tm_show_border, 0)
+            End If
+            If m_show_map_grid.Checked Then
+                Gl.glUniform1i(tm_show_grid, 1)
+            Else
+                Gl.glUniform1i(tm_show_grid, 0)
+            End If
+            Gl.glEnable(Gl.GL_BLEND)
+            'Gl.glDisable(Gl.GL_DEPTH_TEST)
+            Gl.glDepthMask(Gl.GL_FALSE)
+            For i = 0 To test_count
+                If maplist(i).visible Then
+                    Gl.glCallList(maplist(i).calllist_Id)
+                End If
+            Next
+            Gl.glDepthMask(Gl.GL_TRUE)
+            Gl.glDisable(Gl.GL_BLEND)
+            Gl.glUseProgram(0)
+            G_Buffer.attachFOBtextures()
+        End If
         '---------------------------------------------------------------------------------
 
     End Sub
 
     Private Sub draw_g_models(ByVal pass As Boolean)
-        If Not m_models_ Then
+        If Not m_models_ And Not models_loaded Then
             Return
         End If
         ' draw the models
@@ -2783,7 +2729,7 @@ skip:
     End Sub
 
     Private Sub draw_g_trees()
-        If Not m_trees_ Then
+        If Not m_trees_ And Not trees_loaded Then
             Return
         End If
         'Gl.glFrontFace(Gl.GL_CCW)
@@ -2994,7 +2940,7 @@ skip:
 
     Private Sub draw_g_decals()
 
-        If Not m_decals_ Then
+        If Not m_decals_ And Not decals_loaded Then
             Return
         End If
         G_Buffer.attach_color_and_postion_only()
@@ -3005,7 +2951,9 @@ skip:
         Gl.glFrontFace(Gl.GL_CW)
         Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
         Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glDepthMask(Gl.GL_FALSE)
+
         Gl.glUseProgram(shader_list.decalsCpassDef_shader)
         Gl.glUniform1i(prjd_depthmap, 0)
         Gl.glUniform1i(prjd_color, 1)
@@ -3107,7 +3055,9 @@ skip:
 
         G_Buffer.attachFOBtextures()
         If m_wire_decals.Checked Then
-
+            Gl.glDisable(Gl.GL_LIGHTING)
+            G_Buffer.attach_color_only()
+            Gl.glUseProgram(shader_list.wire_shader)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(1.0, 1.0, 1.0)
             For k = 0 To decal_matrix_list.Length - 1
@@ -3116,11 +3066,18 @@ skip:
                     If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
                         Gl.glPushMatrix()
                         Gl.glMultMatrixf(.matrix)
+                        'glutSolidCube(1.0)
                         Gl.glCallList(decal_matrix_list(k).display_id)
+                        Gl.glBegin(Gl.GL_LINES)
+                        Gl.glVertex3f(0.0, 0.0, 0.0)
+                        Gl.glVertex3f(0.0, 0.0, -2.0)
+                        Gl.glEnd()
                         Gl.glPopMatrix()
                     End If
                 End With
             Next
+            Gl.glUseProgram(0)
+            G_Buffer.attachFOBtextures()
         End If
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
@@ -3153,6 +3110,8 @@ skip:
                 Gl.glColor3f(0.4!, 0.0!, 0.0!)
                 If locations.team_1(i).tank_displaylist > -1 Then
                     Gl.glPushMatrix()
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW)
+                    Gl.glLoadIdentity()
                     ReDim locations.team_1(i).scrn_coords(3)
                     Dim y_ = get_Z_at_XY(locations.team_1(i).loc_x, locations.team_1(i).loc_z)
                     Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
@@ -3175,17 +3134,19 @@ skip:
 
                     Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
                     Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
+                    Gl.glPopMatrix()
                     If tankID = i Then
                         Gl.glColor3f(0.5, 0.5, 0.0)
                     End If
                     Gl.glCallList(locations.team_1(i).tank_displaylist)
-                    Gl.glPopMatrix()
                 End If
             Next
             For i = 0 To 14
                 Gl.glColor3f(0.0, 0.3, 0.0)
                 If locations.team_2(i).tank_displaylist > -1 Then
                     Gl.glPushMatrix()
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW)
+                    Gl.glLoadIdentity()
                     ReDim locations.team_2(i).scrn_coords(3)
                     Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
                     Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
@@ -3207,11 +3168,11 @@ skip:
 
                     Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
                     Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
-                    If tankID = i Then
+                    Gl.glPopMatrix()
+                    If tankID = i + 100 Then
                         Gl.glColor3f(0.5, 0.5, 0.0)
                     End If
                     Gl.glCallList(locations.team_2(i).tank_displaylist)
-                    Gl.glPopMatrix()
                 End If
             Next
         End If
@@ -3301,6 +3262,11 @@ skip:
             terrain_time += swat2.ElapsedMilliseconds
         End If
         '---------------------------------------------------------------------------------
+        'Base locations. THis must be after the terrain only or they will be drawn on everything!
+        If bases_loaded Then
+            G_Buffer.get_depth_buffer(width, height)
+            draw_base_rings()
+        End If
         'Models bulidings only
         swat2.Restart()
         If models_loaded Then
@@ -3346,6 +3312,7 @@ skip:
         'only needed for SSAO and I cant get it to work!
         'G_Buffer.get_depth_buffer(width, height)
 
+        G_Buffer.attach_color_only()
 
         Gl.glDisable(Gl.GL_LIGHTING)
         '---------------------------------------------------------------------------------
@@ -3361,9 +3328,78 @@ skip:
         'Gl.glEnable(Gl.GL_LIGHTING)
         '------------------------------------
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        'Draw the water. IF there is water....
+        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
+            'we need to copy the gColor buffer to another texture... luckly, we have gFlags we can use
+            '=========================================================='
+            'G_Buffer.attach_color_and_postion_and_normal_only()
+            'Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT0_EXT)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+            'Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+            'Dim e1 = Gl.glGetError
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            '=========================================================='
+            'setup states
+            Gl.glFrontFace(Gl.GL_CW)
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+            Gl.glDisable(Gl.GL_CULL_FACE)
+            Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+
+            Gl.glEnable(Gl.GL_LIGHTING)
+            Gl.glEnable(Gl.GL_DEPTH_TEST)
+            Gl.glDepthMask(Gl.GL_FALSE)
+            Gl.glEnable(Gl.GL_BLEND)
+            Gl.glEnable(Gl.GL_ALPHA_TEST)
+            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+            '=========================================================='
+            'setup shader variables
+
+            'Gl.glUseProgram(shader_list.basicWater_Shader)
+            'Gl.glUniform1i(basicWater_colorMap, 0)
+            'Gl.glUniform1i(basicWater_normalMap, 1)
+            'Gl.glUniform1i(basicWater_gColor, 2)
+
+            'Gl.glUniform3f(basicWater_tr, water.rtr.x, water.rtr.y, water.rtr.z)
+            'Gl.glUniform3f(basicWater_bl, water.lbl.x, water.lbl.y, water.lbl.z)
+            'Gl.glUniformMatrix4fv(basicWater_matrix, 1, 0, water.matrix)
+            'Gl.glUniform1i(basicWater_mode, 1)
+            '=========================================================='
+            'Gl.glColor4f(0.0, 0.0, 0.2, 0.5)
+            'translate to position
+
+            'Gl.glTranslatef(-water.position.x, -0.1, water.position.z)
+            'Gl.glRotatef(-water.orientation * 57.2957795, 0.0, 1.0, 0.0)
+
+            'Gl.glEnable(Gl.GL_TEXTURE_2D)
+            'Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            'Gl.glActiveTexture(Gl.GL_TEXTURE1)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+            'Gl.glActiveTexture(Gl.GL_TEXTURE2)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag) 'this is the screen colors.
+
+            'Gl.glMultMatrixf(water.matrix)
+
+            'Gl.glCallList(water.displayID_cube)
+            'draw plane with out shader
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glColor4f(0.2, 0.2, 0.3, 0.9)
+            Gl.glUseProgram(0)
+            Gl.glPushMatrix()
+            Gl.glMultMatrixf(water.matrix)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            Gl.glCallList(water.displayID_plane)
+            Gl.glPopMatrix()
+            Gl.glDepthMask(Gl.GL_TRUE)
+
+            Gl.glDisable(Gl.GL_BLEND)
+            Gl.glFrontFace(Gl.GL_CCW)
+        End If
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
 
         'Attach only the color buffer'
-        G_Buffer.attach_color_only()
+        'G_Buffer.attach_color_only()
         'debug only
         'Gl.glColor3f(1.0, 1.0, 0.0)
         'For model As UInt32 = 0 To Models.matrix.Length - 1
@@ -3389,36 +3425,6 @@ skip:
         'Draw the lights location
         draw_light_sphear()
 
-        'Base locations
-        If bases_laoded Then
-            draw_base_rings()
-        End If
-        'Draw the water. IF there is water....
-        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
-            Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
-            Gl.glFrontFace(Gl.GL_CW)
-            Gl.glEnable(Gl.GL_LIGHTING)
-            Gl.glEnable(Gl.GL_DEPTH_TEST)
-
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Gl.glEnable(Gl.GL_ALPHA_TEST)
-            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-            Gl.glPushMatrix()
-            Gl.glEnable(Gl.GL_BLEND)
-            Gl.glColor4f(0.1, 0.1, 0.5, 0.4)
-            Gl.glTranslatef(-water.position.x, -0.1, water.position.z)
-            Gl.glRotatef(-water.orientation * 57.2957795, 0.0, 1.0, 0.0)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
-            Gl.glCallList(water.displayID)
-            Gl.glPopMatrix()
-
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glDisable(Gl.GL_FOG)
-            Gl.glFrontFace(Gl.GL_CCW)
-        End If
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
 
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_BLEND)
@@ -4935,10 +4941,9 @@ no_move_xz:
         ReDim maplist(0)
         maplist(0) = New grid_sec
         xDoc = New XmlDocument
-        water.displayID = -1
+        water.displayID_cube = -1
+        water.displayID_plane = -1
         water.textureID = -1
-        ringDisplayID_1 = -1
-        ringDisplayID_2 = -1
         loaded_models = New Loaded_Model_list
         ReDim loaded_models.stack(0)
         loaded_models.stack(0) = New mdl_stack
