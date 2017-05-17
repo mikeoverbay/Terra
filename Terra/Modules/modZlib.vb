@@ -554,7 +554,7 @@ dont_grab_this:
                 water.IsWater = True
                 build_water()
                 water.textureID = Load_DDS_File(Application.StartupPath + "\Resources\water2.dds")
-                water.normalID = Load_DDS_File(Application.StartupPath + "\Resources\water2_NM.dds")
+                water.normalID = Load_DDS_File(Application.StartupPath + "\Resources\water2_NM2.dds")
                 GC.Collect()
             End If
         End If
@@ -609,7 +609,7 @@ dont_grab_this:
         position(1) = ly_light 'u_look_point_Y + 10 'ly
         position(2) = lz_light 'u_look_point_Z - lz
         position(3) = 1.0
-        frmMain.draw_scene()
+        frmMain.need_screen_update()
     End Function
     Public Sub find_street_lights()
         Dim l_cnt As Integer = 0

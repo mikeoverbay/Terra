@@ -11,7 +11,7 @@ Public Class FrmInfoWindow
     End Sub
 
     Private Sub tb1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles tb1.MouseDoubleClick
-        Me.visible = False
+        frmMain.m_info_window.PerformClick()
     End Sub
 
     Private Sub tb1_MouseDown(sender As Object, e As MouseEventArgs) Handles tb1.MouseDown

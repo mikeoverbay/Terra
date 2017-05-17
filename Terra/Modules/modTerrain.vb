@@ -425,7 +425,7 @@ Module modTerrain
         '	set_layer_2(map)
         'End If
         If layer_count = 0 Then
-            MsgBox("This chunk has no layers! Map:" + map.ToString("000"), MsgBoxStyle.Exclamation, "Well Shit....")
+            'MsgBox("This chunk has no layers! Map:" + map.ToString("000"), MsgBoxStyle.Exclamation, "Well Shit....")
             Return layer_count
         End If
         'make the mix map for this layer

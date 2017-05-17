@@ -93,6 +93,11 @@ Public Class frmMain
     Private welcome_screen As Integer
     Private old_window_state As Integer
     Private old_window_size As New Point(0, 0)
+
+    Dim terrain_time, model_time, decal_time, tree_time, cull_time, total_time As Long
+    Dim sample_cnt As Integer = 0
+    Dim worldMatrix(16), viewMatrix(16), modelMatrix(16) As Single
+    Public projection_s(16) As Single
 #End Region
 
     Private Sub frmMain_ClientSizeChanged(sender As Object, e As EventArgs) Handles Me.ClientSizeChanged
@@ -100,7 +105,7 @@ Public Class frmMain
             If _STARTED Then
                 G_Buffer.init()
             End If
-            update_screen()
+            need_screen_update()
         End If
     End Sub
 
@@ -208,8 +213,8 @@ fail_path:
 
         'map_holder.Visible = True
         'frmTanks.Show()
-        draw_scene()
-        draw_scene()
+        need_screen_update()
+        need_screen_update()
         Application.DoEvents()
         Application.DoEvents()
         FrmInfoWindow.Visible = True
@@ -315,7 +320,7 @@ fail_path:
                 End If
                 tb1.Text = "Icon size: " + icon_scale.ToString
                 My.Settings.icon_scale = icon_scale
-                draw_scene()
+                need_screen_update()
                 Return
             End If
             If e.KeyCode = Keys.Oemplus Then
@@ -325,7 +330,7 @@ fail_path:
                 End If
                 tb1.Text = "Icon size: " + icon_scale.ToString
                 My.Settings.icon_scale = icon_scale
-                draw_scene()
+                need_screen_update()
                 Return
             End If
         End If
@@ -343,7 +348,7 @@ fail_path:
             If d_counter > decal_matrix_list.Length - 1 Then
                 d_counter = 0
             End If
-            draw_scene()
+            need_screen_update()
         End If
         If e.KeyCode = Keys.Q Then
         End If
@@ -381,7 +386,7 @@ fail_path:
         End If
         If e.KeyCode = Keys.F5 And m_small_lights.Checked Then
             find_street_lights()
-            update_screen()
+            need_screen_update()
         End If
         If e.KeyCode = Keys.L Then
             m_lighting.PerformClick()
@@ -398,7 +403,7 @@ fail_path:
             If normal_mode = 3 Then
                 normal_mode = 0
             End If
-            draw_scene()
+            need_screen_update()
         End If
         If e.KeyCode = Keys.G Then
             m_show_map_grid.PerformClick()
@@ -447,7 +452,7 @@ fail_path:
             If Not move_mod Then
                 move_mod = True ' SHIFT KET
                 If Not NetData Then
-                    draw_scene()
+                    need_screen_update()
                 End If
             End If
 
@@ -465,7 +470,7 @@ fail_path:
             End If
             'tb1.Text = "Minimap size: " + minimap_size.ToString
             My.Settings.minimap_size = minimap_size
-            draw_scene()
+            need_screen_update()
         End If
         If e.KeyCode = Keys.Oemplus Then
             minimap_size += 32.0!
@@ -474,7 +479,7 @@ fail_path:
             End If
             'tb1.Text = "Minimap size: " + minimap_size.ToString
             My.Settings.minimap_size = minimap_size
-            draw_scene()
+            need_screen_update()
         End If
         If e.KeyCode = Keys.X Then
             If sun_lock Then
@@ -490,11 +495,11 @@ fail_path:
         ROTATE_TANK = False
         If move_mod Then
             move_mod = False
-            draw_scene()
+            need_screen_update()
         End If
         If z_move Then
             z_move = False
-            draw_scene()
+            need_screen_update()
         End If
     End Sub
     Private Sub frmMain_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
@@ -517,9 +522,9 @@ fail_path:
         'If Me.WindowState = FormWindowState.Maximized Or Me.WindowState = FormWindowState.Normal Then
         'End If
         If Not SHOW_MAPS Then
-            draw_scene()
+            need_screen_update()
         Else
-            draw_maps()
+            need_screen_update()
         End If
 
     End Sub
@@ -535,7 +540,7 @@ fail_path:
         End If
 
         If Not SHOW_MAPS Then
-            update_screen()
+            need_screen_update()
         Else
             draw_maps()
         End If
@@ -1420,7 +1425,7 @@ nope:
                 Packet_out.Tr = Cam_X_angle + PI
             End If
             tankID = b_index
-            update_screen()
+            need_screen_update()
         Else
             frmTanks.SplitContainer1.Panel2.Controls(b_index).Font = sender.font
             frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = sender.text
@@ -1504,7 +1509,7 @@ nope:
                 Packet_out.Tr = Cam_X_angle + PI
             End If
             tankID = b_index + 100
-            update_screen()
+            need_screen_update()
         End If
         old_tankID = tankID
         Packet_out.tankId = tankID
@@ -1724,13 +1729,13 @@ nope:
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         If GetOGLPos_Decals(x, y) Then
             stopGL = False
-            draw_scene()
+            need_screen_update()
             Return
         End If
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         If GetOGLPos_trees(x, y) Then
             stopGL = False
-            draw_scene()
+            need_screen_update()
             Return
         End If
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
@@ -1819,7 +1824,7 @@ nope:
             End If
         End If
         stopGL = False
-        draw_scene()
+        need_screen_update()
     End Sub
     Public Sub seek_scene()
         'set_eyes()
@@ -3011,13 +3016,16 @@ skip:
         Gl.glUseProgram(shader_list.decalsNpassDef_shader)
         Gl.glUniform1i(decal_depthmap_id, 0)
         Gl.glUniform1i(decal_normal_in_id, 1)
-        Gl.glUniform1i(decal_normal_map_id, 3)
-        Gl.glUniform1i(decal_color_map_id, 2)
+        Gl.glUniform1i(decal_flagmap, 2)
+        Gl.glUniform1i(decal_color_map_id, 3)
+        Gl.glUniform1i(decal_normal_map_id, 4)
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
 
         For k = 0 To decal_matrix_list.Length - 1
             With decal_matrix_list(k)
@@ -3029,9 +3037,9 @@ skip:
                     Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
                     Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
                     Gl.glUniform1i(decal_influence, .influence)
-                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
+                    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).normal_id)
 
                     Gl.glCallList(decal_matrix_list(k).display_id)
@@ -3180,10 +3188,152 @@ skip:
 
     End Sub
 
+    Private Sub draw_g_water()
+        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
+            Dim width, height As Integer
+            width = pb1.Width + pb1.Width Mod 1
+            height = pb1.Height + pb1.Height Mod 1
+            '=========================================================='
+            G_Buffer.get_depth_buffer(width, height) ' gotta do this so we have the depth at the waters plane :(
+            'setup states
+            Gl.glFrontFace(Gl.GL_CW)
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+            Gl.glDisable(Gl.GL_CULL_FACE)
+            Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
 
-    Dim terrain_time, model_time, decal_time, tree_time, cull_time, total_time As Long
-    Dim sample_cnt As Integer = 0
-    Public Shared worldMatrix(16), viewMatrix(16), projection_s(16), modelMatrix(16) As Single
+            Gl.glEnable(Gl.GL_LIGHTING)
+
+            Gl.glDisable(Gl.GL_DEPTH_TEST)
+
+            Gl.glDepthMask(Gl.GL_TRUE)
+            Gl.glEnable(Gl.GL_BLEND)
+            Gl.glEnable(Gl.GL_ALPHA_TEST)
+            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+            '=========================================================='
+            'first we need to color everything below but in the water
+            'we use the waterColor_shader for this
+            'GoTo over_it
+            Gl.glUseProgram(shader_list.waterColor_shader)
+
+            Gl.glUniform1i(waterC_color, 0)
+            Gl.glUniform1i(waterC_Depthmap, 1)
+            Gl.glUniformMatrix4fv(waterC_matrix, 1, 0, water.matrix)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+            Gl.glColor4f(0.1, 0.1, 0.4, 0.7)
+
+            Gl.glCallList(water.displayID_cube)
+            Gl.glUseProgram(0)
+
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            '=========================================================='
+over_it:
+            'Gl.glEnable(Gl.GL_DEPTH_TEST)
+
+            ''draw plane with out shader
+            'Gl.glEnable(Gl.GL_TEXTURE_2D)
+            'Gl.glColor4f(0.9, 0.3, 0.5, 1.0)
+
+            'Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            ''color pass
+            'Gl.glPushMatrix()
+            'Gl.glTranslatef(0.0, -0.02, 0.0)
+            'Gl.glMultMatrixf(water.matrix)
+            'Gl.glCallList(water.displayID_plane)
+            'Gl.glPopMatrix()
+            'z buffer pass
+            'Gl.glColorMask(0, 0, 0, 0)
+            'Gl.glPushMatrix()
+            'Gl.glDepthMask(Gl.GL_TRUE)
+            'Gl.glTranslatef(0.0, -0.01, 0.0)
+            'Gl.glMultMatrixf(water.matrix)
+            'Gl.glCallList(water.displayID_plane)
+            'Gl.glPopMatrix()
+            'Gl.glColorMask(1, 1, 1, 1)
+            'Gl.glDepthMask(Gl.GL_TRUE)
+
+            'Gl.glDisable(Gl.GL_BLEND)
+
+            '=========================================================
+            ' draw water normal
+
+            Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+            Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
+            'Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT) 'attach gNormal
+            'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+            'ResizeGL()
+            'ViewPerspective()
+            Dim e0 = Gl.glGetError
+            'Gl.glDisable(Gl.GL_BLEND)
+            Gl.glDisable(Gl.GL_DEPTH_TEST)
+            'Gl.glClearColor(0.3F, 0.0F, 0.0F, 0.0F)
+            'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
+            Gl.glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, Gl.GL_COLOR_BUFFER_BIT, Gl.GL_NEAREST)
+            'Gl.glReadBuffer(Gl.GL_BACK)
+            Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, 0)
+            Dim e = Gl.glGetError
+            'Gl.glPushMatrix()
+            'Gl.glMultMatrixf(water.matrix)
+            'Gl.glCallList(water.displayID_plane)
+            'Gl.glPopMatrix()
+            Gl.glColor4f(0.2, 0.2, 0.3, 0.75)
+            Dim index As Integer = Floor(water_elapsed_time * 63)
+            Gl.glUseProgram(shader_list.water_shader)
+            Gl.glUniform1i(water_gDepthMap, 0)
+            Gl.glUniform1i(water_gNormal, 1)
+            Gl.glUniform1i(water_normalMap, 2)
+            Gl.glUniform1i(water_normalMap2, 3)
+            Gl.glUniform1i(water_colorMap, 4)
+            ' Gl.glUniform1f(water_level, water.position.y)
+            Gl.glUniform1f(water_time, texture_blend_counter)
+
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.normalID)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index))
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+            If index = 63 Then
+                index = -1
+            End If
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index + 1))
+            'tb1.text = CInt(water_elapsed_time * 63)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+
+            Gl.glUniformMatrix4fv(water_matrix, 1, 0, water.matrix)
+
+            Gl.glPushMatrix()
+            'Gl.glMultMatrixf(water.matrix)
+            Gl.glCallList(water.displayID_cube)
+            'glutSolidCube(1.0)
+            Gl.glPopMatrix()
+
+            Gl.glFrontFace(Gl.GL_CCW)
+            Gl.glUseProgram(0)
+            Dim e3 = Gl.glGetError
+
+            'Gl.glReadBuffer(Gl.GL_BACK)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+            Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+            Dim e2 = Gl.glGetError
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+
+
+            Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+
+        End If
+
+    End Sub
+
     Public Sub draw_to_gBuffer()
         Dim model_view(16) As Double
         Dim projection(16) As Double
@@ -3253,6 +3403,7 @@ skip:
         G_Buffer.attachFOBtextures()
 
         '---------------------------------------------------------------------------------
+
         'Terrain
         swat2.Restart()
         If terrain_loaded Then
@@ -3262,6 +3413,25 @@ skip:
             terrain_time += swat2.ElapsedMilliseconds
         End If
         '---------------------------------------------------------------------------------
+        '---------------------------------------------------------------------------------
+        'We must draw the water mask after AFTER terrain
+        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
+            'Gl.glEnable(Gl.GL_BLEND)
+            Gl.glEnable(Gl.GL_ALPHA_TEST)
+            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+            G_Buffer.attach_flag_only()
+            Gl.glEnable(Gl.GL_DEPTH_TEST)
+            Gl.glUseProgram(shader_list.waterMask_shader)
+            Gl.glPushMatrix()
+            'Gl.glColor4f(0.2, 0.2, 0.4, 0.35)
+            Gl.glTranslatef(0.0, -0.05, 0.0)
+            Gl.glMultMatrixf(water.matrix)
+            Gl.glCallList(water.displayID_plane)
+            Gl.glPopMatrix()
+            Gl.glUseProgram(0)
+            G_Buffer.attachFOBtextures()
+            Gl.glDisable(Gl.GL_BLEND)
+        End If
         'Base locations. THis must be after the terrain only or they will be drawn on everything!
         If bases_loaded Then
             G_Buffer.get_depth_buffer(width, height)
@@ -3309,8 +3479,10 @@ skip:
         'Tanks
         draw_g_tanks(cp, model_view, projection, viewport, sx, sy, sz)
 
-        'only needed for SSAO and I cant get it to work!
-        'G_Buffer.get_depth_buffer(width, height)
+        'only needed for SSAO and I cant get it to work 100% :(
+        If m_SSAO.Checked Then
+            G_Buffer.get_depth_buffer(width, height)
+        End If
 
         G_Buffer.attach_color_only()
 
@@ -3328,74 +3500,10 @@ skip:
         'Gl.glEnable(Gl.GL_LIGHTING)
         '------------------------------------
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        '=========================================================='
         'Draw the water. IF there is water....
-        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
-            'we need to copy the gColor buffer to another texture... luckly, we have gFlags we can use
-            '=========================================================='
-            'G_Buffer.attach_color_and_postion_and_normal_only()
-            'Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT0_EXT)
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-            'Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
-            'Dim e1 = Gl.glGetError
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            '=========================================================='
-            'setup states
-            Gl.glFrontFace(Gl.GL_CW)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            Gl.glDisable(Gl.GL_CULL_FACE)
-            Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
-
-            Gl.glEnable(Gl.GL_LIGHTING)
-            Gl.glEnable(Gl.GL_DEPTH_TEST)
-            Gl.glDepthMask(Gl.GL_FALSE)
-            Gl.glEnable(Gl.GL_BLEND)
-            Gl.glEnable(Gl.GL_ALPHA_TEST)
-            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-            '=========================================================='
-            'setup shader variables
-
-            'Gl.glUseProgram(shader_list.basicWater_Shader)
-            'Gl.glUniform1i(basicWater_colorMap, 0)
-            'Gl.glUniform1i(basicWater_normalMap, 1)
-            'Gl.glUniform1i(basicWater_gColor, 2)
-
-            'Gl.glUniform3f(basicWater_tr, water.rtr.x, water.rtr.y, water.rtr.z)
-            'Gl.glUniform3f(basicWater_bl, water.lbl.x, water.lbl.y, water.lbl.z)
-            'Gl.glUniformMatrix4fv(basicWater_matrix, 1, 0, water.matrix)
-            'Gl.glUniform1i(basicWater_mode, 1)
-            '=========================================================='
-            'Gl.glColor4f(0.0, 0.0, 0.2, 0.5)
-            'translate to position
-
-            'Gl.glTranslatef(-water.position.x, -0.1, water.position.z)
-            'Gl.glRotatef(-water.orientation * 57.2957795, 0.0, 1.0, 0.0)
-
-            'Gl.glEnable(Gl.GL_TEXTURE_2D)
-            'Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
-            'Gl.glActiveTexture(Gl.GL_TEXTURE1)
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-            'Gl.glActiveTexture(Gl.GL_TEXTURE2)
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag) 'this is the screen colors.
-
-            'Gl.glMultMatrixf(water.matrix)
-
-            'Gl.glCallList(water.displayID_cube)
-            'draw plane with out shader
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glColor4f(0.2, 0.2, 0.3, 0.9)
-            Gl.glUseProgram(0)
-            Gl.glPushMatrix()
-            Gl.glMultMatrixf(water.matrix)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
-            Gl.glCallList(water.displayID_plane)
-            Gl.glPopMatrix()
-            Gl.glDepthMask(Gl.GL_TRUE)
-
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glFrontFace(Gl.GL_CCW)
-        End If
+        draw_g_water()
+        '=========================================================='
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
 
         'Attach only the color buffer'
@@ -3479,8 +3587,8 @@ skip:
         Gl.glDisable(Gl.GL_BLEND)
         '----------------------------------------------------------------------------------------------
         'SSAO pass
-        'can't get this to work!! GRRRRR
-        GoTo skip_SSAO
+        'can't get this to work 100%!! GRRRRR
+        If Not m_SSAO.Checked Then GoTo skip_SSAO
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Dim Status = Gl.glCheckFramebufferStatusEXT(Gl.GL_FRAMEBUFFER_EXT)
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
@@ -3522,15 +3630,15 @@ skip:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
         Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, width, height, 0)
         Dim e = Gl.glGetError
-        'Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
-
 
 skip_SSAO:
         '----------------------------------------------------------------------------------------------
-        'Lighting pass.
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Gl.glClearColor(0.0, 0.3, 0.3, 0.0)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        '----------------------------------------------------------------------------------------------
+        'Lighting pass.
+        'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
 
         Gl.glUseProgram(shader_list.deferred_shader)
 
@@ -3538,6 +3646,14 @@ skip_SSAO:
         Gl.glUniform1i(deferred_gnormal, 1)
         Gl.glUniform1i(deferred_gposition, 2)
         Gl.glUniform1i(deferred_depthmap, 3)
+        Gl.glUniform1i(deferred_SSAO_Texture, 4)
+        If m_SSAO.Checked Then
+            Gl.glUniform1i(deferred_SSAO_Enabled, 1) ' is SSAO enabled?
+        Else
+            Gl.glUniform1i(deferred_SSAO_Enabled, 0) ' is SSAO enabled?
+        End If
+
+
         Gl.glUniform3fv(deferred_light_position, 1, position)
         Gl.glUniform3f(deferred_cam_position, eyeX, eyeY, eyeZ)
         Gl.glUniform1f(deferred_bright, lighting_terrain_texture)
@@ -3554,7 +3670,6 @@ skip_SSAO:
             Gl.glUniform1i(deferred_light_count, 0) ' send zero light count if off
         End If
 
-        Gl.glUniform1f(deferred_water_line, WATER_LINE_)
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
@@ -3564,6 +3679,10 @@ skip_SSAO:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        'If m_SSAO.Checked Then
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+        'End If
 
 
         Gl.glBegin(Gl.GL_QUADS)
@@ -3584,42 +3703,13 @@ skip_SSAO:
 
         Gl.glUseProgram(0)
 
-        '----------------------------------------------------------------------------------------------
         If m_FXAA.Checked Then
-            'FXAA pass.
-            Gl.glReadBuffer(Gl.GL_BACK)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
-            Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
-
-            Gl.glUseProgram(shader_list.FXAA_shader)
-
-            Gl.glUniform1i(fxaa_texture_in, 0)
-            Gl.glUniform1f(fxaa_rt_h, height)
-            Gl.glUniform1f(fxaa_rt_w, width)
-
-
-            Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
-
-
-            Gl.glBegin(Gl.GL_QUADS)
-            '---
-
-            Gl.glTexCoord2f(0.0, 1.0)
-            Gl.glVertex3f(0, 0, 0.0)
-
-            Gl.glTexCoord2f(1.0, 1.0)
-            Gl.glVertex3f(width, 0, 0.0)
-
-            Gl.glTexCoord2f(1.0, 0.0)
-            Gl.glVertex3f(width, -height, 0.0)
-
-            Gl.glTexCoord2f(0.0, 0.0)
-            Gl.glVertex3f(0, -height, 0.0)
-            Gl.glEnd()
-
-            Gl.glUseProgram(0)
+            'FXAA_Normal_pass(width, height)
+            'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+            FXAA_Color_pass(width, height)
         End If
+
+
 
         'unbind all used textures
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
@@ -3669,6 +3759,78 @@ skip_SSAO:
         autoEventScreen.Set()
     End Sub
 
+    Private Sub FXAA_Color_pass(ByVal width As Integer, ByVal height As Integer)
+        'FXAA pass.
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+
+        Gl.glUseProgram(shader_list.FXAA_shader)
+
+        Gl.glUniform1i(fxaa_texture_in, 0)
+        Gl.glUniform2f(fxaa_frameBufferSize, height, width)
+
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+
+
+        Gl.glBegin(Gl.GL_QUADS)
+        '---
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(Width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(Width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+
+        Gl.glUseProgram(0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, Width, height)
+
+    End Sub
+    Private Sub FXAA_Normal_pass(ByVal width As Integer, ByVal height As Integer)
+        'FXAA pass.
+        Gl.glReadBuffer(Gl.GL_BACK)
+
+        Gl.glUseProgram(shader_list.FXAA_shader)
+
+        Gl.glUniform1i(fxaa_texture_in, 0)
+        Gl.glUniform2f(fxaa_frameBufferSize, height, width)
+
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+
+
+        Gl.glBegin(Gl.GL_QUADS)
+        '---
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(Width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(Width, -Height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -Height, 0.0)
+        Gl.glEnd()
+
+        Gl.glUseProgram(0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, Width, Height)
+
+    End Sub
     Private Sub draw_ortho_stuff()
         Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_CULL_FACE)
@@ -3769,12 +3931,20 @@ skip_SSAO:
         End If
         If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
-            End
+            'End
         End If
         draw_to_gBuffer()
         gl_busy = False
         Return
  
+    End Sub
+
+    Public Sub need_screen_update()
+        If activity Then
+            Return
+        Else
+            draw_scene()
+        End If
     End Sub
 
     Public Sub draw_minimap()
@@ -4492,7 +4662,7 @@ skip_SSAO:
                 frmFullScreen.Location = pb1_screen_location
                 G_Buffer.init()
                 pb1.Focus()
-                update_screen()
+                need_screen_update()
             Else
                 If pb1.Parent.Name = Me.Name Then
                     pb1_screen_location = pb1.PointToScreen(New System.Drawing.Point)
@@ -4507,7 +4677,7 @@ skip_SSAO:
                     pb1.Dock = DockStyle.Fill
                     frmFullScreen.Location = pb1_screen_location
                     G_Buffer.init()
-                    update_screen()
+                    need_screen_update()
                 End If
             End If
         End If
@@ -4552,8 +4722,8 @@ skip_SSAO:
             If e.Button = Forms.MouseButtons.Left Then
                 If selected_map_hit = 0 And maploaded Then
                     SHOW_MAPS = False
-                    draw_scene()
-                    draw_scene()
+                    need_screen_update()
+                    need_screen_update()
                     Application.DoEvents()
                     Return
                 Else
@@ -4844,7 +5014,7 @@ no_move_xz:
             If Cam_Y_angle > -0.3 Then Cam_Y_angle = -0.3
             If Cam_Y_angle < -1.5707 Then Cam_Y_angle = -1.5707
             If Not NetData Then
-                draw_scene()
+                need_screen_update()
             End If
         End If
         If move_cam_z Then
@@ -4866,7 +5036,7 @@ no_move_xz:
             If View_Radius > -0.5 Then View_Radius = -0.5
             If View_Radius < -150 Then View_Radius = -150
             If Not NetData Then
-                draw_scene()
+                need_screen_update()
             End If
 
         End If
@@ -4979,24 +5149,24 @@ no_move_xz:
 
     Private Sub CheckBox1_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
 
     Private Sub ambient_tb_Scroll(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
 
     End Sub
 
     Private Sub show_Ids_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub show_grids_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
 
@@ -5432,17 +5602,26 @@ no_move_xz:
     Private mouse_moved As Boolean = False
     Public activity As Boolean = True
     Dim timeout As Integer
+    Dim water_elapsed_time As Double = 0.0
+    Dim texture_blend_counter As Double = 0
+    Dim constant_update As Boolean = False
     Private Sub screen_updater()
         'This will run for the duration that Terra! is open.
         'Its in a closed loop
         Dim swat As New Stopwatch
         While _STARTED
+            If constant_update Then
+                activity = True
+                timeout = 0
+            End If
             If mouse_moved Then
                 swat.Start()
                 activity = True
                 timeout = 0
             End If
             If activity And Not stopGL Then
+
+                'water_elapsed_time += 0.001
                 timeout = fly(timeout)
                 'If we need to update the screen, lets caclulate draw times and update the timer.
                 If swat.ElapsedMilliseconds >= 1000 Then
@@ -5465,6 +5644,12 @@ no_move_xz:
                     update_screen()
                 End If
                 autoEventScreen.WaitOne(300)
+                water_elapsed_time += (1.0 / 63.0) / 8.0
+                If water_elapsed_time > 1.0 + ((1.0 / 63.0)) Then
+                    water_elapsed_time = 0.0
+                End If
+                texture_blend_counter = (water_elapsed_time * 63.0) - Floor(water_elapsed_time * 63.0)
+                'texture_blend_counter = 0.5
             End If
             Thread.Sleep(3)
         End While
@@ -5585,27 +5770,27 @@ no_move_xz:
 
     Private Sub show_water_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub show_sectors_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub show_cursor_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub show_models_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub show_trees_cb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
 
@@ -5645,7 +5830,7 @@ no_move_xz:
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_Ambient_level_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -5656,28 +5841,28 @@ no_move_xz:
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_show_water_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_water.CheckedChanged
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_show_cursor_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_cursor.CheckedChanged
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_show_map_grid_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles m_show_map_grid.CheckedChanged
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
 
     End Sub
 
@@ -5685,7 +5870,7 @@ no_move_xz:
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
 
     End Sub
 
@@ -5703,7 +5888,7 @@ no_move_xz:
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_reset_tanks_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_reset_tanks.Click
@@ -5718,7 +5903,7 @@ no_move_xz:
             tankID = -1
             frmTanks.make_btns()
             'draw_minimap()
-            draw_scene()
+            need_screen_update()
         End If
     End Sub
 
@@ -5726,7 +5911,7 @@ no_move_xz:
         If Not _STARTED Then
             Return
         End If
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_host_session_Click(sender As Object, e As EventArgs) Handles m_host_session.Click
@@ -5837,7 +6022,7 @@ no_move_xz:
             m_reset_tanks.Visible = False
             frmTanks.Visible = False
             position_camera()
-            draw_scene()
+            need_screen_update()
         End If
 
 
@@ -6034,12 +6219,12 @@ no_move_xz:
 
     Private Sub m_show_chuckIds_Click(sender As Object, e As EventArgs) Handles m_show_chuckIds.Click
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_map_border_Click(sender As Object, e As EventArgs) Handles m_map_border.Click
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_fly_map_CheckedChanged(sender As Object, e As EventArgs) Handles m_fly_map.CheckedChanged
@@ -6070,7 +6255,7 @@ no_move_xz:
 
     Private Sub m_show_tank_names_Click(sender As Object, e As EventArgs) Handles m_show_tank_names.Click
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_comment_DragDrop(sender As Object, e As Forms.DragEventArgs) Handles m_comment.DragDrop
@@ -6097,13 +6282,13 @@ no_move_xz:
                 locations.team_2(tankID - 100).comment = m_comment.Text
                 Packet_out.comment = m_comment.Text
             End If
-            draw_scene()
+            need_screen_update()
         End If
     End Sub
 
     Private Sub m_show_tank_comments_Click(sender As Object, e As EventArgs) Handles m_show_tank_comments.Click
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_comment_Click(sender As Object, e As EventArgs) Handles m_comment.Click
@@ -6153,7 +6338,7 @@ no_move_xz:
             End If
         End If
         My.Settings.hi_rez_terra = m_high_rez_Terrain.Checked
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_BumpMap_CheckedChanged(sender As Object, e As EventArgs)
@@ -6195,7 +6380,7 @@ no_move_xz:
                 locations.team_2(i).comment = ""
                 m_comment.Text = ""
             Next
-            draw_scene()
+            need_screen_update()
         End If
     End Sub
 
@@ -6205,7 +6390,7 @@ no_move_xz:
             MsgBox("There are no UV2 Textures loaded." + vbCrLf + "You will need to reload a map.", MsgBoxStyle.Exclamation, "No UV2 Textures..")
         End If
         My.Settings.m_show_uv2 = m_show_uv2.Checked
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_exit_Click(sender As Object, e As EventArgs) Handles m_exit.Click
@@ -6215,7 +6400,7 @@ no_move_xz:
     Private Sub m_show_minimap_Click(sender As Object, e As EventArgs) Handles m_show_minimap.Click
         If Not _STARTED Then Return
         m_minizoom.Checked = m_show_minimap.Checked
-        update_screen()
+        need_screen_update()
     End Sub
 
     Private Sub m_mini_up_Click(sender As Object, e As EventArgs) Handles m_mini_up.Click
@@ -6226,7 +6411,7 @@ no_move_xz:
         End If
         'tb1.Text = "Minimap size: " + minimap_size.ToString
         My.Settings.minimap_size = minimap_size
-        update_screen()
+        need_screen_update()
 
     End Sub
 
@@ -6234,7 +6419,7 @@ no_move_xz:
     Private Sub m_minizoom_Click(sender As Object, e As EventArgs) Handles m_minizoom.Click
         If Not _STARTED Then Return
         m_show_minimap.Checked = m_minizoom.Checked
-        update_screen()
+        need_screen_update()
     End Sub
     Private Sub m_mini_down_Click(sender As Object, e As EventArgs) Handles m_mini_down.Click
         If Not _STARTED Then Return
@@ -6243,37 +6428,37 @@ no_move_xz:
             minimap_size = 160.0!
         End If
         My.Settings.minimap_size = minimap_size
-        update_screen()
+        need_screen_update()
     End Sub
 
     Private Sub m_show_status_Click(sender As Object, e As EventArgs) Handles m_show_status.Click
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_wire_decals_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_decals.CheckedChanged
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_wire_terrain_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_terrain.CheckedChanged
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_wire_trees_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_trees.CheckedChanged
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_wire_models_CheckedChanged(sender As Object, e As EventArgs) Handles m_wire_models.CheckedChanged
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
     Private Sub m_show_decals_CheckedChanged(sender As Object, e As EventArgs) Handles m_show_decals.CheckedChanged
         If Not _STARTED Then Return
-        draw_scene()
+        need_screen_update()
     End Sub
 
 
@@ -6297,7 +6482,7 @@ no_move_xz:
 
     Private Sub m_FXAA_CheckedChanged(sender As Object, e As EventArgs) Handles m_FXAA.CheckedChanged
         If Not _STARTED Then Return
-        update_screen()
+        need_screen_update()
     End Sub
 
     Private Sub m_small_lights_CheckedChanged(sender As Object, e As EventArgs) Handles m_small_lights.CheckedChanged
@@ -6308,11 +6493,19 @@ no_move_xz:
                 find_street_lights()
             End If
         End If
-        update_screen()
+        need_screen_update()
     End Sub
 
 #End Region
 
 
+    Private Sub m_SSAO_CheckedChanged(sender As Object, e As EventArgs) Handles m_SSAO.CheckedChanged
+        If Not _STARTED Then Return
+        need_screen_update()
+    End Sub
+
+    Private Sub m_constant_updates_CheckedChanged(sender As Object, e As EventArgs) Handles m_constant_updates.CheckedChanged
+        constant_update = m_constant_updates.Checked
+    End Sub
 End Class
 

@@ -51,6 +51,7 @@ Partial Class frmMain
         Me.ToolStripMenuItem13 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_small_lights = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_FXAA = New System.Windows.Forms.ToolStripMenuItem()
+        Me.m_SSAO = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_g_settings = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_tank_names = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_tank_comments = New System.Windows.Forms.ToolStripMenuItem()
@@ -78,6 +79,8 @@ Partial Class frmMain
         Me.m_wire_trees = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_wire_decals = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_wire_terrain = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
+        Me.m_constant_updates = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem14 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_show_minimap = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_show_status = New System.Windows.Forms.ToolStripMenuItem()
@@ -239,7 +242,7 @@ Partial Class frmMain
         '
         'm_settings
         '
-        Me.m_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_lighting, Me.ToolStripMenuItem13, Me.m_small_lights, Me.m_FXAA, Me.m_g_settings, Me.ToolStripMenuItem14, Me.m_show_minimap, Me.m_show_status, Me.m_info_window, Me.ToolStripMenuItem11, Me.m_fly_map, Me.m_Orbit_Light})
+        Me.m_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_lighting, Me.ToolStripMenuItem13, Me.m_small_lights, Me.m_FXAA, Me.m_SSAO, Me.m_g_settings, Me.ToolStripSeparator8, Me.m_constant_updates, Me.ToolStripMenuItem14, Me.m_show_minimap, Me.m_show_status, Me.m_info_window, Me.ToolStripMenuItem11, Me.m_fly_map, Me.m_Orbit_Light})
         Me.m_settings.ForeColor = System.Drawing.Color.Black
         Me.m_settings.Name = "m_settings"
         resources.ApplyResources(Me.m_settings, "m_settings")
@@ -269,6 +272,13 @@ Partial Class frmMain
         Me.m_FXAA.CheckState = System.Windows.Forms.CheckState.Checked
         Me.m_FXAA.Name = "m_FXAA"
         resources.ApplyResources(Me.m_FXAA, "m_FXAA")
+        '
+        'm_SSAO
+        '
+        Me.m_SSAO.Checked = Global.Terra.My.MySettings.Default.SSAO
+        Me.m_SSAO.CheckOnClick = True
+        Me.m_SSAO.Name = "m_SSAO"
+        resources.ApplyResources(Me.m_SSAO, "m_SSAO")
         '
         'm_g_settings
         '
@@ -448,6 +458,18 @@ Partial Class frmMain
         Me.m_wire_terrain.CheckOnClick = True
         Me.m_wire_terrain.Name = "m_wire_terrain"
         resources.ApplyResources(Me.m_wire_terrain, "m_wire_terrain")
+        '
+        'ToolStripSeparator8
+        '
+        Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
+        resources.ApplyResources(Me.ToolStripSeparator8, "ToolStripSeparator8")
+        '
+        'm_constant_updates
+        '
+        Me.m_constant_updates.Checked = Global.Terra.My.MySettings.Default.m_constant_updates
+        Me.m_constant_updates.CheckOnClick = True
+        Me.m_constant_updates.Name = "m_constant_updates"
+        resources.ApplyResources(Me.m_constant_updates, "m_constant_updates")
         '
         'ToolStripMenuItem14
         '
@@ -738,5 +760,8 @@ Partial Class frmMain
     Friend WithEvents pb4 As System.Windows.Forms.Panel
     Friend WithEvents m_small_lights As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_FXAA As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_SSAO As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents m_constant_updates As System.Windows.Forms.ToolStripMenuItem
 
 End Class

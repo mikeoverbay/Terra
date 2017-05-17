@@ -20,6 +20,7 @@ Module modDeferred
         Private attacments() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT}
         Private attacments_CandP() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
         Private attacments_CandPandN() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
+        Private attacments_flag() As Integer = {Gl.GL_COLOR_ATTACHMENT3_EXT}
         Public Sub shut_down()
             delete_textures_and_fob_objects()
         End Sub
@@ -27,6 +28,7 @@ Module modDeferred
             Dim ran As New Random
 
             For i = 0 To (64 * 3) - 1 Step 3
+
                 randomFloats(i + 0) = CSng(ran.NextDouble * 2.0 - 1.0)
                 randomFloats(i + 1) = CSng(ran.NextDouble * 2.0 - 1.0)
                 randomFloats(i + 2) = CSng(ran.NextDouble)
@@ -36,6 +38,12 @@ Module modDeferred
                 randomFloats(i + 0) *= scale
                 randomFloats(i + 1) *= scale
                 randomFloats(i + 2) *= scale
+                'normalize to unit vector length
+                Dim ln = Sqrt((randomFloats(i + 0) ^ 2) + (randomFloats(i + 1) ^ 2) + (randomFloats(i + 2) ^ 2))
+                If ln = 0.0 Then ln = 1.0
+                randomFloats(i + 0) /= ln
+                randomFloats(i + 1) /= ln
+                randomFloats(i + 2) /= ln
 
             Next
         End Sub
@@ -95,23 +103,23 @@ Module modDeferred
             getsize(SCR_WIDTH, SCR_HEIGHT)
             'depth buffer
 
-            'If NoiseTexture = 0 Then
-            '    make_kernel()
-            '    Dim rnd As New Random
-            '    For i = 0 To (16 * 3) - 1 Step 3
-            '        noise(i + 0) = CSng(rnd.NextDouble * 2.0 - 1.0)
-            '        noise(i + 1) = CSng(rnd.NextDouble * 2.0 - 1.0)
-            '        noise(i + 2) = 0.0
-            '    Next
-            '    Gl.glGenTextures(1, NoiseTexture)
-            '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
-            '    Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB16F_ARB, 4, 4, 0, Gl.GL_RGB, Gl.GL_FLOAT, noise)
-            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
-            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
-            '    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
+            If NoiseTexture = 0 Then
+                make_kernel()
+                Dim rnd As New Random
+                For i = 0 To (16 * 3) - 1 Step 3
+                    noise(i + 0) = CSng(rnd.NextDouble * 2.0 - 1.0)
+                    noise(i + 1) = CSng(rnd.NextDouble * 2.0 - 1.0)
+                    noise(i + 2) = 0.0
+                Next
+                Gl.glGenTextures(1, NoiseTexture)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
+                Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB16F_ARB, 4, 4, 0, Gl.GL_RGB, Gl.GL_FLOAT, noise)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
 
-            'End If
+            End If
             Dim e1 = Gl.glGetError
 
             Gl.glGenTextures(1, gFlag)
@@ -131,6 +139,7 @@ Module modDeferred
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_COMPARE_MODE, Gl.GL_NONE)
             Dim e2 = Gl.glGetError
 
             ' - Position color buffer
@@ -175,6 +184,9 @@ Module modDeferred
         End Sub
         Public Sub attach_color_and_postion_only()
             Gl.glDrawBuffers(2, attacments_CandP)
+        End Sub
+        Public Sub attach_flag_only()
+            Gl.glDrawBuffers(1, attacments_flag)
         End Sub
         Public Sub attach_color_and_postion_and_normal_only()
             Gl.glDrawBuffers(3, attacments_CandPandN)

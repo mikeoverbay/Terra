@@ -9,7 +9,7 @@
 				End If
 				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
-				frmMain.draw_scene()
+				frmMain.need_screen_update()
 				Return
 			End If
 			If e.KeyCode = Keys.Oemplus Then
@@ -19,7 +19,7 @@
 				End If
 				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
-				frmMain.draw_scene()
+				frmMain.need_screen_update()
 				Return
 			End If
 		End If
@@ -43,10 +43,10 @@
 				Else
 					If rendermode Then
 						rendermode = False
-						frmMain.draw_scene()
+						frmMain.need_screen_update()
 					Else
 						rendermode = True
-						frmMain.draw_scene()
+						frmMain.need_screen_update()
 					End If
 				End If
 			End If
@@ -55,7 +55,7 @@
 			If Not move_mod Then
 				move_mod = True ' SHIFT KET
 				If Not NetData Then
-					frmMain.draw_scene()
+					frmMain.need_screen_update()
 				End If
 			End If
 
@@ -73,7 +73,7 @@
 			End If
 			'tb1.Text = "Minimap size: " + minimap_size.ToString
 			My.Settings.minimap_size = minimap_size
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 		If e.KeyCode = Keys.Oemplus Then
 			minimap_size += 32.0!
@@ -82,7 +82,7 @@
 			End If
 			'tb1.Text = "Minimap size: " + minimap_size.ToString
 			My.Settings.minimap_size = minimap_size
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 
 
@@ -93,11 +93,11 @@
 		ROTATE_TANK = False
 		If move_mod Then
 			move_mod = False
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 		If z_move Then
 			z_move = False
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 
 	End Sub

@@ -21,7 +21,7 @@ Public Class FrmRenderMap
 	Private Sub Render_btn_Click(sender As Object, e As EventArgs) Handles Render_btn.Click
 		frmMain.Render_minimap(render_size)
 		Dim da_map = frmMain.Render_minimap(render_size)
-		frmMain.draw_scene()
+		frmMain.need_screen_update()
 		Dim sfd As New SaveFileDialog
 		sfd.Title = "Save BMP"
 		sfd.InitialDirectory = GAME_PATH
@@ -34,7 +34,7 @@ Public Class FrmRenderMap
 			p += ".bmp"
 			da_map.Save(p)
 			da_map.Dispose()
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 		sfd.Dispose()
 		Me.Hide()

@@ -31,7 +31,7 @@ Public Class frmTanks
 				End If
 				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
-				frmMain.draw_scene()
+				frmMain.need_screen_update()
 				Return
 			End If
 			If e.KeyCode = Keys.Oemplus Then
@@ -41,7 +41,7 @@ Public Class frmTanks
 				End If
 				tb1.Text = "Icon size: " + icon_scale.ToString
 				My.Settings.icon_scale = icon_scale
-				frmMain.draw_scene()
+				frmMain.need_screen_update()
 				Return
 			End If
 		End If
@@ -52,7 +52,7 @@ Public Class frmTanks
 			End If
 			tb1.Text = "Minimap size: " + minimap_size.ToString
 			My.Settings.minimap_size = minimap_size
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 		If e.KeyCode = Keys.Oemplus Then
 			minimap_size += 32.0!
@@ -61,7 +61,7 @@ Public Class frmTanks
 			End If
 			tb1.Text = "Minimap size: " + minimap_size.ToString
 			My.Settings.minimap_size = minimap_size
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 		If e.KeyCode = Keys.T Then
 			If tankID > -1 Then
@@ -76,11 +76,11 @@ Public Class frmTanks
 		End If
 		If e.KeyCode = 16 Then
 			move_mod = True ' SHIFT KET
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 		If e.KeyCode = 17 Then
 			z_move = True ' CTRL KEY
-			frmMain.draw_scene()
+			frmMain.need_screen_update()
 		End If
 	End Sub
 

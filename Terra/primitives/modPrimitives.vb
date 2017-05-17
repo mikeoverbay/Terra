@@ -1213,10 +1213,13 @@ dont_save_this:
                 loaded_models.stack(Nmods).model_id(0) = id
                 loaded_models.stack(Nmods).matrix(0) = New matrix_
                 ReDim loaded_models.stack(Nmods).matrix(0).matrix(16)
-                Try
+                'Try
+                If Models.matrix IsNot Nothing Then
                     loaded_models.stack(Nmods).matrix(0).matrix = Models.matrix(id).matrix
-                Catch ex As Exception
-                End Try
+
+                End If
+                'Catch ex As Exception
+                'End Try
                 loaded_models.stack(Nmods).model_count = 1
                 If Models.models(id).componets(i)._count > 0 Then
 
@@ -1322,11 +1325,15 @@ Good_image:
             Catch ex As Exception
                 Stop
             End Try
+            'If .color_name.Contains("env404_Sign.dds") Then
+            '    .color_id = Load_DDS_File(Application.StartupPath + "\Resources\env404_Sign_hd.dds")
+            'Else
             If InStr(Models.Model_list(mod_id), "border_") > 0 Then
                 .color_id = get_texture_no_alpha(ms, True)
             Else
                 .color_id = get_texture(ms, frmMain.m_low_quality_textures.Checked)
             End If
+            'End If
 
             ms.Close()
             ms.Dispose()
@@ -1478,7 +1485,7 @@ jump_normal:
         Gl.glVertex3f(-0.5, 0.0, -0.5)
         Gl.glEnd()
         Gl.glEndList()
-
+        load_animated_water_NMs()
 
     End Sub
     Private Sub make_water_box()
@@ -1533,12 +1540,12 @@ jump_normal:
             .BB(1) = .lbr
             '
             .ltl.x = -0.5 'left top left
-            .ltl.y = 0.0
+            .ltl.y = 0.001
             .ltl.z = -0.5
             .BB(2) = .ltl
             '
             .ltr.x = 0.5 ' left top right
-            .ltr.y = 0.0
+            .ltr.y = 0.001
             .ltr.z = -0.5
             .BB(3) = .ltr
             ' right side ----------
@@ -1553,12 +1560,12 @@ jump_normal:
             .BB(5) = .rbr
             '
             .rtl.x = -0.5 ' right top left
-            .rtl.y = 0.0
+            .rtl.y = 0.001
             .rtl.z = 0.5
             .BB(6) = .rtl
             '
             .rtr.x = 0.5 ' right top right
-            .rtr.y = 0.0
+            .rtr.y = 0.001
             .rtr.z = 0.5
             .BB(7) = .rtr
 
@@ -1567,7 +1574,19 @@ jump_normal:
             water.BB(i) = translate_to(water.BB(i), water.matrix)
         Next
     End Sub
+    Private Sub load_animated_water_NMs()
+        Using w As Ionic.Zip.ZipFile = ZipFile.Read(Application.StartupPath + "\Resources\water.zip")
+            Dim cnt As Integer = 0
+            For Each f In w
+                Dim ms As New MemoryStream
+                f.Extract(ms)
+                Debug.WriteLine(f.FileName)
+                animated_water_ids(cnt) = get_texture(ms, False)
+                cnt += 1
+            Next
 
+        End Using
+    End Sub
     Public Sub get_tree_branch_texture(ByVal diffuse As String, ByVal tree As Integer)
 
         With Trees
@@ -2583,7 +2602,7 @@ get_billboard_data:
         If base = 1 Then
             Gl.glColor4f(0.7, 0.0, 0.0, 0.7)
         Else
-            Gl.glColor4f(0.0, 1.0, 0.0, 0.8)
+            Gl.glColor4f(0.0, 0.7, 0.0, 0.8)
         End If
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0)

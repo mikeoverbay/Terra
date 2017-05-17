@@ -27,12 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0283F048265E4F33ADA26BD2477614E8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_035C3CE3D34946BF958E14A68806E403"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,7 +45,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0D3DD7AA53B2483C830537F27BDF29CF"
+        "MsmKey" = "8:_0D0924FAC21F4F90B8792F23BEF9DDF2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0D27966D932D4F8985A8AD0A9758A297"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -75,12 +75,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_107A40AC7027483D8C968A3F888A45BA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_110858CB4D1F427088CEBEBB8015A47C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -88,12 +82,6 @@
         "Entry"
         {
         "MsmKey" = "8:_14F908DCCC9D471DB0A10D0C997A2313"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_154BC0BD67A34DFABBD69173B8B5E78D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -118,12 +106,6 @@
         "Entry"
         {
         "MsmKey" = "8:_1E60CF36B4094C949DA8827CA992F519"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1EED99BDB8EF4BA7880F55846F980F66"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -189,18 +171,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2E6C3BD14C2C45178B9FE064A3CA6391"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2EA4A2E6E63145D8813C1345FABF3DE2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_311F74A6272B4863B787C5E7476E0A34"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -225,25 +195,37 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_346951757F2245078572F9ECF901530B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_34722FD4EC274DEC9825067FEF730854"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_36F0C04C493E4325AB9CA5D3449634BA"
+        "MsmKey" = "8:_34F2759B2C024781944A4A2AD0A96D75"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_36BE65601BAF4BD582AA07F89C077047"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_37255EBF03464A4D9600061D0CDDFABC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_373445A9C5034D939C3948BE7C5A3543"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_37637DB9023945C7894AC0EE5B214053"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -261,13 +243,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3AAE9CFF11514A1ABED01765A883D724"
+        "MsmKey" = "8:_3A0B0714A73348378322B2158C89F1FE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3D7B2D0A41BE44BD92D9CDBD492BA96F"
+        "MsmKey" = "8:_3AC5B19877B145B4BFC7F07F7591FB0C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -291,13 +273,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_423EB4E5CEC242749B490C5E9A0FCEB0"
+        "MsmKey" = "8:_4282F932FEA44A87A5310ED68BB04E63"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_42A1CF29424142EE8EA6A3E61DE189D0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_43079A234BCB4E86A680241335917F6E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -315,12 +303,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_46E2D2A21E7C4AF4B07080EE230C1C8B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_48F7634BC8764F418E45CF151709FB8B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -333,13 +315,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4AB46D7ADA62413FB060C85E37684EFB"
+        "MsmKey" = "8:_4B2881C90B5345A784C3BD446F78EC95"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_4B2881C90B5345A784C3BD446F78EC95"
+        "MsmKey" = "8:_4BCF9DE0C41C491CAB3200EC724F659F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -357,7 +339,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4DF5D7526F4C44898FE75E6A51813028"
+        "MsmKey" = "8:_5120BC5FF10F44718F0D5D8D7F3A11B9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -369,19 +351,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_52F3B5C34E74428CB9777C35F6DE13D3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_535CE4B5F1FB4768BAE851BFA9DBBB34"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_56FAF7B0EA024736917097FC44C5DF91"
+        "MsmKey" = "8:_5584D03A910E4CD997FA22EB760DE6A1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -393,37 +369,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_58B8895DEEAB42EDBD7EF742B9AC6FB3"
+        "MsmKey" = "8:_5EB8132B4678495DA6E614D20DD113F7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_58EDE02779184B03AECF191EE6E08360"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5945B8321BA646D0B0B11865544B4C25"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5A4D4504129A4FCB94781DDAACA201F1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5AD1EBDEF9D04848ADAF5B091E21F4AE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6224723D90A64A8EBF1D48ECBA9A185C"
+        "MsmKey" = "8:_604273AE6CF345ACB777322022ECABAB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -435,13 +387,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_64310F0D2DBE4B96AF53E1E7A87760C8"
+        "MsmKey" = "8:_68829FEC7AA54FD78BA4D7117A6D285D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_68829FEC7AA54FD78BA4D7117A6D285D"
+        "MsmKey" = "8:_692657585CAC42258446C88BE7296840"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -459,7 +411,25 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6E633D11A9FA4CD9A943AE7A311CFE5E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_710D7C767BD04D80AF3CA01D87CFCA05"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_72A2B3EE57D44D24A973E2EE8B734DD0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7407C9368EE64862B4B0A4199E8EA03B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -471,13 +441,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_74B4E0E497C94B05B3FB2AF0800141A2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_75285E5359EA48358289C8210AAA0DB4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7983F5D49CC94FE5946F8064339E46E7"
+        "MsmKey" = "8:_76956DA9E75F49AF9E07587E5A5954AA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -501,25 +477,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_822F7A07B4704F52B4F21F1BC9D87E27"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_847F67C921DD448E888EBDB354F82F00"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_8495B5B1FB81454D98E0F08690723120"
+        "MsmKey" = "8:_85B5AB72EE8F40508D60595667E97069"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_858804F4B03144C7B860422EC0596B39"
+        "MsmKey" = "8:_873AB98AC3974F22A455EC10DFD72620"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_8B64209900014EDC940F86E7A7E57003"
+        "MsmKey" = "8:_8BF092A3D4DA4471A14858A6C093956A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -531,12 +513,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8D10FB9B5897461AB23ED4D8A32B2F09"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_8D428D4E086344EE82F4528DC948B9C2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -544,6 +520,18 @@
         "Entry"
         {
         "MsmKey" = "8:_90FA2A6C3D6E42D7B4E051987CD8471F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_91AC21B62DE448CAB7FF489DC0D210CB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_91AC4D859F4F4720A25D6324AA2B9BB7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -561,19 +549,37 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9352E967BB71415D83AF4101DE141A8B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_93C94A0846284D85807BC068394D39DC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_96F7032CE97F4320A0F9BE84D11F987B"
+        "MsmKey" = "8:_9576B2A0526142798E8BB26ABC7A8BF4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_95E157193D75495AA6A9F220C5D7D83B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_98DC5ADDAD4C4EA1B08E8FF685ABBD89"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9AE0F1997BB1430F945C3C0B74CEA540"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9BEFE449D6B4465598A2C015CD60256F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -585,7 +591,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A09BAC9772FA485A86ED101462696994"
+        "MsmKey" = "8:_A040A3233DCB420D9E913CF85E95F343"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -615,12 +621,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A7B9757EE5F045F5AA74CC85328C5F2F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A838351FD0474F65AB50C48410FAFD96"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -639,7 +639,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_AB4537A1161642B1B753117C7BB6FE57"
+        "MsmKey" = "8:_AA2D14AB9E564190928FC1C681E33F9F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -687,19 +687,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BAD4A895AD864380981E40869E09FA48"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BE822E62335E4BAE8D30B823BC1E47EE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BF71542C1E5348C1A9391B54BE20F6F1"
+        "MsmKey" = "8:_BDADB71C73844963B31DB7B7D145300B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -711,7 +699,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_C07F5CDCC1F741BABF69F2FCA444EDFA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C08486ACDA334194BC799393C9EA1451"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C10A38117E2B47D4A884F407030B560F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C10FA06908DB467D92D187C529B7EAE9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C162B5B610724DC6BAA32FC1C0A8C916"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -741,7 +753,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_C6096A159FB74DB8A28075E7B4448BA2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C688D46F1CF943D4A7B82A0C7E484690"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C6959589004D4C51B776A1F7E9446DB2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -759,7 +783,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CB977325CCEC46E69CE51FC05D411B7D"
+        "MsmKey" = "8:_C988AC5C1B2A44A7B836B7C21D3C47E1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CB960BAB510044B7B34B98FD3299544A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CC9C37CA20C547229D76CCF45B2B80B4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -771,7 +807,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CE8ACDD212EA404091B0A0E9F1035D08"
+        "MsmKey" = "8:_D00258D3C4B64752A5EAA02A335C30B7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D108F85FF0A04BA3A2C5F3672E23F4DD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -783,7 +825,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D52100A2EB8249918E09F0577E793601"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D7E4688F328A4B44A917F76406B1AC7C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D7E5FF559A77440FA4D1473C2895473F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_D81DFC2FEF2D4F2F9AB2C8374014F758"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D9134258AFB844DC8E2CFAF8653CF110"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -849,37 +915,31 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E2BBBAD7FC3044FB820F7B1913C691C6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E2E4E95BAF8C4DA2A86910BB3202867A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E762737A236E4838A57D6FB71CB797CB"
+        "MsmKey" = "8:_E62478FA11B1476EB771DE9824952187"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EB193B583D2946D1A93D55FBAAFEF796"
+        "MsmKey" = "8:_E6ECB5D0AC9B476691A88A21279C1825"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EB5E7152CF6D4A758F9E7AFB65317231"
+        "MsmKey" = "8:_E843A65AB38A41299369CD4402A1AF8B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EB9727E35D174038AEAB0902A6D114BA"
+        "MsmKey" = "8:_E8A075230BC84541BE278D6A3E123228"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -945,31 +1005,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F2E14FE71803411EBBF8451C68FDDB63"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F306CCC3434E451EBE66C63F6D8A2AE3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F38C1B2C669E48E3BA9F3F832A72CB89"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F4E69571C6E04AE897AD360906D7C785"
+        "MsmKey" = "8:_F65ED7D1CCE64126BEB1B93F84603C17"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F8E7DF4B495845ECBB9089E05211F251"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F8FD7401F7224EA19987CA228976379F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FAF13D512CC54D34A05B103D089C4C2F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -982,12 +1036,6 @@
         "Entry"
         {
         "MsmKey" = "8:_FBDD1E66056B4F48A59CCD04FC3994C4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_FD73A3A2CDD6494F98FB88E986316BE8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1102,7 +1150,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V043.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V045.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1202,26 +1250,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0283F048265E4F33ADA26BD2477614E8"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\normalOffset_fragment.glsl"
-            "TargetName" = "8:normalOffset_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_035C3CE3D34946BF958E14A68806E403"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R93_Object263.russian"
@@ -1273,10 +1301,30 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D3DD7AA53B2483C830537F27BDF29CF"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D0924FAC21F4F90B8792F23BEF9DDF2"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_vertex.glsl"
-            "TargetName" = "8:colorMapper_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\leafcoloredDef_vertex.glsl"
+            "TargetName" = "8:leafcoloredDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D27966D932D4F8985A8AD0A9758A297"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\waterColor_fragment.glsl"
+            "TargetName" = "8:waterColor_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -1353,26 +1401,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_107A40AC7027483D8C968A3F888A45BA"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\normal_vertex.glsl"
-            "TargetName" = "8:normal_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_110858CB4D1F427088CEBEBB8015A47C"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R27_SU-14.russian"
@@ -1399,26 +1427,6 @@
             "TargetName" = "8:G99_RhB_Waffentrager.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_154BC0BD67A34DFABBD69173B8B5E78D"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\decalsNpassef_vertex.glsl"
-            "TargetName" = "8:decalsNpassef_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1499,26 +1507,6 @@
             "TargetName" = "8:Ch01_Type59.chinese"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1EED99BDB8EF4BA7880F55846F980F66"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\dome_vertex.glsl"
-            "TargetName" = "8:dome_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1733,46 +1721,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2E6C3BD14C2C45178B9FE064A3CA6391"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\terrainMarkers_fragment.glsl"
-            "TargetName" = "8:terrainMarkers_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2EA4A2E6E63145D8813C1345FABF3DE2"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_vertex.glsl"
-            "TargetName" = "8:toLinear_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_311F74A6272B4863B787C5E7476E0A34"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\G72_JagdPz_E100.german"
@@ -1853,6 +1801,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_346951757F2245078572F9ECF901530B"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDeff_vertex.glsl"
+            "TargetName" = "8:decalsCpassDeff_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34722FD4EC274DEC9825067FEF730854"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R53_Object_704.russian"
@@ -1873,10 +1841,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_36F0C04C493E4325AB9CA5D3449634BA"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34F2759B2C024781944A4A2AD0A96D75"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\wire_fragment.glsl"
-            "TargetName" = "8:wire_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\wire_vertex.glsl"
+            "TargetName" = "8:wire_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_36BE65601BAF4BD582AA07F89C077047"
+            {
+            "SourcePath" = "8:..\\Terra\\Resources\\water.zip"
+            "TargetName" = "8:water.zip"
+            "Tag" = "8:"
+            "Folder" = "8:_4D355FB3199A4BB2B507406BB5D64839"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_37255EBF03464A4D9600061D0CDDFABC"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\deferred_vertex.glsl"
+            "TargetName" = "8:deferred_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -1899,26 +1907,6 @@
             "TargetName" = "8:G97_Waffentrager_IV.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_37637DB9023945C7894AC0EE5B214053"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\comp_fragment.glsl"
-            "TargetName" = "8:comp_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1973,10 +1961,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3AAE9CFF11514A1ABED01765A883D724"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3A0B0714A73348378322B2158C89F1FE"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\terrainDef_fragment.glsl"
-            "TargetName" = "8:terrainDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\water_fragment.glsl"
+            "TargetName" = "8:water_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -1993,10 +1981,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3D7B2D0A41BE44BD92D9CDBD492BA96F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3AC5B19877B145B4BFC7F07F7591FB0C"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\tankDef_fragment.glsl"
-            "TargetName" = "8:tankDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\ring_fragment.glsl"
+            "TargetName" = "8:ring_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2073,10 +2061,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_423EB4E5CEC242749B490C5E9A0FCEB0"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4282F932FEA44A87A5310ED68BB04E63"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\branchDef_fragment.glsl"
-            "TargetName" = "8:branchDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\SSAO_fragment.glsl"
+            "TargetName" = "8:SSAO_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2099,6 +2087,26 @@
             "TargetName" = "8:F17_AMX_13_90.french"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43079A234BCB4E86A680241335917F6E"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_fragment.glsl"
+            "TargetName" = "8:colorMapper_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2139,26 +2147,6 @@
             "TargetName" = "8:G45_G_Tiger.german"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_46E2D2A21E7C4AF4B07080EE230C1C8B"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\FXAA_vertex.glsl"
-            "TargetName" = "8:FXAA_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2224,12 +2212,12 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4AB46D7ADA62413FB060C85E37684EFB"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4B2881C90B5345A784C3BD446F78EC95"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\comp_vertex.glsl"
-            "TargetName" = "8:comp_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\tanks\\A14_T30.american"
+            "TargetName" = "8:A14_T30.american"
             "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2244,12 +2232,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4B2881C90B5345A784C3BD446F78EC95"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4BCF9DE0C41C491CAB3200EC724F659F"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A14_T30.american"
-            "TargetName" = "8:A14_T30.american"
+            "SourcePath" = "8:..\\Terra\\shaders\\normalOffset_fragment.glsl"
+            "TargetName" = "8:normalOffset_fragment.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2304,10 +2292,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4DF5D7526F4C44898FE75E6A51813028"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5120BC5FF10F44718F0D5D8D7F3A11B9"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\shadow_fragment.glsl"
-            "TargetName" = "8:shadow_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_vertex.glsl"
+            "TargetName" = "8:colorMapper_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2344,26 +2332,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_52F3B5C34E74428CB9777C35F6DE13D3"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\decalsNpassDef_fragment.glsl"
-            "TargetName" = "8:decalsNpassDef_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_535CE4B5F1FB4768BAE851BFA9DBBB34"
             {
             "SourcePath" = "8:..\\Terra\\map_list.txt"
@@ -2384,10 +2352,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_56FAF7B0EA024736917097FC44C5DF91"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5584D03A910E4CD997FA22EB760DE6A1"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\tankDef_vertex.glsl"
-            "TargetName" = "8:tankDef_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_fragment.glsl"
+            "TargetName" = "8:toLinear_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2424,12 +2392,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_58B8895DEEAB42EDBD7EF742B9AC6FB3"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5EB8132B4678495DA6E614D20DD113F7"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\SSAO_vertex.glsl"
-            "TargetName" = "8:SSAO_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\Resources\\water2_NM2.dds"
+            "TargetName" = "8:water2_NM2.dds"
             "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Folder" = "8:_4D355FB3199A4BB2B507406BB5D64839"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2444,90 +2412,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_58EDE02779184B03AECF191EE6E08360"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_604273AE6CF345ACB777322022ECABAB"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\gaussian_vertex.glsl"
-            "TargetName" = "8:gaussian_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5945B8321BA646D0B0B11865544B4C25"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_fragment.glsl"
-            "TargetName" = "8:colorMapper_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5A4D4504129A4FCB94781DDAACA201F1"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\dome_fragment.glsl"
-            "TargetName" = "8:dome_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5AD1EBDEF9D04848ADAF5B091E21F4AE"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\terrainDef_vertex.glsl"
-            "TargetName" = "8:terrainDef_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6224723D90A64A8EBF1D48ECBA9A185C"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\FXAA_fragment.glsl"
-            "TargetName" = "8:FXAA_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\terrainMarkers_fragment.glsl"
+            "TargetName" = "8:terrainMarkers_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2564,12 +2452,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64310F0D2DBE4B96AF53E1E7A87760C8"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_68829FEC7AA54FD78BA4D7117A6D285D"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\lzTerrainDef_fragment.glsl"
-            "TargetName" = "8:lzTerrainDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\tanks\\A69_T110E5.american"
+            "TargetName" = "8:A69_T110E5.american"
             "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2584,12 +2472,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_68829FEC7AA54FD78BA4D7117A6D285D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_692657585CAC42258446C88BE7296840"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A69_T110E5.american"
-            "TargetName" = "8:A69_T110E5.american"
+            "SourcePath" = "8:..\\Terra\\shaders\\FXAA_fragment.glsl"
+            "TargetName" = "8:FXAA_fragment.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2644,12 +2532,72 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6E633D11A9FA4CD9A943AE7A311CFE5E"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\deferred_fragment.glsl"
+            "TargetName" = "8:deferred_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_710D7C767BD04D80AF3CA01D87CFCA05"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\tankDef_fragment.glsl"
+            "TargetName" = "8:tankDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_72A2B3EE57D44D24A973E2EE8B734DD0"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\A63_M46_Patton.american"
             "TargetName" = "8:A63_M46_Patton.american"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7407C9368EE64862B4B0A4199E8EA03B"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\dome_fragment.glsl"
+            "TargetName" = "8:dome_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2684,6 +2632,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_74B4E0E497C94B05B3FB2AF0800141A2"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDef_fragment.glsl"
+            "TargetName" = "8:decalsCpassDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_75285E5359EA48358289C8210AAA0DB4"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\G58_VK4502P.german"
@@ -2704,10 +2672,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7983F5D49CC94FE5946F8064339E46E7"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_76956DA9E75F49AF9E07587E5A5954AA"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\buildingsDef_fragment.glsl"
-            "TargetName" = "8:buildingsDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsNpassef_vertex.glsl"
+            "TargetName" = "8:decalsNpassef_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2784,6 +2752,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_822F7A07B4704F52B4F21F1BC9D87E27"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\comp_vertex.glsl"
+            "TargetName" = "8:comp_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_847F67C921DD448E888EBDB354F82F00"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R54_KV-5.russian"
@@ -2804,10 +2792,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8495B5B1FB81454D98E0F08690723120"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_85B5AB72EE8F40508D60595667E97069"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\branchDef_vertex.glsl"
-            "TargetName" = "8:branchDef_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\tankDef_vertex.glsl"
+            "TargetName" = "8:tankDef_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2824,10 +2812,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_858804F4B03144C7B860422EC0596B39"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_873AB98AC3974F22A455EC10DFD72620"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\frondDef_fragment.glsl"
-            "TargetName" = "8:frondDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\normalOffset_vertex.glsl"
+            "TargetName" = "8:normalOffset_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2844,10 +2832,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8B64209900014EDC940F86E7A7E57003"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8BF092A3D4DA4471A14858A6C093956A"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\frondDel_vertex.glsl"
-            "TargetName" = "8:frondDel_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\FXAA_vertex.glsl"
+            "TargetName" = "8:FXAA_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -2895,26 +2883,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8D10FB9B5897461AB23ED4D8A32B2F09"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\normal_geo.glsl"
-            "TargetName" = "8:normal_geo.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8D428D4E086344EE82F4528DC948B9C2"
             {
             "SourcePath" = "8:..\\Terra\\ILU.dll"
@@ -2941,6 +2909,46 @@
             "TargetName" = "8:F62_ELC_AMX.french"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_91AC21B62DE448CAB7FF489DC0D210CB"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\leafcoloredDef_fragment.glsl"
+            "TargetName" = "8:leafcoloredDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_91AC4D859F4F4720A25D6324AA2B9BB7"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\shadow_vertex.glsl"
+            "TargetName" = "8:shadow_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3006,26 +3014,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9352E967BB71415D83AF4101DE141A8B"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\buildingsDef_vertex.glsl"
-            "TargetName" = "8:buildingsDef_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_93C94A0846284D85807BC068394D39DC"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F09_AMX_50_120.french"
@@ -3046,10 +3034,90 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_96F7032CE97F4320A0F9BE84D11F987B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9576B2A0526142798E8BB26ABC7A8BF4"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\ring_vertex.glsl"
-            "TargetName" = "8:ring_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\buildingsDef_fragment.glsl"
+            "TargetName" = "8:buildingsDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_95E157193D75495AA6A9F220C5D7D83B"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\gaussian_vertex.glsl"
+            "TargetName" = "8:gaussian_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98DC5ADDAD4C4EA1B08E8FF685ABBD89"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\terrainDef_vertex.glsl"
+            "TargetName" = "8:terrainDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AE0F1997BB1430F945C3C0B74CEA540"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\branchDef_vertex.glsl"
+            "TargetName" = "8:branchDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BEFE449D6B4465598A2C015CD60256F"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\shadow_fragment.glsl"
+            "TargetName" = "8:shadow_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3086,10 +3154,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A09BAC9772FA485A86ED101462696994"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A040A3233DCB420D9E913CF85E95F343"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_fragment.glsl"
-            "TargetName" = "8:toLinear_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\waterMask_fragment.glsl"
+            "TargetName" = "8:waterMask_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3186,26 +3254,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A7B9757EE5F045F5AA74CC85328C5F2F"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDef_fragment.glsl"
-            "TargetName" = "8:decalsCpassDef_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A838351FD0474F65AB50C48410FAFD96"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\GB30_FV3805.british"
@@ -3288,10 +3336,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AB4537A1161642B1B753117C7BB6FE57"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AA2D14AB9E564190928FC1C681E33F9F"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\leafcoloredDef_vertex.glsl"
-            "TargetName" = "8:leafcoloredDef_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\lzTerrainDef_fragment.glsl"
+            "TargetName" = "8:lzTerrainDef_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3450,50 +3498,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BAD4A895AD864380981E40869E09FA48"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BDADB71C73844963B31DB7B7D145300B"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\terrianMarkers_vertex.glsl"
-            "TargetName" = "8:terrianMarkers_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE822E62335E4BAE8D30B823BC1E47EE"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\deferred_fragment.glsl"
-            "TargetName" = "8:deferred_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BF71542C1E5348C1A9391B54BE20F6F1"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDeff_vertex.glsl"
-            "TargetName" = "8:decalsCpassDeff_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\comp_fragment.glsl"
+            "TargetName" = "8:comp_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3530,12 +3538,92 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C07F5CDCC1F741BABF69F2FCA444EDFA"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\buildingsDef_vertex.glsl"
+            "TargetName" = "8:buildingsDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C08486ACDA334194BC799393C9EA1451"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\toLinear_vertex.glsl"
+            "TargetName" = "8:toLinear_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C10A38117E2B47D4A884F407030B560F"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R52_Object_261.russian"
             "TargetName" = "8:R52_Object_261.russian"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C10FA06908DB467D92D187C529B7EAE9"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\ring_vertex.glsl"
+            "TargetName" = "8:ring_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C162B5B610724DC6BAA32FC1C0A8C916"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\lzTerrainDef_vertex.glsl"
+            "TargetName" = "8:lzTerrainDef_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3630,12 +3718,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6096A159FB74DB8A28075E7B4448BA2"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\frondDel_vertex.glsl"
+            "TargetName" = "8:frondDel_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C688D46F1CF943D4A7B82A0C7E484690"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\Ch19_121.chinese"
             "TargetName" = "8:Ch19_121.chinese"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6959589004D4C51B776A1F7E9446DB2"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\leafDef_fragment.glsl"
+            "TargetName" = "8:leafDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3690,10 +3818,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CB977325CCEC46E69CE51FC05D411B7D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C988AC5C1B2A44A7B836B7C21D3C47E1"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\leafDef_vertex.glsl"
-            "TargetName" = "8:leafDef_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\waterColor_vertex.glsl"
+            "TargetName" = "8:waterColor_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CB960BAB510044B7B34B98FD3299544A"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\branchDef_fragment.glsl"
+            "TargetName" = "8:branchDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CC9C37CA20C547229D76CCF45B2B80B4"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\normal_geo.glsl"
+            "TargetName" = "8:normal_geo.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3730,10 +3898,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CE8ACDD212EA404091B0A0E9F1035D08"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D00258D3C4B64752A5EAA02A335C30B7"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\leafcoloredDef_fragment.glsl"
-            "TargetName" = "8:leafcoloredDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\normal_vertex.glsl"
+            "TargetName" = "8:normal_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D108F85FF0A04BA3A2C5F3672E23F4DD"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\leafDef_vertex.glsl"
+            "TargetName" = "8:leafDef_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -3770,12 +3958,92 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D52100A2EB8249918E09F0577E793601"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\water_vertex.glsl"
+            "TargetName" = "8:water_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D7E4688F328A4B44A917F76406B1AC7C"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\wire_fragment.glsl"
+            "TargetName" = "8:wire_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D7E5FF559A77440FA4D1473C2895473F"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\normal_fragment.glsl"
+            "TargetName" = "8:normal_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D81DFC2FEF2D4F2F9AB2C8374014F758"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F64_AMX_50Fosh_155.french"
             "TargetName" = "8:F64_AMX_50Fosh_155.french"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D9134258AFB844DC8E2CFAF8653CF110"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\waterMask_vertex.glsl"
+            "TargetName" = "8:waterMask_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3990,26 +4258,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E2BBBAD7FC3044FB820F7B1913C691C6"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\SSAO_fragment.glsl"
-            "TargetName" = "8:SSAO_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E2E4E95BAF8C4DA2A86910BB3202867A"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\A67_T57_58.american"
@@ -4030,10 +4278,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E762737A236E4838A57D6FB71CB797CB"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E62478FA11B1476EB771DE9824952187"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\leafDef_fragment.glsl"
-            "TargetName" = "8:leafDef_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\SSAO_vertex.glsl"
+            "TargetName" = "8:SSAO_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4050,10 +4298,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB193B583D2946D1A93D55FBAAFEF796"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E6ECB5D0AC9B476691A88A21279C1825"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\shadow_vertex.glsl"
-            "TargetName" = "8:shadow_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\frondDef_fragment.glsl"
+            "TargetName" = "8:frondDef_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4070,10 +4318,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB5E7152CF6D4A758F9E7AFB65317231"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E843A65AB38A41299369CD4402A1AF8B"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\wire_vertex.glsl"
-            "TargetName" = "8:wire_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\dome_vertex.glsl"
+            "TargetName" = "8:dome_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4090,10 +4338,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB9727E35D174038AEAB0902A6D114BA"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E8A075230BC84541BE278D6A3E123228"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\ring_fragment.glsl"
-            "TargetName" = "8:ring_fragment.glsl"
+            "SourcePath" = "8:..\\Terra\\shaders\\terrianMarkers_vertex.glsl"
+            "TargetName" = "8:terrianMarkers_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4312,70 +4560,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2E14FE71803411EBBF8451C68FDDB63"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\lzTerrainDef_vertex.glsl"
-            "TargetName" = "8:lzTerrainDef_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F306CCC3434E451EBE66C63F6D8A2AE3"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\normal_fragment.glsl"
-            "TargetName" = "8:normal_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F38C1B2C669E48E3BA9F3F832A72CB89"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F65ED7D1CCE64126BEB1B93F84603C17"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\gaussian_fragment.glsl"
             "TargetName" = "8:gaussian_fragment.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F4E69571C6E04AE897AD360906D7C785"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\normalOffset_vertex.glsl"
-            "TargetName" = "8:normalOffset_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4398,6 +4586,46 @@
             "TargetName" = "8:J16_ST_B1.japan"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F8FD7401F7224EA19987CA228976379F"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\decalsNpassDef_fragment.glsl"
+            "TargetName" = "8:decalsNpassDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FAF13D512CC54D34A05B103D089C4C2F"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\terrainDef_fragment.glsl"
+            "TargetName" = "8:terrainDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4438,26 +4666,6 @@
             "TargetName" = "8:GB32_Tortoise.british"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FD73A3A2CDD6494F98FB88E986316BE8"
-            {
-            "SourcePath" = "8:..\\Terra\\shaders\\deferred_vertex.glsl"
-            "TargetName" = "8:deferred_vertex.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4572,15 +4780,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
-        "ProductCode" = "8:{13FA9B65-03B1-4D64-ACCB-C551EAB51A9B}"
-        "PackageCode" = "8:{527ED29F-6C90-40FC-8DC2-99917566CF3E}"
+        "ProductCode" = "8:{833AAED2-50A8-412F-BFAB-118CBB6490B9}"
+        "PackageCode" = "8:{42CE1F6D-F0F9-4ED8-B26A-46C3A07F4F4E}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.43"
+        "ProductVersion" = "8:1.0.45"
         "Manufacturer" = "8:Coffee_"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

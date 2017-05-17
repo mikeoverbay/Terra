@@ -84,8 +84,8 @@ Public Class frmEditFrag
         End With
         set_shader_variables() ' update uniform addresses
         gl_busy = False
-        frmMain.draw_scene()
-        frmMain.draw_scene()
+        frmMain.need_screen_update()
+        frmMain.need_screen_update()
         reset_focus()
         recompile_bt.Enabled = True
 

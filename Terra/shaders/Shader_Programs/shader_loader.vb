@@ -37,9 +37,13 @@ Module shader_loader
         Public terrainMarkers_shader As Integer
         Public toLinear_shader As Integer
         Public trees_shader As Integer
+        Public water_shader As Integer
+        Public waterColor_shader As Integer
+        Public waterMask_shader As Integer
         Public wire_shader As Integer
         Public write3D_shader As Integer
     End Class
+
 #Region "variables"
 
     Public view_normal_mode_ As Integer
@@ -354,7 +358,8 @@ Module shader_loader
         deferred_light_position, deferred_cam_position, deferred_gamma, _
         deferred_spec, deferred_gray, deferred_bright, deferred_ambient, _
         deferred_mapHeight, deferred_depthmap, deferred_lights_pos, _
-        deferred_lights_color, deferred_light_count, deferred_water_line, deferred_cam_Matrix As Integer
+        deferred_lights_color, deferred_light_count, deferred_SSAO_Texture, deferred_cam_Matrix, _
+        deferred_SSAO_Enabled As Integer
 
     Private Sub set_deferredLighting_variables()
         deferred_cam_position = Gl.glGetUniformLocation(shader_list.deferred_shader, "viewPos")
@@ -372,7 +377,8 @@ Module shader_loader
         deferred_lights_pos = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_positions")
         deferred_lights_color = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_colors")
         deferred_light_count = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_count")
-        deferred_water_line = Gl.glGetUniformLocation(shader_list.deferred_shader, "water_line")
+        deferred_SSAO_Texture = Gl.glGetUniformLocation(shader_list.deferred_shader, "SSAO_Texture")
+        deferred_SSAO_Enabled = Gl.glGetUniformLocation(shader_list.deferred_shader, "SSAO_Enabled")
     End Sub
 
     Private Sub set_comp_variables()
@@ -481,11 +487,10 @@ Module shader_loader
     Private Sub set_tankDef_variables()
         tankDef_matrix = Gl.glGetUniformLocation(shader_list.tankDef_shader, "matrix")
     End Sub
-    Public fxaa_rt_w, fxaa_rt_h, fxaa_texture_in As Integer
+    Public fxaa_frameBufferSize, fxaa_texture_in As Integer
     Private Sub set_FXAA_variables()
-        fxaa_rt_h = Gl.glGetUniformLocation(shader_list.FXAA_shader, "rt_h")
-        fxaa_rt_w = Gl.glGetUniformLocation(shader_list.FXAA_shader, "rt_w")
-        fxaa_texture_in = Gl.glGetUniformLocation(shader_list.FXAA_shader, "tex0")
+        fxaa_frameBufferSize = Gl.glGetUniformLocation(shader_list.FXAA_shader, "frameBufSize")
+        fxaa_texture_in = Gl.glGetUniformLocation(shader_list.FXAA_shader, "buf0")
 
     End Sub
 
@@ -499,15 +504,15 @@ Module shader_loader
         shadow_cam_matrix = Gl.glGetUniformLocation(shader_list.shadow_shader, "cam_matrix")
         shadow_cam_position = Gl.glGetUniformLocation(shader_list.shadow_shader, "cam_position")
     End Sub
-    Public ss_gColor, ss_gNormal, ss_gDepthMap, ss_noise, ss_kernel, ss_screen_size, ss_prj_matrix, ss_mdl_Matrix As Integer
+
+    Public ss_gNormal, ss_gDepthMap, ss_noise, ss_kernel, ss_screen_size, ss_prj_matrix, ss_mdl_Matrix As Integer
     Private Sub set_SSAO_variables()
-        ss_gColor = Gl.glGetUniformLocation(shader_list.SSAO_shader, "gColor")
-        ss_gNormal = Gl.glGetUniformLocation(shader_list.SSAO_shader, "gNormal")
-        ss_gDepthMap = Gl.glGetUniformLocation(shader_list.SSAO_shader, "gDepthMap")
-        ss_noise = Gl.glGetUniformLocation(shader_list.SSAO_shader, "texNoise")
-        ss_kernel = Gl.glGetUniformLocation(shader_list.SSAO_shader, "samples")
+        ss_gNormal = Gl.glGetUniformLocation(shader_list.SSAO_shader, "u_normalTexture")
+        ss_gDepthMap = Gl.glGetUniformLocation(shader_list.SSAO_shader, "u_depthTexture")
+        ss_noise = Gl.glGetUniformLocation(shader_list.SSAO_shader, "u_rotationNoiseTexture")
+        ss_kernel = Gl.glGetUniformLocation(shader_list.SSAO_shader, "u_kernel")
         ss_screen_size = Gl.glGetUniformLocation(shader_list.SSAO_shader, "screen_size")
-        ss_prj_matrix = Gl.glGetUniformLocation(shader_list.SSAO_shader, "prj_matrix")
+        ss_prj_matrix = Gl.glGetUniformLocation(shader_list.SSAO_shader, "u_projectionMatrix")
         ss_mdl_Matrix = Gl.glGetUniformLocation(shader_list.SSAO_shader, "mdl_matrix")
     End Sub
 
@@ -527,7 +532,24 @@ Module shader_loader
 
     End Sub
 
-
+    Public water_colorMap, water_normalMap, water_normalMap2, water_gNormal, water_gDepthMap, water_time, water_matrix, water_level As Integer
+    Private Sub set_water_variables()
+        water_colorMap = Gl.glGetUniformLocation(shader_list.water_shader, "colorMap")
+        water_normalMap = Gl.glGetUniformLocation(shader_list.water_shader, "normalMap")
+        water_normalMap2 = Gl.glGetUniformLocation(shader_list.water_shader, "normalMap2")
+        water_gNormal = Gl.glGetUniformLocation(shader_list.water_shader, "gNormalIn")
+        water_gDepthMap = Gl.glGetUniformLocation(shader_list.water_shader, "gDepthMap")
+        water_time = Gl.glGetUniformLocation(shader_list.water_shader, "time")
+        water_matrix = Gl.glGetUniformLocation(shader_list.water_shader, "matrix")
+        water_level = Gl.glGetUniformLocation(shader_list.water_shader, "water_level")
+    End Sub
+    Public waterC_color, waterC_matrix, waterC_Depthmap As Integer
+    Private Sub set_waterColor_variables()
+        waterC_color = Gl.glGetUniformLocation(shader_list.waterColor_shader, "colorMap")
+        waterC_matrix = Gl.glGetUniformLocation(shader_list.waterColor_shader, "matrix")
+        waterC_Depthmap = Gl.glGetUniformLocation(shader_list.waterColor_shader, "gDepthMap")
+    End Sub
+    '==============================================================================================================
     Public Sub set_shader_variables()
         set_ring_variables()
         set_terrainDef_variables()
@@ -535,14 +557,18 @@ Module shader_loader
         set_comp_variables()
         set_normal_variables()
         set_buldingsDef_variables()
+
         set_branchDef_variables()
         set_frondDef_variables()
         set_leafDef_variables()
         set_leafColored_variables()
+
         set_colorMapper_variables()
         set_lzTerrainDef_variables()
+
         set_decalsNpassDef_variables()
         set_decalsCpassDef_variables()
+
         set_toLinear_variables()
         set_tankDef_variables()
         set_FXAA_variables()
@@ -550,116 +576,12 @@ Module shader_loader
         set_shadow_variables()
         set_SSAO_variables()
         set_terrainMarkers_variables()
+
+        set_water_variables()
+        set_waterColor_variables()
         Return
 
-        colorMapper_mask_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "mask")
-        colorMapper_colorMap_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "colorMap")
-        '--------------------------------------------------------------------------
-
-        c_address2 = Gl.glGetUniformLocation(shader_list.lzTerrainDef_shader, "colorMap")
-        n_address2 = Gl.glGetUniformLocation(shader_list.lzTerrainDef_shader, "normalMap")
-        a_address2 = Gl.glGetUniformLocation(shader_list.lzTerrainDef_shader, "l_ambient")
-        t_address2 = Gl.glGetUniformLocation(shader_list.lzTerrainDef_shader, "l_texture")
-        gray_level_2 = Gl.glGetUniformLocation(shader_list.lzTerrainDef_shader, "gray_level")
-        gamma_2 = Gl.glGetUniformLocation(shader_list.lzTerrainDef_shader, "gamma")
-        GoTo skip_render
-
-        '--------------------------------------------------------------------------
-        main_texture = Gl.glGetUniformLocation(shader_list.render_shader, "main_texture")
-        'No idea how to use this or if its even needed.
-        ' color_correct_addy = Gl.glGetUniformLocation(shader_list.render_shader, "dom_")
-        c_position = Gl.glGetUniformLocation(shader_list.render_shader, "cam_position")
-        a_address = Gl.glGetUniformLocation(shader_list.render_shader, "l_ambient")
-        t_address = Gl.glGetUniformLocation(shader_list.render_shader, "l_texture")
-        gray_level_1 = Gl.glGetUniformLocation(shader_list.render_shader, "gray_level")
-        gamma = Gl.glGetUniformLocation(shader_list.render_shader, "gamma")
-        render_has_holes = Gl.glGetUniformLocation(shader_list.render_shader, "has_holes")
-        '--------------------------------------------------------------------------
-        layer_1 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_1")
-        layer_2 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_2")
-        layer_3 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_3")
-        layer_4 = Gl.glGetUniformLocation(shader_list.render_shader, "layer_4")
-        n_layer_1 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_1")
-        n_layer_2 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_2")
-        n_layer_3 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_3")
-        n_layer_4 = Gl.glGetUniformLocation(shader_list.render_shader, "n_layer_4")
-        mixtexture = Gl.glGetUniformLocation(shader_list.render_shader, "mixtexture")
-        c_address = Gl.glGetUniformLocation(shader_list.render_shader, "colorMap")
-        'dominateTex = Gl.glGetUniformLocation(shader_list.render_shader, "DominateMap")
-        layer0U = Gl.glGetUniformLocation(shader_list.render_shader, "layer0U")
-        layer1U = Gl.glGetUniformLocation(shader_list.render_shader, "layer1U")
-        layer2U = Gl.glGetUniformLocation(shader_list.render_shader, "layer2U")
-        layer3U = Gl.glGetUniformLocation(shader_list.render_shader, "layer3U")
-        layer0V = Gl.glGetUniformLocation(shader_list.render_shader, "layer0V")
-        layer1V = Gl.glGetUniformLocation(shader_list.render_shader, "layer1V")
-        layer2V = Gl.glGetUniformLocation(shader_list.render_shader, "layer2V")
-        layer3V = Gl.glGetUniformLocation(shader_list.render_shader, "layer3V")
-        render_hole_texture = Gl.glGetUniformLocation(shader_list.render_shader, "hole_texture")
-skip_render:
-        '--------------------------------------------------------------------------
-        c_address3 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "colorMap")
-        colormap2 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "colorMap_2")
-        n_address3 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "normalMap")
-        'c_position3 = Gl.glGetUniformLocation(bump_shader, "camPos")
-        t_address3 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "l_texture")
-        gray_level_3 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "gray_level")
-        is_bumped3 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "is_bumped")
-        is_GAmap = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "is_GAmap")
-        is_multi_textured = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "is_multi_textured")
-        gamma_3 = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "gamma")
-        alphaRef = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "alphaRef")
-        alphaTestEnable = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "alphaTestEnable")
-        model_ambient = Gl.glGetUniformLocation(shader_list.buildingsDef_shader, "ambient")
-        '--------------------------------------------------------------------------
-        'branch_color_map_id = Gl.glGetUniformLocation(shader_list.branchDef_shader, "colorMap")
-        'branch_normalmap_map_id = Gl.glGetUniformLocation(shader_list.branchDef_shader, "normalMap")
-        'branch_eye_pos_id = Gl.glGetUniformLocation(shader_list.branchDef_shader, "cam_position")
-        'branch_tex_level_id = Gl.glGetUniformLocation(shader_list.branchDef_shader, "l_texture")
-        'branch_gray_level_id = Gl.glGetUniformLocation(shader_list.branchDef_shader, "gray_level")
-        'branch_gamma_level_id = Gl.glGetUniformLocation(shader_list.branchDef_shader, "gamma")
-        'branch_ambient_level_id = Gl.glGetUniformLocation(shader_list.branchDef_shader, "ambient")
-        '-----------------------------------------------------------------
-        'frond_color_map_id = Gl.glGetUniformLocation(shader_list.frondDef_shader, "colorMap")
-        'frond_normal_map_id = Gl.glGetUniformLocation(shader_list.frondDef_shader, "normalMap")
-        'frond_eye_pos_id = Gl.glGetUniformLocation(shader_list.frondDef_shader, "cam_position")
-        'frond_tex_level_id = Gl.glGetUniformLocation(shader_list.frondDef_shader, "l_texture")
-        'frond_gray_level_id = Gl.glGetUniformLocation(shader_list.frondDef_shader, "gray_level")
-        'frond_gamma_level_id = Gl.glGetUniformLocation(shader_list.frondDef_shader, "gamma")
-        'frond_ambient_level_id = Gl.glGetUniformLocation(shader_list.frondDef_shader, "ambient")
-        '-----------------------------------------------------------------
-        'leaf_color_map_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "colorMap")
-        'leaf_normal_map_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "normalMap")
-        'leaf_eye_pos_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "cam_position")
-        'leaf_tex_level_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "l_texture")
-        'leaf_gray_level_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "gray_level")
-        'leaf_gamma_level_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "gamma")
-        'leaf_ambient_level_id = Gl.glGetUniformLocation(shader_list.leafDef_shader, "ambient")
-        ''--------------------------------------------------------------------------
-        'decal_color_map_id = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "colorMap")
-        'decal_normal_map_id = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "normalMap")
-        'decal_cam_position_id = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "cam_position")
-        'decal_tex_level_id = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "l_texture")
-        'decal_gray_level_id = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "gray_level")
-        'decal_gamma_level_id = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "gamma")
-        'decal_ambient = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "ambient")
-        'decal_u_wrap = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "u_wrap")
-        'decal_v_wrap = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "v_wrap")
-        'decal_influence = Gl.glGetUniformLocation(shader_list.decalsDef_shader, "influence")
-        '-----------------------------------------------------------------
-        '-----------------
-        bump_out_ = Gl.glGetUniformLocation(shader_list.comp_shader, "amount")
-        '-----------------
-        vismap_address = Gl.glGetUniformLocation(shader_list.fog_shader, "map")
-        noise_map_address = Gl.glGetUniformLocation(shader_list.fog_shader, "noise_map")
-        '-----------------
-        view_normal_mode_ = Gl.glGetUniformLocation(shader_list.normal_shader, "mode")
-        normal_length_ = Gl.glGetUniformLocation(shader_list.normal_shader, "l_length")
-        '-----------------
-        basic_color = Gl.glGetUniformLocation(shader_list.lowQualityTrees_shader, "colorMap")
-        basic_normal = Gl.glGetUniformLocation(shader_list.lowQualityTrees_shader, "normalMap")
-        basic_color_level = Gl.glGetUniformLocation(shader_list.lowQualityTrees_shader, "c_level")
-        basic_gamma = Gl.glGetUniformLocation(shader_list.lowQualityTrees_shader, "gamma")
-
     End Sub
+    '==============================================================================================================
 
 End Module

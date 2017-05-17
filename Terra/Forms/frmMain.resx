@@ -352,25 +352,31 @@
     <value>&amp;File</value>
   </data>
   <data name="m_lighting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_lighting.Text" xml:space="preserve">
     <value>&amp;Lighting</value>
   </data>
   <data name="ToolStripMenuItem13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 6</value>
+    <value>236, 6</value>
   </data>
   <data name="m_small_lights.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_small_lights.Text" xml:space="preserve">
     <value>Small Lights</value>
   </data>
   <data name="m_FXAA.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_FXAA.Text" xml:space="preserve">
     <value>FXAA Anti Aliasing</value>
+  </data>
+  <data name="m_SSAO.Size" type="System.Drawing.Size, System.Drawing">
+    <value>239, 22</value>
+  </data>
+  <data name="m_SSAO.Text" xml:space="preserve">
+    <value>SSAO ( Experimental! )</value>
   </data>
   <data name="m_show_tank_names.Size" type="System.Drawing.Size, System.Drawing">
     <value>197, 22</value>
@@ -514,43 +520,52 @@
     <value>Wire Mesh Terrain</value>
   </data>
   <data name="m_g_settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_g_settings.Text" xml:space="preserve">
     <value>&amp;Graphics</value>
   </data>
+  <data name="ToolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>236, 6</value>
+  </data>
+  <data name="m_constant_updates.Size" type="System.Drawing.Size, System.Drawing">
+    <value>239, 22</value>
+  </data>
+  <data name="m_constant_updates.Text" xml:space="preserve">
+    <value>Constant Updates (Uses Power)</value>
+  </data>
   <data name="ToolStripMenuItem14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 6</value>
+    <value>236, 6</value>
   </data>
   <data name="m_show_minimap.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_show_minimap.Text" xml:space="preserve">
     <value>Mini Map</value>
   </data>
   <data name="m_show_status.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_show_status.Text" xml:space="preserve">
     <value>Show Status Bar</value>
   </data>
   <data name="m_info_window.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_info_window.Text" xml:space="preserve">
     <value>Show Information window</value>
   </data>
   <data name="ToolStripMenuItem11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 6</value>
+    <value>236, 6</value>
   </data>
   <data name="m_fly_map.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_fly_map.Text" xml:space="preserve">
     <value>&amp;Fly</value>
   </data>
   <data name="m_Orbit_Light.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>239, 22</value>
   </data>
   <data name="m_Orbit_Light.Text" xml:space="preserve">
     <value>Orbiting Light</value>
@@ -2186,6 +2201,12 @@
   <data name="&gt;&gt;m_FXAA.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;m_SSAO.Name" xml:space="preserve">
+    <value>m_SSAO</value>
+  </data>
+  <data name="&gt;&gt;m_SSAO.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;m_g_settings.Name" xml:space="preserve">
     <value>m_g_settings</value>
   </data>
@@ -2346,6 +2367,18 @@
     <value>m_wire_terrain</value>
   </data>
   <data name="&gt;&gt;m_wire_terrain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ToolStripSeparator8.Name" xml:space="preserve">
+    <value>ToolStripSeparator8</value>
+  </data>
+  <data name="&gt;&gt;ToolStripSeparator8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_constant_updates.Name" xml:space="preserve">
+    <value>m_constant_updates</value>
+  </data>
+  <data name="&gt;&gt;m_constant_updates.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ToolStripMenuItem14.Name" xml:space="preserve">

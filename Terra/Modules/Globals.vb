@@ -17,7 +17,7 @@ Module Globals
     Public bases_loaded As Boolean
     Public sky_loaded As Boolean
     Public water_loaded As Boolean
-
+    Public animated_water_ids(64) As Integer
     Public map_x_min, map_x_max, map_y_max, map_y_min As Single
     Public map_center_offset_x, map_center_offset_y As Single
     Public noise_map_id As Integer

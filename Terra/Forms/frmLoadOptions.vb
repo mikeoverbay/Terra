@@ -6,7 +6,7 @@
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         End If
     End Sub
 
@@ -16,7 +16,7 @@
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         End If
     End Sub
 
@@ -26,7 +26,7 @@
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         End If
     End Sub
 
@@ -36,7 +36,7 @@
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         End If
     End Sub
 
@@ -46,7 +46,7 @@
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         End If
     End Sub
 
@@ -56,7 +56,7 @@
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         End If
     End Sub
 
@@ -66,7 +66,7 @@
             MsgBox("You can change this setting but it was never loaded." + vbCrLf + "I can't draw it. It does not exist.", MsgBoxStyle.Exclamation, "Warning!")
         End If
         If maploaded Then
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         End If
     End Sub
 

@@ -1,52 +1,91 @@
-﻿#version 330 compatibility
-// I cant get SSAO working so this is never used!
-in vec2 TexCoord;
-in vec2 ViewRay;
-in mat4 Prjmatrix;
-out vec4 FragColor;
+﻿#version 410 core
 
-uniform sampler2D gDepthMap;
-uniform float gSampleRad;
-uniform mat4 prj_matrix;
-
-const int MAX_KERNEL_SIZE = 64;
-uniform vec3 gKernel[MAX_KERNEL_SIZE];
+#define KERNEL_SIZE 64
 
 
-float CalcViewZ(vec2 Coords)
+uniform sampler2D u_normalTexture;
+uniform sampler2D u_depthTexture;
+
+uniform vec3 u_kernel[KERNEL_SIZE];
+
+uniform sampler2D u_rotationNoiseTexture; 
+
+uniform vec2 u_rotationNoiseScale;
+uniform vec2 screen_size;
+
+in mat4 u_inverseProjectionMatrix;
+uniform mat4 u_projectionMatrix;
+
+in vec2 v_texCoord;
+
+out vec4 fragColor;
+vec4 getViewPos(vec2 texCoord)
 {
-    float Depth = texture(gDepthMap, Coords).x;
-    float ViewZ = prj_matrix[3][2] / (2 * Depth -1 - prj_matrix[2][2]);
-    return ViewZ;
+    // Calculate out of the fragment in screen space the view space position.
+
+    float x = texCoord.s * 2.0 - 1.0;
+    float y = texCoord.t * 2.0 - 1.0;
+    
+    // Assume we have a normal depth range between 0.0 and 1.0
+    float z = texture(u_depthTexture, texCoord).x * 2.0 - 1.0;
+    
+    vec4 posProj = vec4(x, y, z, 1.0);
+    
+    vec4 posView = inverse(u_projectionMatrix) * posProj;
+    
+    posView /= posView.w;
+    
+    return posView;
 }
 
-
-void main()
+void main(void)
 {
-    float ViewZ = CalcViewZ(TexCoord);
+    // Calculate out of the current fragment in screen space the view space position.
+    vec2 noise_uv = vec2 (textureSize(u_depthTexture,0)) / vec2(4.0,4.0);
+    vec4 posView = getViewPos(v_texCoord);
+    // Normal gathering.
+    vec3 normalView = normalize(texture(u_normalTexture, v_texCoord).xyz );
+    // Calculate the rotation matrix for the kernel.
+    vec3 randomVector = normalize(texture(u_rotationNoiseTexture, v_texCoord * noise_uv).xyz );
+    vec3 tangentView = normalize(randomVector - dot(randomVector, normalView) * normalView);
+    vec3 bitangentView = cross(normalView, tangentView);
+    // Final matrix to reorient the kernel depending on the normal and the random vector.
+    mat3 kernelMatrix = mat3(tangentView, bitangentView, normalView); 
+    // Go through the kernel samples and create occlusion factor.   
+    float occlusion = -5.0;
+    const int sampSize = 16;
+    const float u_radius = 0.08;
+    const float bias = 0.00005;
+    for (int i = 0; i < sampSize; i++)
+    {
+        // Reorient sample vector in view space ...
+        vec3 sampleVectorView = normalize(kernelMatrix * u_kernel[i]);
+        // ... and calculate sample point.
+        vec4 samplePointView = posView + u_radius * vec4(sampleVectorView, 0.0);
+        
+        // Project point and calculate NDC.
+        
+        vec4 samplePointNDC = u_projectionMatrix * samplePointView;
+        
+        samplePointNDC /= samplePointNDC.w;
+        
+        // Create texture coordinate out of it.
+        
+        vec2 samplePointTexCoord = samplePointNDC.xy * 0.5 + 0.5;   
+        
+        // Get sample out of depth texture
+        float L = length(samplePointView.xyz - posView.xyz);
+        float zSceneNDC = (texture(u_depthTexture, samplePointTexCoord).r * 2.0 - 1.0);
 
-    float ViewX = ViewRay.x * ViewZ;
-    float ViewY = ViewRay.y * ViewZ;
+        float rangeCheck = smoothstep(0.0, 1.0, u_radius / L);
 
-    vec3 Pos = vec3(ViewX, ViewY, ViewZ);
+        occlusion += (samplePointNDC.z >= zSceneNDC + bias ? 1.0 : 0.0) * rangeCheck;
 
-    float AO = 0.0;
-
-    for (int i = 0 ; i < MAX_KERNEL_SIZE ; i++) {
-        vec3 samplePos = Pos + gKernel[i];
-        vec4 offset = vec4(samplePos, 1.0);
-        offset = prj_matrix * offset;
-        offset.xy /= offset.w;
-        offset.xy = offset.xy * 0.5 + vec2(0.5);
-
-        float sampleDepth = CalcViewZ(offset.xy);
-
-        if (abs(Pos.z - sampleDepth) < gSampleRad) {
-            AO += step(sampleDepth,samplePos.z);
-        }
     }
+    
+    // No occlusion gets white, full occlusion gets black.
+    occlusion = pow(1.0 - occlusion / (float(sampSize) - 1.0), 3.0);
 
-    AO = 1.0 - AO/64.0;
+    fragColor =  vec4(occlusion,occlusion,occlusion,1.0);
 
-    FragColor = vec4(pow(AO, 2.0));
 }

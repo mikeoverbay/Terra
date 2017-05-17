@@ -665,6 +665,30 @@ Namespace My
                 Me("m_FXAA") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property SSAO() As Boolean
+            Get
+                Return CType(Me("SSAO"),Boolean)
+            End Get
+            Set
+                Me("SSAO") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property m_constant_updates() As Boolean
+            Get
+                Return CType(Me("m_constant_updates"),Boolean)
+            End Get
+            Set
+                Me("m_constant_updates") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

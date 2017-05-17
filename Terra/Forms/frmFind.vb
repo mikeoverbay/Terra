@@ -89,7 +89,7 @@
             look_point_Y = y
             u_look_point_Y = y
             frmMain.position_camera()
-            frmMain.draw_scene()
+            frmMain.need_screen_update()
         Catch ex As Exception
 
         End Try
