@@ -8,7 +8,7 @@ uniform sampler2D normalMap2;
 uniform sampler2D gNormalIn;
 uniform sampler2D gDepthMap;
 uniform float time;
-
+uniform float aspect;
 in vec4 positionSS; // screen space
 in mat4 matPrjInv; // inverse projection matrix
 in vec3 n;
@@ -30,7 +30,7 @@ void clip(vec3 v){
 }
 
 void main(void) {
-
+    //water images
     vec2 uv_wrap = vec2 (6.0,6.0);
 
     vec2 UV = postProjToScreen(positionSS);
@@ -59,7 +59,8 @@ void main(void) {
     //Get texture UVs
     WorldPosition.xy += 0.5;
     WorldPosition.y *= -1.0;
-    vec2 tc = WorldPosition.xz * 16.0;
+    vec2 tc = WorldPosition.xz * 8.0;
+    tc.x*= aspect;
      //=================================================================
     vec4 b1,b2;
     b1.xy = (texture2D(normalMap, tc.xy ).ga);        
@@ -70,16 +71,17 @@ void main(void) {
     b2.z = sqrt(1.0 - ((b2.x*b2.x) + (b2.y*b2.y)));
     b2.a  = texture2D(normalMap2, tc.xy).r;
     
+    float p = 0.75;
+    vec4 bump =  pow(mix(b1, b2 , time),vec4(p,p,p,p)); // blend from b1 to b2 based on time sample.
 
-    vec4 bump =  mix(b1, b2 , time); // blend from b1 to b2 based on time sample.
     vec4 normalDef = texture2D(gNormalIn, tc.xy+ (bump.xy*.10) );
     float alpha = texture2D(colorMap, tc.xy + (bump.xy*.1)).a;
-    alpha*=1.5;
+    alpha*=1.0;
 
     bump.xyz = normalize(TBN * bump.xyz);
     normalDef.xyz = normalize(normalDef.xyz * TBN);
    
-    gl_FragColor.xyz = mix(normalDef.xyz, bump.xyz+n, alpha) ;
+    gl_FragColor.xyz =mix(normalDef.xyz, bump.xyz+n, alpha) ;
     gl_FragColor.w = 2.0;
 }
 

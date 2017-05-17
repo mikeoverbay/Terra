@@ -2294,9 +2294,7 @@ skip:
         Gl.glFogf(Gl.GL_FOG_END, 2.0)
     End Sub
     Private Sub draw_base_rings()
-        If Not m_bases_ Then
-            Return
-        End If
+
         Gl.glDisable(Gl.GL_LIGHTING)
         If maploaded And SHOW_RINGS Then
             G_Buffer.attach_color_only()
@@ -2311,19 +2309,7 @@ skip:
     End Sub
 
     Private Sub draw_dome()
-        If Not m_sky_ And Not sky_loaded Then
-            'Gl.glPointSize(1.0)
-            'Gl.glDisable(Gl.GL_LIGHTING)
-            'Gl.glDisable(Gl.GL_DEPTH_TEST)
-            'Gl.glColor3f(0.7, 0.7, 1.0)
-            'Gl.glPushMatrix()
-            'Gl.glTranslatef(eyeX, eyeY - 1.0, eyeZ)
-            'Gl.glCallList(stars_display_id)
-            'Gl.glPopMatrix()
-            'Gl.glEnable(Gl.GL_DEPTH_TEST)
-            'Gl.glEnable(Gl.GL_LIGHTING)
-            Return
-        End If
+
         Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
         Dim c = lighting_ambient + 0.95
         Gl.glColor3f(c, c, c)
@@ -2366,9 +2352,7 @@ skip:
     End Sub
 
     Private Sub draw_g_terrain()
-        If Not m_terrain_ And Not terrain_loaded Then
-            Return
-        End If
+     
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
         Gl.glEnable(Gl.GL_CULL_FACE)
         Gl.glFrontFace(Gl.GL_CCW)
@@ -2578,9 +2562,7 @@ skip:
     End Sub
 
     Private Sub draw_g_models(ByVal pass As Boolean)
-        If Not m_models_ And Not models_loaded Then
-            Return
-        End If
+      
         ' draw the models
         Gl.glEnable(Gl.GL_CULL_FACE)
         Gl.glFrontFace(Gl.GL_CW)
@@ -2734,11 +2716,9 @@ skip:
     End Sub
 
     Private Sub draw_g_trees()
-        If Not m_trees_ And Not trees_loaded Then
-            Return
-        End If
+       
         'Gl.glFrontFace(Gl.GL_CCW)
-        If maploaded And m_wire_trees.Checked And m_show_trees.Checked Then
+        If m_wire_trees.Checked Then
             'Gl.glEnable(Gl.GL_LIGHTING)
             'draw as soild
             Dim e1 = Gl.glGetError
@@ -2819,9 +2799,7 @@ skip:
         End If
         '---------------------------------------------------------------------------------
         'draw trees 
-        If maploaded And m_show_trees.Checked _
-            And Not m_wire_trees.Checked _
-            And Not m_low_quality_trees.Checked Then
+        If Not m_wire_trees.Checked And Not m_low_quality_trees.Checked Then
 
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
             Gl.glDisable(Gl.GL_CULL_FACE)
@@ -2914,7 +2892,7 @@ skip:
             Gl.glEnable(Gl.GL_LIGHTING)
         End If
 
-        If m_low_quality_trees.Checked Then
+        If m_low_quality_trees.Checked And Not m_wire_trees.Checked Then
             Gl.glEnable(Gl.GL_CULL_FACE)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
             Gl.glUseProgram(shader_list.lowQualityTrees_shader)
@@ -2945,9 +2923,6 @@ skip:
 
     Private Sub draw_g_decals()
 
-        If Not m_decals_ And Not decals_loaded Then
-            Return
-        End If
         G_Buffer.attach_color_and_postion_only()
 
         Dim width, height As Integer
@@ -3194,6 +3169,22 @@ skip:
             width = pb1.Width + pb1.Width Mod 1
             height = pb1.Height + pb1.Height Mod 1
             '=========================================================='
+            Gl.glEnable(Gl.GL_DEPTH_TEST)
+
+            ''draw plane with out shader
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glColorMask(0, 0, 0, 0)
+            Gl.glActiveTexture(Gl.GL_TEXTURE0)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            'color pass
+            Gl.glPushMatrix()
+            Gl.glTranslatef(0.0, -0.1, 0.0)
+            Gl.glMultMatrixf(water.matrix)
+            Gl.glCallList(water.displayID_plane)
+            Gl.glPopMatrix()
+            Gl.glColorMask(1, 1, 1, 1)
+            '=========================================================='
+
             G_Buffer.get_depth_buffer(width, height) ' gotta do this so we have the depth at the waters plane :(
             'setup states
             Gl.glFrontFace(Gl.GL_CW)
@@ -3222,7 +3213,7 @@ skip:
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
             Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-            Gl.glColor4f(0.1, 0.1, 0.4, 0.7)
+            Gl.glColor4f(0.1, 0.1, 0.6, 0.9)
 
             Gl.glCallList(water.displayID_cube)
             Gl.glUseProgram(0)
@@ -3234,34 +3225,6 @@ skip:
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             '=========================================================='
 over_it:
-            'Gl.glEnable(Gl.GL_DEPTH_TEST)
-
-            ''draw plane with out shader
-            'Gl.glEnable(Gl.GL_TEXTURE_2D)
-            'Gl.glColor4f(0.9, 0.3, 0.5, 1.0)
-
-            'Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
-            ''color pass
-            'Gl.glPushMatrix()
-            'Gl.glTranslatef(0.0, -0.02, 0.0)
-            'Gl.glMultMatrixf(water.matrix)
-            'Gl.glCallList(water.displayID_plane)
-            'Gl.glPopMatrix()
-            'z buffer pass
-            'Gl.glColorMask(0, 0, 0, 0)
-            'Gl.glPushMatrix()
-            'Gl.glDepthMask(Gl.GL_TRUE)
-            'Gl.glTranslatef(0.0, -0.01, 0.0)
-            'Gl.glMultMatrixf(water.matrix)
-            'Gl.glCallList(water.displayID_plane)
-            'Gl.glPopMatrix()
-            'Gl.glColorMask(1, 1, 1, 1)
-            'Gl.glDepthMask(Gl.GL_TRUE)
-
-            'Gl.glDisable(Gl.GL_BLEND)
-
-            '=========================================================
             ' draw water normal
 
             Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
@@ -3283,7 +3246,7 @@ over_it:
             'Gl.glMultMatrixf(water.matrix)
             'Gl.glCallList(water.displayID_plane)
             'Gl.glPopMatrix()
-            Gl.glColor4f(0.2, 0.2, 0.3, 0.75)
+            Gl.glColor4f(0.2, 0.2, 0.5, 0.75)
             Dim index As Integer = Floor(water_elapsed_time * 63)
             Gl.glUseProgram(shader_list.water_shader)
             Gl.glUniform1i(water_gDepthMap, 0)
@@ -3293,6 +3256,7 @@ over_it:
             Gl.glUniform1i(water_colorMap, 4)
             ' Gl.glUniform1f(water_level, water.position.y)
             Gl.glUniform1f(water_time, texture_blend_counter)
+            Gl.glUniform1f(water_aspect, water.aspect)
 
             Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
@@ -3398,48 +3362,49 @@ over_it:
             Next
         End If
         '---------------------------------------------------------------------------------
-        G_Buffer.attach_color_only()
-        draw_dome()
-        G_Buffer.attachFOBtextures()
+        If m_sky_ And sky_loaded Then
+            G_Buffer.attach_color_only()
+            draw_dome()
+            G_Buffer.attachFOBtextures()
+        End If
 
         '---------------------------------------------------------------------------------
 
         'Terrain
         swat2.Restart()
-        If terrain_loaded Then
+        If m_terrain_ And terrain_loaded Then
             draw_g_terrain()
         End If
         If frmStats.Visible = True Then
             terrain_time += swat2.ElapsedMilliseconds
         End If
         '---------------------------------------------------------------------------------
-        '---------------------------------------------------------------------------------
         'We must draw the water mask after AFTER terrain
         If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
-            'Gl.glEnable(Gl.GL_BLEND)
+            Gl.glDepthMask(Gl.GL_FALSE)
             Gl.glEnable(Gl.GL_ALPHA_TEST)
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
             G_Buffer.attach_flag_only()
             Gl.glEnable(Gl.GL_DEPTH_TEST)
             Gl.glUseProgram(shader_list.waterMask_shader)
             Gl.glPushMatrix()
-            'Gl.glColor4f(0.2, 0.2, 0.4, 0.35)
-            Gl.glTranslatef(0.0, -0.05, 0.0)
             Gl.glMultMatrixf(water.matrix)
             Gl.glCallList(water.displayID_plane)
             Gl.glPopMatrix()
             Gl.glUseProgram(0)
             G_Buffer.attachFOBtextures()
             Gl.glDisable(Gl.GL_BLEND)
+            Gl.glDepthMask(Gl.GL_TRUE)
         End If
+        '---------------------------------------------------------------------------------
         'Base locations. THis must be after the terrain only or they will be drawn on everything!
-        If bases_loaded Then
+        If bases_loaded And m_bases_ Then
             G_Buffer.get_depth_buffer(width, height)
             draw_base_rings()
         End If
         'Models bulidings only
         swat2.Restart()
-        If models_loaded Then
+        If models_loaded And m_models_ And m_show_models.Checked Then
             draw_g_models(False)
         End If
         If frmStats.Visible = True Then
@@ -3451,11 +3416,13 @@ over_it:
         'flags for decals
         '64 = terrain
         '96 = buildings
-        '128 = everything but buildings
+        '128 = everything but buildings as far as decals care
+        '160 = water
+        '192 = trees
         swat2.Restart()
         If m_decals_ And m_show_decals.Checked Then
             G_Buffer.get_depth_buffer(width, height)
-            If decals_loaded And m_show_decals.Checked Then
+            If decals_loaded And m_show_decals.Checked And m_decals_ Then
                 draw_g_decals()
             End If
         End If
@@ -3467,7 +3434,7 @@ over_it:
         '---------------------------------------------------------------------------------
         'Trees
         swat2.Restart()
-        If trees_loaded Then
+        If trees_loaded And m_trees_ And m_show_trees.Checked Then
             draw_g_trees()
         End If
 
@@ -3497,12 +3464,13 @@ over_it:
                 draw_cursor(Packet_in.Ex, Packet_in.Ez)
             End If
         End If
-        'Gl.glEnable(Gl.GL_LIGHTING)
         '------------------------------------
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         '=========================================================='
         'Draw the water. IF there is water....
-        draw_g_water()
+        If m_water_ And water_loaded And m_show_water.Checked Then
+            draw_g_water()
+        End If
         '=========================================================='
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
 
@@ -3519,17 +3487,18 @@ over_it:
         '        Gl.glEnd()
         '    End If
         'Next
-        Gl.glPointSize(4)
-        Gl.glColor3f(1.0, 1.0, 0.0)
-        Gl.glBegin(Gl.GL_POINTS)
-        Dim v As vect3
-        For i = 0 To LIGHT_COUNT_ * 3 Step 3
-            v.x = sl_light_pos(i + 0)
-            v.y = sl_light_pos(i + 1)
-            v.z = sl_light_pos(i + 2)
-            'Gl.glVertex3f(v.x, v.y, v.z)
-        Next
-        Gl.glEnd()
+        'debug: draw the location of the small lights
+        'Gl.glPointSize(4)
+        'Gl.glColor3f(1.0, 1.0, 0.0)
+        'Gl.glBegin(Gl.GL_POINTS)
+        'Dim v As vect3
+        'For i = 0 To LIGHT_COUNT_ * 3 Step 3
+        '    v.x = sl_light_pos(i + 0)
+        '    v.y = sl_light_pos(i + 1)
+        '    v.z = sl_light_pos(i + 2)
+        '    Gl.glVertex3f(v.x, v.y, v.z)
+        'Next
+        'Gl.glEnd()
         'Draw the lights location
         draw_light_sphear()
 
@@ -3704,8 +3673,6 @@ skip_SSAO:
         Gl.glUseProgram(0)
 
         If m_FXAA.Checked Then
-            'FXAA_Normal_pass(width, height)
-            'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
             FXAA_Color_pass(width, height)
         End If
 

@@ -305,6 +305,7 @@ Module structures
         Public displayID_plane As Integer
         Public textureID As Integer
         Public normalID As Integer
+        Public aspect As Single
         Public size_ As vect3
         Public position As vect3
         Public orientation As Single

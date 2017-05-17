@@ -1455,6 +1455,7 @@ jump_normal:
         Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, water.matrix)
         Gl.glPopMatrix()
 
+        water.aspect = water.size_.x / water.size_.z
         get_water_corners()
         '-----------------------------------1
         water.displayID_cube = Gl.glGenLists(1)

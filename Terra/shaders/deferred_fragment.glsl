@@ -81,23 +81,31 @@ void main(void)
     vec4 fog_color = gl_Fog.color* ambient_level*3.0;
   
     gl_FragColor = mix(fog_color, gl_FragColor, fogFactor );
-    const float cutoff = 15.0;
+
     /*======================================================================================*/
     // do all the small lights
     for(int i = 0; i < light_count; ++i)
     {
-        // Diffuse
-        //lp.xyz *=0.25;
-        float dist =  length(light_positions[i] - FragPos);
-        if (length(FragPos) > 0.0){// sow we dont affect the sky
+        float cutoff = 15.0; 
 
-        if (dist < cutoff) {
-        if (dist <0.4) { Normal.xz *= -1.0; }
+        float dist =  length(light_positions[i] - FragPos);
+        if (length(FragPos) > 0.0){// so we dont affect the sky
+        if (flag == 160.0) {spec_l = 1.0; cutoff = 50; }
+
+        if (dist < cutoff){
+        if (dist <0.4) { Normal.xz *= -1.0;}
         vec3 lightDir = normalize(light_positions[i] - FragPos);
+        halfwayDir = normalize(lightDir + viewDir);
+
+
+        spec = pow(max(dot(Normal, halfwayDir), 0.0), 90.0) * 0.3 * spec_l;
+
+        specular = light_Color * spec * Specular;
 
         vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Albedo * light_colors[i];
+        //if (alt == 0.0) {diffuse = vec3(0.0);}
         if (dist <0.5) { diffuse *= 2.0; }
-        gl_FragColor.xyz += mix(diffuse.xyz, vec3(0.0), dist/cutoff );
+        gl_FragColor.xyz += mix(diffuse.xyz + specular, vec3(0.0), dist/cutoff );
         }
         }
     }
