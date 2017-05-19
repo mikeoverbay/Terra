@@ -213,6 +213,8 @@ Module Mod_Space_Bin_Functions
         ReDim BSMO.bsmo_t2(BSMO.t2_dc)
         'get node entries
         For k = 0 To BSMO.t2_dc - 1
+
+
             BSMO.bsmo_t2(k).min_BB.x = br.ReadSingle
             BSMO.bsmo_t2(k).min_BB.y = br.ReadSingle
             BSMO.bsmo_t2(k).min_BB.z = br.ReadSingle
@@ -249,11 +251,11 @@ Module Mod_Space_Bin_Functions
         ReDim BSMO.bsmo_t4(BSMO.t4_dc)
         'get table data
         For k = 0 To BSMO.t4_dc - 1
-            BSMO.bsmo_t4(k).min_BB.x = br.ReadSingle
+            BSMO.bsmo_t4(k).min_BB.x = -br.ReadSingle
             BSMO.bsmo_t4(k).min_BB.y = br.ReadSingle
             BSMO.bsmo_t4(k).min_BB.z = br.ReadSingle
 
-            BSMO.bsmo_t4(k).max_BB.x = br.ReadSingle
+            BSMO.bsmo_t4(k).max_BB.x = -br.ReadSingle
             BSMO.bsmo_t4(k).max_BB.y = br.ReadSingle
             BSMO.bsmo_t4(k).max_BB.z = br.ReadSingle
         Next

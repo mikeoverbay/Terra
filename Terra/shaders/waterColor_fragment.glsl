@@ -58,7 +58,7 @@ void main(void) {
      //=================================================================
   
     FragColor = texture2D(colorMap, tc.xy )* color;
-    FragColor.a = 0.35;
+    FragColor.a = 0.55;
  
 }
 

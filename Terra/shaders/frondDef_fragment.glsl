@@ -5,7 +5,7 @@
 layout (location = 0) out vec4 gColor;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gPosition;
-layout (location = 3) out vec4 gFlag;
+layout (location = 3) out float gFlag;
 
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
@@ -30,6 +30,6 @@ void main (void)
     gColor = base;
     gNormal.w = bump.a;
     gPosition = Vertex;
-    gFlag = vec4(192.0/255.0);
+    gFlag =(192.0/255.0);
 
 }

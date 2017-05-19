@@ -1,11 +1,14 @@
 ﻿//water shader
 
 #version 330 compatibility
-layout (location = 0) out vec4 gFlag;
 
-uniform sampler2D colorMap;
+layout (location = 0) out vec4 gPosition;
+layout (location = 1) out float gFlag;
+
+in vec4 Vertex;
+
 void main(void)
 {
-    gFlag = vec4((160)/255.0);
-    
+    gFlag = 160.0/255.0;
+    gPosition = Vertex;
 }

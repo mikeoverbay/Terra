@@ -18,7 +18,7 @@ uniform mat4 u_projectionMatrix;
 
 in vec2 v_texCoord;
 
-out vec4 fragColor;
+out float fragColor;
 vec4 getViewPos(vec2 texCoord)
 {
     // Calculate out of the fragment in screen space the view space position.
@@ -86,6 +86,6 @@ void main(void)
     // No occlusion gets white, full occlusion gets black.
     occlusion = pow(1.0 - occlusion / (float(sampSize) - 1.0), 3.0);
 
-    fragColor =  vec4(occlusion,occlusion,occlusion,1.0);
+    fragColor =  occlusion;
 
 }

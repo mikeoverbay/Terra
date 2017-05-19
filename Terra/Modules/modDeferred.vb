@@ -20,7 +20,7 @@ Module modDeferred
         Private attacments() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT}
         Private attacments_CandP() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
         Private attacments_CandPandN() As Integer = {Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT}
-        Private attacments_flag() As Integer = {Gl.GL_COLOR_ATTACHMENT3_EXT}
+        Private attacments_CandNandF() As Integer = {Gl.GL_COLOR_ATTACHMENT1_EXT, Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT}
         Public Sub shut_down()
             delete_textures_and_fob_objects()
         End Sub
@@ -124,13 +124,14 @@ Module modDeferred
 
             Gl.glGenTextures(1, gFlag)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, Nothing)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_LUMINANCE, Gl.GL_UNSIGNED_BYTE, Nothing)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
 
+            Dim e2 = Gl.glGetError
             Gl.glGenTextures(1, gDepthTexture)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE16F_ARB, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_LUMINANCE, Gl.GL_FLOAT, Nothing)
@@ -140,7 +141,6 @@ Module modDeferred
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE)
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_COMPARE_MODE, Gl.GL_NONE)
-            Dim e2 = Gl.glGetError
 
             ' - Position color buffer
             Gl.glGenTextures(1, gPosition)
@@ -155,7 +155,7 @@ Module modDeferred
             ' - Normal + Specular color buffer
             Gl.glGenTextures(1, gNormal)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, Nothing)
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, SCR_WIDTH, SCR_HEIGHT, 0, Gl.GL_RGBA, Gl.GL_FLOAT, Nothing)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
@@ -186,7 +186,8 @@ Module modDeferred
             Gl.glDrawBuffers(2, attacments_CandP)
         End Sub
         Public Sub attach_flag_only()
-            Gl.glDrawBuffers(1, attacments_flag)
+            Dim d_buffers() As Integer = {Gl.GL_COLOR_ATTACHMENT2_EXT, Gl.GL_COLOR_ATTACHMENT3_EXT}
+            Gl.glDrawBuffers(2, d_buffers)
         End Sub
         Public Sub attach_color_and_postion_and_normal_only()
             Gl.glDrawBuffers(3, attacments_CandPandN)

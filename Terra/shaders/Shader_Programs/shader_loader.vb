@@ -532,7 +532,8 @@ Module shader_loader
 
     End Sub
 
-    Public water_colorMap, water_normalMap, water_normalMap2, water_gNormal, water_gDepthMap, water_time, water_matrix, water_level, water_aspect As Integer
+    Public water_colorMap, water_normalMap, water_normalMap2, water_gNormal, water_gDepthMap, _
+        water_time, water_matrix, water_level, water_aspect, water_texture_shift, water_foam As Integer
     Private Sub set_water_variables()
         water_colorMap = Gl.glGetUniformLocation(shader_list.water_shader, "colorMap")
         water_normalMap = Gl.glGetUniformLocation(shader_list.water_shader, "normalMap")
@@ -543,6 +544,8 @@ Module shader_loader
         water_matrix = Gl.glGetUniformLocation(shader_list.water_shader, "matrix")
         water_level = Gl.glGetUniformLocation(shader_list.water_shader, "water_level")
         water_aspect = Gl.glGetUniformLocation(shader_list.water_shader, "aspect")
+        water_texture_shift = Gl.glGetUniformLocation(shader_list.water_shader, "shift")
+        water_foam = Gl.glGetUniformLocation(shader_list.water_shader, "foamMap")
     End Sub
     Public waterC_color, waterC_matrix, waterC_Depthmap As Integer
     Private Sub set_waterColor_variables()

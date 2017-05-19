@@ -21,8 +21,8 @@ void main(void)
     
     n = vec3(0.0, 1.0, 0.0);
     vec3 t = vec3 (1.0, 0.0, 0.0);
-    t = normalize(inverse(mat3(matrix)) * t);
-    vec3 b = cross(t,n);
+    //t = normalize(inverse(mat3(matrix)) * t);
+    vec3 b =normalize(cross(t,n));
     TBN = mat3(t,b,n);
     color = gl_Color;
 }

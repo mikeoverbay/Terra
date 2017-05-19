@@ -50,7 +50,7 @@ Module modPrimitives
         'Destructible buildings are stored as components and as a merged version.
         'The mergerd version is faster to load and is a sigle mesh.
 
-        thefile = Models.Model_list(model_ID)
+        thefile = Models.Model_list(model_ID).ToLower
         thefile = thefile.Replace("model", "visual_processed")
         If InStr(Models.Model_list(model_ID), "bld_Constr") > 0 Then
             Models.Model_list(model_ID) = Replace(Models.Model_list(model_ID), "normal", "merged")
@@ -844,15 +844,10 @@ fing_loop:
                             .UV2s(i + 2).v = uv2(uvPnt.a3).v
                         End If
 
-                        'If .vertices(i).z < -1000.0 Then
-                        '    'Stop
-                        'End If
-                        'If .vertices(i + 1).z < -1000.0 Then
-                        '    'Stop
-                        'End If
-                        'If .vertices(i + 2).z < -1000.0 Then
-                        '    'Stop
-                        'End If
+                        'get_bb(.vertices(i + 0), model_id)
+                        'get_bb(.vertices(i + 1), model_id)
+                        'get_bb(.vertices(i + 2), model_id)
+
 
                     End With
                 Next
@@ -873,6 +868,8 @@ dont_save_this:
         Pms.Close()
         Pms.Dispose()
 
+        ReDim Model_Matrix_list(model_id).BB(8)
+        get_translated_bb_model(Model_Matrix_list(model_id))
         'sw.Stop()
         'Dim t = sw.ElapsedMilliseconds
         'Debug.Write("make model time: " & t & vbCrLf)
@@ -880,7 +877,17 @@ dont_save_this:
         Return True
 
     End Function
+    Private Sub get_bb(ByVal v As vect3, ByVal model As Integer)
+        With Model_Matrix_list(model)
+            If .BB_Min.x > v.x Then .BB_Min.x = v.x
+            If .BB_Min.y > v.y Then .BB_Min.y = v.y
+            If .BB_Min.z > v.z Then .BB_Min.z = v.z
 
+            If .BB_Max.x < v.x Then .BB_Max.x = v.x
+            If .BB_Max.y < v.y Then .BB_Max.y = v.y
+            If .BB_Max.z < v.z Then .BB_Max.z = v.z
+        End With
+    End Sub
     Private Sub get_uv2(ByVal cnt As UInt32, ByVal f As MemoryStream)
         Dim uv2_reader = New BinaryReader(f)
         ReDim uv2(1)
@@ -1487,7 +1494,7 @@ jump_normal:
         Gl.glEnd()
         Gl.glEndList()
         load_animated_water_NMs()
-
+        load_foam_texture()
     End Sub
     Private Sub make_water_box()
         With water
@@ -1586,6 +1593,16 @@ jump_normal:
                 cnt += 1
             Next
 
+        End Using
+    End Sub
+    Private Sub load_foam_texture()
+        Using Z As Ionic.Zip.ZipFile = ZipFile.Read(GAME_PATH + "\res\packages\misc.pkg")
+            Dim entry = Z("\system\maps\waves3_N.dds")
+            If Z IsNot Nothing Then
+                Dim ms As New MemoryStream
+                entry.Extract(ms)
+                water.foam_id = get_texture(ms, False)
+            End If
         End Using
     End Sub
     Public Sub get_tree_branch_texture(ByVal diffuse As String, ByVal tree As Integer)

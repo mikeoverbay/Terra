@@ -116,6 +116,7 @@ Module Mod_space_bin
             Dim m = BSMO.bsmo_t2(BSMO_Index).model_str
             Model_Matrix_list(k) = New model_matrix_list_
             Model_Matrix_list(k).primitive_name = m.Replace("primitives", "model")
+          
             Model_Matrix_list(k).matrix = BSMI.bsmi_t1(k).matrix
             Model_Matrix_list(k).matrix(1) *= -1.0
             Model_Matrix_list(k).matrix(2) *= -1.0
@@ -147,7 +148,7 @@ Module Mod_space_bin
         GC.WaitForFullGCComplete()
 
     End Sub
-    Private Sub get_translated_bb_model(ByRef mm As model_matrix_list_)
+    Public Sub get_translated_bb_model(ByRef mm As model_matrix_list_)
         Dim v1, v2, v3, v4, v5, v6, v7, v8 As vect3
         v1.z = mm.BB_Max.z : v2.z = mm.BB_Max.z : v3.z = mm.BB_Max.z : v4.z = mm.BB_Max.z
         v5.z = mm.BB_Min.z : v6.z = mm.BB_Min.z : v7.z = mm.BB_Min.z : v8.z = mm.BB_Min.z

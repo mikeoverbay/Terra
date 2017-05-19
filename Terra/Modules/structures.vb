@@ -311,6 +311,7 @@ Module structures
         Public orientation As Single
         Public type As String
         Public IsWater As Boolean
+        Public foam_id As Integer
         Public lbl As vect3
         Public lbr As vect3
         Public ltl As vect3

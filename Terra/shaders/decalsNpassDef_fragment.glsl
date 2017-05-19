@@ -38,7 +38,7 @@ void main(){
    // Calculate UVs
     vec2 UV = postProjToScreen(positionSS);
 
-     int flag = int(texture2D(gFlag, UV.xy).x * 255);
+     int flag = int(texture2D(gFlag, UV.xy).r * 255);
      if (flag != 64) {
         if (influence == 2) { discard;}
         }

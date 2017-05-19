@@ -32,17 +32,28 @@ vec4 correct(in vec4 hdrColor, in float exposure){
 
 void main(void)
 {
-
+    vec2 c_shift = vec2(0.0,0.0);
+    vec2 comp = vec2(0.015,-0.011);
     vec3 light_Color = vec3 (1.0, 1.0, 1.0);
+    vec3 Albedo = texture2D(gColor, TexCoords).rgb;
+
     // Retrieve data from G-buffer
+    float flag = texture2D(SSAO_Texture, TexCoords).r*255.0;
     vec3 FragPos = texture2D(gPosition, TexCoords).rgb;
     vec3 Normal = normalize(texture2D(gNormal, TexCoords).rgb*2.0-1.0);
-    vec3 Albedo = texture2D(gColor, TexCoords).rgb;
+    if (flag == 160.0  )
+    {
+    c_shift = (Normal.xy*2.0-1.0)*0.01;c_shift += comp;
+    float gFlag = texture2D(SSAO_Texture, TexCoords + c_shift).r*255.0;
+    if (gFlag == 160.0)
+        {    
+        Albedo = texture2D(gColor, TexCoords+c_shift).rgb;
+        }
+    }
     float Specular = texture2D(gNormal, TexCoords).a;
     float depth = texture2D(depthMap, TexCoords).x;
-    float flag = texture2D(SSAO_Texture, TexCoords).x*255;
     /*======================================================================================*/
-    // Then calculate lighting as usual
+    // Calculate lighting
     // Diffuse
     vec3 lightDir = normalize(LightPos - FragPos);
     vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Albedo * light_Color*1.5;
@@ -53,8 +64,12 @@ void main(void)
     float viewDistance = length(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec_l = spec_level;
-    if (flag == 160.0) {spec_l = 1.0;}
-    float spec = pow(max(dot(Normal, halfwayDir), 0.0), 90.0) * 0.3 * spec_l;
+    float spec_power = 90.0;
+
+    if (flag == 160.0) {spec_l = 3.0; spec_power=120.0;}
+
+
+    float spec = pow(max(dot(Normal, halfwayDir), 0.0), spec_power) * 0.3 * spec_l;
     vec3 specular = light_Color * spec * Specular;
     if (length(FragPos) > 0.0){ // so we dont effect the skydome!
         gl_FragColor = correct(vec4(lighting + diffuse + specular, 1.0), 3.0 * bright_level);
@@ -110,7 +125,7 @@ void main(void)
         }
     }
     /*======================================================================================*/
-
+    //SSAO testing junk.
     if (SSAO_Enabled == 1){
         vec2 texelSize = 1.0 / vec2(textureSize(SSAO_Texture, 0));
         float result = 0.0;

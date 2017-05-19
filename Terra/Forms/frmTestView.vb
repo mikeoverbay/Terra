@@ -58,6 +58,7 @@
         Gl.glEnable(Gl.GL_TEXTURE_2D)
         Gl.glActiveTexture(0)
         'select image and shader by selected radio button
+        Gl.glDisable(Gl.GL_BLEND)
         Select Case image_id
             Case 1
                 Gl.glUseProgram(shader_list.toLinear_shader)

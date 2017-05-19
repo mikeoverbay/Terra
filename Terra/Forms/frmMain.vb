@@ -3173,12 +3173,12 @@ skip:
 
             ''draw plane with out shader
             Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glColorMask(0, 0, 0, 0)
+            Gl.glColorMask(Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE, Gl.GL_FALSE)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
             'color pass
             Gl.glPushMatrix()
-            Gl.glTranslatef(0.0, -0.1, 0.0)
+            Gl.glTranslatef(0.0, -0.015, 0.0)
             Gl.glMultMatrixf(water.matrix)
             Gl.glCallList(water.displayID_plane)
             Gl.glPopMatrix()
@@ -3192,11 +3192,11 @@ skip:
             Gl.glDisable(Gl.GL_CULL_FACE)
             Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
 
-            Gl.glEnable(Gl.GL_LIGHTING)
+            'Gl.glEnable(Gl.GL_LIGHTING)
 
             Gl.glDisable(Gl.GL_DEPTH_TEST)
 
-            Gl.glDepthMask(Gl.GL_TRUE)
+            Gl.glDepthMask(Gl.GL_FALSE)
             Gl.glEnable(Gl.GL_BLEND)
             Gl.glEnable(Gl.GL_ALPHA_TEST)
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -3213,7 +3213,7 @@ skip:
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
             Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-            Gl.glColor4f(0.1, 0.1, 0.6, 0.9)
+            Gl.glColor4f(0.1, 0.1, 0.3, 0.99)
 
             Gl.glCallList(water.displayID_cube)
             Gl.glUseProgram(0)
@@ -3229,15 +3229,15 @@ over_it:
 
             Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
             Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
-            'Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT) 'attach gNormal
+            Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT) 'attach gNormal
             'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
             'ResizeGL()
             'ViewPerspective()
             Dim e0 = Gl.glGetError
-            'Gl.glDisable(Gl.GL_BLEND)
+            Gl.glDisable(Gl.GL_BLEND)
             Gl.glDisable(Gl.GL_DEPTH_TEST)
             'Gl.glClearColor(0.3F, 0.0F, 0.0F, 0.0F)
-            'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
+            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
             Gl.glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, Gl.GL_COLOR_BUFFER_BIT, Gl.GL_NEAREST)
             'Gl.glReadBuffer(Gl.GL_BACK)
             Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, 0)
@@ -3246,17 +3246,21 @@ over_it:
             'Gl.glMultMatrixf(water.matrix)
             'Gl.glCallList(water.displayID_plane)
             'Gl.glPopMatrix()
-            Gl.glColor4f(0.2, 0.2, 0.5, 0.75)
+            'Gl.glColor4f(0.2, 0.2, 0.5, 1.0)
             Dim index As Integer = Floor(water_elapsed_time * 63)
+            'index = 24
             Gl.glUseProgram(shader_list.water_shader)
             Gl.glUniform1i(water_gDepthMap, 0)
             Gl.glUniform1i(water_gNormal, 1)
             Gl.glUniform1i(water_normalMap, 2)
             Gl.glUniform1i(water_normalMap2, 3)
-            Gl.glUniform1i(water_colorMap, 4)
+            'Gl.glUniform1i(water_colorMap, 4)
+            'Gl.glUniform1i(water_foam, 5)
+
             ' Gl.glUniform1f(water_level, water.position.y)
             Gl.glUniform1f(water_time, texture_blend_counter)
             Gl.glUniform1f(water_aspect, water.aspect)
+            Gl.glUniform1f(water_texture_shift, water_shift_time)
 
             Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
@@ -3264,26 +3268,28 @@ over_it:
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.normalID)
             Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index))
-            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
             If index = 63 Then
                 index = -1
             End If
+            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index + 1))
             'tb1.text = CInt(water_elapsed_time * 63)
-            Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            'Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+            'Gl.glActiveTexture(Gl.GL_TEXTURE0 + 5)
+            'Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.foam_id)
 
             Gl.glUniformMatrix4fv(water_matrix, 1, 0, water.matrix)
 
-            Gl.glPushMatrix()
+            'Gl.glPushMatrix()
             'Gl.glMultMatrixf(water.matrix)
             Gl.glCallList(water.displayID_cube)
             'glutSolidCube(1.0)
-            Gl.glPopMatrix()
+            'Gl.glPopMatrix()
 
             Gl.glFrontFace(Gl.GL_CCW)
             Gl.glUseProgram(0)
-            Dim e3 = Gl.glGetError
+            'Dim e3 = Gl.glGetError
 
             'Gl.glReadBuffer(Gl.GL_BACK)
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
@@ -3293,6 +3299,7 @@ over_it:
 
 
             Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+            Gl.glDepthMask(Gl.GL_TRUE)
 
         End If
 
@@ -3379,24 +3386,6 @@ over_it:
             terrain_time += swat2.ElapsedMilliseconds
         End If
         '---------------------------------------------------------------------------------
-        'We must draw the water mask after AFTER terrain
-        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
-            Gl.glDepthMask(Gl.GL_FALSE)
-            Gl.glEnable(Gl.GL_ALPHA_TEST)
-            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
-            G_Buffer.attach_flag_only()
-            Gl.glEnable(Gl.GL_DEPTH_TEST)
-            Gl.glUseProgram(shader_list.waterMask_shader)
-            Gl.glPushMatrix()
-            Gl.glMultMatrixf(water.matrix)
-            Gl.glCallList(water.displayID_plane)
-            Gl.glPopMatrix()
-            Gl.glUseProgram(0)
-            G_Buffer.attachFOBtextures()
-            Gl.glDisable(Gl.GL_BLEND)
-            Gl.glDepthMask(Gl.GL_TRUE)
-        End If
-        '---------------------------------------------------------------------------------
         'Base locations. THis must be after the terrain only or they will be drawn on everything!
         If bases_loaded And m_bases_ Then
             G_Buffer.get_depth_buffer(width, height)
@@ -3441,6 +3430,22 @@ over_it:
         If frmStats.Visible = True Then
             tree_time += swat2.ElapsedMilliseconds
         End If
+        '---------------------------------------------------------------------------------
+        'We must draw the water mask after AFTER 
+        If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
+            Gl.glDepthMask(Gl.GL_FALSE)
+            Gl.glDisable(Gl.GL_BLEND)
+            Dim m = Gl.glGetUniformLocation(shader_list.waterMask_shader, "matrix")
+            G_Buffer.attach_flag_only()
+            Gl.glEnable(Gl.GL_DEPTH_TEST)
+            Gl.glUseProgram(shader_list.waterMask_shader)
+            Gl.glUniformMatrix4fv(m, 1, 0, water.matrix)
+            Gl.glCallList(water.displayID_plane)
+            Gl.glUseProgram(0)
+            G_Buffer.attachFOBtextures()
+            Gl.glDisable(Gl.GL_BLEND)
+            Gl.glDepthMask(Gl.GL_TRUE)
+        End If
 
         '---------------------------------------------------------------------------------
         'Tanks
@@ -3476,7 +3481,8 @@ over_it:
 
         'Attach only the color buffer'
         'G_Buffer.attach_color_only()
-        'debug only
+        'Gl.glEnable(Gl.GL_DEPTH_TEST)
+        ''Debug only
         'Gl.glColor3f(1.0, 1.0, 0.0)
         'For model As UInt32 = 0 To Models.matrix.Length - 1
         '    If Models.matrix(model).matrix IsNot Nothing Then
@@ -5570,6 +5576,7 @@ no_move_xz:
     Public activity As Boolean = True
     Dim timeout As Integer
     Dim water_elapsed_time As Double = 0.0
+    Dim water_shift_time As Single = 0.0
     Dim texture_blend_counter As Double = 0
     Dim constant_update As Boolean = False
     Private Sub screen_updater()
@@ -5587,7 +5594,10 @@ no_move_xz:
                 timeout = 0
             End If
             If activity And Not stopGL Then
-
+                water_shift_time += 0.0005
+                If water_shift_time > 1.0 Then
+                    water_shift_time -= 1.0
+                End If
                 'water_elapsed_time += 0.001
                 timeout = fly(timeout)
                 'If we need to update the screen, lets caclulate draw times and update the timer.
