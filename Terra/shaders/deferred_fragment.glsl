@@ -5,7 +5,7 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gColor;
 uniform sampler2D depthMap;
-uniform sampler2D SSAO_Texture;
+uniform sampler2D gFlags;
 
 uniform vec3 LightPos;
 uniform vec3 viewPos;
@@ -19,7 +19,6 @@ uniform float mapHeight;
 uniform int light_count;
 uniform vec3 light_positions[256];
 uniform vec3 light_colors[256];
-uniform int SSAO_Enabled;
 in vec2 TexCoords;
 
 vec4 correct(in vec4 hdrColor, in float exposure){  
@@ -38,13 +37,13 @@ void main(void)
     vec3 Albedo = texture2D(gColor, TexCoords).rgb;
 
     // Retrieve data from G-buffer
-    float flag = texture2D(SSAO_Texture, TexCoords).r*255.0;
+    float flag = texture2D(gFlags, TexCoords).r*255.0;
     vec3 FragPos = texture2D(gPosition, TexCoords).rgb;
     vec3 Normal = normalize(texture2D(gNormal, TexCoords).rgb*2.0-1.0);
     if (flag == 160.0  )
     {
     c_shift = (Normal.xy*2.0-1.0)*0.01;c_shift += comp;
-    float gFlag = texture2D(SSAO_Texture, TexCoords + c_shift).r*255.0;
+    float gFlag = texture2D(gFlags, TexCoords + c_shift).r*255.0;
     if (gFlag == 160.0)
         {    
         Albedo = texture2D(gColor, TexCoords+c_shift).rgb;
@@ -123,23 +122,6 @@ void main(void)
         gl_FragColor.xyz += mix(diffuse.xyz + specular, vec3(0.0), dist/cutoff );
         }
         }
-    }
-    /*======================================================================================*/
-    //SSAO testing junk.
-    if (SSAO_Enabled == 1){
-        vec2 texelSize = 1.0 / vec2(textureSize(SSAO_Texture, 0));
-        float result = 0.0;
-        for (int x = -2; x < 2; ++x) 
-            {
-            for (int y = -2; y < 2; ++y) 
-                {
-                    vec2 offset = vec2(float(x), float(y)) * texelSize;
-                    result += texture(SSAO_Texture, TexCoords + offset).r;
-                }//y
-            }//x
-        float r = (result / (4.0 * 4.0));
-
-        gl_FragColor.xyz *= r;
     }
 
 }

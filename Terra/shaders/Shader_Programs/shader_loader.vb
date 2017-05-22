@@ -31,6 +31,7 @@ Module shader_loader
         Public shadow_shader As Integer
         Public shadowDepth_shader As Integer
         Public SSAO_shader As Integer
+        Public SSAOBlend_shader As Integer
         Public lzTerrainDef_shader As Integer
         Public tankDef_shader As Integer
         Public terrainDef_shader As Integer
@@ -358,8 +359,8 @@ Module shader_loader
         deferred_light_position, deferred_cam_position, deferred_gamma, _
         deferred_spec, deferred_gray, deferred_bright, deferred_ambient, _
         deferred_mapHeight, deferred_depthmap, deferred_lights_pos, _
-        deferred_lights_color, deferred_light_count, deferred_SSAO_Texture, deferred_cam_Matrix, _
-        deferred_SSAO_Enabled As Integer
+        deferred_lights_color, deferred_light_count, deferred_gFlags, _
+        deferred_cam_Matrix As Integer
 
     Private Sub set_deferredLighting_variables()
         deferred_cam_position = Gl.glGetUniformLocation(shader_list.deferred_shader, "viewPos")
@@ -377,8 +378,7 @@ Module shader_loader
         deferred_lights_pos = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_positions")
         deferred_lights_color = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_colors")
         deferred_light_count = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_count")
-        deferred_SSAO_Texture = Gl.glGetUniformLocation(shader_list.deferred_shader, "SSAO_Texture")
-        deferred_SSAO_Enabled = Gl.glGetUniformLocation(shader_list.deferred_shader, "SSAO_Enabled")
+        deferred_gFlags = Gl.glGetUniformLocation(shader_list.deferred_shader, "gFlags")
     End Sub
 
     Private Sub set_comp_variables()
@@ -516,6 +516,13 @@ Module shader_loader
         ss_mdl_Matrix = Gl.glGetUniformLocation(shader_list.SSAO_shader, "mdl_matrix")
     End Sub
 
+    Public SSAOBlend_gcolor, SSAOBlend_gFlag As Integer
+    Private Sub set_SSAOBlend_variables()
+        SSAOBlend_gcolor = Gl.glGetUniformLocation(shader_list.SSAOBlend_shader, "gColor")
+        SSAOBlend_gFlag = Gl.glGetUniformLocation(shader_list.SSAOBlend_shader, "gFlags")
+
+    End Sub
+
     Public normalOffset_normal As Integer
     Private Sub set_normalOffset_variables()
         normalOffset_normal = Gl.glGetUniformLocation(shader_list.normalOffset_shader, "normalMap")
@@ -547,6 +554,7 @@ Module shader_loader
         water_texture_shift = Gl.glGetUniformLocation(shader_list.water_shader, "shift")
         water_foam = Gl.glGetUniformLocation(shader_list.water_shader, "foamMap")
     End Sub
+
     Public waterC_color, waterC_matrix, waterC_Depthmap As Integer
     Private Sub set_waterColor_variables()
         waterC_color = Gl.glGetUniformLocation(shader_list.waterColor_shader, "colorMap")
@@ -579,6 +587,7 @@ Module shader_loader
         set_dome_variables()
         set_shadow_variables()
         set_SSAO_variables()
+        set_SSAOBlend_variables()
         set_terrainMarkers_variables()
 
         set_water_variables()

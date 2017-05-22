@@ -80,20 +80,23 @@ C : Chunk Outline
 B : Map Border <br /> 
 W : Water on/off<br />
 M : Models on/off<br />
-T : Trees on/off<br />
+T : Trees on/off (Translate Tank if a tank is selected) <br />
 D : Decals on/off<br />
-F : Full Screen mode on/off.
-<br />
-</span></p>
+F : Full Screen mode on/off.<br />
+  R : Rotate tank if a tank is selected. </span><span class="style14"><br />
+  </span>Post Filters:<br />
+  <span class="style14">S : SSAO  (Screen space ambient occlusion)<br />
+A : FXAA (Fast Approximate Anti-Aliasing)</span></p>
 <p class="style14">You may need to turn Ambient up to see these clear. <br />
   1 : Decal bounding boxes.<br />
   2 : Models as wire models.<br />
   3 : Trees as wire models. Does not draw leaf cards. <br />
 4 : Terrain as wire model.</p>
 <p><span class="style14">F1 : Hide Info Window <br />
-  F2 : Rotale Light<br />
-  F3 : Fly Mode</span><br />
-  <br /> 
+F2 : Hide Status Bar and Mini map. (This also hides tank comments)<br />
+F3 : Spin Light.<br />
+F4 : Fly Mode. (Makes the camera fly around the center of the map.) <br />
+  </span><br /> 
   <span class="style15">Terra has undergone a complete rewrite of the rendering process.</span><br />
   Before, everything was done doing what is known as &quot;Forward Rendering&quot;.<br />
   Now.. it is done using &quot;<a href="https://gamedevelopment.tutsplus.com/articles/forward-rendering-vs-deferred-rendering--gamedev-12342">Deferred Rendering</a>&quot;. The advantage of this method is<br />
@@ -194,6 +197,7 @@ Tao OpenGL</a> : Wrapper for .NET : This project is dead.. I use it because it a
   Except for the tank models, all data is loaded either at the start of Terra! or when a map is selected.<br />
   The Tank's are from the game data but I changed their data format to speed load times. (Terra! doesn't need textures on the tanks or bump mapping. It would slow down the load time of tanks and use far too much memory. Be sides.. I like the 'plastic' board game look they have..).<br />
 </p>
+<p>The source code for Terra is located at <a href="https://github.com/mikeoverbay/Terra" target="_blank">GitHub.</a></p>
 <p>You can email me at <a href="mailto: thecooltool@hotmail.com?subject=Terra! Comments and Questions">thecooltool@hotmail.com</a><br />
   Don't change the subject.. My email rules use it to route it to the correct folder.</p>
 <p>Thanks and please email me with good or bad comments</p>

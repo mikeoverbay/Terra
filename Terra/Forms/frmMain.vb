@@ -343,14 +343,14 @@ fail_path:
         If e.KeyCode = Keys.F Then
           
         End If
+        'post effect items ===================================
         If e.KeyCode = Keys.S Then
-            d_counter += 1
-            If d_counter > decal_matrix_list.Length - 1 Then
-                d_counter = 0
-            End If
+            m_SSAO.PerformClick()
             need_screen_update()
         End If
-        If e.KeyCode = Keys.Q Then
+        If e.KeyCode = Keys.A Then
+            m_FXAA.PerformClick()
+            need_screen_update()
         End If
         '====================================================================
         If e.KeyCode = Keys.D1 Then
@@ -3306,6 +3306,7 @@ over_it:
     End Sub
 
     Public Sub draw_to_gBuffer()
+        swat1.Restart()
         Dim model_view(16) As Double
         Dim projection(16) As Double
         Dim viewport(4) As Integer
@@ -3314,7 +3315,6 @@ over_it:
         Dim width, height As Integer
         width = pb1.Width + pb1.Width Mod 1
         height = pb1.Height + pb1.Height Mod 1
-        swat1.Restart()
         setup_fog()
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
         G_Buffer.attachFOBtextures()
@@ -3561,52 +3561,6 @@ over_it:
         Gl.glUseProgram(0)
         Gl.glDisable(Gl.GL_BLEND)
         '----------------------------------------------------------------------------------------------
-        'SSAO pass
-        'can't get this to work 100%!! GRRRRR
-        If Not m_SSAO.Checked Then GoTo skip_SSAO
-        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        Dim Status = Gl.glCheckFramebufferStatusEXT(Gl.GL_FRAMEBUFFER_EXT)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
-        Gl.glUseProgram(shader_list.SSAO_shader)
-        Gl.glUniform1i(ss_gNormal, 0)
-        Gl.glUniform1i(ss_gDepthMap, 1)
-        Gl.glUniform1i(ss_noise, 2)
-        Gl.glUniform2f(ss_screen_size, CSng(width), CSng(height))
-        Gl.glUniform3fv(ss_kernel, 64, randomFloats)
-
-        Gl.glUniformMatrix4fv(ss_prj_matrix, 1, 0, projection_s)
-        Gl.glUniformMatrix4fv(ss_mdl_Matrix, 1, 0, modelMatrix)
-
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
-
-        Gl.glBegin(Gl.GL_QUADS)
-        '---
-
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(width, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(width, -height, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(0, -height, 0.0)
-        Gl.glEnd()
-
-        Gl.glUseProgram(0)
-        Gl.glReadBuffer(Gl.GL_BACK)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, width, height, 0)
-        Dim e = Gl.glGetError
-
-skip_SSAO:
         '----------------------------------------------------------------------------------------------
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Gl.glClearColor(0.0, 0.3, 0.3, 0.0)
@@ -3621,13 +3575,7 @@ skip_SSAO:
         Gl.glUniform1i(deferred_gnormal, 1)
         Gl.glUniform1i(deferred_gposition, 2)
         Gl.glUniform1i(deferred_depthmap, 3)
-        Gl.glUniform1i(deferred_SSAO_Texture, 4)
-        If m_SSAO.Checked Then
-            Gl.glUniform1i(deferred_SSAO_Enabled, 1) ' is SSAO enabled?
-        Else
-            Gl.glUniform1i(deferred_SSAO_Enabled, 0) ' is SSAO enabled?
-        End If
-
+        Gl.glUniform1i(deferred_gFlags, 4)
 
         Gl.glUniform3fv(deferred_light_position, 1, position)
         Gl.glUniform3f(deferred_cam_position, eyeX, eyeY, eyeZ)
@@ -3637,6 +3585,7 @@ skip_SSAO:
         Gl.glUniform1f(deferred_ambient, lighting_ambient)
         Gl.glUniform1f(deferred_gamma, gamma_level)
         Gl.glUniform1f(deferred_mapHeight, z_max)
+
         If m_small_lights.Checked Then ' lights on?
             Gl.glUniform3fv(deferred_lights_pos, LIGHT_COUNT_, sl_light_pos)
             Gl.glUniform3fv(deferred_lights_color, LIGHT_COUNT_, sl_light_color)
@@ -3654,10 +3603,8 @@ skip_SSAO:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-        'If m_SSAO.Checked Then
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-        'End If
 
 
         Gl.glBegin(Gl.GL_QUADS)
@@ -3681,8 +3628,85 @@ skip_SSAO:
         If m_FXAA.Checked Then
             FXAA_Color_pass(width, height)
         End If
+        '----------------------------------------------------------------------------------------------
+        '----------------------------------------------------------------------------------------------
+
+        'SSAO pass
+        'can't get this to work 100%!! GRRRRR
+        If Not m_SSAO.Checked Then GoTo skip_SSAO
+        'We need to copy the color buffer back to gColor so we can blend it
+        'with the ssao texture we are about to generate.
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
+        '-------------
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
+        Gl.glUseProgram(shader_list.SSAO_shader)
+        'Gl.glUniform1i(ss_gNormal, 0)
+        Gl.glUniform1i(ss_gDepthMap, 1)
+        Gl.glUniform1i(ss_noise, 2)
+        'Gl.glUniform2f(ss_screen_size, CSng(width), CSng(height))
+        Gl.glUniform3fv(ss_kernel, 64, randomFloats)
+
+        Gl.glUniformMatrix4fv(ss_prj_matrix, 1, 0, projection_s)
+        'Gl.glUniformMatrix4fv(ss_mdl_Matrix, 1, 0, modelMatrix)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
+
+        '--- draw quad
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+
+        Gl.glUseProgram(0)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, width, height, 0)
+        Dim e = Gl.glGetError
+        '----------------------------------------------------------------------------------------------
+        Gl.glUseProgram(shader_list.SSAOBlend_shader)
+        Gl.glUniform1i(SSAOBlend_gcolor, 0)
+        Gl.glUniform1i(SSAOBlend_gFlag, 1)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+
+        '--- draw quad
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+        Gl.glUseProgram(0)
 
 
+skip_SSAO:
 
         'unbind all used textures
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
@@ -5870,6 +5894,7 @@ no_move_xz:
 
     Private Sub m_reset_tanks_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_reset_tanks.Click
         frmTanks.TopMost = False
+        Me.TopMost = True
         If MsgBox("Are you sure?", MsgBoxStyle.YesNo, "Reset Assignments.") = MsgBoxResult.Yes Then
             frmTanks.TopMost = True
             make_locations()
@@ -5882,6 +5907,7 @@ no_move_xz:
             'draw_minimap()
             need_screen_update()
         End If
+        Me.TopMost = False
     End Sub
 
     Private Sub m_show_fog_Click(sender As Object, e As EventArgs)

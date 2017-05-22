@@ -103,17 +103,18 @@ Module modDeferred
             getsize(SCR_WIDTH, SCR_HEIGHT)
             'depth buffer
 
-            If NoiseTexture = 0 Then
+            If NoiseTexture >= 0 Then
+                Gl.glDeleteTextures(1, NoiseTexture)
                 make_kernel()
                 Dim rnd As New Random
                 For i = 0 To (16 * 3) - 1 Step 3
-                    noise(i + 0) = CSng(rnd.NextDouble * 2.0 - 1.0)
-                    noise(i + 1) = CSng(rnd.NextDouble * 2.0 - 1.0)
+                    noise(i + 0) = CSng(rnd.NextDouble)
+                    noise(i + 1) = CSng(rnd.NextDouble)
                     noise(i + 2) = 0.0
                 Next
                 Gl.glGenTextures(1, NoiseTexture)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
-                Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB16F_ARB, 4, 4, 0, Gl.GL_RGB, Gl.GL_FLOAT, noise)
+                Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB8, 4, 4, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, noise)
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST)
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)

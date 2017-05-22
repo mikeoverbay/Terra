@@ -303,6 +303,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4487F7B2C77E4FB0B481A892541821C4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_48F7634BC8764F418E45CF151709FB8B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -556,6 +562,12 @@
         "Entry"
         {
         "MsmKey" = "8:_9576B2A0526142798E8BB26ABC7A8BF4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_959A2018763A45F4A70E15D2E8790B7B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1150,7 +1162,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V046.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V047.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -2161,6 +2173,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4487F7B2C77E4FB0B481A892541821C4"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\SSAOBlend_fragment.glsl"
+            "TargetName" = "8:SSAOBlend_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_48F7634BC8764F418E45CF151709FB8B"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\Ch18_WZ-120.chinese"
@@ -3038,6 +3070,26 @@
             {
             "SourcePath" = "8:..\\Terra\\shaders\\buildingsDef_fragment.glsl"
             "TargetName" = "8:buildingsDef_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_959A2018763A45F4A70E15D2E8790B7B"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\SSAOBlend_vertex.glsl"
+            "TargetName" = "8:SSAOBlend_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
@@ -4780,15 +4832,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
-        "ProductCode" = "8:{732DEE6B-2A32-4B34-A48C-8ECAAD4D763D}"
-        "PackageCode" = "8:{7400F634-A514-4F49-9B21-9951E84E0849}"
+        "ProductCode" = "8:{50A784DF-85DC-408F-BE25-9D557B07EAD0}"
+        "PackageCode" = "8:{6D05AFC0-D734-4856-89C3-FC60C2ED81E4}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.46"
+        "ProductVersion" = "8:1.0.47"
         "Manufacturer" = "8:Coffee_"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
