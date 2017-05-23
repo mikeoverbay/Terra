@@ -3542,171 +3542,39 @@ over_it:
             Gl.glEnd()
         End If
 
+        Gl.glPopMatrix()
+        Gl.glFlush() ' needed?
         '---------------------------------------------------------------------------------
 
-        Gl.glFlush() ' needed?
 
-        Gl.glPopMatrix()
-        'Dim e6 = Gl.glGetError
-        'Dim e5 = Gl.glGetError
         ViewOrtho()
         Gl.glFrontFace(Gl.GL_CW)
-
-        Gl.glDisable(Gl.GL_DEPTH_TEST)
-        'G_Buffer.getsize(width, heigth)
-        Gl.glDisable(Gl.GL_LIGHTING)
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
         Gl.glEnable(Gl.GL_CULL_FACE)
+
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+        Gl.glDisable(Gl.GL_LIGHTING)
         Gl.glDisable(Gl.GL_TEXTURE_2D)
-        Gl.glUseProgram(0)
         Gl.glDisable(Gl.GL_BLEND)
         '----------------------------------------------------------------------------------------------
         '----------------------------------------------------------------------------------------------
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Gl.glClearColor(0.0, 0.3, 0.3, 0.0)
-        'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
         '----------------------------------------------------------------------------------------------
         'Lighting pass.
-        'Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        lighting_pass(width, height)
 
-        Gl.glUseProgram(shader_list.deferred_shader)
-
-        Gl.glUniform1i(deferred_gcolor, 0)
-        Gl.glUniform1i(deferred_gnormal, 1)
-        Gl.glUniform1i(deferred_gposition, 2)
-        Gl.glUniform1i(deferred_depthmap, 3)
-        Gl.glUniform1i(deferred_gFlags, 4)
-
-        Gl.glUniform3fv(deferred_light_position, 1, position)
-        Gl.glUniform3f(deferred_cam_position, eyeX, eyeY, eyeZ)
-        Gl.glUniform1f(deferred_bright, lighting_terrain_texture)
-        Gl.glUniform1f(deferred_gray, gray_level)
-        Gl.glUniform1f(deferred_spec, lighting_model_level)
-        Gl.glUniform1f(deferred_ambient, lighting_ambient)
-        Gl.glUniform1f(deferred_gamma, gamma_level)
-        Gl.glUniform1f(deferred_mapHeight, z_max)
-
-        If m_small_lights.Checked Then ' lights on?
-            Gl.glUniform3fv(deferred_lights_pos, LIGHT_COUNT_, sl_light_pos)
-            Gl.glUniform3fv(deferred_lights_color, LIGHT_COUNT_, sl_light_color)
-            Gl.glUniform1i(deferred_light_count, LIGHT_COUNT_)
-        Else
-            Gl.glUniform1i(deferred_light_count, 0) ' send zero light count if off
-        End If
-
-
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-
-
-        Gl.glBegin(Gl.GL_QUADS)
-        '---
-
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(width, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(width, -height, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(0, -height, 0.0)
-        Gl.glEnd()
-
-        Gl.glUseProgram(0)
-
+        '----------------------------------------------------------------------------------------------
+        'FXAA pass
         If m_FXAA.Checked Then
-            FXAA_Color_pass(width, height)
+            FXAA_pass(width, height)
         End If
         '----------------------------------------------------------------------------------------------
-        '----------------------------------------------------------------------------------------------
-
         'SSAO pass
-        'can't get this to work 100%!! GRRRRR
-        If Not m_SSAO.Checked Then GoTo skip_SSAO
-        'We need to copy the color buffer back to gColor so we can blend it
-        'with the ssao texture we are about to generate.
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
-        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
-        '-------------
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
-        Gl.glUseProgram(shader_list.SSAO_shader)
-        'Gl.glUniform1i(ss_gNormal, 0)
-        Gl.glUniform1i(ss_gDepthMap, 1)
-        Gl.glUniform1i(ss_noise, 2)
-        'Gl.glUniform2f(ss_screen_size, CSng(width), CSng(height))
-        Gl.glUniform3fv(ss_kernel, 64, randomFloats)
-
-        Gl.glUniformMatrix4fv(ss_prj_matrix, 1, 0, projection_s)
-        'Gl.glUniformMatrix4fv(ss_mdl_Matrix, 1, 0, modelMatrix)
-
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
-
-        '--- draw quad
-        Gl.glBegin(Gl.GL_QUADS)
-
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(width, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(width, -height, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(0, -height, 0.0)
-        Gl.glEnd()
-
-        Gl.glUseProgram(0)
-        Gl.glReadBuffer(Gl.GL_BACK)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, width, height, 0)
-        Dim e = Gl.glGetError
+        If m_SSAO.Checked Then
+            SSAO_pass(width, height)
+        End If
         '----------------------------------------------------------------------------------------------
-        Gl.glUseProgram(shader_list.SSAOBlend_shader)
-        Gl.glUniform1i(SSAOBlend_gcolor, 0)
-        Gl.glUniform1i(SSAOBlend_gFlag, 1)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-
-        '--- draw quad
-        Gl.glBegin(Gl.GL_QUADS)
-
-        Gl.glTexCoord2f(0.0, 1.0)
-        Gl.glVertex3f(0, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(width, 0, 0.0)
-
-        Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(width, -height, 0.0)
-
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(0, -height, 0.0)
-        Gl.glEnd()
-        Gl.glUseProgram(0)
-
-
-skip_SSAO:
 
         'unbind all used textures
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
@@ -3755,8 +3623,65 @@ skip_SSAO:
         '---------------------------------------------------------------------------------
         autoEventScreen.Set()
     End Sub
+    Private Sub lighting_pass(ByVal width As Integer, ByVal height As Integer)
 
-    Private Sub FXAA_Color_pass(ByVal width As Integer, ByVal height As Integer)
+        Gl.glUseProgram(shader_list.deferred_shader)
+
+        Gl.glUniform1i(deferred_gcolor, 0)
+        Gl.glUniform1i(deferred_gnormal, 1)
+        Gl.glUniform1i(deferred_gposition, 2)
+        Gl.glUniform1i(deferred_depthmap, 3)
+        Gl.glUniform1i(deferred_gFlags, 4)
+
+        Gl.glUniform3fv(deferred_light_position, 1, position)
+        Gl.glUniform3f(deferred_cam_position, eyeX, eyeY, eyeZ)
+        Gl.glUniform1f(deferred_bright, lighting_terrain_texture)
+        Gl.glUniform1f(deferred_gray, gray_level)
+        Gl.glUniform1f(deferred_spec, lighting_model_level)
+        Gl.glUniform1f(deferred_ambient, lighting_ambient)
+        Gl.glUniform1f(deferred_gamma, gamma_level)
+        Gl.glUniform1f(deferred_mapHeight, z_max)
+
+        If m_small_lights.Checked Then ' lights on?
+            Gl.glUniform3fv(deferred_lights_pos, LIGHT_COUNT_, sl_light_pos)
+            Gl.glUniform3fv(deferred_lights_color, LIGHT_COUNT_, sl_light_color)
+            Gl.glUniform1i(deferred_light_count, LIGHT_COUNT_)
+        Else
+            Gl.glUniform1i(deferred_light_count, 0) ' send zero light count if off
+        End If
+
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gPosition)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+
+        '---
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+
+        Gl.glUseProgram(0)
+
+    End Sub
+    Private Sub FXAA_pass(ByVal width As Integer, ByVal height As Integer)
         'FXAA pass.
         Gl.glReadBuffer(Gl.GL_BACK)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
@@ -3779,10 +3704,10 @@ skip_SSAO:
         Gl.glVertex3f(0, 0, 0.0)
 
         Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(Width, 0, 0.0)
+        Gl.glVertex3f(width, 0, 0.0)
 
         Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(Width, -height, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
 
         Gl.glTexCoord2f(0.0, 0.0)
         Gl.glVertex3f(0, -height, 0.0)
@@ -3790,7 +3715,7 @@ skip_SSAO:
 
         Gl.glUseProgram(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
-        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, Width, height)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
 
     End Sub
     Private Sub FXAA_Normal_pass(ByVal width As Integer, ByVal height As Integer)
@@ -3826,6 +3751,80 @@ skip_SSAO:
         Gl.glUseProgram(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
         Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, Width, Height)
+
+    End Sub
+    Private Sub SSAO_pass(ByVal width As Integer, ByVal height As Integer)
+        'We need to copy the color buffer back to gColor so we can blend it
+        'with the ssao texture we are about to generate.
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, Width, Height)
+        '-------------
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
+        Gl.glUseProgram(shader_list.SSAO_shader)
+        'Gl.glUniform1i(ss_gNormal, 0)
+        Gl.glUniform1i(ss_gDepthMap, 1)
+        Gl.glUniform1i(ss_noise, 2)
+        'Gl.glUniform2f(ss_screen_size, CSng(width), CSng(height))
+        Gl.glUniform3fv(ss_kernel, 64, randomFloats)
+
+        Gl.glUniformMatrix4fv(ss_prj_matrix, 1, 0, projection_s)
+        'Gl.glUniformMatrix4fv(ss_mdl_Matrix, 1, 0, modelMatrix)
+
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, NoiseTexture)
+
+        '--- draw quad
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+
+        Gl.glUseProgram(0)
+        Gl.glReadBuffer(Gl.GL_BACK)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, Width, Height, 0)
+        Dim e = Gl.glGetError
+        '----------------------------------------------------------------------------------------------
+        Gl.glUseProgram(shader_list.SSAOBlend_shader)
+        Gl.glUniform1i(SSAOBlend_gcolor, 0)
+        Gl.glUniform1i(SSAOBlend_gFlag, 1)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
+
+        '--- draw quad
+        Gl.glBegin(Gl.GL_QUADS)
+
+        Gl.glTexCoord2f(0.0, 1.0)
+        Gl.glVertex3f(0, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 1.0)
+        Gl.glVertex3f(width, 0, 0.0)
+
+        Gl.glTexCoord2f(1.0, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
+
+        Gl.glTexCoord2f(0.0, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
+        Gl.glEnd()
+        Gl.glUseProgram(0)
+
 
     End Sub
     Private Sub draw_ortho_stuff()

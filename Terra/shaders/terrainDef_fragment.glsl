@@ -58,7 +58,7 @@ vec4 add_norms (in vec4 n1 , in vec4 n2){
 void main(void)
 {
     // lets check for a hole before doing any math.. It saves time
-    float hole = texture2D(hole_texture,-texCoord/10.0).x;
+    float hole = texture2D(hole_texture, texCoord/10.0).x;
     if (has_holes == 1)
       {
         if ( hole >0.0) {discard;}

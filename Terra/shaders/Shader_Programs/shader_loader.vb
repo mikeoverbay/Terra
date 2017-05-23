@@ -359,8 +359,7 @@ Module shader_loader
         deferred_light_position, deferred_cam_position, deferred_gamma, _
         deferred_spec, deferred_gray, deferred_bright, deferred_ambient, _
         deferred_mapHeight, deferred_depthmap, deferred_lights_pos, _
-        deferred_lights_color, deferred_light_count, deferred_gFlags, _
-        deferred_cam_Matrix As Integer
+        deferred_lights_color, deferred_light_count, deferred_gFlags As Integer
 
     Private Sub set_deferredLighting_variables()
         deferred_cam_position = Gl.glGetUniformLocation(shader_list.deferred_shader, "viewPos")
@@ -379,6 +378,7 @@ Module shader_loader
         deferred_lights_color = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_colors")
         deferred_light_count = Gl.glGetUniformLocation(shader_list.deferred_shader, "light_count")
         deferred_gFlags = Gl.glGetUniformLocation(shader_list.deferred_shader, "gFlags")
+        'deferred_Matrix = Gl.glGetUniformLocation(shader_list.deferred_shader, "projectionmatrix")
     End Sub
 
     Private Sub set_comp_variables()
