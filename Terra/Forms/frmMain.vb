@@ -142,7 +142,7 @@ Public Class frmMain
         Dim script_pkg As Ionic.Zip.ZipFile = Nothing
         Dim ms As New MemoryStream
         Try
-            script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "res\packages\scripts.pkg")
+            script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\scripts.pkg")
             Dim script As Ionic.Zip.ZipEntry = script_pkg("\scripts\destructibles.xml")
             script.Extract(ms)
             ms.Position = 0
@@ -166,7 +166,7 @@ Public Class frmMain
           "Example:   C:\Games\World of Tanks\" + vbCrLf + _
           "and than restart Terra!", MsgBoxStyle.Exclamation, "Path not set.")
             m_set_path.PerformClick()
-            Application.Restart()
+            'Application.Restart()
         End Try
         script_pkg.Dispose()
         ms.Dispose()
@@ -3164,10 +3164,80 @@ skip:
     End Sub
 
     Private Sub draw_g_water()
+        Dim width, height As Integer
+        width = pb1.Width + pb1.Width Mod 1
+        height = pb1.Height + pb1.Height Mod 1
+
+        'If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
+        '    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
+        '    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        '    Gl.glDisable(Gl.GL_CULL_FACE)
+        '    Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+
+        '    Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+        '    G_Buffer.attach_flag_only()
+        '    'Gl.glEnable(Gl.GL_BLEND)
+        '    Gl.glColor4f(0.0, 0.0, 0.0, 0.0)
+        '    Dim index As Integer = Floor(water_elapsed_time * 63)
+        '    Gl.glUseProgram(shader_list.waterMesh_shader)
+        '    Gl.glUniform1i(waterMesh_n1, 0)
+        '    Gl.glUniform1i(waterMesh_n2, 1)
+        '    Gl.glUniform1i(waterMesh_colorMap, 2)
+        '    Gl.glUniform1f(waterMesh_time, texture_blend_counter)
+
+        '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index))
+        '    If index = 63 Then
+        '        index = -1
+        '    End If
+        '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index + 1))
+        '    'tb1.text = CInt(water_elapsed_time * 63)
+        '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+
+        '    Gl.glUniformMatrix4fv(waterMesh_matrix, 1, 0, water.matrix)
+        '    'Gl.glCallList(water.displayID_plane)
+
+
+        '    '============================================================
+        '    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
+        '    'Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+        '    Gl.glDisable(Gl.GL_CULL_FACE)
+        '    Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE)
+
+        '    Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
+        '    G_Buffer.attach_color_and_postion_and_normal_only()
+        '    'Gl.glEnable(Gl.GL_BLEND)
+        '    Gl.glColor4f(0.5, 0.7, 1.0, 1.0)
+        '    index = Floor(water_elapsed_time * 63)
+        '    Gl.glUseProgram(shader_list.waterMesh_shader)
+        '    Gl.glUniform1i(waterMesh_n1, 0)
+        '    Gl.glUniform1i(waterMesh_n2, 1)
+        '    Gl.glUniform1i(waterMesh_colorMap, 2)
+        '    Gl.glUniform1f(waterMesh_time, texture_blend_counter)
+
+        '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+        '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index))
+        '    If index = 63 Then
+        '        index = -1
+        '    End If
+        '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, animated_water_ids(index + 1))
+        '    'tb1.text = CInt(water_elapsed_time * 63)
+        '    Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
+        '    Gl.glBindTexture(Gl.GL_TEXTURE_2D, water.textureID)
+
+        '    Gl.glUniformMatrix4fv(waterMesh_matrix, 1, 0, water.matrix)
+
+        '    Gl.glCallList(water.displayID_plane)
+        '    G_Buffer.attachFOBtextures()
+        '    Gl.glUseProgram(0)
+        'End If
+        'Return
+
+
         If water.IsWater And maploaded And m_show_water.Checked And m_water_ And water_loaded Then
-            Dim width, height As Integer
-            width = pb1.Width + pb1.Width Mod 1
-            height = pb1.Height + pb1.Height Mod 1
             '=========================================================='
             Gl.glEnable(Gl.GL_DEPTH_TEST)
 
@@ -3622,7 +3692,8 @@ over_it:
         End If
         '---------------------------------------------------------------------------------
         autoEventScreen.Set()
-    End Sub
+    End Sub '==============================================
+
     Private Sub lighting_pass(ByVal width As Integer, ByVal height As Integer)
 
         Gl.glUseProgram(shader_list.deferred_shader)
@@ -5944,6 +6015,8 @@ no_move_xz:
             GAME_PATH = FolderBrowserDialog1.SelectedPath
             My.Settings.game_path = GAME_PATH
             My.Settings.Save()
+            Application.Restart()
+            End
         End If
     End Sub
 

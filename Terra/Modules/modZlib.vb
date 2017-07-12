@@ -553,6 +553,7 @@ dont_grab_this:
             If BWWa.bwwa_t1(0).width > 0 Then
                 water.IsWater = True
                 build_water()
+                'make_water_mesh() 'experimental.. Too slow to use as is
                 water.textureID = Load_DDS_File(Application.StartupPath + "\Resources\water2.dds")
                 water.normalID = Load_DDS_File(Application.StartupPath + "\Resources\water2_NM2.dds")
                 GC.Collect()

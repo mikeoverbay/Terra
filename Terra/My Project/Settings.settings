@@ -99,7 +99,7 @@
       <Value Profile="(Default)">dec7th_1941</Value>
     </Setting>
     <Setting Name="game_path" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\games\World_of_Tanks\</Value>
+      <Value Profile="(Default)">C:\games\World_of_Tanks</Value>
     </Setting>
     <Setting Name="m_show_tank_names" Type="System.Windows.Forms.CheckState" Scope="User">
       <Value Profile="(Default)">Checked</Value>

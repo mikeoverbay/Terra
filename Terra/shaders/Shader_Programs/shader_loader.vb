@@ -41,6 +41,7 @@ Module shader_loader
         Public water_shader As Integer
         Public waterColor_shader As Integer
         Public waterMask_shader As Integer
+        Public waterMesh_shader As Integer
         Public wire_shader As Integer
         Public write3D_shader As Integer
     End Class
@@ -561,6 +562,15 @@ Module shader_loader
         waterC_matrix = Gl.glGetUniformLocation(shader_list.waterColor_shader, "matrix")
         waterC_Depthmap = Gl.glGetUniformLocation(shader_list.waterColor_shader, "gDepthMap")
     End Sub
+
+    Public waterMesh_n1, waterMesh_n2, waterMesh_matrix, waterMesh_time, waterMesh_colorMap As Integer
+    Private Sub set_waterMesh_variables()
+        waterMesh_n1 = Gl.glGetUniformLocation(shader_list.waterMesh_shader, "normalMap")
+        waterMesh_n2 = Gl.glGetUniformLocation(shader_list.waterMesh_shader, "normalMap2")
+        waterMesh_matrix = Gl.glGetUniformLocation(shader_list.waterMesh_shader, "matrix")
+        waterMesh_time = Gl.glGetUniformLocation(shader_list.waterMesh_shader, "time")
+        waterMesh_colorMap = Gl.glGetUniformLocation(shader_list.waterMesh_shader, "colorMap")
+    End Sub
     '==============================================================================================================
     Public Sub set_shader_variables()
         set_ring_variables()
@@ -592,6 +602,7 @@ Module shader_loader
 
         set_water_variables()
         set_waterColor_variables()
+        set_waterMesh_variables()
         Return
 
     End Sub
