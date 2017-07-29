@@ -3986,8 +3986,8 @@ over_it:
     Public Sub draw_scene()
         'Application.DoEvents()
         If stopGL Then Return
-        gl_busy = True
         If Not _STARTED Then Return
+        gl_busy = True
         If SHOW_MAPS Then
             gl_pick_map(mouse.X, mouse.Y)
             gl_busy = False

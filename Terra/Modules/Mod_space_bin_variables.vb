@@ -117,13 +117,27 @@ Module Mod_space_bin_variables
         Public t6_dl As UInt32
         Public t6_dc As UInt32
 
+        Public t7_start As UInt32
+        Public t7_dl As UInt32
+        Public t7_dc As UInt32
+
+        Public t8_start As UInt32
+        Public t8_dl As UInt32
+        Public t8_dc As UInt32
+
+        Public t9_start As UInt32
+        Public t9_dl As UInt32
+        Public t9_dc As UInt32
+
         Public bsmi_t1() As bsmi_t1_
         Public bsmi_t2() As bsmi_t2_
         Public bsmi_t3() As bsmi_t3_
         Public bsmi_t4() As bsmi_t4_
         Public bsmi_t5() As bsmi_t5_
         Public bsmi_t6() As bsmi_t6_
-        Public bsmi_t7() As bsmi_t7_
+        Public bsmi_t7() As bsmi_t4_
+        Public bsmi_t8() As bsmi_t5_
+        Public bsmi_t9() As bsmi_t4_
     End Structure
     Public Structure bsmi_t1_
         Public matrix() As Single
@@ -140,12 +154,12 @@ Module Mod_space_bin_variables
     End Structure
     Public Structure bsmi_t5_
         Public u1_index As UInt32
-    End Structure
-    Public Structure bsmi_t6_
-        Public u1_index As UInt32
         Public u2_index As UInt32
         Public u3_index As UInt32
         Public u4_index As UInt32
+    End Structure
+    Public Structure bsmi_t6_
+        Public u1_index As UInt32
     End Structure
     Public Structure bsmi_t7_
         Public u1_index As UInt32

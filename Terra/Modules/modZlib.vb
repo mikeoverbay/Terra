@@ -618,7 +618,7 @@ dont_grab_this:
         make_lights()
         For i = 0 To Model_Matrix_list.Length - 2
             With Model_Matrix_list(i)
-                If l_cnt / 3 = light_count - 1 Then
+                If l_cnt / 3 = light_count Then
                     Return ' no slots left for lights
                 End If
                 If Model_Matrix_list(i).primitive_name IsNot Nothing Then
@@ -919,6 +919,9 @@ dont_grab_this:
             For m = 0 To Model_Matrix_list.Length - 2
                 If True Then
                     'stuff we dont want on the map.
+                    If Model_Matrix_list(m).exclude Then
+                        GoTo skip_this
+                    End If
                     If Model_Matrix_list(m).primitive_name.ToLower.Contains("wgl_banner") _
                         Or Model_Matrix_list(m).primitive_name.ToLower.Contains("000_base") _
                         Or Model_Matrix_list(m).primitive_name.ToLower.Contains("particles") Then

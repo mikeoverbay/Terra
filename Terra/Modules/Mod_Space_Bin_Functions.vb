@@ -17,6 +17,7 @@ Module Mod_Space_Bin_Functions
         Public BB_Min As vect3
         Public BB_Max As vect3
         Public BB() As vect3
+        Public exclude As Boolean
     End Structure
 
     Public speedtree_matrix_list() As speedtree_matrix_list_
@@ -438,13 +439,20 @@ Module Mod_Space_Bin_Functions
         Next
 
         'not sure what this is
-        Dim n1 As UInteger
-        'read off 12 more
         'now there is a huge bunch of more FFFFFFFF data
-        n1 = br.ReadUInt32 'lenfth 4 uints
-        Dim c1 As UInt32 = br.ReadUInt32 'count
-        Dim offset As UInt32 = n1 * c1
-        br.BaseStream.Position += offset ' move to next block
+        'table order is wrong but i dont want to rename all of them because of this new table.
+        BSMI.t7_start = br.BaseStream.Position
+
+        BSMI.t7_dl = br.ReadUInt32 'length 4 uints
+        BSMI.t7_dc = br.ReadUInt32 'count
+        ReDim BSMI.bsmi_t7(BSMI.t7_dc)
+        For k = 0 To BSMI.t7_dc - 1
+            BSMI.bsmi_t7(k).u1_index = br.ReadUInt32
+            If BSMI.bsmi_t7(k).u1_index <> 4294967295 Then
+                Debug.WriteLine(k.ToString("0000"))
+            End If
+        Next
+        'br.BaseStream.Position += offset ' move to next block
 
         BSMI.t3_start = br.BaseStream.Position
         BSMI.t3_dl = br.ReadUInt32
@@ -457,45 +465,65 @@ Module Mod_Space_Bin_Functions
                 max = BSMI.bsmi_t3(k).BSMO_Index
             End If
         Next
-        'As far as I can tell, the rest of this data is
-        'all FFFF FFFFF (-1 hex) or BF80 00000 (-1.0 float)
-        'not sure what its for but I dont need it
-        Return
-
+        'the next table defines if its a boat of some kind.. <> 4294967295 its a boat
         BSMI.t4_start = br.BaseStream.Position
         BSMI.t4_dl = br.ReadUInt32
         BSMI.t4_dc = br.ReadUInt32
         ReDim BSMI.bsmi_t4(BSMI.t4_dc)
         For k = 0 To BSMI.t4_dc - 1
             BSMI.bsmi_t4(k).u1_index = br.ReadUInt32
+            If BSMI.bsmi_t4(k).u1_index <> 4294967295 Then
+                Debug.WriteLine(k.ToString("0000"))
+            End If
         Next
+        'this next table defines more boat information
+        'its length is = to the boat count.
         BSMI.t5_start = br.BaseStream.Position
         BSMI.t5_dl = br.ReadUInt32
         BSMI.t5_dc = br.ReadUInt32
         ReDim BSMI.bsmi_t5(BSMI.t5_dc)
         For k = 0 To BSMI.t5_dc - 1
-            BSMI.bsmi_t5(k).u1_index = br.ReadUInt32
+            BSMI.bsmi_t5(k).u1_index = br.ReadUInt32 'boat id by model index
+            BSMI.bsmi_t5(k).u2_index = br.ReadUInt32 'setting of some kind
+            BSMI.bsmi_t5(k).u3_index = br.ReadUInt32 'always zero?
+            BSMI.bsmi_t5(k).u4_index = br.ReadUInt32 'setting of some kind
         Next
-
+        Debug.WriteLine("--- BSMI.t6 ----")
+        'this table is a list of sub models of destroyed buildings
         BSMI.t6_start = br.BaseStream.Position
         BSMI.t6_dl = br.ReadUInt32
         BSMI.t6_dc = br.ReadUInt32
         ReDim BSMI.bsmi_t6(BSMI.t6_dc)
         For k = 0 To BSMI.t6_dc - 1
-            BSMI.bsmi_t6(k).u1_index = br.ReadUInt32
-            BSMI.bsmi_t6(k).u2_index = br.ReadUInt32
-            BSMI.bsmi_t6(k).u3_index = br.ReadUInt32
-            BSMI.bsmi_t6(k).u4_index = br.ReadUInt32
+            BSMI.bsmi_t6(k).u1_index = br.ReadUInt32 'index of model
+            Debug.WriteLine(BSMI.bsmi_t6(k).u1_index.ToString("0000"))
+            'BSMI.bsmi_t6(k).u2_index = br.ReadUInt32
+            'BSMI.bsmi_t6(k).u3_index = br.ReadUInt32
+            'BSMI.bsmi_t6(k).u4_index = br.ReadUInt32
         Next
-
-        BSMI.t6_start = br.BaseStream.Position
-        BSMI.t6_dl = br.ReadUInt32
-        BSMI.t6_dc = br.ReadUInt32
-        ReDim BSMI.bsmi_t6(BSMI.t6_dc)
-        For k = 0 To BSMI.t6_dc - 1
-            BSMI.bsmi_t6(k).u1_index = br.ReadUInt32
+        'componet list of sub models
+        BSMI.t8_start = br.BaseStream.Position
+        BSMI.t8_dl = br.ReadUInt32
+        BSMI.t8_dc = br.ReadUInt32
+        ReDim BSMI.bsmi_t8(BSMI.t8_dc)
+        For k = 0 To BSMI.t8_dc - 1
+            BSMI.bsmi_t8(k).u1_index = br.ReadUInt32 '!= FFFFFFFF means its a index to the start of parts
+            BSMI.bsmi_t8(k).u2_index = br.ReadUInt32 ' end index to parts
+            BSMI.bsmi_t8(k).u3_index = br.ReadUInt32 ' != FFFFFFFF means its the parent index 
         Next
-
+        '
+        'this table seems to be an index to the end of the destroyed buildings last componet.
+        BSMI.t9_start = br.BaseStream.Position
+        BSMI.t9_dl = br.ReadUInt32
+        BSMI.t9_dc = br.ReadUInt32
+        ReDim BSMI.bsmi_t9(BSMI.t9_dc)
+        For i = 0 To BSMI.t9_dc - 1
+            BSMI.bsmi_t9(i).u1_index = br.ReadUInt32
+        Next
+        'br.Close()
+        'ms.Dispose()
+        'Return
+        'the very last table is all -1 singles... not sure what it is and as of now dont need it.
         br.Close()
         ms.Dispose()
 
@@ -849,9 +877,9 @@ Module Mod_Space_Bin_Functions
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
         ms.Position = 0
-        BWST.d_length = br.ReadUInt32 ' lenght of data
+        BWST.d_length = br.ReadUInt32 ' length of data
         BWST.entry_count = br.ReadUInt32 ' number of entries
-        'Dim unknown = br.ReadUInt32
+        '
         '------------------------------------------------------------
         bw_strings.AppendLine("-------- BWST STRINGS ----------")
         ReDim BWST.entries(BWST.entry_count)

@@ -112,11 +112,18 @@ Module Mod_space_bin
         bw_strings.Clear()
         ReDim Model_Matrix_list(BSMI.t3_dc)
         For k = 0 To BSMI.t3_dc - 1
+            For i = 0 To BSMI.bsmi_t6.Length - 2 ' check if this is part of a destroyed building
+                If BSMI.bsmi_t6(i).u1_index = k Then
+                    Model_Matrix_list(k).exclude = True
+                Else
+                    Model_Matrix_list(k).exclude = False
+                End If
+            Next
             Dim BSMO_Index = BSMI.bsmi_t3(k).BSMO_Index
             Dim m = BSMO.bsmo_t2(BSMO_Index).model_str
             Model_Matrix_list(k) = New model_matrix_list_
             Model_Matrix_list(k).primitive_name = m.Replace("primitives", "model")
-          
+
             Model_Matrix_list(k).matrix = BSMI.bsmi_t1(k).matrix
             Model_Matrix_list(k).matrix(1) *= -1.0
             Model_Matrix_list(k).matrix(2) *= -1.0
@@ -131,7 +138,26 @@ Module Mod_space_bin
             get_translated_bb_model(Model_Matrix_list(k))
             'Console.WriteLine(k.ToString("000") + " : " + m)
         Next
-
+        'lets compress the model_matrix_list to only used models
+        Dim mc As Integer = 0
+        For i = 0 To BSMI.bsmi_t2.Length - 2
+            If BSMI.bsmi_t2(i).u2_Index = 1 Then
+                mc += 1
+            End If
+        Next
+        Dim tm(mc) As model_matrix_list_
+        mc = 0
+        For i = 0 To BSMI.bsmi_t2.Length - 2
+            If BSMI.bsmi_t2(i).u2_Index = 1 Then
+                tm(mc) = New model_matrix_list_
+                tm(mc) = Model_Matrix_list(i)
+                mc += 1
+            End If
+        Next
+        ReDim Model_Matrix_list(mc)
+        For i = 0 To mc
+            Model_Matrix_list(i) = tm(i)
+        Next
         mr.Dispose()
         br.Close()
         'clean up some space
