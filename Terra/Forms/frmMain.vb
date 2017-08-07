@@ -56,7 +56,15 @@ Public Class frmMain
     Dim swat2 As New Stopwatch
     Dim swat1 As New Stopwatch
     Dim angle_offset As Single
-    Dim real_names_list As New List(Of String)
+    Dim tank_data() As tank_item_
+    Public Structure tank_item_
+        Public tank_name As String
+        Public tank_shortname As String
+        Public tank_nation As String
+        Public tank_tier As String
+        Public tank_type As String
+        Public tank_png_path As String
+    End Structure
     Dim Lx, Ly As Single
     Dim angle As Single
     'Dim mass_value As Single = 2
@@ -231,7 +239,7 @@ fail_path:
         '-------------------------------------------------
         get_tank_list() ' get the tanks and add them to the GUI
 
-        tb1.Text = "Getting Map Images"
+        tb1.text = "Getting Map Images"
         Application.DoEvents()
         Application.DoEvents()
         Application.DoEvents()
@@ -273,7 +281,7 @@ fail_path:
 
 
     Private Sub Form1_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-      
+
         m_fly_map.Checked = False
         m_Orbit_Light.Checked = False
         If maploaded Then
@@ -318,7 +326,7 @@ fail_path:
                 If icon_scale < 3 Then
                     icon_scale = 3
                 End If
-                tb1.Text = "Icon size: " + icon_scale.ToString
+                tb1.text = "Icon size: " + icon_scale.ToString
                 My.Settings.icon_scale = icon_scale
                 need_screen_update()
                 Return
@@ -328,7 +336,7 @@ fail_path:
                 If icon_scale > 100.0! Then
                     icon_scale = 100.0!
                 End If
-                tb1.Text = "Icon size: " + icon_scale.ToString
+                tb1.text = "Icon size: " + icon_scale.ToString
                 My.Settings.icon_scale = icon_scale
                 need_screen_update()
                 Return
@@ -341,7 +349,7 @@ fail_path:
         'End If
         '====================================================================
         If e.KeyCode = Keys.F Then
-          
+
         End If
         'post effect items ===================================
         If e.KeyCode = Keys.S Then
@@ -503,7 +511,7 @@ fail_path:
         End If
     End Sub
     Private Sub frmMain_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
-     
+
 
         npb.Update()
         Application.DoEvents()
@@ -580,30 +588,6 @@ fail_path:
         lighting_model_level = My.Settings.s_model_level / 100.0!
         gamma_level = (My.Settings.s_gamma / 100.0!) * 2.0!
     End Sub
-
-    Public Sub make_locations()
-        ReDim locations.team_1(15)
-        ReDim locations.team_2(15)
-        For u = 0 To 14
-            locations.team_1(u) = New t_l
-            If locations.team_1(u).tank_displaylist > 0 Then
-                Gl.glDeleteLists(locations.team_1(u).tank_displaylist, 1)
-            End If
-            locations.team_1(u).tank_displaylist = -1
-            locations.team_1(u).id = ""
-            locations.team_1(u).comment = ""
-            locations.team_1(u).name = ""
-
-            locations.team_2(u) = New t_l
-            If locations.team_2(u).tank_displaylist > 0 Then
-                Gl.glDeleteLists(locations.team_2(u).tank_displaylist, 1)
-            End If
-            locations.team_2(u).tank_displaylist = -1
-            locations.team_2(u).id = ""
-            locations.team_2(u).comment = ""
-            locations.team_2(u).name = ""
-        Next
-    End Sub
     Public Sub get_materials()
 
         Dim z As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\misc.pkg")
@@ -628,8 +612,31 @@ fail_path:
 
 
     End Sub
+
+    Public Sub make_locations()
+        ReDim locations.team_1(15)
+        ReDim locations.team_2(15)
+        For u = 0 To 14
+            locations.team_1(u) = New t_l
+            If locations.team_1(u).tank_displaylist > 0 Then
+                Gl.glDeleteLists(locations.team_1(u).tank_displaylist, 1)
+            End If
+            locations.team_1(u).tank_displaylist = -1
+            locations.team_1(u).id = ""
+            locations.team_1(u).comment = ""
+            locations.team_1(u).name = ""
+
+            locations.team_2(u) = New t_l
+            If locations.team_2(u).tank_displaylist > 0 Then
+                Gl.glDeleteLists(locations.team_2(u).tank_displaylist, 1)
+            End If
+            locations.team_2(u).tank_displaylist = -1
+            locations.team_2(u).id = ""
+            locations.team_2(u).comment = ""
+            locations.team_2(u).name = ""
+        Next
+    End Sub
     Private Function set_panelsize(ByRef p As Panel) As Panel
-        frmTanks.Panel1.Controls.Add(p)
         p.Width = frmTanks.Panel1.Width
         p.Height = frmTanks.Panel1.Height - 23
         p.Location = New System.Drawing.Point(0, 24)
@@ -637,8 +644,79 @@ fail_path:
         p.BackColor = Color.DimGray
         p.ForeColor = Color.White
         p.AutoScroll = True
+        'p.Visible = False
+        frmTanks.Panel1.Controls.Add(p)
         Return p
     End Function
+
+    Private Sub add_to_list(ByRef t() As tank_, td As tank_item_)
+        Dim i = t.Length - 1
+        ReDim Preserve t(i + 1)
+        Dim ms As New MemoryStream
+        Dim entry As ZipEntry = gui_pkg(td.tank_png_path)
+        entry.Extract(ms)
+        t(i).image = get_tank_image(ms, 0, False).Clone
+        t(i).gui_string = td.tank_shortname.Replace("\", "")
+        t(i).weight = td.tank_type
+        t(i).file_name = td.tank_name + ".tank"
+        If td.tank_type.ToLower.Contains("hea") Then
+            t(i).sortorder = "2"
+        End If
+        If td.tank_type.ToLower.Contains("med") Then
+            t(i).sortorder = "1"
+        End If
+        If td.tank_type.ToLower.Contains("lig") Then
+            t(i).sortorder = "0"
+        End If
+        If td.tank_type.ToLower.Contains("des") Then
+            t(i).sortorder = "3"
+        End If
+        If td.tank_type.ToLower.Contains("art") Then
+            t(i).sortorder = "4"
+        End If
+    End Sub
+    Private Function add_buttons_to_panel(ByRef pan As Panel, ByRef tanks() As tank_, ByVal flag_s As String) As Panel
+        Dim cnt As Integer = 0
+        Dim sbw = SystemInformation.VerticalScrollBarWidth + 8
+        Dim ww = frmTanks.Panel1.Width - sbw
+        For Each t In tanks
+            If t.image IsNot Nothing Then
+                Dim butt As New Button
+                Dim m = ww / t.image.Width
+                butt.Width = t.image.Width * m
+                butt.Height = t.image.Height * m
+                butt.Tag = cnt.ToString + ":" + flag_s
+                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
+                butt.BackgroundImage = t.image
+                butt.BackgroundImageLayout = ImageLayout.Stretch
+                butt.TextAlign = ContentAlignment.TopRight
+                butt.ForeColor = Color.White
+                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
+                Dim lbl As New Label
+                lbl.Width = butt.Width
+                lbl.Height = butt.Height - 3
+                lbl.BackColor = Color.Transparent
+                lbl.Font = butt.Font
+                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
+                lbl.TextAlign = ContentAlignment.BottomLeft
+                lbl.Text = t.weight
+                lbl.Enabled = False
+                butt.Controls.Add(lbl)
+                lbl.Location = New System.Drawing.Point(3, 0)
+                ' butt.BackColor = Color.Wheat
+                AddHandler butt.Click, AddressOf Me.picked_tank
+                pan.Controls.Add(butt)
+                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
+                cnt += 1
+            End If
+        Next
+        Return pan
+    End Function
+    Private Sub trim_tank_list(ByRef t() As tank_)
+        Dim l = t.Length
+        If l = 1 Then Return
+        ReDim Preserve t(l - 2)
+    End Sub
     Public Sub get_tank_list()
         Dim american_list As String = "usa\list.xml"
         Dim russian_list As String = "ussr\list.xml"
@@ -647,6 +725,7 @@ fail_path:
         Dim german_list As String = "germany\list.xml"
         Dim french_list As String = "france\list.xml"
         Dim japan_list As String = "japan\list.xml"
+        Dim sweden_list As String = "sweden\list.xml"
 
         Dim ussr_short As String = "ussr-"
         Dim usa_short As String = "usa-"
@@ -657,43 +736,94 @@ fail_path:
         Dim japan_short As String = "japan-"
 
         'load the real names file.
-        Dim fname = File.ReadAllText(Application.StartupPath & "\tanks\selected_tanks.txt")
+        Dim fname = File.ReadAllText(Application.StartupPath & "\tanks\tanknames.txt")
 
-        Dim n_array = fname.Split(vbCrLf)
-        For Each fn In n_array
-            real_names_list.Add(fn)
+        Dim n_a = fname.Split(vbCrLf)
+        ReDim tank_data(n_a.Length - 2)
+        For i = 0 To n_a.Length - 2
+            n_a(i) = n_a(i).Replace(vbLf, "")
+            tank_data(i) = New tank_item_
+            Dim ta = n_a(i).Split(":")
+            tank_data(i).tank_name = ta(0)
+            tank_data(i).tank_shortname = ta(1)
+            tank_data(i).tank_nation = ta(2)
+            tank_data(i).tank_tier = ta(3)
+            tank_data(i).tank_type = ta(4)
+            tank_data(i).tank_png_path = ta(5)
         Next
 
-        'Try
+        gui_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
 
-        build_tank_data(a_tanks, american_list, ".american", usa_short)
-        build_tank_data(b_tanks, british_list, ".british", uk_short)
-        build_tank_data(r_tanks, russian_list, ".russian", ussr_short)
-        build_tank_data(g_tanks, german_list, ".german", germany_short)
-        build_tank_data(c_tanks, chinese_list, ".chinese", china_short)
-        build_tank_data(f_tanks, french_list, ".french", french_short)
-        build_tank_data(j_tanks, japan_list, ".japan", japan_short)
-        'Catch ex As Exception
+        For i = 0 To tank_data.Length - 1
+            If tank_data(i).tank_nation.Contains("usa") Then
+                add_to_list(american_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("uss") Then
+                add_to_list(russian_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("ger") Then
+                add_to_list(german_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("uk") Then
+                add_to_list(british_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("fra") Then
+                add_to_list(french_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("chin") Then
+                add_to_list(chinese_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("jap") Then
+                add_to_list(japanese_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("swe") Then
+                add_to_list(sweden_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("cze") Then
+                add_to_list(czech_tanks, tank_data(i))
+            End If
+            If tank_data(i).tank_nation.Contains("pol") Then
+                add_to_list(poland_tanks, tank_data(i))
+            End If
+        Next
+        trim_tank_list(american_tanks)
+        trim_tank_list(russian_tanks)
+        trim_tank_list(german_tanks)
+        trim_tank_list(british_tanks)
+        trim_tank_list(french_tanks)
+        trim_tank_list(chinese_tanks)
+        trim_tank_list(japanese_tanks)
+        trim_tank_list(sweden_tanks)
+        trim_tank_list(czech_tanks)
+        trim_tank_list(poland_tanks)
 
-        'End Try
+        Array.Sort(american_tanks)
+        Array.Sort(russian_tanks)
+        Array.Sort(german_tanks)
+        Array.Sort(british_tanks)
+        Array.Sort(french_tanks)
+        Array.Sort(chinese_tanks)
+        Array.Sort(japanese_tanks)
+        Array.Sort(sweden_tanks)
+        Array.Sort(czech_tanks)
+        Array.Sort(poland_tanks)
+
+        gui_pkg.Dispose()
+        GC.Collect()
         'now that we have all the tank data. we need to add it to the form. but. how?
         're-writing all of this so it will work in Win7/Vista and hopefully,, Win8
-        'Need 6 panels
-        Dim p1, p2, p3, p4, p5, p6, p7 As New Panel
-        p1 = set_panelsize(p1)
-        p2 = set_panelsize(p2)
-        p3 = set_panelsize(p3)
-        p4 = set_panelsize(p4)
-        p5 = set_panelsize(p5)
-        p6 = set_panelsize(p6)
-        p7 = set_panelsize(p7)
-        nations(0) = ("American")
-        nations(1) = ("Russian")
+        'Need 10 panels
+        Dim p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 As New Panel
+        nations(0) = ("USA")
+        nations(1) = ("USSR")
         nations(2) = ("German")
-        nations(3) = ("British")
+        nations(3) = ("UK")
         nations(4) = ("French")
-        nations(5) = ("Chinese")
-        nations(6) = ("Japanese")
+        nations(5) = ("China")
+        nations(6) = ("Japan")
+        nations(7) = ("Sweden")
+        nations(8) = ("Czech")
+        nations(9) = ("Poland")
 
         Dim cnt As Integer = 0
         'these 2 are used to scale the buttons so they fit the space they have
@@ -701,237 +831,28 @@ fail_path:
         Dim ww = frmTanks.Panel1.Width - sbw
         'The nice thing is, the pngs that are loaded in have a alpha channel. this
         'enables blending with the background color of the buttons.
-        'american
-        For Each t In a_tanks
-            If t.image IsNot Nothing Then
-                Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
-                butt.Tag = cnt.ToString & ":A"
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
-                butt.BackgroundImage = t.image
-                butt.BackgroundImageLayout = ImageLayout.Stretch
-                butt.TextAlign = ContentAlignment.TopRight
-                butt.ForeColor = Color.White
-                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-                Dim lbl As New Label
-                lbl.Width = butt.Width
-                lbl.Height = butt.Height - 3
-                lbl.BackColor = Color.Transparent
-                lbl.Font = butt.Font
-                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
-                lbl.TextAlign = ContentAlignment.BottomLeft
-                lbl.Text = t.weight
-                lbl.Enabled = False
-                butt.Controls.Add(lbl)
-                lbl.Location = New System.Drawing.Point(3, 0)
-                ' butt.BackColor = Color.Wheat
-                AddHandler butt.Click, AddressOf Me.picked_tank
-                p1.Controls.Add(butt)
-                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
-                cnt += 1
-            End If
-        Next
-        'russian
-        cnt = 0
-        For Each t In r_tanks
-            If t.image IsNot Nothing Then
-                Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
-                butt.Tag = cnt.ToString & ":R"
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
-                butt.BackgroundImage = t.image
-                butt.BackgroundImageLayout = ImageLayout.Stretch
-                butt.TextAlign = ContentAlignment.TopRight
-                butt.ForeColor = Color.White
-                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-                Dim lbl As New Label
-                lbl.Width = butt.Width
-                lbl.Height = butt.Height - 3
-                lbl.BackColor = Color.Transparent
-                lbl.Font = butt.Font
-                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
-                lbl.TextAlign = ContentAlignment.BottomLeft
-                lbl.Text = t.weight
-                lbl.Enabled = False
-                butt.Controls.Add(lbl)
-                lbl.Location = New System.Drawing.Point(3, 0)
-                ' butt.BackColor = Color.Wheat
-                AddHandler butt.Click, AddressOf Me.picked_tank
-                p2.Controls.Add(butt)
-                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
-                cnt += 1
-            End If
-        Next
-        'german
-        cnt = 0
-        For Each t In g_tanks
-            If t.image IsNot Nothing Then
-                Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
-                butt.Tag = cnt.ToString & ":G"
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
-                butt.BackgroundImage = t.image
-                butt.BackgroundImageLayout = ImageLayout.Stretch
-                butt.TextAlign = ContentAlignment.TopRight
-                butt.ForeColor = Color.White
-                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-                Dim lbl As New Label
-                lbl.Width = butt.Width
-                lbl.Height = butt.Height - 3
-                lbl.BackColor = Color.Transparent
-                lbl.Font = butt.Font
-                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
-                lbl.TextAlign = ContentAlignment.BottomLeft
-                lbl.Text = t.weight
-                lbl.Enabled = False
-                butt.Controls.Add(lbl)
-                lbl.Location = New System.Drawing.Point(3, 0)
-                ' butt.BackColor = Color.Wheat
-                AddHandler butt.Click, AddressOf Me.picked_tank
-                p3.Controls.Add(butt)
-                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
-                cnt += 1
-            End If
-        Next
-        'british
-        cnt = 0
-        For Each t In b_tanks
-            If t.image IsNot Nothing Then
-                Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
-                butt.Tag = cnt.ToString & ":B"
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
-                butt.BackgroundImage = t.image
-                butt.BackgroundImageLayout = ImageLayout.Stretch
-                butt.TextAlign = ContentAlignment.TopRight
-                butt.ForeColor = Color.White
-                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-                Dim lbl As New Label
-                lbl.Width = butt.Width
-                lbl.Height = butt.Height - 3
-                lbl.BackColor = Color.Transparent
-                lbl.Font = butt.Font
-                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
-                lbl.TextAlign = ContentAlignment.BottomLeft
-                lbl.Text = t.weight
-                lbl.Enabled = False
-                butt.Controls.Add(lbl)
-                lbl.Location = New System.Drawing.Point(3, 0)
-                ' butt.BackColor = Color.Wheat
-                AddHandler butt.Click, AddressOf Me.picked_tank
-                p4.Controls.Add(butt)
-                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
-                cnt += 1
-            End If
-        Next
-        'french
-        cnt = 0
-        For Each t In f_tanks
-            If t.image IsNot Nothing Then
-                Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
-                butt.Tag = cnt.ToString & ":F"
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
-                butt.Text = butt.Text.Replace("ILLON", " ")
-                butt.BackgroundImage = t.image
-                butt.BackgroundImageLayout = ImageLayout.Stretch
-                butt.TextAlign = ContentAlignment.TopRight
-                butt.ForeColor = Color.White
-                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-                Dim lbl As New Label
-                lbl.Width = butt.Width
-                lbl.Height = butt.Height - 3
-                lbl.BackColor = Color.Transparent
-                lbl.Font = butt.Font
-                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
-                lbl.TextAlign = ContentAlignment.BottomLeft
-                lbl.Text = t.weight
-                lbl.Enabled = False
-                butt.Controls.Add(lbl)
-                lbl.Location = New System.Drawing.Point(3, 0)
-                ' butt.BackColor = Color.Wheat
-                AddHandler butt.Click, AddressOf Me.picked_tank
-                p5.Controls.Add(butt)
-                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
-                cnt += 1
-            End If
-        Next
-        'chinese
-        cnt = 0
-        For Each t In c_tanks
-            If t.image IsNot Nothing Then
-                Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
-                butt.Tag = cnt.ToString & ":C"
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
-                butt.BackgroundImage = t.image
-                butt.BackgroundImageLayout = ImageLayout.Stretch
-                butt.TextAlign = ContentAlignment.TopRight
-                butt.ForeColor = Color.White
-                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-                Dim lbl As New Label
-                lbl.Width = butt.Width
-                lbl.Height = butt.Height - 3
-                lbl.BackColor = Color.Transparent
-                lbl.Font = butt.Font
-                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
-                lbl.TextAlign = ContentAlignment.BottomLeft
-                lbl.Text = t.weight
-                lbl.Enabled = False
-                butt.Controls.Add(lbl)
-                lbl.Location = New System.Drawing.Point(3, 0)
-                ' butt.BackColor = Color.Wheat
-                AddHandler butt.Click, AddressOf Me.picked_tank
-                p6.Controls.Add(butt)
-                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
-                cnt += 1
-            End If
-        Next
-        'Japan
-        cnt = 0
-        For Each t In j_tanks
-            If t.image IsNot Nothing Then
-                Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
-                butt.Tag = cnt.ToString & ":J"
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
-                butt.BackgroundImage = t.image
-                butt.BackgroundImageLayout = ImageLayout.Stretch
-                butt.TextAlign = ContentAlignment.TopRight
-                butt.ForeColor = Color.White
-                butt.Font = New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-                Dim lbl As New Label
-                lbl.Width = butt.Width
-                lbl.Height = butt.Height - 3
-                lbl.BackColor = Color.Transparent
-                lbl.Font = butt.Font
-                lbl.ForeColor = Color.Red 'dont matter. it will show as gray cuz its disabled.
-                lbl.TextAlign = ContentAlignment.BottomLeft
-                lbl.Text = t.weight
-                lbl.Enabled = False
-                butt.Controls.Add(lbl)
-                lbl.Location = New System.Drawing.Point(3, 0)
-                ' butt.BackColor = Color.Wheat
-                AddHandler butt.Click, AddressOf Me.picked_tank
-                p7.Controls.Add(butt)
-                butt.Location = (New System.Drawing.Point(0, cnt * butt.Height))
-                cnt += 1
-            End If
-        Next
+        p1 = set_panelsize(p1)
+        p2 = set_panelsize(p2)
+        p3 = set_panelsize(p3)
+        p4 = set_panelsize(p4)
+        p5 = set_panelsize(p5)
+        p6 = set_panelsize(p6)
+        p7 = set_panelsize(p7)
+        p8 = set_panelsize(p8)
+        p9 = set_panelsize(p9)
+        p10 = set_panelsize(p10)
+        p1 = add_buttons_to_panel(p1, american_tanks, "Am")
+        p2 = add_buttons_to_panel(p2, russian_tanks, "Ru")
+        p3 = add_buttons_to_panel(p3, german_tanks, "Ge")
+        p4 = add_buttons_to_panel(p4, british_tanks, "Br")
+        p5 = add_buttons_to_panel(p5, french_tanks, "Fr")
+        p6 = add_buttons_to_panel(p6, chinese_tanks, "Ch")
+        p7 = add_buttons_to_panel(p7, japanese_tanks, "Ja")
+        p8 = add_buttons_to_panel(p8, sweden_tanks, "Sw")
+        p9 = add_buttons_to_panel(p9, czech_tanks, "Cz")
+        p10 = add_buttons_to_panel(p10, poland_tanks, "Po")
+        p1.Visible = True
+
         'Lets grab the nation flags and put them in the imagelist
         'set the image size
 
@@ -1010,6 +931,36 @@ fail_path:
                     End If
                 End If
             Next
+            For Each ze In ens
+                If InStr(ze.FileName, "/nations/") > 0 Then
+                    If InStr(ze.FileName, "sweden.png") > 0 Then
+                        Dim bms As New MemoryStream
+                        ze.Extract(bms)
+                        Tankimagelist.Images.Add(get_tank_image(bms, 0, False).Clone)
+                        bms.Dispose()
+                    End If
+                End If
+            Next
+            For Each ze In ens
+                If InStr(ze.FileName, "/nations/") > 0 Then
+                    If InStr(ze.FileName, "czech.png") > 0 Then
+                        Dim bms As New MemoryStream
+                        ze.Extract(bms)
+                        Tankimagelist.Images.Add(get_tank_image(bms, 0, False).Clone)
+                        bms.Dispose()
+                    End If
+                End If
+            Next
+            For Each ze In ens
+                If InStr(ze.FileName, "/nations/") > 0 Then
+                    If InStr(ze.FileName, "poland.png") > 0 Then
+                        Dim bms As New MemoryStream
+                        ze.Extract(bms)
+                        Tankimagelist.Images.Add(get_tank_image(bms, 0, False).Clone)
+                        bms.Dispose()
+                    End If
+                End If
+            Next
 
 
         End Using
@@ -1058,23 +1009,27 @@ fail_path:
         frmTanks.Panel1.Controls.SetChildIndex(p5, 4)
         frmTanks.Panel1.Controls.SetChildIndex(p6, 5)
         frmTanks.Panel1.Controls.SetChildIndex(p7, 6)
+        frmTanks.Panel1.Controls.SetChildIndex(p8, 7)
+        frmTanks.Panel1.Controls.SetChildIndex(p9, 8)
+        frmTanks.Panel1.Controls.SetChildIndex(p10, 9)
 
         'frmTanks.Panel1.Controls.SetChildIndex(npb, 6)
-        frmTanks.Panel1.Controls.SetChildIndex(npb, 7) 'picturebox
-        frmTanks.Panel1.Controls.SetChildIndex(br, 8)
-        frmTanks.Panel1.Controls.SetChildIndex(bl, 9)
-        p1.Visible = True
-        p2.Visible = False
-        p3.Visible = False
-        p4.Visible = False
-        p5.Visible = False
-        p6.Visible = False
-        p7.Visible = False
+        frmTanks.Panel1.Controls.SetChildIndex(npb, 10) 'picturebox
+        frmTanks.Panel1.Controls.SetChildIndex(br, 11)
+        frmTanks.Panel1.Controls.SetChildIndex(bl, 12)
+
+        For i = 0 To 9
+            frmTanks.Panel1.Controls.Item(i).Name = nations(i)
+        Next
         current_nation = 0
+        frmTanks.Panel1.Controls.Item(current_nation).Visible = True
+
+        Dim ppp = frmTanks.Panel1.Controls
         Application.DoEvents()
         npb.Update()
 
     End Sub
+
     Private Sub npb_Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs)
         'this draws the current nation at the top of the panel.
         If frmTanks.Panel1.Controls.Count < 8 Then Return 'Cant draw if it dont exist so return
@@ -1091,7 +1046,7 @@ fail_path:
     End Sub
 
     Public Sub update_npb()
-        If frmTanks.Panel1.Controls.Count < 9 Then Return ' cant draw if it dont exist so return
+        If frmTanks.Panel1.Controls.Count < 12 Then Return ' cant draw if it dont exist so return
         Using g As Graphics = npb.CreateGraphics
             Dim font As New Font("Arial", 10.0!, System.Drawing.FontStyle.Bold)
             Dim brush As New SolidBrush(Color.White)
@@ -1152,120 +1107,34 @@ dontaddthis:
     End Sub
 
 
-    Private Sub build_tank_data(ByRef tank() As tank_, ByVal xml_name As String, ByVal nation As String, nat_short As String)
-        Dim tank_number As Integer = 0
-        Try
-            Dim script_pkg = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\scripts.pkg")
-            Dim script As Ionic.Zip.ZipEntry = script_pkg("scripts\item_defs\vehicles\" & xml_name)
-            Dim ms As New MemoryStream
-            script.Extract(ms)
 
-            openXml_stream(ms, "list")
-            ms.Dispose()
-            Dim tl(50) As String
-            Dim fi As New System.IO.DirectoryInfo(Application.StartupPath & "\tanks\")
-            Dim di = fi.GetFiles
-            Using z As Ionic.Zip.ZipFile = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\gui.pkg")
-                Dim ens = z.Entries
-                For Each fn In di
-                    If fn.Extension = nation Then
-                        tank(tank_number) = New tank_
-
-                        Dim ar = fn.Name.Split(".")
-                        tb1.Text = "Getting Tank Data: " + ar(0) ' let the user know whats going on
-                        Application.DoEvents()
-                        Dim ar2 = ar(0).Split("_")
-                        Dim tankNnum As String = ar2(0).ToLower
-                        Dim s As String = ""
-                        For i = 1 To ar2.Length - 1
-                            If i > 1 Then
-                                s += "_" + ar2(i)
-                            Else
-                                s += ar2(i)
-                            End If
-                        Next
-                        Dim da_real_name = s
-
-                        If nation = ".british" Then s = ar(0)
-                        If nation = ".chinese" Then s = ar(0)
-                        For Each n In real_names_list
-                            If n.Contains(s) Then
-                                Dim n_s = n.Split(",")
-                                s = n_s(0)
-                                da_real_name = n_s(1)
-                                s = s.Replace(vbLf, "")
-                            End If
-                        Next
-                        Dim t As DataTable = xmldataset.Tables(ar(0))
-                        If t Is Nothing Then
-                            t = xmldataset.Tables(ar(0) + "_IGR")
-                            If t Is Nothing Then
-                                MsgBox("Cant find tank in gui.pkg", MsgBoxStyle.Exclamation, "Opps")
-                                Return
-                            End If
-                        End If
-                        Dim qq = From row In t Select _
-                             un = row.Field(Of String)("userString"), _
-                             tags = row.Field(Of String)("tags") _
-                             Order By tags Descending
-                        Dim weight = ""
-                        Dim u_name = ""
-
-                        For Each rr In qq
-                            u_name = rr.un
-                            weight = rr.tags
-                        Next
-                        If u_name = "" Then
-                            Stop
-                        End If
-                        ar2 = t.TableName.Split("_")
-
-                        ar = weight.Split(" ")
-                        For ix = 0 To tank_weights.Length - 1
-                            If InStr(ar(0), tank_weights(ix)) > 0 Then
-                                tank(tank_number).weight = tank_types(ix)
-                                tank(tank_number).sortorder = tank_sortorder(ix)
-                                tank(tank_number).gui_string = da_real_name
-                                tank(tank_number).file_name = fn.Name
-                                For Each ze In ens
-                                    If ze.FileName.Contains(ar2(0)) And Not ze.FileName.Contains("small") _
-                                        And Not ze.FileName.Contains("fallout") _
-                                        And ze.FileName.Contains(nat_short) _
-                                    And InStr(ze.FileName, "contour") = 0 And InStr(ze.FileName, "unique") = 0 Then
-                                        Dim bms As New MemoryStream
-                                        ze.Extract(bms)
-                                        tank(tank_number).image = get_tank_image(bms, 0, False).Clone
-                                        bms.Dispose()
-                                        GC.Collect()
-                                    End If
-nope:
-                                Next
-
-                            End If
-                        Next
-
-                        tank_number += 1
-                        ReDim Preserve tank(tank_number)
-                        t.Dispose()
-                    End If
-                Next
-            End Using
-        Catch ex As Exception
-            frmSplash.TopMost = False
-            MsgBox(ex.Message, MsgBoxStyle.Exclamation, "Opps")
-        End Try
-        ReDim Preserve tank(tank_number - 1)
-        Array.Sort(tank)
-    End Sub
     Friend Function get_tank(ByVal name As String, ByRef tank As t_l) As Integer
         If Not maploaded Then Return 0
         Dim path = Application.StartupPath & "\tanks\" & name
-        Dim f_ = System.IO.File.Open(path, FileMode.Open, FileAccess.Read)
+        Dim f_ As New Object
+        Try
+            f_ = System.IO.File.Open(path, FileMode.Open, FileAccess.Read)
+
+        Catch ex As Exception
+            Return 0
+        End Try
         Dim v(3) As Single
         Dim n(3) As Single
         Dim uv(2) As Single
         Dim b As New BinaryReader(f_)
-        Dim poly_count As UInt32 = b.ReadUInt32
+        Dim s1 = b.ReadString
+        Dim s2 = b.ReadString
+        Dim version = b.ReadUInt32
+
+
+        Dim poly_count1 As UInt32 = b.ReadUInt32 * 3
+        Dim poly_count2 As UInt32 = b.ReadUInt32 * 3
+
+        tank.turret_location.x = b.ReadSingle
+        tank.turret_location.z = -b.ReadSingle
+
+        tank.rot_limit_l = b.ReadSingle
+        tank.rot_limit_r = b.ReadSingle
 
         If tank.tank_displaylist > 0 Then
             Gl.glDeleteLists(tank.tank_displaylist, 1)
@@ -1277,12 +1146,13 @@ nope:
         Gl.glBegin(Gl.GL_TRIANGLES)
         Dim cnt As Integer = 0 ' for debug
         'start pushing vertices
-        For c As UInt32 = 0 To poly_count - 1
+        For c As UInt32 = 0 To poly_count1 - 1
 
             v(0) = -b.ReadSingle
             v(1) = b.ReadSingle
-            v(2) = b.ReadSingle
-            n(0) = -b.ReadSingle
+            v(2) = -b.ReadSingle
+
+            n(0) = b.ReadSingle
             n(1) = b.ReadSingle
             n(2) = b.ReadSingle
             'uv(0) = -b.ReadSingle
@@ -1296,13 +1166,67 @@ nope:
         Gl.glEndList()
 
         Gl.glFinish()
+        '-----------------------------------
+        'turret and gun
+        ID = Gl.glGenLists(1)
+        Gl.glNewList(ID, Gl.GL_COMPILE)
 
+        tank.tank_displaylist2 = ID
+        Gl.glBegin(Gl.GL_TRIANGLES)
+        cnt = 0 ' for debug
+        'start pushing vertices
+        For c As UInt32 = 0 To poly_count2 - 1
+
+            v(0) = -b.ReadSingle '- tank.turret_location.x
+            v(1) = b.ReadSingle
+            v(2) = -b.ReadSingle '- tank.turret_location.z
+
+            n(0) = b.ReadSingle
+            n(1) = b.ReadSingle
+            n(2) = b.ReadSingle
+            'uv(0) = b.ReadSingle
+            'uv(1) = b.ReadSingle
+            Gl.glNormal3fv(n)
+            'Gl.glTexCoord2fv(uv)
+            Gl.glVertex3fv(v)
+
+            cnt += 1
+        Next
+        Gl.glEnd()
+        Gl.glEndList()
+
+        Gl.glFinish()
         b.Close()
         f_.Close()
         f_.Dispose()
         Return ID
 
     End Function
+
+    Private Sub set_up_location_1(ByRef t_nation() As tank_, ByRef location() As t_l, ByVal s_flag As String, ByVal b_index As Integer, ByVal id As Integer)
+
+        Dim team = 1
+        frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage = t_nation(id).image
+
+        get_tank(t_nation(id).file_name, location(b_index))
+
+        location(b_index).id = team.ToString + s_flag + id.ToString & "_" & b_index.ToString
+        frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + s_flag + id.ToString & "_" & b_index.ToString
+        location(b_index).type = t_nation(id).sortorder
+
+    End Sub
+    Private Sub set_up_location_2(ByRef t_nation() As tank_, ByRef location() As t_l, ByVal s_flag As String, ByVal b_index As Integer, ByVal id As Integer)
+
+        Dim team = 2
+        frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage = t_nation(id).image
+
+        get_tank(t_nation(id).file_name, location(b_index))
+
+        location(b_index).id = team.ToString + s_flag + id.ToString & "_" & b_index.ToString
+        frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + s_flag + id.ToString & "_" & b_index.ToString
+        location(b_index).type = t_nation(id).sortorder
+
+    End Sub
     Public Sub picked_tank(ByVal sender As Object, ByVal e As System.EventArgs)
         If team_setup_selected_tank.Length = 0 Then
             Return
@@ -1337,76 +1261,26 @@ nope:
             frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = sender.text
             locations.team_1(b_index).name = sender.text
             Select Case ar(1)
-                Case "A"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = a_tanks(ID).image
-
-                    get_tank(a_tanks(ID).file_name, locations.team_1(b_index))
-
-                    locations.team_1(b_index).id = team.ToString + "_A_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_A_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = a_tanks(ID).gui_string
-                    locations.team_1(b_index).type = a_tanks(ID).sortorder
-                Case "R"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = r_tanks(ID).image
-
-                    get_tank(r_tanks(ID).file_name, locations.team_1(b_index))
-
-                    locations.team_1(b_index).id = team.ToString + "_R_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_R_" + ID.ToString & "_" & b_index.ToString
-                    'frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = r_tanks(ID).gui_string
-                    locations.team_1(b_index).type = r_tanks(ID).sortorder
-                Case "G"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = g_tanks(ID).image
-
-                    get_tank(g_tanks(ID).file_name, locations.team_1(b_index))
-
-                    locations.team_1(b_index).id = team.ToString + "_G_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_G_" + ID.ToString & "_" & b_index.ToString
-                    'frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = g_tanks(ID).gui_string
-                    locations.team_1(b_index).type = g_tanks(ID).sortorder
-                Case "B"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = b_tanks(ID).image
-
-                    get_tank(b_tanks(ID).file_name, locations.team_1(b_index))
-
-                    locations.team_1(b_index).id = team.ToString + "_B_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_B_" + ID.ToString & "_" & b_index.ToString
-                    'frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = b_tanks(ID).gui_string
-                    locations.team_1(b_index).type = b_tanks(ID).sortorder
-                Case "F"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = f_tanks(ID).image
-                    Application.DoEvents()
-                    get_tank(f_tanks(ID).file_name, locations.team_1(b_index))
-
-                    locations.team_1(b_index).id = team.ToString + "_F_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_F_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = f_tanks(ID).gui_string
-                    locations.team_1(b_index).type = f_tanks(ID).sortorder
-                Case "C"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = c_tanks(ID).image
-
-                    get_tank(c_tanks(ID).file_name, locations.team_1(b_index))
-
-                    locations.team_1(b_index).id = team.ToString + "_C_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_C_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = c_tanks(ID).gui_string
-                    locations.team_1(b_index).type = c_tanks(ID).sortorder
-                Case "J"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = j_tanks(ID).image
-
-                    get_tank(j_tanks(ID).file_name, locations.team_1(b_index))
-
-                    locations.team_1(b_index).id = team.ToString + "_J_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_J_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = c_tanks(ID).gui_string
-                    locations.team_1(b_index).type = j_tanks(ID).sortorder
+                Case "Am"
+                    set_up_location_1(american_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Ru"
+                    set_up_location_1(russian_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Ge"
+                    set_up_location_1(german_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Br"
+                    set_up_location_1(british_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Fr"
+                    set_up_location_1(french_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Ch"
+                    set_up_location_1(chinese_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Ja"
+                    set_up_location_1(japanese_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Sw"
+                    set_up_location_1(sweden_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Cz"
+                    set_up_location_1(czech_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
+                Case "Po"
+                    set_up_location_1(poland_tanks, locations.team_1, "_" + ar(1) + "_", b_index, ID)
             End Select
             SyncLock packet_lock
                 Packet_out.ID = locations.team_1(b_index).id
@@ -1431,67 +1305,28 @@ nope:
             frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = sender.text
             locations.team_2(b_index).name = sender.text
             Select Case ar(1)
-                Case "A"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = a_tanks(ID).image
-                    get_tank(a_tanks(ID).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_A_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_A_" + ID.ToString & "_" & b_index.ToString
-                    'frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = a_tanks(ID).gui_string
-                    locations.team_2(b_index).type = a_tanks(ID).sortorder
-                Case "R"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = r_tanks(ID).image
-                    get_tank(r_tanks(ID).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_R_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_R_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = r_tanks(ID).gui_string
-                    locations.team_2(b_index).type = r_tanks(ID).sortorder
-                Case "G"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = g_tanks(ID).image
-                    get_tank(g_tanks(ID).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_G_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_G_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = g_tanks(ID).gui_string
-                    locations.team_2(b_index).type = g_tanks(ID).sortorder
-                Case "B"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = b_tanks(ID).image
-                    get_tank(b_tanks(ID).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_B_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_B_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = b_tanks(ID).gui_string
-                    locations.team_2(b_index).type = b_tanks(ID).sortorder
-                Case "F"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = f_tanks(ID).image
-                    get_tank(f_tanks(ID).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_F_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_F_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = f_tanks(ID).gui_string
-                    locations.team_2(b_index).type = f_tanks(ID).sortorder
-                Case "C"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = c_tanks(ID).image
-
-                    get_tank(c_tanks(ID).file_name, locations.team_2(b_index))
-
-                    locations.team_2(b_index).id = team.ToString + "_C_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_C_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = c_tanks(ID).gui_string
-                    locations.team_2(b_index).type = c_tanks(ID).sortorder
-                Case "J"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = j_tanks(ID).image
-
-                    get_tank(j_tanks(ID).file_name, locations.team_2(b_index))
-
-                    locations.team_2(b_index).id = team.ToString + "_J_" + ID.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_J_" + ID.ToString & "_" & b_index.ToString
-                    ' frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = c_tanks(ID).gui_string
-                    locations.team_2(b_index).type = j_tanks(ID).sortorder
+                Case "Am"
+                    set_up_location_2(american_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Ru"
+                    set_up_location_2(russian_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Ge"
+                    set_up_location_2(german_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Br"
+                    set_up_location_2(british_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Fr"
+                    set_up_location_2(french_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Ch"
+                    set_up_location_2(chinese_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Ja"
+                    set_up_location_2(japanese_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Sw"
+                    set_up_location_2(sweden_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Cz"
+                    set_up_location_2(czech_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
+                Case "Po"
+                    set_up_location_2(poland_tanks, locations.team_2, "_" + ar(1) + "_", b_index, ID)
             End Select
+
             SyncLock packet_lock
                 Packet_out.ID = locations.team_2(b_index).id
             End SyncLock
@@ -1772,7 +1607,6 @@ nope:
                 Packet_out.tankId = tankID
 
                 If tankID > -1 Then
-
                     If tankID < 100 Then
                         frmTanks.SplitContainer1.Panel1.Controls(tankID).BackColor = Color.Blue
                         look_point_X = locations.team_1(tankID).loc_x
@@ -1865,40 +1699,73 @@ nope:
                 Dim cv = 57.2957795
                 For i = 0 To 14
                     If locations.team_1(i).tank_displaylist > -1 Then
+                        red = i + 1
+                        green = 0
+                        blue = 0
+                        Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
+
                         Gl.glPushMatrix()
-                        Gl.glTranslatef(locations.team_1(i).loc_x, get_Z_at_XY(locations.team_1(i).loc_x, locations.team_1(i).loc_z), locations.team_1(i).loc_z)
+                        Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
+
+                        Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
                         Dim rot = locations.team_1(i).rot_y
                         Dim rx = (cv * surface_normal.y * Cos(rot)) + (cv * surface_normal.x * Sin(rot))
                         Dim rz = (cv * surface_normal.x * Cos(rot)) + (cv * -surface_normal.y * Sin(rot))
                         Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
                         Gl.glRotatef(rz, 0.0, 0.0, 1.0)
                         Gl.glRotatef(rx, -1.0, 0.0, 0.0)
-                        red = i + 1
-                        green = 0
-                        blue = 0
-                        Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
                         Gl.glCallList(locations.team_1(i).tank_displaylist)
+                        Gl.glPopMatrix()
+                        '------------------------------------
+                        'turret/gun
+                        Gl.glPushMatrix()
+
+                        Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
+                        Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                        Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                        Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                        Gl.glTranslatef(locations.team_1(i).turret_location.x, 0.0, locations.team_1(i).turret_location.z)
+                        Gl.glRotatef(locations.team_1(i).t_rotation, 0.0, 1.0, 0.0)
+                        Gl.glTranslatef(-locations.team_1(i).turret_location.x, 0.0, -locations.team_1(i).turret_location.z)
+
+                        Gl.glCallList(locations.team_1(i).tank_displaylist2)
                         Gl.glPopMatrix()
                     End If
                 Next
                 For i = 0 To 14
                     If locations.team_2(i).tank_displaylist > -1 Then
+                        red = 0
+                        green = 0
+                        blue = i + 1
+                        Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
+
                         Gl.glPushMatrix()
-                        Gl.glTranslatef(locations.team_2(i).loc_x, get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z), locations.team_2(i).loc_z)
+                        Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
+                        Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
                         Dim rot = locations.team_2(i).rot_y
                         Dim rx = (cv * surface_normal.y * Cos(rot)) + (cv * surface_normal.x * Sin(rot))
                         Dim rz = (cv * surface_normal.x * Cos(rot)) + (cv * -surface_normal.y * Sin(rot))
                         Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
                         Gl.glRotatef(rz, 0.0, 0.0, 1.0)
                         Gl.glRotatef(rx, -1.0, 0.0, 0.0)
-                        Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
-                        Gl.glRotatef(rz, 0.0, 0.0, 1.0)
-                        Gl.glRotatef(rx, -1.0, 0.0, 0.0)
-                        red = 0
-                        green = 0
-                        blue = i + 1
-                        Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
                         Gl.glCallList(locations.team_2(i).tank_displaylist)
+                        Gl.glPopMatrix()
+                        '------------------------------------
+                        'turret/gun
+                        Gl.glPushMatrix()
+
+
+                        Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
+                        Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                        Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                        Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                        Gl.glTranslatef(locations.team_2(i).turret_location.x, 0.0, locations.team_2(i).turret_location.z)
+                        Gl.glRotatef(locations.team_2(i).t_rotation, 0.0, 1.0, 0.0)
+                        Gl.glTranslatef(-locations.team_2(i).turret_location.x, 0.0, -locations.team_2(i).turret_location.z)
+
+                        Gl.glCallList(locations.team_2(i).tank_displaylist2)
                         Gl.glPopMatrix()
                     End If
                 Next
@@ -2352,7 +2219,7 @@ skip:
     End Sub
 
     Private Sub draw_g_terrain()
-     
+
         Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
         Gl.glEnable(Gl.GL_CULL_FACE)
         Gl.glFrontFace(Gl.GL_CCW)
@@ -2562,7 +2429,7 @@ skip:
     End Sub
 
     Private Sub draw_g_models(ByVal pass As Boolean)
-      
+
         ' draw the models
         Gl.glEnable(Gl.GL_CULL_FACE)
         Gl.glFrontFace(Gl.GL_CW)
@@ -2716,7 +2583,7 @@ skip:
     End Sub
 
     Private Sub draw_g_trees()
-       
+
         'Gl.glFrontFace(Gl.GL_CCW)
         If m_wire_trees.Checked Then
             'Gl.glEnable(Gl.GL_LIGHTING)
@@ -3078,7 +2945,7 @@ skip:
 
     End Sub
 
-    Private Sub draw_g_tanks(ByRef cp() As Single, ByVal model_view() As Double, ByVal projection() As Double, ByVal viewport() As Integer, ByVal sx As Single, ByVal sy As Single, ByVal sz As Single)
+    Private Sub draw_tanks(ByRef cp() As Single, ByVal model_view() As Double, ByVal projection() As Double, ByVal viewport() As Integer, ByVal sx As Single, ByVal sy As Single, ByVal sz As Single)
         Dim mat(16) As Single
         'Gl.glFinish()
         Gl.glFrontFace(Gl.GL_CW)
@@ -3122,6 +2989,28 @@ skip:
                         Gl.glColor3f(0.5, 0.5, 0.0)
                     End If
                     Gl.glCallList(locations.team_1(i).tank_displaylist)
+
+                    'turret rotation
+                    Gl.glPushMatrix()
+
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW)
+                    Gl.glLoadIdentity()
+
+
+                    Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
+                    Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                    Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                    Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                    Gl.glTranslatef(locations.team_1(i).turret_location.x, 0.0, locations.team_1(i).turret_location.z)
+                    Gl.glRotatef(locations.team_1(i).t_rotation, 0.0, 1.0, 0.0)
+                    Gl.glTranslatef(-locations.team_1(i).turret_location.x, 0.0, -locations.team_1(i).turret_location.z)
+
+                    Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
+                    Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
+                    Gl.glPopMatrix()
+
+                    Gl.glCallList(locations.team_1(i).tank_displaylist2)
                 End If
             Next
             For i = 0 To 14
@@ -3156,6 +3045,27 @@ skip:
                         Gl.glColor3f(0.5, 0.5, 0.0)
                     End If
                     Gl.glCallList(locations.team_2(i).tank_displaylist)
+                    'turret rotation
+                    Gl.glPushMatrix()
+
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW)
+                    Gl.glLoadIdentity()
+
+
+                    Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
+                    Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                    Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                    Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                    Gl.glTranslatef(locations.team_2(i).turret_location.x, 0.0, locations.team_2(i).turret_location.z)
+                    Gl.glRotatef(locations.team_2(i).t_rotation, 0.0, 1.0, 0.0)
+                    Gl.glTranslatef(-locations.team_2(i).turret_location.x, 0.0, -locations.team_2(i).turret_location.z)
+
+                    Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
+                    Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
+                    Gl.glPopMatrix()
+
+                    Gl.glCallList(locations.team_2(i).tank_displaylist2)
                 End If
             Next
         End If
@@ -3519,7 +3429,7 @@ over_it:
 
         '---------------------------------------------------------------------------------
         'Tanks
-        draw_g_tanks(cp, model_view, projection, viewport, sx, sy, sz)
+        draw_tanks(cp, model_view, projection, viewport, sx, sy, sz)
 
         'only needed for SSAO and I cant get it to work 100% :(
         If m_SSAO.Checked Then
@@ -3810,18 +3720,18 @@ over_it:
         Gl.glVertex3f(0, 0, 0.0)
 
         Gl.glTexCoord2f(1.0, 1.0)
-        Gl.glVertex3f(Width, 0, 0.0)
+        Gl.glVertex3f(width, 0, 0.0)
 
         Gl.glTexCoord2f(1.0, 0.0)
-        Gl.glVertex3f(Width, -Height, 0.0)
+        Gl.glVertex3f(width, -height, 0.0)
 
         Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(0, -Height, 0.0)
+        Gl.glVertex3f(0, -height, 0.0)
         Gl.glEnd()
 
         Gl.glUseProgram(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
-        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, Width, Height)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
 
     End Sub
     Private Sub SSAO_pass(ByVal width As Integer, ByVal height As Integer)
@@ -3829,7 +3739,7 @@ over_it:
         'with the ssao texture we are about to generate.
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
-        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, Width, Height)
+        Gl.glCopyTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height)
         '-------------
         Gl.glClear(Gl.GL_COLOR_BUFFER_BIT)
         Gl.glUseProgram(shader_list.SSAO_shader)
@@ -3868,7 +3778,7 @@ over_it:
         Gl.glUseProgram(0)
         Gl.glReadBuffer(Gl.GL_BACK)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, Width, Height, 0)
+        Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_LUMINANCE8, 0, 0, width, height, 0)
         Dim e = Gl.glGetError
         '----------------------------------------------------------------------------------------------
         Gl.glUseProgram(shader_list.SSAOBlend_shader)
@@ -3972,6 +3882,7 @@ over_it:
                 Dim str = " FPS:" + fps.ToString
                 str += "  Location: [ "
                 str += coordStr + " ]"
+                str += " ROT:" + locations.team_1(0).t_rotation.ToString("000")
                 ' Dim yp = get_Z_at_XY(u_look_point_X, u_look_point_Z)
                 'str += "   X:" + u_look_point_X.ToString("0.000000") + "  Y:" + u_look_point_Y.ToString("0.000000") + "  Z:" + u_look_point_Z.ToString("0.000000")
                 'str += "   GX:" + d_hx.ToString + "  GY:" + d_hy.ToString
@@ -4003,7 +3914,7 @@ over_it:
         draw_to_gBuffer()
         gl_busy = False
         Return
- 
+
     End Sub
 
     Public Sub need_screen_update()
@@ -4715,6 +4626,37 @@ over_it:
     End Sub
 
 #Region "pb1 mouse and other functions"
+
+    Private Sub pb1_MouseWheel(sender As Object, e As MouseEventArgs) Handles pb1.MouseWheel
+        If frmTanks.Visible Then
+            Dim rm! = 0.0
+            Dim am = 1.0
+            If e.Delta > 0 Then
+                rm = am
+            End If
+            If e.Delta < 0.0 Then
+                rm = -am
+            End If
+            If rm Then
+                If tankID > -1 Then
+                    If tankID > 99 Then
+                        Dim r = locations.team_2(tankID - 100).t_rotation
+                        r += rm
+                        If r < locations.team_2(tankID - 100).rot_limit_l Then r = locations.team_2(tankID - 100).rot_limit_l
+                        If r > locations.team_2(tankID - 100).rot_limit_r Then r = locations.team_2(tankID - 100).rot_limit_r
+                        locations.team_2(tankID - 100).t_rotation = r
+                    Else
+                        Dim r = locations.team_1(tankID).t_rotation
+                        r += rm
+                        If r < locations.team_1(tankID).rot_limit_l Then r = locations.team_1(tankID).rot_limit_l
+                        If r > locations.team_1(tankID).rot_limit_r Then r = locations.team_1(tankID).rot_limit_r
+                        locations.team_1(tankID).t_rotation = r
+                    End If
+                    activity = True 'force screen updates
+                End If
+            End If
+        End If
+    End Sub
 
     Private Sub pb1_PreviewKeyDown(sender As Object, e As PreviewKeyDownEventArgs) Handles pb1.PreviewKeyDown
         If e.KeyCode = Keys.F Then
@@ -6035,18 +5977,22 @@ no_move_xz:
             For i = 0 To 14
                 btn = frmTanks.SplitContainer1.Panel1.Controls(i)
                 bw.Write(locations.team_1(i).comment)
+                bw.Write(locations.team_1(i).name)
                 bw.Write(locations.team_1(i).id)    ' this is a string
                 bw.Write(locations.team_1(i).loc_x)
                 bw.Write(locations.team_1(i).loc_z)
                 bw.Write(locations.team_1(i).rot_y)
+                bw.Write(locations.team_1(i).t_rotation)
             Next
             For i = 0 To 14
                 btn = frmTanks.SplitContainer1.Panel2.Controls(i)
                 bw.Write(locations.team_2(i).comment)
+                bw.Write(locations.team_2(i).name)
                 bw.Write(locations.team_2(i).id)    ' this is a string
                 bw.Write(locations.team_2(i).loc_x)
                 bw.Write(locations.team_2(i).loc_z)
                 bw.Write(locations.team_2(i).rot_y)
+                bw.Write(locations.team_2(i).t_rotation)
             Next
             fs.Close()
             bw.Close()
@@ -6057,6 +6003,7 @@ no_move_xz:
     Private Sub m_load_Click(sender As Object, e As EventArgs) Handles m_load.Click
         If OpenFileDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
             maploaded = False
+            SHOW_MAPS = False
             m_comment.Text = ""
             m_comment.Visible = False
             flush_data()
@@ -6081,10 +6028,12 @@ no_move_xz:
             Dim txt As String = ""
             For i = 0 To 29
                 uTank.comment = br.ReadString
+                uTank.name = br.ReadString
                 uTank.id = br.ReadString
                 uTank.loc_x = br.ReadSingle
                 uTank.loc_z = br.ReadSingle
                 uTank.rot_y = br.ReadSingle
+                uTank.t_rotation = br.ReadSingle
                 net_button_update()
                 Application.DoEvents()
             Next
@@ -6121,76 +6070,35 @@ no_move_xz:
             End If
             frmTanks.SplitContainer1.Panel1.Controls(b_index).Font = _
                             New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
+            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = uTank.name
             frmTanks.SplitContainer1.Panel1.Controls(b_index).BackColor = Color.DarkRed
             locations.team_1(b_index).loc_x = uTank.loc_x
             locations.team_1(b_index).loc_z = uTank.loc_z
             locations.team_1(b_index).rot_y = uTank.rot_y
             locations.team_1(b_index).comment = uTank.comment
+            locations.team_1(b_index).name = uTank.name
+            locations.team_1(b_index).t_rotation = uTank.t_rotation
             Select Case ar(1)
-                Case "A"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                            = a_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = a_tanks(Id).gui_string
-                    locations.team_1(b_index).name = a_tanks(Id).gui_string
-                    get_tank(a_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = _
-                        team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = a_tanks(Id).sortorder
-                Case "R"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = r_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = r_tanks(Id).gui_string
-                    locations.team_1(b_index).name = r_tanks(Id).gui_string
-                    get_tank(r_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = r_tanks(Id).sortorder
-                Case "G"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = g_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = g_tanks(Id).gui_string
-                    locations.team_1(b_index).name = g_tanks(Id).gui_string
-                    get_tank(g_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = g_tanks(Id).sortorder
-                Case "B"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = b_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = b_tanks(Id).gui_string
-                    locations.team_1(b_index).name = b_tanks(Id).gui_string
-                    get_tank(b_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = b_tanks(Id).sortorder
-                Case "F"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = f_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = f_tanks(Id).gui_string
-                    locations.team_1(b_index).name = f_tanks(Id).gui_string
-                    get_tank(f_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = f_tanks(Id).sortorder
-                Case "C"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = c_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = c_tanks(Id).gui_string
-                    locations.team_1(b_index).name = c_tanks(Id).gui_string
-                    get_tank(c_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = c_tanks(Id).sortorder
-                Case "J"
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-                    = j_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = j_tanks(Id).gui_string
-                    locations.team_1(b_index).name = j_tanks(Id).gui_string
-                    get_tank(j_tanks(Id).file_name, locations.team_1(b_index))
-                    locations.team_1(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_1(b_index).type = j_tanks(Id).sortorder
+                Case "Am"
+                    set_up_location_1(american_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Ru"
+                    set_up_location_1(russian_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Ge"
+                    set_up_location_1(german_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Br"
+                    set_up_location_1(british_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Fr"
+                    set_up_location_1(french_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Ch"
+                    set_up_location_1(chinese_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Ja"
+                    set_up_location_1(japanese_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Sw"
+                    set_up_location_1(sweden_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Cz"
+                    set_up_location_1(czech_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
+                Case "Po"
+                    set_up_location_1(poland_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
             End Select
         Else
             If locations.team_2(b_index).id = uTank.id Then
@@ -6198,75 +6106,35 @@ no_move_xz:
             End If
             frmTanks.SplitContainer1.Panel2.Controls(b_index).Font = _
                     New Font(pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
+            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = uTank.name
             frmTanks.SplitContainer1.Panel2.Controls(b_index).BackColor = Color.Green
             locations.team_2(b_index).loc_x = uTank.loc_x
             locations.team_2(b_index).loc_z = uTank.loc_z
             locations.team_2(b_index).rot_y = uTank.rot_y
             locations.team_2(b_index).comment = uTank.comment
+            locations.team_2(b_index).name = uTank.name
+            locations.team_2(b_index).t_rotation = uTank.t_rotation
             Select Case ar(1)
-                Case "A"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = a_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = a_tanks(Id).gui_string
-                    locations.team_2(b_index).name = a_tanks(Id).gui_string
-                    get_tank(a_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = a_tanks(Id).sortorder
-                Case "R"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = r_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = r_tanks(Id).gui_string
-                    locations.team_2(b_index).name = r_tanks(Id).gui_string
-                    get_tank(r_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = r_tanks(Id).sortorder
-                Case "G"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = g_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = g_tanks(Id).gui_string
-                    locations.team_2(b_index).name = g_tanks(Id).gui_string
-                    get_tank(g_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = g_tanks(Id).sortorder
-                Case "B"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = b_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = b_tanks(Id).gui_string
-                    locations.team_2(b_index).name = b_tanks(Id).gui_string
-                    get_tank(b_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = b_tanks(Id).sortorder
-                Case "F"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = f_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = f_tanks(Id).gui_string
-                    locations.team_2(b_index).name = f_tanks(Id).gui_string
-                    get_tank(f_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = f_tanks(Id).sortorder
-                Case "C"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = c_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = c_tanks(Id).gui_string
-                    locations.team_2(b_index).name = c_tanks(Id).gui_string
-                    get_tank(c_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = c_tanks(Id).sortorder
-                Case "J"
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-                    = j_tanks(Id).image
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = j_tanks(Id).gui_string
-                    locations.team_2(b_index).name = j_tanks(Id).gui_string
-                    get_tank(j_tanks(Id).file_name, locations.team_2(b_index))
-                    locations.team_2(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-                    locations.team_2(b_index).type = j_tanks(Id).sortorder
+                Case "Am"
+                    set_up_location_2(american_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Ru"
+                    set_up_location_2(russian_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Ge"
+                    set_up_location_2(german_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Br"
+                    set_up_location_2(british_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Fr"
+                    set_up_location_2(french_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Ch"
+                    set_up_location_2(chinese_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Ja"
+                    set_up_location_2(japanese_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Sw"
+                    set_up_location_2(sweden_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Cz"
+                    set_up_location_2(czech_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
+                Case "Po"
+                    set_up_location_2(poland_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)
             End Select
 
         End If
@@ -6582,5 +6450,7 @@ no_move_xz:
     Private Sub m_constant_updates_CheckedChanged(sender As Object, e As EventArgs) Handles m_constant_updates.CheckedChanged
         constant_update = m_constant_updates.Checked
     End Sub
+
+ 
 End Class
 

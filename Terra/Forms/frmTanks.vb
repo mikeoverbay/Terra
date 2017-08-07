@@ -106,10 +106,10 @@ Public Class frmTanks
 		SplitContainer1.Panel2.Controls.Clear()
 
         Dim ww = SplitContainer1.Panel1.Width - 6
-        If a_tanks(0).image Is Nothing Then
+        If american_tanks.Length = 1 Then
             Return
         End If
-        Dim t = a_tanks(0).image.Width
+        Dim t = american_tanks(1).image.Width
         Dim l As New Label
         Dim fnt As New Font(frmMain.pfc.Families(0), 6, FontStyle.Regular)
 
@@ -121,7 +121,7 @@ Public Class frmTanks
             butt.Font = fnt
             Dim m = ww / t
             butt.Width = t * m
-            butt.Height = a_tanks(0).image.Height * m
+            butt.Height = american_tanks(0).image.Height * m
             butt.Tag = "1_" & i.ToString
             butt.Text = ""
             butt.BackgroundImage = My.Resources.open_slot
@@ -153,7 +153,7 @@ Public Class frmTanks
             butt.Font = fnt
             Dim m = ww / t
             butt.Width = t * m
-            butt.Height = a_tanks(0).image.Height * m
+            butt.Height = american_tanks(0).image.Height * m
             butt.Tag = "2_" & i.ToString
             butt.Text = ""
             butt.BackgroundImage = My.Resources.open_slot
@@ -178,7 +178,7 @@ Public Class frmTanks
             butt.Location = (New System.Drawing.Point(2, i * butt.Height))
         Next
         Dim wo = Me.Height - Me.ClientSize.Height
-        Dim h = a_tanks(0).image.Height * (ww / t)
+        Dim h = american_tanks(0).image.Height * (ww / t)
         Me.Height = (15 * h) + wo
 
     End Sub
@@ -284,7 +284,7 @@ Public Class frmTanks
 	Public Sub prev_nation()
 		Me.Panel1.Controls.Item(current_nation).visible = False
 		If current_nation = 0 Then
-			current_nation = 6
+            current_nation = 9
 		Else
 			current_nation -= 1
 		End If
@@ -297,11 +297,11 @@ Public Class frmTanks
 	End Sub
 	Public Sub next_nation()
 		Me.Panel1.Controls.Item(current_nation).visible = False
-		If current_nation = 6 Then
-			current_nation = 0
-		Else
-			current_nation += 1
-		End If
+        If current_nation = 9 Then
+            current_nation = 0
+        Else
+            current_nation += 1
+        End If
 		Me.Panel1.Controls.Item(current_nation).visible = True
 		Application.DoEvents()
 		Me.Panel1.Update()

@@ -865,147 +865,147 @@ no_tank_data:
 					locations.team_1(b_index).rot_y = uTank.rot_y
 					locations.team_1(b_index).comment = uTank.comment
 					Select Case ar(1)
-						Case "A"
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-									= a_tanks(Id).image
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = a_tanks(Id).gui_string
-							locations.team_1(b_index).name = a_tanks(Id).gui_string
-							frmMain.get_tank(a_tanks(Id).file_name, locations.team_1(b_index))
-							locations.team_1(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = _
-								team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-							locations.team_1(b_index).type = a_tanks(Id).sortorder
-						Case "R"
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-							= r_tanks(Id).image
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = r_tanks(Id).gui_string
-							locations.team_1(b_index).name = r_tanks(Id).gui_string
-							frmMain.get_tank(r_tanks(Id).file_name, locations.team_1(b_index))
-							locations.team_1(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-							locations.team_1(b_index).type = r_tanks(Id).sortorder
-						Case "G"
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-							= g_tanks(Id).image
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = g_tanks(Id).gui_string
-							locations.team_1(b_index).name = g_tanks(Id).gui_string
-							frmMain.get_tank(g_tanks(Id).file_name, locations.team_1(b_index))
-							locations.team_1(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-							locations.team_1(b_index).type = g_tanks(Id).sortorder
-						Case "B"
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-							= b_tanks(Id).image
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = b_tanks(Id).gui_string
-							locations.team_1(b_index).name = b_tanks(Id).gui_string
-							frmMain.get_tank(b_tanks(Id).file_name, locations.team_1(b_index))
-							locations.team_1(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-							locations.team_1(b_index).type = b_tanks(Id).sortorder
-						Case "F"
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-							= f_tanks(Id).image
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = f_tanks(Id).gui_string
-							locations.team_1(b_index).name = f_tanks(Id).gui_string
-							frmMain.get_tank(f_tanks(Id).file_name, locations.team_1(b_index))
-							locations.team_1(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-							locations.team_1(b_index).type = f_tanks(Id).sortorder
-						Case "C"
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-							= c_tanks(Id).image
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = c_tanks(Id).gui_string
-							locations.team_1(b_index).name = c_tanks(Id).gui_string
-							frmMain.get_tank(c_tanks(Id).file_name, locations.team_1(b_index))
-							locations.team_1(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-							locations.team_1(b_index).type = c_tanks(Id).sortorder
-						Case "J"
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
-							= j_tanks(Id).image
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = j_tanks(Id).gui_string
-							locations.team_1(b_index).name = j_tanks(Id).gui_string
-							frmMain.get_tank(j_tanks(Id).file_name, locations.team_1(b_index))
-							locations.team_1(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-							locations.team_1(b_index).type = j_tanks(Id).sortorder
-					End Select
-				Else
-					If locations.team_2(b_index).id = uTank.id Then
-						Return ' we dont want to update tanks that are already updated
-					End If
-					frmTanks.SplitContainer1.Panel2.Controls(b_index).Font = _
-							New Font(frmMain.pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
-					frmTanks.SplitContainer1.Panel2.Controls(b_index).BackColor = Color.Green
-					locations.team_2(b_index).loc_x = uTank.loc_x
-					locations.team_2(b_index).loc_z = uTank.loc_z
-					locations.team_2(b_index).rot_y = uTank.rot_y
-					locations.team_2(b_index).comment = uTank.comment
-					Select Case ar(1)
-						Case "A"
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-							= a_tanks(Id).image
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = a_tanks(Id).gui_string
-							locations.team_2(b_index).name = a_tanks(Id).gui_string
-							frmMain.get_tank(a_tanks(Id).file_name, locations.team_2(b_index))
-							locations.team_2(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
-							locations.team_2(b_index).type = a_tanks(Id).sortorder
-						Case "R"
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-							= r_tanks(Id).image
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = r_tanks(Id).gui_string
-							locations.team_2(b_index).name = r_tanks(Id).gui_string
-							frmMain.get_tank(r_tanks(Id).file_name, locations.team_2(b_index))
-							locations.team_2(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
-							locations.team_2(b_index).type = r_tanks(Id).sortorder
-						Case "G"
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-							= g_tanks(Id).image
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = g_tanks(Id).gui_string
-							locations.team_2(b_index).name = g_tanks(Id).gui_string
-							frmMain.get_tank(g_tanks(Id).file_name, locations.team_2(b_index))
-							locations.team_2(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
-							locations.team_2(b_index).type = g_tanks(Id).sortorder
-						Case "B"
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-							= b_tanks(Id).image
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = b_tanks(Id).gui_string
-							locations.team_2(b_index).name = b_tanks(Id).gui_string
-							frmMain.get_tank(b_tanks(Id).file_name, locations.team_2(b_index))
-							locations.team_2(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
-							locations.team_2(b_index).type = b_tanks(Id).sortorder
-						Case "F"
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-							= f_tanks(Id).image
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = f_tanks(Id).gui_string
-							locations.team_2(b_index).name = f_tanks(Id).gui_string
-							frmMain.get_tank(f_tanks(Id).file_name, locations.team_2(b_index))
-							locations.team_2(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
-							locations.team_2(b_index).type = f_tanks(Id).sortorder
-						Case "C"
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-							= c_tanks(Id).image
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = c_tanks(Id).gui_string
-							locations.team_2(b_index).name = c_tanks(Id).gui_string
-							frmMain.get_tank(c_tanks(Id).file_name, locations.team_2(b_index))
-							locations.team_2(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
-							locations.team_2(b_index).type = c_tanks(Id).sortorder
-						Case "J"
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
-							= j_tanks(Id).image
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = j_tanks(Id).gui_string
-							locations.team_2(b_index).name = j_tanks(Id).gui_string
-							frmMain.get_tank(j_tanks(Id).file_name, locations.team_2(b_index))
-							locations.team_2(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-							frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
-							locations.team_2(b_index).type = j_tanks(Id).sortorder
-					End Select
+                        Case "Am"
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                                    = american_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = american_tanks(Id).gui_string
+                            locations.team_1(b_index).name = american_tanks(Id).gui_string
+                            frmMain.get_tank(american_tanks(Id).file_name, locations.team_1(b_index))
+                            locations.team_1(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = _
+                                team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_1(b_index).type = american_tanks(Id).sortorder
+                        Case "Ru"
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                            = russian_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = russian_tanks(Id).gui_string
+                            locations.team_1(b_index).name = russian_tanks(Id).gui_string
+                            frmMain.get_tank(russian_tanks(Id).file_name, locations.team_1(b_index))
+                            locations.team_1(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_1(b_index).type = russian_tanks(Id).sortorder
+                        Case "Gr"
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                            = german_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = german_tanks(Id).gui_string
+                            locations.team_1(b_index).name = german_tanks(Id).gui_string
+                            frmMain.get_tank(german_tanks(Id).file_name, locations.team_1(b_index))
+                            locations.team_1(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_1(b_index).type = german_tanks(Id).sortorder
+                        Case "Br"
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                            = british_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = british_tanks(Id).gui_string
+                            locations.team_1(b_index).name = british_tanks(Id).gui_string
+                            frmMain.get_tank(british_tanks(Id).file_name, locations.team_1(b_index))
+                            locations.team_1(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_1(b_index).type = british_tanks(Id).sortorder
+                        Case "Fr"
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                            = french_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = french_tanks(Id).gui_string
+                            locations.team_1(b_index).name = french_tanks(Id).gui_string
+                            frmMain.get_tank(french_tanks(Id).file_name, locations.team_1(b_index))
+                            locations.team_1(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_1(b_index).type = french_tanks(Id).sortorder
+                        Case "Ch"
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                            = chinese_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = chinese_tanks(Id).gui_string
+                            locations.team_1(b_index).name = chinese_tanks(Id).gui_string
+                            frmMain.get_tank(chinese_tanks(Id).file_name, locations.team_1(b_index))
+                            locations.team_1(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_1(b_index).type = chinese_tanks(Id).sortorder
+                        Case "Ja"
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).BackgroundImage _
+                            = japanese_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Text = japanese_tanks(Id).gui_string
+                            locations.team_1(b_index).name = japanese_tanks(Id).gui_string
+                            frmMain.get_tank(japanese_tanks(Id).file_name, locations.team_1(b_index))
+                            locations.team_1(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel1.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_1(b_index).type = japanese_tanks(Id).sortorder
+                    End Select
+                Else
+                    If locations.team_2(b_index).id = uTank.id Then
+                        Return ' we dont want to update tanks that are already updated
+                    End If
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).Font = _
+                            New Font(frmMain.pfc.Families(0), 6, System.Drawing.FontStyle.Regular)
+                    frmTanks.SplitContainer1.Panel2.Controls(b_index).BackColor = Color.Green
+                    locations.team_2(b_index).loc_x = uTank.loc_x
+                    locations.team_2(b_index).loc_z = uTank.loc_z
+                    locations.team_2(b_index).rot_y = uTank.rot_y
+                    locations.team_2(b_index).comment = uTank.comment
+                    Select Case ar(1)
+                        Case "A"
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                            = american_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = american_tanks(Id).gui_string
+                            locations.team_2(b_index).name = american_tanks(Id).gui_string
+                            frmMain.get_tank(american_tanks(Id).file_name, locations.team_2(b_index))
+                            locations.team_2(b_index).id = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_A_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_2(b_index).type = american_tanks(Id).sortorder
+                        Case "R"
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                            = russian_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = russian_tanks(Id).gui_string
+                            locations.team_2(b_index).name = russian_tanks(Id).gui_string
+                            frmMain.get_tank(russian_tanks(Id).file_name, locations.team_2(b_index))
+                            locations.team_2(b_index).id = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_R_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_2(b_index).type = russian_tanks(Id).sortorder
+                        Case "G"
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                            = german_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = german_tanks(Id).gui_string
+                            locations.team_2(b_index).name = german_tanks(Id).gui_string
+                            frmMain.get_tank(german_tanks(Id).file_name, locations.team_2(b_index))
+                            locations.team_2(b_index).id = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_G_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_2(b_index).type = german_tanks(Id).sortorder
+                        Case "B"
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                            = british_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = british_tanks(Id).gui_string
+                            locations.team_2(b_index).name = british_tanks(Id).gui_string
+                            frmMain.get_tank(british_tanks(Id).file_name, locations.team_2(b_index))
+                            locations.team_2(b_index).id = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_B_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_2(b_index).type = british_tanks(Id).sortorder
+                        Case "F"
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                            = french_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = french_tanks(Id).gui_string
+                            locations.team_2(b_index).name = french_tanks(Id).gui_string
+                            frmMain.get_tank(french_tanks(Id).file_name, locations.team_2(b_index))
+                            locations.team_2(b_index).id = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_F_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_2(b_index).type = french_tanks(Id).sortorder
+                        Case "C"
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                            = chinese_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = chinese_tanks(Id).gui_string
+                            locations.team_2(b_index).name = chinese_tanks(Id).gui_string
+                            frmMain.get_tank(chinese_tanks(Id).file_name, locations.team_2(b_index))
+                            locations.team_2(b_index).id = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_C_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_2(b_index).type = chinese_tanks(Id).sortorder
+                        Case "J"
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).BackgroundImage _
+                            = japanese_tanks(Id).image
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Text = japanese_tanks(Id).gui_string
+                            locations.team_2(b_index).name = japanese_tanks(Id).gui_string
+                            frmMain.get_tank(japanese_tanks(Id).file_name, locations.team_2(b_index))
+                            locations.team_2(b_index).id = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                            frmTanks.SplitContainer1.Panel2.Controls(b_index).Tag = team.ToString + "_J_" + Id.ToString & "_" & b_index.ToString
+                            locations.team_2(b_index).type = japanese_tanks(Id).sortorder
+                    End Select
 
 				End If
 

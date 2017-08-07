@@ -15,19 +15,37 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_01E009D22E614023877B647416FB23BF"
+        "MsmKey" = "8:_02CF28CBEE1141BCAB209245E53F7DC4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_01F0E0C1F44E4972B79B9ACD925C7ACE"
+        "MsmKey" = "8:_0451FD9A487D4D8AB8853985F5B35445"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_035C3CE3D34946BF958E14A68806E403"
+        "MsmKey" = "8:_048C69D9C6F847379F0FF7BB72444C13"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_066F270387684E8886B5141678AF1766"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0A03C22EB9B941D19BD9FC5C15E38E00"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0B91F86D06FD4D978C733294D52EA920"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,7 +75,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0E283315EDCE4F37A70A22F9EBB3B939"
+        "MsmKey" = "8:_0D57CBA982874519B0EC64F2A69872A3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0F427B0FDDB7418FBD162C4CDC911D59"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -69,31 +93,43 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0F95AD25F31540F28EF7A16618BE1338"
+        "MsmKey" = "8:_104A7505B7D24802A2DBBC95659FB54B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_110858CB4D1F427088CEBEBB8015A47C"
+        "MsmKey" = "8:_10BCEBE040EF4554A12EC754542EADAE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_14F908DCCC9D471DB0A10D0C997A2313"
+        "MsmKey" = "8:_11925408FB35491487DFED5474B14B5F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1608992258474C21AFD5C6CAC15128A1"
+        "MsmKey" = "8:_130E31950AAC44C5BF9F9ACDD6C4A23D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_19FF2F15067949849840F05D6426C568"
+        "MsmKey" = "8:_13BAAF8291274B3F8B2D48F921AF2700"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_17BC3D37BAFA490880F43C5B7E043FBB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_19FB6DF035314E4CA81F8A4EDF61A220"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -105,37 +141,31 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1E60CF36B4094C949DA8827CA992F519"
+        "MsmKey" = "8:_1E21A6DABB444F3FB8881C73A4A522DF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1EFCFD23C5314C97BE031851CFE4D60D"
+        "MsmKey" = "8:_1FAB7DA43CC6405EAFC5D1CC2F2B99D2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1F22B9FC39094E218DCA9B59EC170617"
+        "MsmKey" = "8:_1FB0A25A782F4F85A6013CA681D641AB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1F69EEFD0DF7400DBD4A75F532AF1303"
+        "MsmKey" = "8:_20C85CA65EB541F5A0632C789DB5CE72"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_210D28F2429645E194EB3104EA26CCD6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2260BD44A80147078B626D85D4FFCF6C"
+        "MsmKey" = "8:_210A11E1F13E4ECC9FB0C7C9EE8FB11E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -147,31 +177,73 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_249A085EDD4844C686CFCC74B590AE52"
+        "MsmKey" = "8:_24B0F75A5139430A88BD8332C021A7C0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_29441F2853DB43E4A2E954568BE8E614"
+        "MsmKey" = "8:_26159EA15B484AE09150C3DA0A9260A1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2A257A9089114AB2BFEBFA95B7C83BF5"
+        "MsmKey" = "8:_263163DF9640461CAC88E1562E9AB427"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2B208227A2BF44908392A04CFA386E67"
+        "MsmKey" = "8:_26F05BA5790D4ACB92DF152D915E5D48"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_311F74A6272B4863B787C5E7476E0A34"
+        "MsmKey" = "8:_26F21CCF1BE04A9EA26CBA0586CC9468"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2709B2EC56804C58AA6D37B8321C5434"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_292EE72FE2BD437B94A133ABEE4692EA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2AADF5FB26524DFD83925C1503158C32"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2ACD0AAFA7664A1AB168832274EF0E67"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2B0F9BDC1A3242E6A1567914D528573D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2CD9A1A3855E4BF8A599F843CEB331B2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_314869D3069D45E2912FD1880BD9FE11"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -183,31 +255,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3285A342194C4426BEBC62FDC14CD4BD"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_33DD8103AD4D4CE987BDA8936D7B31F1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_346951757F2245078572F9ECF901530B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_34722FD4EC274DEC9825067FEF730854"
+        "MsmKey" = "8:_34F2759B2C024781944A4A2AD0A96D75"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_34F2759B2C024781944A4A2AD0A96D75"
+        "MsmKey" = "8:_35C22EB0893A43C8A905CC889123FCC8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -225,13 +285,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_373445A9C5034D939C3948BE7C5A3543"
+        "MsmKey" = "8:_37896FA008D444BCBB96B8558F9C14D5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_378478261E29466FBC757499B016852F"
+        "MsmKey" = "8:_37F6E89A92C34F5899DFDBBF4884F61A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -255,19 +315,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3DF7F717D79A49EEAEA4CD164247B969"
+        "MsmKey" = "8:_3B1B2A2711AA4E7D8D81BDC1DF12A10B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3E4DE84CB85946889328086979605155"
+        "MsmKey" = "8:_3E6012C46365437A80E3F75E9E4E1E22"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3ED7CD1486E94F289DACE445A775CA87"
+        "MsmKey" = "8:_40066CEA2FFB43A1981245DDD6AA90F7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -279,25 +339,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_42A1CF29424142EE8EA6A3E61DE189D0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_43079A234BCB4E86A680241335917F6E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_444415BF11984F9183C7D98476EB325B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4486C35E45FC4D01AF2DBDABE1954D39"
+        "MsmKey" = "8:_4330E39A7EA1411398BC2829839A6A75"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -309,7 +357,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_48F7634BC8764F418E45CF151709FB8B"
+        "MsmKey" = "8:_4873A9D385DA46D9A696CE09644AAD05"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_49C570CBBF28461AAB5FBDD17CA98E52"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -321,25 +375,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4B2881C90B5345A784C3BD446F78EC95"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4BCF9DE0C41C491CAB3200EC724F659F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_4CD05D9E4C874662879EE70D17543621"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4D48EC1040F94A92A55FDF63778C916D"
+        "MsmKey" = "8:_4D9796C38E3744BBB826F63AEB193C23"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -351,7 +393,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_51F876ECF71E4EEAB84701C685A14322"
+        "MsmKey" = "8:_51B6189AA5F64284B32C88DDCF76BC34"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_532207F212F04475A9E2E1242046E8FA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -363,13 +411,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_53A04DFAB42A4C9F8F2BE3CA1E026D13"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_53FD0C515B8A42B4AB38D23F42751547"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_542EB38A7A8F4E289BF7F95D745855D3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5584D03A910E4CD997FA22EB760DE6A1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_57DF8DB42D6146ED964C9053EEEAC436"
+        "MsmKey" = "8:_58583314BDEE45A689A61CB5F3C5FCF8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -387,13 +453,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_62CD795B58994F9DB7223D3E85B7DD0D"
+        "MsmKey" = "8:_617EEEEE16BE4ACF9CBA089AE0513407"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_68829FEC7AA54FD78BA4D7117A6D285D"
+        "MsmKey" = "8:_67AFBE308CAD43EBAF691A7D41A56673"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_691327A50C274608A695076E6C298B32"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -405,13 +477,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6D5BE7B38A4C4453971CFE33BC651AEE"
+        "MsmKey" = "8:_6AE4920D78C345D1919361C89AD40A4E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6D8D10F1614F49A2B9383F42132AAEA5"
+        "MsmKey" = "8:_6DBF9A9624D54F11A388CD9E992C0495"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -429,7 +501,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_72A2B3EE57D44D24A973E2EE8B734DD0"
+        "MsmKey" = "8:_719FD89FB6314E71AB546525B89E4606"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_71E8DEBC61394A48BC55891746D3EC8B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -441,19 +519,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7460341CC4AB42CB848161C49FC63077"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_74B4E0E497C94B05B3FB2AF0800141A2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_75285E5359EA48358289C8210AAA0DB4"
+        "MsmKey" = "8:_755665898FDA43659066C2D87CBFE8F1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_76440DC3797E45B190EFAB850424DBE3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -465,19 +543,43 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7CF268F9A6944B40A2F38230D1E60C10"
+        "MsmKey" = "8:_76AAB5ED448643AFBA13806FD399C82D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7D042792E43E40679082E31EB7F6D880"
+        "MsmKey" = "8:_7AADAD098B2B4C9B8EBD8ED23AD06A3E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7DF3E8B28FDC43EEBF30C930ED0806BD"
+        "MsmKey" = "8:_7B2FFEDC542D44D999395AA8886AA39F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7B3C8844410A456396D923E2933E3F9E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7B8C0D20FF8B4BC696602150005DF687"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7BCF56A4758949048ACA2096E053AB6F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7F555E0C5C094E12B57E02703AD98008"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -489,7 +591,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_847F67C921DD448E888EBDB354F82F00"
+        "MsmKey" = "8:_848D1CA135C54B37A76198326A38D310"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -501,7 +603,37 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_873093E2FE454A34BA0CEBD288C45F4B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_873AB98AC3974F22A455EC10DFD72620"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_87C0C3BEE67E4212A504975B87EE2EF4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_89448C70143744E999774E61177861BA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_89C26B0391B343DA84F5F646A0DFA2BD"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8B3E92F8E5A448EDA6CEE16669CC43AF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -525,7 +657,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_90FA2A6C3D6E42D7B4E051987CD8471F"
+        "MsmKey" = "8:_9070872076E64DEA9EFD16EADF49CDDA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -549,13 +681,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9274E9CB51324918B361DB0E2467173C"
+        "MsmKey" = "8:_923A46A82FCC4D7EA6D447F03E04FE42"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_93C94A0846284D85807BC068394D39DC"
+        "MsmKey" = "8:_92B1FFFB7F84472F9E9C7DCD21A79F80"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_93DE23209A7145888FB4D30AC699F177"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -579,7 +717,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_98235C1DD2E046F1A4F39832774BD828"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_98701B3A638B4CFBB997D99320F90E9F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_98809E65F1FF42A0B7C797C8420224FB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_98DC5ADDAD4C4EA1B08E8FF685ABBD89"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_991A4C82BE0B4A1892A4AFBEC52F8918"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -591,7 +753,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9BDB689F0B044518A699AAEEFF2011FF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9BEFE449D6B4465598A2C015CD60256F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9C6164E57CC84C6C83BE7237A1522B71"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9CB7C0152B49452FAF9A6D7092B041BC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9DB203EDEAFF4D88AFAE90CA64C9D6DE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -603,37 +789,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9E7A0C04BB904A31A15E2DD12F5F1073"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9F47AF4793D34F9DB5D71F5243B8DAA2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A040A3233DCB420D9E913CF85E95F343"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A0A5F62672B648E8A98E040155E90BFD"
+        "MsmKey" = "8:_A15360E602CC441E96A96FD5A4B7CAC2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A2598522AEC54AAFBEDF99EBE4C0233E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A63B16153AC6497C849822C69BE6E9D9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A78721DBAF0142629D96CF7AC71DDD72"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A838351FD0474F65AB50C48410FAFD96"
+        "MsmKey" = "8:_A4C2AFB453294C34A84B0AF664555419"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -651,7 +831,37 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A958D408C2C646B3985241593A05940C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_AA2D14AB9E564190928FC1C681E33F9F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AA37BDFF89604584A488375EF26D9E2F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ABADE86289A84D159B0DE08D77A4BEFD"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AC0011E68E6E4AA6AE964E3BA5760750"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AE7BA2AEA8334CB0843B0037A4E8C116"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -659,6 +869,12 @@
         {
         "MsmKey" = "8:_AFE032B90970D8FF805E531922B6C5AB"
         "OwnerKey" = "8:_0C5BF608457D480B87B630800FAE9C40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B154227C85FD496E9F1EB462C1EF74AE"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -681,25 +897,55 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B355437626104E2FA75761775DF0A736"
+        "MsmKey" = "8:_B7F122BBF1C74D6E9E0F2FA63CBC61E3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_B9CC143A7A774AF6BF9E20C548601D74"
+        "MsmKey" = "8:_B941FFDD209B422282B5EA4C4E5A142F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_BA28360F40D14BC4BDAE1EB41C8F45DF"
+        "MsmKey" = "8:_BBA171D6D56547A3B0CD2390EBD39CF7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BD0B85DB175C40E2B43C4DC171D7C53A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BD11891C170146D08E19DA17FFE2010F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_BDADB71C73844963B31DB7B7D145300B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BDC598B0AECB488380FAC2B8CFE880FD"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BE49166728F745C8AF31C1E06A56AC82"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BF95507AD3A14C8EAB060DA02111CFD3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -723,7 +969,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C10A38117E2B47D4A884F407030B560F"
+        "MsmKey" = "8:_C0A040328F7E417D86AEEBC3DC4C4C5F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -741,25 +987,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C20E80324BFD4846ADDB5E3D370CE9CE"
+        "MsmKey" = "8:_C467D3C05B714FEABA6153DE4AF2384E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C33D9D0A20E743B9A7A80233CFA007F2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C3D776DD95EF470E98C0EA374B14CCFA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C56A1B2408C14D739F7E659F997CF8AB"
+        "MsmKey" = "8:_C4BFE47AFFB64A2DA01EFBC03674B240"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -771,7 +1005,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C688D46F1CF943D4A7B82A0C7E484690"
+        "MsmKey" = "8:_C6894234261442239DEB6C7CD48A29FD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -783,19 +1017,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C704EB7936824741964A54A1343D5048"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C7BEB8C019B240638BFF2AE269387089"
+        "MsmKey" = "8:_C823DF27BC9547DC903FA9F841DCC3C0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_C988AC5C1B2A44A7B836B7C21D3C47E1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C9B57D66F8304B51939DE698FD5A3007"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -813,7 +1047,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CCBFC7F6CEC54B38970524C6C3AF257B"
+        "MsmKey" = "8:_CD9EA104B2C44C8CB51F20D617FC0727"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CFDC0E4407F3431DBEDC02C0271C80E2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -831,13 +1071,31 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D27F04E52E4F4A3AB8F75C2F12852A0E"
+        "MsmKey" = "8:_D213276142464345849C17D8F10D8CC8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D29CD321ECE54C799F4B40D28E8EF213"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D4893C127E064471B5502518D2FF2DE0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_D52100A2EB8249918E09F0577E793601"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D55BF674A6E4444FBC831C8C92B2D913"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -855,7 +1113,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D81DFC2FEF2D4F2F9AB2C8374014F758"
+        "MsmKey" = "8:_D89726589DFD47A0A0E15AB4F630C4E4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -867,31 +1125,31 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DA788FDAD3A749DBAB993F07B04FED8B"
+        "MsmKey" = "8:_DA8625A8F78A4788B7A42A6F8A4C56FC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DAF5CA528D0D4F89BA1C82730F7C38C1"
+        "MsmKey" = "8:_DB9E5BACE1BD4E0E82C3D87C34ED7818"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DD7DD273C819438EA871C2082D431B21"
+        "MsmKey" = "8:_DBD54F254456401B9C97E82B0485FD1E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DF81B28C7F4E4AEF915482FE5A3D0EA6"
+        "MsmKey" = "8:_DBF63E798F1544EDB6B57C3DB863F51D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E06A07DEA8434370B8381DD9A40C9F31"
+        "MsmKey" = "8:_E03F06A231F2449099F3F0BABA515E4B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -903,7 +1161,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E0C59F7AF9AB4C31B7581EC77A402384"
+        "MsmKey" = "8:_E0A531E6A7B74FF59137009BB33B8AB9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -915,25 +1173,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E2230B1B80B647B08F838D193D26620F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E290855BDE1C4CFEAB844A4B01D7C823"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E2E4E95BAF8C4DA2A86910BB3202867A"
+        "MsmKey" = "8:_E53ED82250084CD1944385727E433799"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_E62478FA11B1476EB771DE9824952187"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E6C53B9FFF464E908786151CD2545ECC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -951,19 +1209,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E88BF241BC374603A1607D482EA2B116"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E8A075230BC84541BE278D6A3E123228"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EB97DC6FE4E3460A8E4A8B6C14895AC4"
+        "MsmKey" = "8:_E9D69C0E2F7F4DB7AFE574219E4D4D28"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EBFB8D46A15749B0BA199D36EA4380B8"
+        "MsmKey" = "8:_EAC83C7CA4DD489CBA891C612B41B14B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EBE9CE6B6DC5474FBCE489D18FDBAE65"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -987,31 +1257,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EF483F96A2894915A9FC1996434A4B03"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_EF75A15CF2B2283C32EE1D4A5349E019"
         "OwnerKey" = "8:_0C5BF608457D480B87B630800FAE9C40"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F04857D9598F45B3A236467DC56A42EA"
+        "MsmKey" = "8:_F1892B06A5BD4CA0BCEA7F62E21F5928"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F139DE2DA0EA48ADAE0231CD5F260F84"
+        "MsmKey" = "8:_F2D111584EF34109A8FB09E79B947922"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F2D4EE3A75204C37A5F99DA487A909F0"
+        "MsmKey" = "8:_F4865FDDA8B9479E87534D31BA4591DB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1023,7 +1287,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F8E7DF4B495845ECBB9089E05211F251"
+        "MsmKey" = "8:_F71AFB77DD7A44F89FB9BC41CDAD5813"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1041,13 +1305,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_FB7EFBAA55B24294B7C3F8AB434A413B"
+        "MsmKey" = "8:_FC5BEFE0DF754C0390606A9A5EDB9A22"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_FBDD1E66056B4F48A59CCD04FC3994C4"
+        "MsmKey" = "8:_FCF39DC0E04E4605A3BE0A7D84B15541"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FFBE19F6DCCB4F3BA73FE11A24FC9610"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1060,49 +1330,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0BB3A47F3407B8C15816E4E9F88A7F7C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B32A28EA6C4506631274409F90650C32"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_49DBF77BCD4A69C239730055A0B65E9B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AFE032B90970D8FF805E531922B6C5AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EF75A15CF2B2283C32EE1D4A5349E019"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8C9AC8AFA81FCC93257D3447C278A7D5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_ED9769D54DF5C163439259900072032F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A8A0906E0B0BC8E79FE80D68104CAB70"
+        "OwnerKey" = "8:_A84D2CD1E6684BEEBAC614928CC88EF7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1114,7 +1342,49 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A84D2CD1E6684BEEBAC614928CC88EF7"
+        "OwnerKey" = "8:_A8A0906E0B0BC8E79FE80D68104CAB70"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_ED9769D54DF5C163439259900072032F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_8C9AC8AFA81FCC93257D3447C278A7D5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_EF75A15CF2B2283C32EE1D4A5349E019"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_AFE032B90970D8FF805E531922B6C5AB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_49DBF77BCD4A69C239730055A0B65E9B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B32A28EA6C4506631274409F90650C32"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0BB3A47F3407B8C15816E4E9F88A7F7C"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -1162,7 +1432,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V050.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V051.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1222,10 +1492,10 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_01E009D22E614023877B647416FB23BF"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_02CF28CBEE1141BCAB209245E53F7DC4"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R47_ISU-152.russian"
-            "TargetName" = "8:R47_ISU-152.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\G67_VK4502A.tank"
+            "TargetName" = "8:G67_VK4502A.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1242,10 +1512,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_01F0E0C1F44E4972B79B9ACD925C7ACE"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0451FD9A487D4D8AB8853985F5B35445"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G92_VK7201.german"
-            "TargetName" = "8:G92_VK7201.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB24_Centurion_Mk3.tank"
+            "TargetName" = "8:GB24_Centurion_Mk3.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1262,10 +1532,70 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_035C3CE3D34946BF958E14A68806E403"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_048C69D9C6F847379F0FF7BB72444C13"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R93_Object263.russian"
-            "TargetName" = "8:R93_Object263.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\R96_Object_430.tank"
+            "TargetName" = "8:R96_Object_430.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_066F270387684E8886B5141678AF1766"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\J27_O_I_120.tank"
+            "TargetName" = "8:J27_O_I_120.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0A03C22EB9B941D19BD9FC5C15E38E00"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A37_M40M43.tank"
+            "TargetName" = "8:A37_M40M43.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0B91F86D06FD4D978C733294D52EA920"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R75_SU122_54.tank"
+            "TargetName" = "8:R75_SU122_54.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1289,6 +1619,11 @@
             "AssemblyAsmDisplayName" = "8:FastColoredTextBox, Version=2.16.11.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_0BB3A47F3407B8C15816E4E9F88A7F7C"
+                    {
+                    "Name" = "8:FastColoredTextBox.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:FastColoredTextBox.dll"
             "TargetName" = "8:"
@@ -1348,10 +1683,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0E283315EDCE4F37A70A22F9EBB3B939"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D57CBA982874519B0EC64F2A69872A3"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A84_M48A1.american"
-            "TargetName" = "8:A84_M48A1.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\A117_T26E5.tank"
+            "TargetName" = "8:A117_T26E5.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0F427B0FDDB7418FBD162C4CDC911D59"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G119_Panzer58_BF.tank"
+            "TargetName" = "8:G119_Panzer58_BF.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1388,10 +1743,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0F95AD25F31540F28EF7A16618BE1338"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_104A7505B7D24802A2DBBC95659FB54B"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB10_Black_Prince.british"
-            "TargetName" = "8:GB10_Black_Prince.british"
+            "SourcePath" = "8:..\\Terra\\tanks\\F75_Char_de_25t.tank"
+            "TargetName" = "8:F75_Char_de_25t.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1408,10 +1763,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_110858CB4D1F427088CEBEBB8015A47C"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_10BCEBE040EF4554A12EC754542EADAE"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R27_SU-14.russian"
-            "TargetName" = "8:R27_SU-14.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\F64_AMX_50Fosh_155.tank"
+            "TargetName" = "8:F64_AMX_50Fosh_155.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1428,10 +1783,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_14F908DCCC9D471DB0A10D0C997A2313"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_11925408FB35491487DFED5474B14B5F"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G99_RhB_Waffentrager.german"
-            "TargetName" = "8:G99_RhB_Waffentrager.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\R27_SU-14.tank"
+            "TargetName" = "8:R27_SU-14.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1448,10 +1803,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1608992258474C21AFD5C6CAC15128A1"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_130E31950AAC44C5BF9F9ACDD6C4A23D"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB13_FV215b.british"
-            "TargetName" = "8:GB13_FV215b.british"
+            "SourcePath" = "8:..\\Terra\\tanks\\A83_T110E4.tank"
+            "TargetName" = "8:A83_T110E4.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1468,10 +1823,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_19FF2F15067949849840F05D6426C568"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_13BAAF8291274B3F8B2D48F921AF2700"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G66_VK2801.german"
-            "TargetName" = "8:G66_VK2801.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\A45_M6A2E1.tank"
+            "TargetName" = "8:A45_M6A2E1.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_17BC3D37BAFA490880F43C5B7E043FBB"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G94_GW_Tiger_P.tank"
+            "TargetName" = "8:G94_GW_Tiger_P.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_19FB6DF035314E4CA81F8A4EDF61A220"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G65_JagdTiger_SdKfz_185.tank"
+            "TargetName" = "8:G65_JagdTiger_SdKfz_185.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1508,10 +1903,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1E60CF36B4094C949DA8827CA992F519"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1E21A6DABB444F3FB8881C73A4A522DF"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch01_Type59.chinese"
-            "TargetName" = "8:Ch01_Type59.chinese"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB70_N_FV4202_105.tank"
+            "TargetName" = "8:GB70_N_FV4202_105.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1528,10 +1923,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1EFCFD23C5314C97BE031851CFE4D60D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1FAB7DA43CC6405EAFC5D1CC2F2B99D2"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A40_T95.american"
-            "TargetName" = "8:A40_T95.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\A89_T54E1.tank"
+            "TargetName" = "8:A89_T54E1.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1548,10 +1943,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1F22B9FC39094E218DCA9B59EC170617"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1FB0A25A782F4F85A6013CA681D641AB"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A38_T92.american"
-            "TargetName" = "8:A38_T92.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\G72_JagdPz_E100.tank"
+            "TargetName" = "8:G72_JagdPz_E100.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1568,10 +1963,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1F69EEFD0DF7400DBD4A75F532AF1303"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_20C85CA65EB541F5A0632C789DB5CE72"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R15_S-51.russian"
-            "TargetName" = "8:R15_S-51.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB72_AT15.tank"
+            "TargetName" = "8:GB72_AT15.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1588,30 +1983,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_210D28F2429645E194EB3104EA26CCD6"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_210A11E1F13E4ECC9FB0C7C9EE8FB11E"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G56_E-100.german"
-            "TargetName" = "8:G56_E-100.german"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2260BD44A80147078B626D85D4FFCF6C"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\J14_Type_61.japan"
-            "TargetName" = "8:J14_Type_61.japan"
+            "SourcePath" = "8:..\\Terra\\tanks\\R20_T-44.tank"
+            "TargetName" = "8:R20_T-44.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1648,10 +2023,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_249A085EDD4844C686CFCC74B590AE52"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_24B0F75A5139430A88BD8332C021A7C0"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R97_Object_140.russian"
-            "TargetName" = "8:R97_Object_140.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\R40_T-54.tank"
+            "TargetName" = "8:R40_T-54.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1668,10 +2043,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_29441F2853DB43E4A2E954568BE8E614"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26159EA15B484AE09150C3DA0A9260A1"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R20_T-44.russian"
-            "TargetName" = "8:R20_T-44.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\R51_Object_212.tank"
+            "TargetName" = "8:R51_Object_212.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1688,10 +2063,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2A257A9089114AB2BFEBFA95B7C83BF5"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_263163DF9640461CAC88E1562E9AB427"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\selected_tanks.txt"
-            "TargetName" = "8:selected_tanks.txt"
+            "SourcePath" = "8:..\\Terra\\tanks\\G73_E50_Ausf_M.tank"
+            "TargetName" = "8:G73_E50_Ausf_M.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1708,10 +2083,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2B208227A2BF44908392A04CFA386E67"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26F05BA5790D4ACB92DF152D915E5D48"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R19_IS-3.russian"
-            "TargetName" = "8:R19_IS-3.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\G119_Pz58_Mutz.tank"
+            "TargetName" = "8:G119_Pz58_Mutz.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1728,10 +2103,150 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_311F74A6272B4863B787C5E7476E0A34"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26F21CCF1BE04A9EA26CBA0586CC9468"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G72_JagdPz_E100.german"
-            "TargetName" = "8:G72_JagdPz_E100.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\G51_Lowe.tank"
+            "TargetName" = "8:G51_Lowe.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2709B2EC56804C58AA6D37B8321C5434"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch18_WZ-120.tank"
+            "TargetName" = "8:Ch18_WZ-120.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_292EE72FE2BD437B94A133ABEE4692EA"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F38_Bat_Chatillon155_58.tank"
+            "TargetName" = "8:F38_Bat_Chatillon155_58.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2AADF5FB26524DFD83925C1503158C32"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\GB81_FV4004.tank"
+            "TargetName" = "8:GB81_FV4004.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2ACD0AAFA7664A1AB168832274EF0E67"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A13_T34_hvy.tank"
+            "TargetName" = "8:A13_T34_hvy.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2B0F9BDC1A3242E6A1567914D528573D"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R87_T62A.tank"
+            "TargetName" = "8:R87_T62A.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2CD9A1A3855E4BF8A599F843CEB331B2"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F19_Lorraine40t.tank"
+            "TargetName" = "8:F19_Lorraine40t.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_314869D3069D45E2912FD1880BD9FE11"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G45_G_Tiger.tank"
+            "TargetName" = "8:G45_G_Tiger.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1768,46 +2283,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3285A342194C4426BEBC62FDC14CD4BD"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\G94_GW_Tiger_P.german"
-            "TargetName" = "8:G94_GW_Tiger_P.german"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_33DD8103AD4D4CE987BDA8936D7B31F1"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\A37_M40M43.american"
-            "TargetName" = "8:A37_M40M43.american"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_346951757F2245078572F9ECF901530B"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDeff_vertex.glsl"
@@ -1828,12 +2303,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34722FD4EC274DEC9825067FEF730854"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34F2759B2C024781944A4A2AD0A96D75"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R53_Object_704.russian"
-            "TargetName" = "8:R53_Object_704.russian"
+            "SourcePath" = "8:..\\Terra\\shaders\\wire_vertex.glsl"
+            "TargetName" = "8:wire_vertex.glsl"
             "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1848,12 +2323,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34F2759B2C024781944A4A2AD0A96D75"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_35C22EB0893A43C8A905CC889123FCC8"
             {
-            "SourcePath" = "8:..\\Terra\\shaders\\wire_vertex.glsl"
-            "TargetName" = "8:wire_vertex.glsl"
+            "SourcePath" = "8:..\\Terra\\tanks\\A63_M46_Patton.tank"
+            "TargetName" = "8:A63_M46_Patton.tank"
             "Tag" = "8:"
-            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1908,10 +2383,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_373445A9C5034D939C3948BE7C5A3543"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_37896FA008D444BCBB96B8558F9C14D5"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G97_Waffentrager_IV.german"
-            "TargetName" = "8:G97_Waffentrager_IV.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\A66_M103.tank"
+            "TargetName" = "8:A66_M103.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -1928,10 +2403,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_378478261E29466FBC757499B016852F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_37F6E89A92C34F5899DFDBBF4884F61A"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB70_FV4202_105.british"
-            "TargetName" = "8:GB70_FV4202_105.british"
+            "SourcePath" = "8:..\\Terra\\tanks\\Cz02_TVP_T50.tank"
+            "TargetName" = "8:Cz02_TVP_T50.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2008,10 +2483,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3DF7F717D79A49EEAEA4CD164247B969"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3B1B2A2711AA4E7D8D81BDC1DF12A10B"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R51_Object_212.russian"
-            "TargetName" = "8:R51_Object_212.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\F37_AMX50_Foch.tank"
+            "TargetName" = "8:F37_AMX50_Foch.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2028,10 +2503,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3E4DE84CB85946889328086979605155"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3E6012C46365437A80E3F75E9E4E1E22"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F38_Bat_Chatillon155_58.french"
-            "TargetName" = "8:F38_Bat_Chatillon155_58.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\F17_AMX_13_90.tank"
+            "TargetName" = "8:F17_AMX_13_90.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2048,10 +2523,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3ED7CD1486E94F289DACE445A775CA87"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_40066CEA2FFB43A1981245DDD6AA90F7"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G73_E50_Ausf_M.german"
-            "TargetName" = "8:G73_E50_Ausf_M.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB48_FV215b_183.tank"
+            "TargetName" = "8:GB48_FV215b_183.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2088,26 +2563,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_42A1CF29424142EE8EA6A3E61DE189D0"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\F17_AMX_13_90.french"
-            "TargetName" = "8:F17_AMX_13_90.french"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43079A234BCB4E86A680241335917F6E"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\colorMapper_fragment.glsl"
@@ -2128,30 +2583,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_444415BF11984F9183C7D98476EB325B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4330E39A7EA1411398BC2829839A6A75"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch12_111_1_2_3.chinese"
-            "TargetName" = "8:Ch12_111_1_2_3.chinese"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4486C35E45FC4D01AF2DBDABE1954D39"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\G45_G_Tiger.german"
-            "TargetName" = "8:G45_G_Tiger.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\A97_M41_Bulldog.tank"
+            "TargetName" = "8:A97_M41_Bulldog.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2188,10 +2623,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_48F7634BC8764F418E45CF151709FB8B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4873A9D385DA46D9A696CE09644AAD05"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch18_WZ-120.chinese"
-            "TargetName" = "8:Ch18_WZ-120.chinese"
+            "SourcePath" = "8:..\\Terra\\tanks\\R45_IS-7.tank"
+            "TargetName" = "8:R45_IS-7.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_49C570CBBF28461AAB5FBDD17CA98E52"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\GB13_FV215b.tank"
+            "TargetName" = "8:GB13_FV215b.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2215,6 +2670,11 @@
             "AssemblyAsmDisplayName" = "8:Pngcs, Version=1.0.96.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_49DBF77BCD4A69C239730055A0B65E9B"
+                    {
+                    "Name" = "8:Pngcs.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Pngcs.dll"
             "TargetName" = "8:"
@@ -2232,26 +2692,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4B2881C90B5345A784C3BD446F78EC95"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\A14_T30.american"
-            "TargetName" = "8:A14_T30.american"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4BCF9DE0C41C491CAB3200EC724F659F"
@@ -2274,30 +2714,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4CD05D9E4C874662879EE70D17543621"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4D9796C38E3744BBB826F63AEB193C23"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB75_AT7.british"
-            "TargetName" = "8:GB75_AT7.british"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4D48EC1040F94A92A55FDF63778C916D"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\F10_AMX_50B.french"
-            "TargetName" = "8:F10_AMX_50B.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch28_WZ_132A.tank"
+            "TargetName" = "8:Ch28_WZ_132A.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2334,10 +2754,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_51F876ECF71E4EEAB84701C685A14322"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_51B6189AA5F64284B32C88DDCF76BC34"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R88_Object268.russian"
-            "TargetName" = "8:R88_Object268.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\R104_Object_430_II.tank"
+            "TargetName" = "8:R104_Object_430_II.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_532207F212F04475A9E2E1242046E8FA"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G97_Waffentrager_IV.tank"
+            "TargetName" = "8:G97_Waffentrager_IV.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2374,6 +2814,66 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_53A04DFAB42A4C9F8F2BE3CA1E026D13"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F18_Bat_Chatillon25t.tank"
+            "TargetName" = "8:F18_Bat_Chatillon25t.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_53FD0C515B8A42B4AB38D23F42751547"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G121_Grille_15_L63.tank"
+            "TargetName" = "8:G121_Grille_15_L63.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_542EB38A7A8F4E289BF7F95D745855D3"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch23_112.tank"
+            "TargetName" = "8:Ch23_112.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5584D03A910E4CD997FA22EB760DE6A1"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\toLinear_fragment.glsl"
@@ -2394,10 +2894,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57DF8DB42D6146ED964C9053EEEAC436"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_58583314BDEE45A689A61CB5F3C5FCF8"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F37_AMX50_Foch.french"
-            "TargetName" = "8:F37_AMX50_Foch.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB79_FV206.tank"
+            "TargetName" = "8:GB79_FV206.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2454,10 +2954,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_62CD795B58994F9DB7223D3E85B7DD0D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_617EEEEE16BE4ACF9CBA089AE0513407"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F25_Lorraine155_51.french"
-            "TargetName" = "8:F25_Lorraine155_51.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\G92_VK7201.tank"
+            "TargetName" = "8:G92_VK7201.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2474,10 +2974,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_68829FEC7AA54FD78BA4D7117A6D285D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_67AFBE308CAD43EBAF691A7D41A56673"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A69_T110E5.american"
-            "TargetName" = "8:A69_T110E5.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\R88_Object268.tank"
+            "TargetName" = "8:R88_Object268.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_691327A50C274608A695076E6C298B32"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch17_WZ131_1_WZ132.tank"
+            "TargetName" = "8:Ch17_WZ131_1_WZ132.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2514,10 +3034,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6D5BE7B38A4C4453971CFE33BC651AEE"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6AE4920D78C345D1919361C89AD40A4E"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch22_113.chinese"
-            "TargetName" = "8:Ch22_113.chinese"
+            "SourcePath" = "8:..\\Terra\\tanks\\G89_Leopard1.tank"
+            "TargetName" = "8:G89_Leopard1.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2534,10 +3054,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6D8D10F1614F49A2B9383F42132AAEA5"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6DBF9A9624D54F11A388CD9E992C0495"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A90_T69.american"
-            "TargetName" = "8:A90_T69.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB31_Conqueror_Gun.tank"
+            "TargetName" = "8:GB31_Conqueror_Gun.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2594,10 +3114,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_72A2B3EE57D44D24A973E2EE8B734DD0"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_719FD89FB6314E71AB546525B89E4606"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A63_M46_Patton.american"
-            "TargetName" = "8:A63_M46_Patton.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\J14_Type_61.tank"
+            "TargetName" = "8:J14_Type_61.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_71E8DEBC61394A48BC55891746D3EC8B"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A80_T26_E4_SuperPershing.tank"
+            "TargetName" = "8:A80_T26_E4_SuperPershing.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2634,26 +3174,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7460341CC4AB42CB848161C49FC63077"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\G42_Maus.german"
-            "TargetName" = "8:G42_Maus.german"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_74B4E0E497C94B05B3FB2AF0800141A2"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\decalsCpassDef_fragment.glsl"
@@ -2674,10 +3194,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_75285E5359EA48358289C8210AAA0DB4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_755665898FDA43659066C2D87CBFE8F1"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G58_VK4502P.german"
-            "TargetName" = "8:G58_VK4502P.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\G88_Indien_Panzer.tank"
+            "TargetName" = "8:G88_Indien_Panzer.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_76440DC3797E45B190EFAB850424DBE3"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G110_Typ_205.tank"
+            "TargetName" = "8:G110_Typ_205.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2714,10 +3254,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7CF268F9A6944B40A2F38230D1E60C10"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_76AAB5ED448643AFBA13806FD399C82D"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R104_Object_430_II.russian"
-            "TargetName" = "8:R104_Object_430_II.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\F72_AMX_30.tank"
+            "TargetName" = "8:F72_AMX_30.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2734,10 +3274,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7D042792E43E40679082E31EB7F6D880"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7AADAD098B2B4C9B8EBD8ED23AD06A3E"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\J12_Chi_Nu_Kai.japan"
-            "TargetName" = "8:J12_Chi_Nu_Kai.japan"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB83_FV4005.tank"
+            "TargetName" = "8:GB83_FV4005.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2754,10 +3294,90 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7DF3E8B28FDC43EEBF30C930ED0806BD"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7B2FFEDC542D44D999395AA8886AA39F"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\J11_Chi_Ri.japan"
-            "TargetName" = "8:J11_Chi_Ri.japan"
+            "SourcePath" = "8:..\\Terra\\tanks\\A100_T49.tank"
+            "TargetName" = "8:A100_T49.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7B3C8844410A456396D923E2933E3F9E"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A40_T95.tank"
+            "TargetName" = "8:A40_T95.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7B8C0D20FF8B4BC696602150005DF687"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R113_Object_730.tank"
+            "TargetName" = "8:R113_Object_730.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7BCF56A4758949048ACA2096E053AB6F"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G37_Ferdinand.tank"
+            "TargetName" = "8:G37_Ferdinand.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7F555E0C5C094E12B57E02703AD98008"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G55_E-75.tank"
+            "TargetName" = "8:G55_E-75.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2794,10 +3414,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_847F67C921DD448E888EBDB354F82F00"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_848D1CA135C54B37A76198326A38D310"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R54_KV-5.russian"
-            "TargetName" = "8:R54_KV-5.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch03_WZ-111.tank"
+            "TargetName" = "8:Ch03_WZ-111.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2834,12 +3454,112 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_873093E2FE454A34BA0CEBD288C45F4B"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R52_Object_261.tank"
+            "TargetName" = "8:R52_Object_261.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_873AB98AC3974F22A455EC10DFD72620"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\normalOffset_vertex.glsl"
             "TargetName" = "8:normalOffset_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_87C0C3BEE67E4212A504975B87EE2EF4"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\J25_Type_4.tank"
+            "TargetName" = "8:J25_Type_4.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_89448C70143744E999774E61177861BA"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A84_M48A1.tank"
+            "TargetName" = "8:A84_M48A1.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_89C26B0391B343DA84F5F646A0DFA2BD"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\GB23_Centurion.tank"
+            "TargetName" = "8:GB23_Centurion.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8B3E92F8E5A448EDA6CEE16669CC43AF"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\S21_UDES_03.tank"
+            "TargetName" = "8:S21_UDES_03.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2881,6 +3601,11 @@
             "AssemblyAsmDisplayName" = "8:Tao.FreeGlut, Version=2.4.0.2, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_8C9AC8AFA81FCC93257D3447C278A7D5"
+                    {
+                    "Name" = "8:Tao.FreeGlut.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Tao.FreeGlut.dll"
             "TargetName" = "8:"
@@ -2920,10 +3645,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_90FA2A6C3D6E42D7B4E051987CD8471F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9070872076E64DEA9EFD16EADF49CDDA"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F62_ELC_AMX.french"
-            "TargetName" = "8:F62_ELC_AMX.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\Cz04_T50_51.tank"
+            "TargetName" = "8:Cz04_T50_51.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -2987,6 +3712,11 @@
             "AssemblyAsmDisplayName" = "8:Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_922AD9617921815938FE4F1440D8879F"
+                    {
+                    "Name" = "8:Ionic.Zip.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Ionic.Zip.dll"
             "TargetName" = "8:"
@@ -3006,10 +3736,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9274E9CB51324918B361DB0E2467173C"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_923A46A82FCC4D7EA6D447F03E04FE42"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R40_T-54.russian"
-            "TargetName" = "8:R40_T-54.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\A69_T110E5.tank"
+            "TargetName" = "8:A69_T110E5.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3026,10 +3756,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_93C94A0846284D85807BC068394D39DC"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_92B1FFFB7F84472F9E9C7DCD21A79F80"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F09_AMX_50_120.french"
-            "TargetName" = "8:F09_AMX_50_120.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch29_Type_62C_prot.tank"
+            "TargetName" = "8:Ch29_Type_62C_prot.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_93DE23209A7145888FB4D30AC699F177"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G114_Skorpian.tank"
+            "TargetName" = "8:G114_Skorpian.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3106,12 +3856,92 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98235C1DD2E046F1A4F39832774BD828"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A38_T92.tank"
+            "TargetName" = "8:A38_T92.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98701B3A638B4CFBB997D99320F90E9F"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\S17_EMIL_1952_E2.tank"
+            "TargetName" = "8:S17_EMIL_1952_E2.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98809E65F1FF42A0B7C797C8420224FB"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R19_IS-3.tank"
+            "TargetName" = "8:R19_IS-3.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98DC5ADDAD4C4EA1B08E8FF685ABBD89"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\terrainDef_vertex.glsl"
             "TargetName" = "8:terrainDef_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_991A4C82BE0B4A1892A4AFBEC52F8918"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R81_IS8.tank"
+            "TargetName" = "8:R81_IS8.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3146,12 +3976,92 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BDB689F0B044518A699AAEEFF2011FF"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G54_E-50.tank"
+            "TargetName" = "8:G54_E-50.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BEFE449D6B4465598A2C015CD60256F"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\shadow_fragment.glsl"
             "TargetName" = "8:shadow_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C6164E57CC84C6C83BE7237A1522B71"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G119_Panzer58.tank"
+            "TargetName" = "8:G119_Panzer58.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9CB7C0152B49452FAF9A6D7092B041BC"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G61_G_E.tank"
+            "TargetName" = "8:G61_G_E.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9DB203EDEAFF4D88AFAE90CA64C9D6DE"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F10_AMX_50B.tank"
+            "TargetName" = "8:F10_AMX_50B.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3186,6 +4096,46 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9E7A0C04BB904A31A15E2DD12F5F1073"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\GB80_Charioteer.tank"
+            "TargetName" = "8:GB80_Charioteer.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F47AF4793D34F9DB5D71F5243B8DAA2"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F36_AMX_AC_Mle1948.tank"
+            "TargetName" = "8:F36_AMX_AC_Mle1948.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A040A3233DCB420D9E913CF85E95F343"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\waterMask_fragment.glsl"
@@ -3206,10 +4156,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A0A5F62672B648E8A98E040155E90BFD"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A15360E602CC441E96A96FD5A4B7CAC2"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A88_M53_55.american"
-            "TargetName" = "8:A88_M53_55.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB32_Tortoise.tank"
+            "TargetName" = "8:GB32_Tortoise.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3226,70 +4176,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A2598522AEC54AAFBEDF99EBE4C0233E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A4C2AFB453294C34A84B0AF664555419"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F67_Bat_Chatillon155_55.french"
-            "TargetName" = "8:F67_Bat_Chatillon155_55.french"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A63B16153AC6497C849822C69BE6E9D9"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\R12_A-20.russian"
-            "TargetName" = "8:R12_A-20.russian"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A78721DBAF0142629D96CF7AC71DDD72"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\G44_JagdTiger.german"
-            "TargetName" = "8:G44_JagdTiger.german"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A838351FD0474F65AB50C48410FAFD96"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB30_FV3805.british"
-            "TargetName" = "8:GB30_FV3805.british"
+            "SourcePath" = "8:..\\Terra\\tanks\\R107_LTB.tank"
+            "TargetName" = "8:R107_LTB.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3344,6 +4234,11 @@
             "AssemblyAsmDisplayName" = "8:Tao.Platform.Windows, Version=1.0.0.5, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_A8A0906E0B0BC8E79FE80D68104CAB70"
+                    {
+                    "Name" = "8:Tao.Platform.Windows.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Tao.Platform.Windows.dll"
             "TargetName" = "8:"
@@ -3361,6 +4256,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A958D408C2C646B3985241593A05940C"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G42_Maus.tank"
+            "TargetName" = "8:G42_Maus.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AA2D14AB9E564190928FC1C681E33F9F"
@@ -3383,6 +4298,86 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AA37BDFF89604584A488375EF26D9E2F"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A12_T32.tank"
+            "TargetName" = "8:A12_T32.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ABADE86289A84D159B0DE08D77A4BEFD"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch41_WZ_111_5A.tank"
+            "TargetName" = "8:Ch41_WZ_111_5A.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AC0011E68E6E4AA6AE964E3BA5760750"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\GB30_FV3805.tank"
+            "TargetName" = "8:GB30_FV3805.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AE7BA2AEA8334CB0843B0037A4E8C116"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\S10_Strv_103_0_Series.tank"
+            "TargetName" = "8:S10_Strv_103_0_Series.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AFE032B90970D8FF805E531922B6C5AB"
             {
             "AssemblyRegister" = "3:1"
@@ -3390,6 +4385,11 @@
             "AssemblyAsmDisplayName" = "8:Lidgren.Network, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_AFE032B90970D8FF805E531922B6C5AB"
+                    {
+                    "Name" = "8:Lidgren.Network.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Lidgren.Network.dll"
             "TargetName" = "8:"
@@ -3407,6 +4407,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B154227C85FD496E9F1EB462C1EF74AE"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F88_AMX_13_105.tank"
+            "TargetName" = "8:F88_AMX_13_105.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B17A1E5F67344EDAB24A5F03723ACE76"
@@ -3436,6 +4456,11 @@
             "AssemblyAsmDisplayName" = "8:ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_B32A28EA6C4506631274409F90650C32"
+                    {
+                    "Name" = "8:ICSharpCode.SharpZipLib.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ICSharpCode.SharpZipLib.dll"
             "TargetName" = "8:"
@@ -3455,10 +4480,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B355437626104E2FA75761775DF0A736"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B7F122BBF1C74D6E9E0F2FA63CBC61E3"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F18_Bat_Chatillon25t.french"
-            "TargetName" = "8:F18_Bat_Chatillon25t.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\F65_FCM_50t.tank"
+            "TargetName" = "8:F65_FCM_50t.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3475,10 +4500,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B9CC143A7A774AF6BF9E20C548601D74"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B941FFDD209B422282B5EA4C4E5A142F"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB31_Conqueror_Gun.british"
-            "TargetName" = "8:GB31_Conqueror_Gun.british"
+            "SourcePath" = "8:..\\Terra\\tanks\\A85_T110E3.tank"
+            "TargetName" = "8:A85_T110E3.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3495,10 +4520,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BA28360F40D14BC4BDAE1EB41C8F45DF"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BBA171D6D56547A3B0CD2390EBD39CF7"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A39_T28.american"
-            "TargetName" = "8:A39_T28.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch26_59_Patton.tank"
+            "TargetName" = "8:Ch26_59_Patton.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD0B85DB175C40E2B43C4DC171D7C53A"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\GB12_Conqueror.tank"
+            "TargetName" = "8:GB12_Conqueror.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD11891C170146D08E19DA17FFE2010F"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A88_M53_55.tank"
+            "TargetName" = "8:A88_M53_55.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3521,6 +4586,66 @@
             "TargetName" = "8:comp_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BDC598B0AECB488380FAC2B8CFE880FD"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R122_T44_100.tank"
+            "TargetName" = "8:R122_T44_100.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE49166728F745C8AF31C1E06A56AC82"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch19_121.tank"
+            "TargetName" = "8:Ch19_121.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BF95507AD3A14C8EAB060DA02111CFD3"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F09_AMX_50_120.tank"
+            "TargetName" = "8:F09_AMX_50_120.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3595,10 +4720,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C10A38117E2B47D4A884F407030B560F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C0A040328F7E417D86AEEBC3DC4C4C5F"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R52_Object_261.russian"
-            "TargetName" = "8:R52_Object_261.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\G99_RhB_Waffentrager.tank"
+            "TargetName" = "8:G99_RhB_Waffentrager.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3655,10 +4780,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C20E80324BFD4846ADDB5E3D370CE9CE"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C467D3C05B714FEABA6153DE4AF2384E"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F08_AMX_50_100.french"
-            "TargetName" = "8:F08_AMX_50_100.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\R47_ISU-152.tank"
+            "TargetName" = "8:R47_ISU-152.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3675,50 +4800,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C33D9D0A20E743B9A7A80233CFA007F2"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C4BFE47AFFB64A2DA01EFBC03674B240"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G52_Pz38_NA.german"
-            "TargetName" = "8:G52_Pz38_NA.german"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C3D776DD95EF470E98C0EA374B14CCFA"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\G55_E-75.german"
-            "TargetName" = "8:G55_E-75.german"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C56A1B2408C14D739F7E659F997CF8AB"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\A83_T110E4.american"
-            "TargetName" = "8:A83_T110E4.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\R63_ST_I.tank"
+            "TargetName" = "8:R63_ST_I.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3755,10 +4840,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C688D46F1CF943D4A7B82A0C7E484690"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6894234261442239DEB6C7CD48A29FD"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch19_121.chinese"
-            "TargetName" = "8:Ch19_121.chinese"
+            "SourcePath" = "8:..\\Terra\\tanks\\R111_ISU130.tank"
+            "TargetName" = "8:R111_ISU130.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3795,30 +4880,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C704EB7936824741964A54A1343D5048"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C823DF27BC9547DC903FA9F841DCC3C0"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R45_IS-7.russian"
-            "TargetName" = "8:R45_IS-7.russian"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C7BEB8C019B240638BFF2AE269387089"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\G51_Lowe.german"
-            "TargetName" = "8:G51_Lowe.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\R97_Object_140.tank"
+            "TargetName" = "8:R97_Object_140.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3841,6 +4906,26 @@
             "TargetName" = "8:waterColor_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C9B57D66F8304B51939DE698FD5A3007"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G126_HWK_12.tank"
+            "TargetName" = "8:G126_HWK_12.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3895,10 +4980,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CCBFC7F6CEC54B38970524C6C3AF257B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CD9EA104B2C44C8CB51F20D617FC0727"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F19_Lorraine40t.french"
-            "TargetName" = "8:F19_Lorraine40t.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\R54_KV-5.tank"
+            "TargetName" = "8:R54_KV-5.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CFDC0E4407F3431DBEDC02C0271C80E2"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\F25_Lorraine155_51.tank"
+            "TargetName" = "8:F25_Lorraine155_51.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3955,10 +5060,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D27F04E52E4F4A3AB8F75C2F12852A0E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D213276142464345849C17D8F10D8CC8"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB48_FV215b_183.british"
-            "TargetName" = "8:GB48_FV215b_183.british"
+            "SourcePath" = "8:..\\Terra\\tanks\\A68_T28_Prototype.tank"
+            "TargetName" = "8:A68_T28_Prototype.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D29CD321ECE54C799F4B40D28E8EF213"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\R60_Object416.tank"
+            "TargetName" = "8:R60_Object416.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D4893C127E064471B5502518D2FF2DE0"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\S11_Strv_103B.tank"
+            "TargetName" = "8:S11_Strv_103B.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -3981,6 +5126,26 @@
             "TargetName" = "8:water_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D55BF674A6E4444FBC831C8C92B2D913"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A14_T30.tank"
+            "TargetName" = "8:A14_T30.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4035,10 +5200,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D81DFC2FEF2D4F2F9AB2C8374014F758"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D89726589DFD47A0A0E15AB4F630C4E4"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F64_AMX_50Fosh_155.french"
-            "TargetName" = "8:F64_AMX_50Fosh_155.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\J13_STA_1.tank"
+            "TargetName" = "8:J13_STA_1.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4075,10 +5240,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DA788FDAD3A749DBAB993F07B04FED8B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DA8625A8F78A4788B7A42A6F8A4C56FC"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R90_IS_4M.russian"
-            "TargetName" = "8:R90_IS_4M.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\S22_Strv_S1.tank"
+            "TargetName" = "8:S22_Strv_S1.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4095,10 +5260,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DAF5CA528D0D4F89BA1C82730F7C38C1"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DB9E5BACE1BD4E0E82C3D87C34ED7818"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A13_T34_hvy.american"
-            "TargetName" = "8:A13_T34_hvy.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\GB11_Caernarvon.tank"
+            "TargetName" = "8:GB11_Caernarvon.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4115,10 +5280,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DD7DD273C819438EA871C2082D431B21"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DBD54F254456401B9C97E82B0485FD1E"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A66_M103.american"
-            "TargetName" = "8:A66_M103.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\R93_Object263.tank"
+            "TargetName" = "8:R93_Object263.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4135,10 +5300,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DF81B28C7F4E4AEF915482FE5A3D0EA6"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DBF63E798F1544EDB6B57C3DB863F51D"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A85_T110E3.american"
-            "TargetName" = "8:A85_T110E3.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\R53_Object_704.tank"
+            "TargetName" = "8:R53_Object_704.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4155,10 +5320,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E06A07DEA8434370B8381DD9A40C9F31"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E03F06A231F2449099F3F0BABA515E4B"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\R87_T62A.russian"
-            "TargetName" = "8:R87_T62A.russian"
+            "SourcePath" = "8:..\\Terra\\tanks\\G64_Panther_II.tank"
+            "TargetName" = "8:G64_Panther_II.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4195,10 +5360,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E0C59F7AF9AB4C31B7581EC77A402384"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E0A531E6A7B74FF59137009BB33B8AB9"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch11_110.chinese"
-            "TargetName" = "8:Ch11_110.chinese"
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch01_Type59.tank"
+            "TargetName" = "8:Ch01_Type59.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4235,26 +5400,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E2230B1B80B647B08F838D193D26620F"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\R91_SU14_1.russian"
-            "TargetName" = "8:R91_SU14_1.russian"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E290855BDE1C4CFEAB844A4B01D7C823"
             {
             "SourcePath" = "8:..\\Terra\\Terra!.ico"
@@ -4275,10 +5420,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E2E4E95BAF8C4DA2A86910BB3202867A"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E53ED82250084CD1944385727E433799"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A67_T57_58.american"
-            "TargetName" = "8:A67_T57_58.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\G115_Typ_205_4_Jun.tank"
+            "TargetName" = "8:G115_Typ_205_4_Jun.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4301,6 +5446,26 @@
             "TargetName" = "8:SSAO_vertex.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E6C53B9FFF464E908786151CD2545ECC"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\A67_T57_58.tank"
+            "TargetName" = "8:A67_T57_58.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4355,6 +5520,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E88BF241BC374603A1607D482EA2B116"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch12_111_1_2_3.tank"
+            "TargetName" = "8:Ch12_111_1_2_3.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E8A075230BC84541BE278D6A3E123228"
             {
             "SourcePath" = "8:..\\Terra\\shaders\\terrianMarkers_vertex.glsl"
@@ -4375,10 +5560,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB97DC6FE4E3460A8E4A8B6C14895AC4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E9D69C0E2F7F4DB7AFE574219E4D4D28"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch23_112.chinese"
-            "TargetName" = "8:Ch23_112.chinese"
+            "SourcePath" = "8:..\\Terra\\tanks\\R90_IS_4M.tank"
+            "TargetName" = "8:R90_IS_4M.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4395,10 +5580,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EBFB8D46A15749B0BA199D36EA4380B8"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EAC83C7CA4DD489CBA891C612B41B14B"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\F65_FCM_50t.french"
-            "TargetName" = "8:F65_FCM_50t.french"
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch22_113.tank"
+            "TargetName" = "8:Ch22_113.tank"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EBE9CE6B6DC5474FBCE489D18FDBAE65"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G71_JagdPantherII.tank"
+            "TargetName" = "8:G71_JagdPantherII.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4422,6 +5627,11 @@
             "AssemblyAsmDisplayName" = "8:Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_ED9769D54DF5C163439259900072032F"
+                    {
+                    "Name" = "8:Tao.OpenGl.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Tao.OpenGl.dll"
             "TargetName" = "8:"
@@ -4461,26 +5671,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EF483F96A2894915A9FC1996434A4B03"
-            {
-            "SourcePath" = "8:..\\Terra\\tanks\\R81_IS8.russian"
-            "TargetName" = "8:R81_IS8.russian"
-            "Tag" = "8:"
-            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EF75A15CF2B2283C32EE1D4A5349E019"
             {
             "AssemblyRegister" = "3:1"
@@ -4488,6 +5678,11 @@
             "AssemblyAsmDisplayName" = "8:Tao.DevIl, Version=1.6.8.3, Culture=neutral, PublicKeyToken=7ec4053013524957, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_EF75A15CF2B2283C32EE1D4A5349E019"
+                    {
+                    "Name" = "8:Tao.DevIl.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Tao.DevIl.dll"
             "TargetName" = "8:"
@@ -4507,10 +5702,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F04857D9598F45B3A236467DC56A42EA"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F1892B06A5BD4CA0BCEA7F62E21F5928"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\A89_T54E1.american"
-            "TargetName" = "8:A89_T54E1.american"
+            "SourcePath" = "8:..\\Terra\\tanks\\Ch14_T34_3.tank"
+            "TargetName" = "8:Ch14_T34_3.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4527,10 +5722,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F139DE2DA0EA48ADAE0231CD5F260F84"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2D111584EF34109A8FB09E79B947922"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G61_G_E.german"
-            "TargetName" = "8:G61_G_E.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\G56_E-100.tank"
+            "TargetName" = "8:G56_E-100.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4547,10 +5742,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2D4EE3A75204C37A5F99DA487A909F0"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F4865FDDA8B9479E87534D31BA4591DB"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\Ch16_WZ_131.chinese"
-            "TargetName" = "8:Ch16_WZ_131.chinese"
+            "SourcePath" = "8:..\\Terra\\tanks\\R58_SU-101.tank"
+            "TargetName" = "8:R58_SU-101.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4587,10 +5782,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F8E7DF4B495845ECBB9089E05211F251"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F71AFB77DD7A44F89FB9BC41CDAD5813"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\J16_ST_B1.japan"
-            "TargetName" = "8:J16_ST_B1.japan"
+            "SourcePath" = "8:..\\Terra\\tanks\\F08_AMX_50_100.tank"
+            "TargetName" = "8:F08_AMX_50_100.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4647,10 +5842,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FB7EFBAA55B24294B7C3F8AB434A413B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FC5BEFE0DF754C0390606A9A5EDB9A22"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\G54_E-50.german"
-            "TargetName" = "8:G54_E-50.german"
+            "SourcePath" = "8:..\\Terra\\tanks\\S16_Kranvagn.tank"
+            "TargetName" = "8:S16_Kranvagn.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4667,10 +5862,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FBDD1E66056B4F48A59CCD04FC3994C4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FCF39DC0E04E4605A3BE0A7D84B15541"
             {
-            "SourcePath" = "8:..\\Terra\\tanks\\GB32_Tortoise.british"
-            "TargetName" = "8:GB32_Tortoise.british"
+            "SourcePath" = "8:..\\Terra\\tanks\\tanknames.txt"
+            "TargetName" = "8:tanknames.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FFBE19F6DCCB4F3BA73FE11A24FC9610"
+            {
+            "SourcePath" = "8:..\\Terra\\tanks\\G103_RU_251.tank"
+            "TargetName" = "8:G103_RU_251.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
             "Condition" = "8:"
@@ -4787,15 +6002,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
-        "ProductCode" = "8:{19E818EF-D55E-4D42-BA48-D5935C4C5F66}"
-        "PackageCode" = "8:{71E55691-4728-4B95-A27A-C3E36EEAAE41}"
+        "ProductCode" = "8:{A3597BFE-30C5-48AD-AF5B-0B7C9EE8586A}"
+        "PackageCode" = "8:{0FD831CD-AFC0-4EEE-91DA-FC8098EC133C}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.50"
+        "ProductVersion" = "8:1.0.51"
         "Manufacturer" = "8:Coffee_"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

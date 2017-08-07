@@ -118,10 +118,15 @@ Module structures
         Public rot_y As Single
         Public loc_x As Single
         Public loc_z As Single
+        Public t_rotation As Single
+        Public turret_location As vect3
+        Public rot_limit_l As Single
+        Public rot_limit_r As Single
         'This will be in the form of "n_a_n_n" 
-        'team (1 or 2) _ (nation a,r,b,c,g) _ (index) _ button index
+        'team (1 or 2) _ (nation Am,Ru,Ge... Po) _ (index) _ button index
         Public id As String
         Public tank_displaylist As Integer
+        Public tank_displaylist2 As Integer
         Public type As Integer
         Public name As String
         Public comment As String
@@ -182,13 +187,17 @@ Module structures
             End Try
         End Function
     End Structure
-    Public a_tanks(1) As tank_
-    Public r_tanks(1) As tank_
-    Public g_tanks(1) As tank_
-    Public f_tanks(1) As tank_
-    Public b_tanks(1) As tank_
-    Public c_tanks(1) As tank_
-    Public j_tanks(1) As tank_
+    Public american_tanks(0) As tank_
+    Public russian_tanks(0) As tank_
+    Public german_tanks(0) As tank_
+    Public french_tanks(0) As tank_
+    Public british_tanks(0) As tank_
+    Public chinese_tanks(0) As tank_
+    Public japanese_tanks(0) As tank_
+    Public czech_tanks(0) As tank_
+    Public sweden_tanks(0) As tank_
+    Public poland_tanks(0) As tank_
+
     Public Structure tank_
         Implements IComparable(Of tank_)
         Public gui_string As String

@@ -440,7 +440,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\games\World_of_Tanks")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\games\World_ofrench_tanks")>  _
         Public Property game_path() As String
             Get
                 Return CType(Me("game_path"),String)

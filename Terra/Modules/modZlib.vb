@@ -1078,7 +1078,7 @@ skip_this:
         Dim icon_ms As New MemoryStream
         Dim icon_entry As Ionic.Zip.ZipEntry = gui(sp + "heavyTank.png")
         icon_entry.Extract(icon_ms)
-        tank_mini_icons(0) = load_png(icon_ms)
+        tank_mini_icons(2) = load_png(icon_ms)
         'med
         icon_ms = New MemoryStream
         icon_entry = gui(sp + "mediumTank.png")
@@ -1088,7 +1088,7 @@ skip_this:
         icon_ms = New MemoryStream
         icon_entry = gui(sp + "lightTank.png")
         icon_entry.Extract(icon_ms)
-        tank_mini_icons(2) = load_png(icon_ms)
+        tank_mini_icons(0) = load_png(icon_ms)
         'td
         icon_ms = New MemoryStream
         icon_entry = gui(sp + "AT-SPG.png")

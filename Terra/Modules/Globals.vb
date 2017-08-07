@@ -5,6 +5,7 @@ Imports Lidgren.Network
 Imports System.Windows.Media.Media3D
 Module Globals
     '==============
+    Public gui_pkg = New Ionic.Zip.ZipFile
     Public global_map_width As Integer
     Public triangle_count As Integer
     Public m_decals_, m_terrain_, m_trees_, m_sky_, m_water_, m_bases_, m_models_ As Boolean
@@ -180,7 +181,7 @@ Module Globals
     Public glob_str As String = ""
     Public highZmap As Bitmap
     Public npb As New Panel
-    Public nations(7) As String
+    Public nations(10) As String
     Public current_nation As Integer = 0
     Public Far_Clip As Single = 700
     Public lod1_swap As Integer
