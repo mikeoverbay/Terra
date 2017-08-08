@@ -1436,7 +1436,7 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:2"
+        "Compression" = "3:3"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -6003,7 +6003,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
         "ProductCode" = "8:{A3597BFE-30C5-48AD-AF5B-0B7C9EE8586A}"
-        "PackageCode" = "8:{0FD831CD-AFC0-4EEE-91DA-FC8098EC133C}"
+        "PackageCode" = "8:{E1AF7AB6-6CD6-4E03-9E73-2294BA09D49A}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -6557,7 +6557,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0C5BF608457D480B87B630800FAE9C40"
             {
-            "SourcePath" = "8:..\\Terra\\obj\\x86\\Debug\\Terra.exe"
+            "SourcePath" = "8:..\\Terra\\obj\\x86\\Release\\Terra.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"
