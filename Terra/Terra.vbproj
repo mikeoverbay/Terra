@@ -40,8 +40,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>1.0.5.1</ApplicationVersion>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.5.2</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -297,6 +297,7 @@
     <Compile Include="Modules\Mod_space_bin.vb" />
     <Compile Include="Modules\Mod_Space_Bin_Functions.vb" />
     <Compile Include="Modules\Mod_space_bin_variables.vb" />
+    <Compile Include="Modules\Mod_X_file.vb" />
     <Compile Include="primitives\frmFullScreen.Designer.vb">
       <DependentUpon>frmFullScreen.vb</DependentUpon>
     </Compile>
@@ -495,6 +496,9 @@
     <None Include="freeglut.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\dial.x">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\env404_Sign_hd.dds" />
     <None Include="Resources\noise.dds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -509,6 +513,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\water2_NM2.dds">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\compass_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\compass_vertex.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="shaders\ring_fragment.glsl">
@@ -1102,6 +1112,9 @@
     <None Include="Resources\control_090.png" />
     <None Include="Resources\control_270.png" />
     <Content Include="light_settings\sothisfoldergetscreated.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\linear_face.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="tanks\tanknames.txt">

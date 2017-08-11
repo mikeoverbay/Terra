@@ -440,7 +440,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\games\World_ofrench_tanks")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\games\World_of_tanks")>  _
         Public Property game_path() As String
             Get
                 Return CType(Me("game_path"),String)
@@ -687,6 +687,18 @@ Namespace My
             End Get
             Set
                 Me("m_constant_updates") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property image_save_address() As String
+            Get
+                Return CType(Me("image_save_address"),String)
+            End Get
+            Set
+                Me("image_save_address") = value
             End Set
         End Property
     End Class

@@ -65,6 +65,7 @@ Public Class frmMain
         Public tank_type As String
         Public tank_png_path As String
     End Structure
+    Dim map_view As Boolean = False
     Dim Lx, Ly As Single
     Dim angle As Single
     'Dim mass_value As Single = 2
@@ -254,6 +255,10 @@ fail_path:
         make_locations() ' setup tank location data and clear displaylist
         make_map_buttons()
         tb1.text = "Welcome to Terra!"
+        Dim ver = Application.ProductVersion
+
+        tb1.text += vbCrLf + "Version: " + ver
+
         Application.DoEvents()
         'open up our huge virual file for access.
         triangle_holder.open((15 * 15) * (4096 * 6))
@@ -348,8 +353,14 @@ fail_path:
         '    draw_scene()
         'End If
         '====================================================================
-        If e.KeyCode = Keys.F Then
-
+        If e.KeyCode = Keys.F6 Then
+            If map_view Then
+                map_view = False
+            Else
+                map_view = True
+            End If
+            G_Buffer.init()
+            update_screen()
         End If
         'post effect items ===================================
         If e.KeyCode = Keys.S Then
@@ -1582,6 +1593,7 @@ dontaddthis:
         _SELECTED_model = 0
         Dim type = pixel(3)
         Dim component = pixel(0)
+        Gl.glReadBuffer(Gl.GL_BACK)
         Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport)
         Gl.glReadPixels(x, viewport(3) - y, 1, 1, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixel)
         Dim index As UInt32 = (CUInt(pixel(1) * 256) + pixel(2))
@@ -1702,10 +1714,10 @@ dontaddthis:
                         red = i + 1
                         green = 0
                         blue = 0
-                        Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
+                        Gl.glColor4ub(red, green, blue, 0)
 
                         Gl.glPushMatrix()
-                        Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
+                        Dim y_ = get_Z_at_XY(locations.team_1(i).loc_x, locations.team_1(i).loc_z)
 
                         Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
                         Dim rot = locations.team_1(i).rot_y
@@ -1738,7 +1750,7 @@ dontaddthis:
                         red = 0
                         green = 0
                         blue = i + 1
-                        Gl.glColor4ub(CInt(red), CInt(green), CInt(blue), 0)
+                        Gl.glColor4ub(red, green, blue, 0)
 
                         Gl.glPushMatrix()
                         Dim y_ = get_Z_at_XY(locations.team_2(i).loc_x, locations.team_2(i).loc_z)
@@ -2227,7 +2239,7 @@ skip:
 
         If maploaded And Not m_wire_terrain.Checked Then
             Gl.glDisable(Gl.GL_TEXTURE_2D)
-            Gl.glColor3f(0.8, 0.8, 0.8)
+            Gl.glColor4f(0.8, 0.8, 0.8, 1.0)
             Dim u, v As vect4
 
             For i = 0 To test_count
@@ -2957,7 +2969,7 @@ skip:
             Dim cv = 57.2957795
             Gl.glUseProgram(shader_list.tankDef_shader)
             For i = 0 To 14
-                Gl.glColor3f(0.4!, 0.0!, 0.0!)
+                Gl.glColor4f(0.4!, 0.0!, 0.0!, 1.0)
                 If locations.team_1(i).tank_displaylist > -1 Then
                     Gl.glPushMatrix()
                     Gl.glMatrixMode(Gl.GL_MODELVIEW)
@@ -2986,7 +2998,7 @@ skip:
                     Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
                     Gl.glPopMatrix()
                     If tankID = i Then
-                        Gl.glColor3f(0.5, 0.5, 0.0)
+                        Gl.glColor4f(0.5, 0.5, 0.0, 1.0)
                     End If
                     Gl.glCallList(locations.team_1(i).tank_displaylist)
 
@@ -3014,7 +3026,7 @@ skip:
                 End If
             Next
             For i = 0 To 14
-                Gl.glColor3f(0.0, 0.3, 0.0)
+                Gl.glColor4f(0.0, 0.3, 0.0, 1.0)
                 If locations.team_2(i).tank_displaylist > -1 Then
                     Gl.glPushMatrix()
                     Gl.glMatrixMode(Gl.GL_MODELVIEW)
@@ -3042,7 +3054,7 @@ skip:
                     Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
                     Gl.glPopMatrix()
                     If tankID = i + 100 Then
-                        Gl.glColor3f(0.5, 0.5, 0.0)
+                        Gl.glColor4f(0.5, 0.5, 0.0, 1.0)
                     End If
                     Gl.glCallList(locations.team_2(i).tank_displaylist)
                     'turret rotation
@@ -3882,7 +3894,13 @@ over_it:
                 Dim str = " FPS:" + fps.ToString
                 str += "  Location: [ "
                 str += coordStr + " ]"
-                str += " ROT:" + locations.team_1(0).t_rotation.ToString("000")
+                If tankID > -1 Then
+                    If tankID > 99 Then
+                        str += " Rotation:" + locations.team_2(tankID - 100).t_rotation.ToString("000")
+                    Else
+                        str += " Rotation:" + locations.team_1(tankID).t_rotation.ToString("000")
+                    End If
+                End If
                 ' Dim yp = get_Z_at_XY(u_look_point_X, u_look_point_Z)
                 'str += "   X:" + u_look_point_X.ToString("0.000000") + "  Y:" + u_look_point_Y.ToString("0.000000") + "  Z:" + u_look_point_Z.ToString("0.000000")
                 'str += "   GX:" + d_hx.ToString + "  GY:" + d_hy.ToString
@@ -3911,7 +3929,11 @@ over_it:
             MessageBox.Show("Unable to make rendering context current")
             'End
         End If
-        draw_to_gBuffer()
+        If Not map_view Then
+            draw_to_gBuffer()
+        Else
+            draw_top_down(1024)
+        End If
         gl_busy = False
         Return
 
@@ -4155,329 +4177,245 @@ over_it:
         'End Try
 
     End Sub
-    Public Function Render_minimap(ByVal Psize As Integer) As Bitmap
-        Dim uc As vect2
-        Dim lc As vect2
-        'draw the minimap_frame. (this is a custom resource I created.
-        Dim old_wx, old_wy, old_msize As Integer
-        old_wx = pb1.Width
-        old_wy = pb1.Height
-        old_msize = minimap_size
-        minimap_size = Psize
-        Application.DoEvents()
-        Dim dck = pb1.Dock
-        pb1.Width = Psize
-        pb1.Height = Psize
-        lc.x = pb1.Width
-        lc.y = -pb1.Height
-        uc.x = pb1.Width - (minimap_size * 1.066666)
-        uc.y = -pb1.Height + (minimap_size * 1.066666) ' top to bottom is negitive
 
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
-        ResizeGL()
-        ViewPerspective()
-        ViewOrtho()
-        Gl.glPushMatrix()
-        Gl.glTranslatef(0.0, 0.0F, -0.1F)
+    Public Sub draw_top_down(ByVal psize As Integer)
 
+        m_show_map_grid.Checked = True
+        m_map_border.Checked = True
 
-        Gl.glColor3f(1.0!, 1.0!, 1.0!)
-        '-------------------------------------
-        'draw loaded minimap
-        lc.x = pb1.Width
-        lc.y = -pb1.Height
-        uc.x = pb1.Width - minimap_size
-        uc.y = -pb1.Height + minimap_size ' top to bottom is negitive
-        Gl.glColor3f(1.0!, 1.0!, 1.0!)
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, minimap_textureid)
-        Gl.glBegin(Gl.GL_TRIANGLES)
-        '---
-        Gl.glTexCoord2f(0.0, 0.0)
-        Gl.glVertex3f(uc.x, lc.y, -1.0!)
-
-        Gl.glTexCoord2f(0.0, -1.0)
-        Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-        Gl.glTexCoord2f(-1.0, 0.0)
-        Gl.glVertex3f(lc.x, lc.y, -1.0!)
-        '---
-        Gl.glTexCoord2f(0.0, -1.0)
-        Gl.glVertex3f(uc.x, uc.y, -1.0!)
-
-        Gl.glTexCoord2f(-1.0, -1.0)
-        Gl.glVertex3f(lc.x, uc.y, -1.0!)
-
-        Gl.glTexCoord2f(-1.0, 0.0)
-        Gl.glVertex3f(lc.x, lc.y, -1.0!)
-
-        Gl.glEnd()
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        '-------------------------------------
         Dim NUMS = "1234567890".ToArray
         Dim letters = "ABCDEFGHIJK".ToArray
-        Dim iw = 18.0! : Dim ih = 11.33!
-        Dim ic_x As Single = 13.5!
-        Dim ic_y As Single = 8.5!
-        Dim w As Double = MAP_BB_UR.x + MAP_BB_BL.x
-        Dim v As Double = MAP_BB_UR.y + MAP_BB_BL.y
-        If w = 0 Then Return Nothing
-        Dim scale As Single = 1.0 '(minimap_size / 300)
+        Dim model_view(16) As Double
+        Dim projection(16) As Double
+        Dim viewport(4) As Integer
+        Dim cp(2) As Single
+        Dim sx, sy, sz As Single
+        Dim uc As vect2
+
+        Dim L = -MAP_BB_UR.x
+        Dim R = -MAP_BB_BL.x
+        Dim T = MAP_BB_UR.y
+        Dim B = MAP_BB_BL.y
+        Dim scale = psize / (Abs(L) + Abs(R))
+        L *= scale
+        R *= scale
+        T *= scale
+        B *= scale
+
+        uc.x = 0.0 'pb1.Width - (psize * 1.066666)
+        uc.y = 0.0 '-pb1.Height + (psize * 1.066666) ' top to bottom is negitive
+        Dim w As Double = L + R
+        Dim v As Double = T + B
+        w *= scale
+        v *= scale
+        If w = 0 Then Return
         Dim xc = -(w / 2)
         Dim yc = -(v / 2)
-        Dim xy As Single = (minimap_size) / 10
-        Dim x1 = 0 : Dim x2 = minimap_size
-        ' Dim mxc, mzc As Single
-        '------------
+        Dim xy As Single = (psize) / 10
+        Dim x1 = 0 'Dim x2 = psize
+
+        Dim vs As Single = (R - L) / 10
+
+        pb1.Dock = DockStyle.None
+        pb1.Location = New Point(0, mainMenu.Height)
+
+        pb1.Width = Abs(L) + Abs(R)
+        pb1.Height = Abs(T) + Abs(B)
+        ResizeGL()
+        'G_Buffer.init()
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
+        'G_Buffer.attachFOBtextures()
+
+        Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
+        Gl.glLoadIdentity() 'Reset The Matrix
+        Gl.glOrtho(L, R, B, T, 1000.0, -1000.0) 'Select Ortho Mode
+        Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
+        Gl.glLoadIdentity() 'Reset The Matrix
+        Gl.glClearColor(0.0, 0.0, 0.0, 1.0)
+        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        'Gl.glColorMask(Glu.GLU_FALSE, Glu.GLU_FALSE, Glu.GLU_FALSE, Glu.GLU_TRUE)
+        Gl.glPushMatrix()
+
+        Gl.glScalef(scale, scale, -1.0)
+        Gl.glRotatef(180, 0.0, 1.0, 0.0)
+        Gl.glRotatef(-90, 1.0, 0.0, 0.0)
+
+        Dim center As vect2
+        center.x = L + R
+        center.y = T + B
+
+        For i = 0 To test_count
+            maplist(i).visible = True
+        Next
+        For model As UInt32 = 0 To Models.matrix.Length - 1
+            Models.models(model).visible = True
+        Next
+        For k = 0 To treeCache.Length - 2
+            With treeCache(k)
+                For i As UInt32 = 0 To .tree_cnt - 1
+                    treeCache(k).BB(i).visible = True
+                Next
+            End With
+
+        Next
+
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Gl.glDisable(Gl.GL_BLEND)
+        If water.IsWater Then
+            Gl.glColor3f(0.0, 0.15, 0.25)
+            Gl.glFrontFace(Gl.GL_CW)
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+            Gl.glDisable(Gl.GL_CULL_FACE)
+            Gl.glPushMatrix()
+            Gl.glTranslatef(0.0, 0.015, 0.0)
+            Gl.glMultMatrixf(water.matrix)
+            Gl.glCallList(water.displayID_plane)
+            Gl.glPopMatrix()
+
+        End If
+        draw_g_terrain()
+
+        G_Buffer.get_depth_buffer(pb1.Width, pb1.Height)
+        Gl.glEnable(Gl.GL_BLEND)
+        draw_base_ring(-team_1.x, team_1.z, 1)
+        draw_base_ring(-team_2.x, team_2.z, 2)
+        Gl.glDisable(Gl.GL_BLEND)
+
+        draw_g_models(True)
+        draw_tanks(cp, model_view, projection, viewport, sx, sy, sz)
+
+        Gl.glPopMatrix()
+
+        Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
+        Gl.glLoadIdentity() 'Reset The Matrix
+        Gl.glOrtho(MAP_BB_BL.x, MAP_BB_UR.x, MAP_BB_BL.y, MAP_BB_UR.y, 100, -100.0) 'Select Ortho Mode
+        Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
+        Gl.glLoadIdentity() 'Reset The Matrix
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
+
+
+
+
+        xy = (Abs(MAP_BB_BL.x) + Abs(MAP_BB_UR.x)) / 10.0
+        For i = 0 To 9
+            Dim K = ((i + 1) * xy) - (xy / 2)
+            glutPrint(MAP_BB_BL.x + K, MAP_BB_UR.y - 11, NUMS(i), 0.0!, 0.0!, 0.0!, 1.0!)
+            glutPrint(MAP_BB_BL.x + K + 1, MAP_BB_UR.y - 11, NUMS(i), 0.0!, 0.0!, 0.0!, 1.0!)
+            glutPrint(MAP_BB_BL.x + K, MAP_BB_UR.y - 10, NUMS(i), 1.0!, 1.0!, 1.0!, 1.0!)
+        Next
+        For i = 0 To 9
+            Dim K = ((i + 1) * xy) - 3
+            glutPrint((2) + MAP_BB_BL.x, (-K) + MAP_BB_UR.y + (xy / 2) - 4, letters(i), 0.0!, 0.0!, 0.0!, 1.0!)
+            glutPrint((2) + MAP_BB_BL.x + 1, (-K) + MAP_BB_UR.y + (xy / 2) - 4, letters(i), 0.0!, 0.0!, 0.0!, 1.0!)
+            glutPrint((2) + MAP_BB_BL.x, (-K) + MAP_BB_UR.y + (xy / 2) - 3, letters(i), 1.0!, 1.0!, 1.0!, 1.0!)
+        Next
+        Gl.glScalef(1.0, 1.0, 1.0)
+        Gl.glMatrixMode(Gl.GL_PROJECTION) 'Select Projection
+        Gl.glLoadIdentity() 'Reset The Matrix
+        Gl.glOrtho(MAP_BB_UR.x, MAP_BB_BL.x, MAP_BB_BL.y, MAP_BB_UR.y, 100, -100.0) 'Select Ortho Mode
+        Gl.glMatrixMode(Gl.GL_MODELVIEW)    'Select Modelview Matrix
+        Gl.glLoadIdentity() 'Reset The Matrix
+        Dim ts = (Abs(MAP_BB_UR.x) + Abs(MAP_BB_BL.x)) / psize
+
+        '=========================================================================
         'draw the base rings
-        Dim vs As Single = (MAP_BB_UR.x - MAP_BB_BL.x) / 10
-        Dim rx, rz, r As Single
-        Dim sz = (100) / vs * xy
-        rx = (((-team_1.x + 50 + xc) / vs) * (-xy)) + (minimap_size / 2) '- (25.0! * scale)
-        rz = (((team_1.z + 50 + yc) / vs) * (-xy)) + (minimap_size / 2) '- (25.0! * scale)
+        Dim lx = -team_1.x
+        Dim ly = team_1.z
+
         Gl.glColor3f(0.8!, 0.0!, 0.0!)
 
         Gl.glLineWidth(2.0! * scale)
 
         Gl.glBegin(Gl.GL_LINE_LOOP)
-        r = sz / 2
+        R = 50.0
         For i = 0 To 2 * PI Step 0.2
-            Gl.glVertex3f((r * Cos(i)) + uc.x + rx + r, (r * Sin(i)) + uc.y - rz - r, -0.1!)
+            'Gl.glVertex3f((R * Cos(i)) + lx, (R * Sin(i)) + ly, 0.0)
         Next
         Gl.glEnd()
 
+        lx = -team_2.x
+        ly = team_2.z
 
-        rx = (((-team_2.x + 50 + xc) / vs) * (-xy)) + (minimap_size / 2) '- (25.0! * scale)
-        rz = (((team_2.z + 50 + yc) / vs) * (-xy)) + (minimap_size / 2) '- (25.0! * scale)
 
 
         Gl.glColor3f(0.0!, 0.8!, 0.0!)
         Gl.glBegin(Gl.GL_LINE_LOOP)
 
-        r = sz / 2
         For i = 0 To 2 * PI Step 0.2
-            Gl.glVertex3f((r * Cos(i)) + uc.x + rx + r, (r * Sin(i)) + uc.y - rz - r, -0.1!)
+            'Gl.glVertex3f((R * Cos(i)) + lx, (R * Sin(i)) + ly, 0.0)
         Next
         Gl.glEnd()
-        '-------------------------------------------------
-        'draw the grid
-        Gl.glColor3f(0.9!, 0.9!, 0.9!)
-        Gl.glLineWidth(1.0!)
-        If xy = 0 Then Return Nothing ' no data lodaed and the 'step xy' causes an infinite loop
-        For y As Single = xy - xy To (xy * 11.0!) Step xy
-            Gl.glBegin(Gl.GL_LINES)
-            Gl.glVertex3f(x1 + uc.x, -y + uc.y, -0.2!)
-            Gl.glVertex3f(x2 + uc.x, -y + uc.y, -0.2!)
-            Gl.glEnd()
-        Next
-        For y As Single = xy - xy To (xy * 11.0!) Step xy
-            Gl.glBegin(Gl.GL_LINES)
-            Gl.glVertex3f(y + uc.x, -x1 + uc.y, -0.2!)
-            Gl.glVertex3f(y + uc.x, -x2 + uc.y, -0.2!)
-            Gl.glEnd()
-        Next
+        '=========================================================================
 
-        Dim mex As Single = (((look_point_X + xc) / vs) * (-xy)) + (minimap_size / 2)
-        Dim mey As Single = (((look_point_Z + yc) / vs) * (-xy)) + (minimap_size / 2)
 
-        'draw the tanks locations and types
-        Gl.glEnable(Gl.GL_BLEND)
-        Gl.glEnable(Gl.GL_TEXTURE_2D)
 
         For t1 = 0 To 14
-            Gl.glColor3f(0.9!, 0.0!, 0.0!)
             If locations.team_1(t1).tank_displaylist > -1 Then
-                Dim lx = (((locations.team_1(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' + (ic_x * scale)
-                Dim ly = (((locations.team_1(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
-                'glutPrint(lx - ((locations.team_1(t1).name.Length / 2) * 8), ly - Psize, locations.team_1(t1).name, 1.0, 0.0, 0.0, 1.0)
-
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, tank_mini_icons(locations.team_1(t1).type))
-                Gl.glBegin(Gl.GL_QUADS)
-
-                Gl.glTexCoord2f(0, 1)
-                Gl.glVertex3f(-icon_scale + lx + uc.x, (-icon_scale * 0.63) + uc.y - ly, -0.11)
-
-                Gl.glTexCoord2f(0, 0)
-                Gl.glVertex3f(-icon_scale + lx + uc.x, (icon_scale * 0.63) + uc.y - ly, -0.11)
-
-                Gl.glTexCoord2f(-1, 0)
-                Gl.glVertex3f(icon_scale + lx + uc.x, (icon_scale * 0.63) + uc.y - ly, -0.11)
-
-                Gl.glTexCoord2f(-1, 1)
-                Gl.glVertex3f(icon_scale + lx + uc.x, (-icon_scale * 0.63) + uc.y - ly, -0.11)
-                Gl.glEnd()
-            End If
-            Gl.glColor3f(0.0!, 0.9!, 0.0!)
-            If locations.team_2(t1).tank_displaylist > -1 Then
-                Dim lx = (((locations.team_2(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_x * scale)
-                Dim ly = (((locations.team_2(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
-                'glutPrint(lx - ((locations.team_2(t1).name.Length / 2) * 8), ly - Psize, locations.team_2(t1).name, 0.0, 1.0, 0.0, 1.0)
-
-
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, tank_mini_icons(locations.team_2(t1).type))
-                Gl.glBegin(Gl.GL_QUADS)
-
-                Gl.glTexCoord2f(0, 1)
-                Gl.glVertex3f(-icon_scale + lx + uc.x, (-icon_scale * 0.63) + uc.y - ly, -0.11)
-
-                Gl.glTexCoord2f(0, 0)
-                Gl.glVertex3f(-icon_scale + lx + uc.x, (icon_scale * 0.63) + uc.y - ly, -0.11)
-
-                Gl.glTexCoord2f(-1, 0)
-                Gl.glVertex3f(icon_scale + lx + uc.x, (icon_scale * 0.63) + uc.y - ly, -0.11)
-
-                Gl.glTexCoord2f(-1, 1)
-                Gl.glVertex3f(icon_scale + lx + uc.x, (-icon_scale * 0.63) + uc.y - ly, -0.11)
-                Gl.glEnd()
-            End If
-        Next
-        Gl.glDisable(Gl.GL_TEXTURE_2D)
-        'Gl.glPopMatrix()
-        'Gl.glPushMatrix()
-        'Gl.glTranslatef(0.0, 0.0F, -55.1F)
-
-        'draw the text/numbered columns and rows
-        For i = 0 To 9
-            Dim K = ((i + 1) * xy) - 10
-            glutPrintBox((K * scale) + uc.x - (xy / 2) + 4, uc.y - 14, NUMS(i), 1.0!, 1.0!, 0.0!, 1.0!)
-        Next
-        For i = 0 To 9
-            Dim K = ((i + 1) * xy) - 3
-            glutPrintBox((2) + uc.x, (-K * scale) + uc.y + (xy / 2), letters(i), 1.0!, 1.0!, 0.0!, 1.0!)
-        Next
-        For t1 = 0 To 14
-            If locations.team_1(t1).tank_displaylist > -1 Then
-                Dim lx = (((locations.team_1(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' + (ic_x * scale)
-                Dim ly = (((locations.team_1(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
-                glutPrint(lx - ((locations.team_1(t1).name.Length / 2) * 8) + 2, -ly - 2, locations.team_1(t1).name, 0.0, 0.0, 0.0, 0.3)
-                glutPrint(lx - ((locations.team_1(t1).name.Length / 2) * 8) + 1, -ly - 1, locations.team_1(t1).name, 0.0, 0.0, 0.0, 0.5)
-                glutPrint(lx - ((locations.team_1(t1).name.Length / 2) * 8), -ly, locations.team_1(t1).name, 1.0, 1.0, 1.0, 1.0)
+                lx = locations.team_1(t1).loc_x
+                ly = locations.team_1(t1).loc_z
+                glutPrint(lx + (((locations.team_1(t1).name.Length / 2) * 8) + 2) * ts, ly, locations.team_1(t1).name, 0.0, 0.0, 0.0, 0.3)
+                glutPrint(lx + (((locations.team_1(t1).name.Length / 2) * 8) + 1) * ts, ly - (1 * ts), locations.team_1(t1).name, 0.0, 0.0, 0.0, 0.5)
+                glutPrint(lx + ((locations.team_1(t1).name.Length / 2) * 8) * ts, ly, locations.team_1(t1).name, 1.0, 1.0, 1.0, 1.0)
 
             End If
             If locations.team_2(t1).tank_displaylist > -1 Then
-                Dim lx = (((locations.team_2(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_x * scale)
-                Dim ly = (((locations.team_2(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
-                glutPrint(lx - ((locations.team_2(t1).name.Length / 2) * 8) + 2, -ly - 2, locations.team_2(t1).name, 0.0, 0.0, 0.0, 0.3)
-                glutPrint(lx - ((locations.team_2(t1).name.Length / 2) * 8) + 1, -ly - 1, locations.team_2(t1).name, 0.0, 0.0, 0.0, 0.5)
-                glutPrint(lx - ((locations.team_2(t1).name.Length / 2) * 8), -ly, locations.team_2(t1).name, 1.0, 1.0, 1.0, 1.0)
-
+                lx = locations.team_2(t1).loc_x
+                ly = locations.team_2(t1).loc_z
+                glutPrint(lx + (((locations.team_2(t1).name.Length / 2) * 8) + 2) * ts, ly, locations.team_2(t1).name, 0.0, 0.0, 0.0, 0.3)
+                glutPrint(lx + (((locations.team_2(t1).name.Length / 2) * 8) + 1) * ts, ly - (1 * ts), locations.team_2(t1).name, 0.0, 0.0, 0.0, 0.5)
+                glutPrint(lx + ((locations.team_2(t1).name.Length / 2) * 8) * ts, ly, locations.team_2(t1).name, 1.0, 1.0, 1.0, 1.0)
 
             End If
         Next
         Gl.glDisable(Gl.GL_BLEND)
-        Dim os = 2 * scale
+
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Wgl.wglSwapBuffers(pb1_hDC)
+    End Sub
+
+    Public Sub Render_minimap(ByVal Psize As Integer)
 
 
-        'Gl.glColor3f(0.9!, 0.9!, 0.0!)
-        'Gl.glPointSize(6.0)
-        'Gl.glColor3f(0.9!, 0.9!, 0.0!)
-        'Gl.glBegin(Gl.GL_POINTS)
-        'Gl.glVertex3f(mex + uc.x, -mey + uc.y, -0.1)
-        'Gl.glEnd()
-        'Gl.glLineWidth(2.0)
-        'Gl.glBegin(Gl.GL_LINES)
-        'Gl.glVertex3f(mex + uc.x, -mey + uc.y, -0.1)
-
-        'Dim hpie As Single = PI / 2
-        'Dim d_x As Single = Cos((PI * 1.5) - (Cam_X_angle + angle_offset)) * (15 * scale)
-        'Dim d_y As Single = Sin((PI * 1.5) - (Cam_X_angle + angle_offset)) * (15 * scale)
-        'Gl.glVertex3f(mex + d_x + uc.x, -mey - d_y + uc.y, -0.1)
-        'Gl.glEnd()
-        Try
-            Dim xr = Floor((mex / minimap_size) * 10)
-            Dim yr = Floor((mey / minimap_size) * 10)
-            coordStr = letters(CInt(yr)) + NUMS(CInt(xr))
-        Catch ex As Exception
-        End Try
-        Gl.glFlush()
-        'Gdi.SwapBuffers(hDC)
-        Dim bmp = New Bitmap(Psize, Psize)
-        Dim rect As New System.Drawing.Rectangle(0, 0, Psize, Psize)
-        Dim data As BitmapData = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb)
-        Gl.glReadPixels(0, 0, Psize, Psize, Gl.GL_BGR, Gl.GL_UNSIGNED_BYTE, data.Scan0)
-        bmp.UnlockBits(data)
-
-        bmp.RotateFlip(RotateFlipType.RotateNoneFlipY)
-        pb1.Width = old_wx
-        pb1.Height = old_wy
-        minimap_size = old_msize
-        Gl.glPopMatrix()
-        Return bmp
-
-    End Function
+    End Sub
     Public Sub draw_heading()
 
-        Dim sc As Single = 75
-        Dim r As Single = 35.0
-        Dim r2 As Single = 25.0
-        Dim xo As Single = -12
-        Dim yo As Single = -5
-        'draw the compus face
+        Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT)
+        Gl.glEnable(Gl.GL_DEPTH_TEST)
+        Dim s = 0.2
+        Dim c As Single = 1.0
+        Gl.glColor3f(c, c, c)
         Gl.glPushMatrix()
-        Gl.glBlendEquation(Gl.GL_FUNC_ADD)
-        Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
+        Gl.glTranslatef(pb1.Width / 2.0, -15.0, 0.0)
+        Gl.glScalef(0.2, 0.3, -0.2)
+        Dim rt = u_Cam_X_angle * 57.29577951
+        'Gl.glRotatef(5, 1.0, 0.0, 0.0)
+        Gl.glRotatef(rt + -45, 0.0, 1.0, 0.0)
+        '----------------------------------
         Gl.glEnable(Gl.GL_BLEND)
-        'Dim loc = Gl.glGetUniformLocation(comp_shader, "colorMap")
-        'Gl.glUseProgram(comp_shader)
-        'Gl.glUniform1i(loc, 0)
-        'Gl.glActiveTexture(Gl.GL_TEXTURE0)
-        ''Gl.glRotatef(Cam_X_angle * 57.2957795, 0.0, 0.0, 1.0)
-        'Gl.glRotatef(90, 1.0, 0.0, 0.0)
-        ''Gl.glTranslatef(-sc, -0.1, -sc)
-        Gl.glColor4f(0.3, 0.0, 0.0, 0.6)
-        Gl.glTranslatef(pb1.Width / 2, -sc, 0.0)
-        'Gl.glScalef(1.0, 1.0, 1.0)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, compus_textureID)
-        'Gl.glCallList(compus_displayID)
-        Dim disk As Tao.OpenGl.Glu.GLUquadric
-        disk = Glu.gluNewQuadric
-        Glu.gluDisk(disk, 38.0, 55.0, 60, 10)
-        'Gl.glUseProgram(0)
-        Gl.glLineWidth(3)
-        Dim sx, sy As Single
-        Dim halfPI As Single = PI / 2
-        Dim dv As Single = PI / 30
-        Dim radi As Single = 0.0F
-        'Gl.glScalef(1.0, 1.0, 1.0)
-        Dim agl As Single
-        If NetData Then
-            agl = (PI / 2) - Packet_in.Rx
-        Else
-            agl = (PI / 2) - Cam_X_angle
-        End If
-        sx = (-Cos(agl) * r)
-        sy = (-Sin(agl) * r)
-        Dim lx As Single = (-Cos(agl - dv) * r2)
-        Dim rx As Single = (-Cos(agl + dv) * r2)
-        Dim ly As Single = (-Sin(agl - dv) * r2)
-        Dim ry As Single = (-Sin(agl + dv) * r2)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0)
 
-        Gl.glBegin(Gl.GL_LINES)
-        Gl.glColor4f(1.0, 1.0, 0.0, 0.0)
-        'Gl.glColor3f(0.0, 0.0, 0.0)
-        Gl.glVertex3f(0, 0, -0.01)
-        Gl.glColor4f(1.0, 1.0, 0.0, 1.0)
-        Gl.glVertex3f(sx, -sy, -0.01)
+        Gl.glUseProgram(shader_list.compass_shader)
+        Gl.glUniform1i(compass_texture, 0)
+        Gl.glUniform1f(compass_scale, s)
+        Gl.glUniform1f(compass_location, CSng(pb1.Width / 2.0!))
 
-        Gl.glVertex3f(sx, -sy, -0.01)
-        Gl.glVertex3f(lx, -ly, -0.01)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, compass_tex_id)
+        Gl.glCallList(compass_display_list)
 
-        Gl.glVertex3f(sx, -sy, -0.01)
-        Gl.glVertex3f(rx, -ry, -0.01)
-        'Gl.glDisable(Gl.GL_BLEND)
-
-        Gl.glEnd()
-        r = 50.0
-        glutPrint((Cos(radi) * r) + xo + 3, (Sin(radi) * r) + yo, "E", 0.0, 1.0, 0.0, 1.0)
-        radi += halfPI
-        glutPrint((Cos(radi) * r) + xo + 8, (Sin(radi) * r) + yo - 3, "N", 0.0, 1.0, 0.0, 1.0)
-        radi += halfPI
-        glutPrint((Cos(radi) * r) + xo + 12, (Sin(radi) * r) + yo, "W", 0.0, 1.0, 0.0, 1.0)
-        radi += halfPI
-        glutPrint((Cos(radi) * r) + xo + 8, (Sin(radi) * r) + yo + 4, "S", 0.0, 1.0, 0.0, 1.0)
-        radi += halfPI
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+        Gl.glUseProgram(0)
+        Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glPopMatrix()
-        'glutPrint(10, -300, m_rot.ToString, 1, 1, 1, 1)
+        '----------------------------------
+        Gl.glDisable(Gl.GL_BLEND)
+        Gl.glBegin(Gl.GL_LINES)
+        Gl.glVertex3f(pb1.Width / 2.0, -22.0, 0)
+        Gl.glVertex3f(pb1.Width / 2.0, -38.0, 0)
+        Gl.glEnd()
+        '----------------------------------
+
+        Return
+
     End Sub
 
     'Public Sub make_compus()
@@ -4644,12 +4582,16 @@ over_it:
                         r += rm
                         If r < locations.team_2(tankID - 100).rot_limit_l Then r = locations.team_2(tankID - 100).rot_limit_l
                         If r > locations.team_2(tankID - 100).rot_limit_r Then r = locations.team_2(tankID - 100).rot_limit_r
+                        If r < -360 Then r += 360
+                        If r > 360 Then r -= 360
                         locations.team_2(tankID - 100).t_rotation = r
                     Else
                         Dim r = locations.team_1(tankID).t_rotation
                         r += rm
                         If r < locations.team_1(tankID).rot_limit_l Then r = locations.team_1(tankID).rot_limit_l
                         If r > locations.team_1(tankID).rot_limit_r Then r = locations.team_1(tankID).rot_limit_r
+                        If r < -360 Then r += 360
+                        If r > 360 Then r -= 360
                         locations.team_1(tankID).t_rotation = r
                     End If
                     activity = True 'force screen updates
@@ -6244,7 +6186,7 @@ no_move_xz:
 
     Private Sub m_render_to_bitmap_Click(sender As Object, e As EventArgs) Handles m_render_to_bitmap.Click
         If Not maploaded Then
-            Return
+            'Return
         End If
         FrmRenderMap.Visible = True
     End Sub

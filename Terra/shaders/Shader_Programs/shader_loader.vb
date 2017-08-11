@@ -14,6 +14,7 @@ Module shader_loader
         Public buildingsDef_shader As Integer
         Public colorMapper_shader As Integer
         Public comp_shader As Integer
+        Public compass_shader As Integer
         Public decalsCpassDef_shader As Integer
         Public decalsNpassDef_shader As Integer
         Public deferred_shader As Integer
@@ -571,6 +572,14 @@ Module shader_loader
         waterMesh_time = Gl.glGetUniformLocation(shader_list.waterMesh_shader, "time")
         waterMesh_colorMap = Gl.glGetUniformLocation(shader_list.waterMesh_shader, "colorMap")
     End Sub
+
+    Public compass_location, compass_scale, compass_texture As Integer
+    Public Sub set_compass_variables()
+        compass_location = Gl.glGetUniformLocation(shader_list.compass_shader, "location")
+        compass_scale = Gl.glGetUniformLocation(shader_list.compass_shader, "scale")
+        compass_texture = Gl.glGetUniformLocation(shader_list.compass_shader, "colorMap")
+    End Sub
+
     '==============================================================================================================
     Public Sub set_shader_variables()
         set_ring_variables()
@@ -603,6 +612,8 @@ Module shader_loader
         set_water_variables()
         set_waterColor_variables()
         set_waterMesh_variables()
+
+        set_compass_variables()
         Return
 
     End Sub

@@ -637,10 +637,10 @@
     <value>False</value>
   </data>
   <data name="m_render_to_bitmap.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 20</value>
+    <value>93, 20</value>
   </data>
   <data name="m_render_to_bitmap.Text" xml:space="preserve">
-    <value>Render to Bitmap</value>
+    <value>Save to Image</value>
   </data>
   <data name="m_comment.AutoSize" type="System.Boolean, mscorlib">
     <value>False</value>

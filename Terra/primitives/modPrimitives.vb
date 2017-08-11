@@ -2608,7 +2608,6 @@ get_billboard_data:
 
     End Sub
     Public Sub draw_base_ring(ByVal x As Single, ByVal z As Single, ByVal base As Integer)
-
         Dim radius, thickness As Single
         radius = 50.0
         thickness = 1.0

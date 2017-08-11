@@ -751,6 +751,52 @@ Module modTextures
         Return Nothing
     End Function
 
+    Public Function load_png_file(ByVal fs As String) As Integer
+        'Dim s As String = ""
+        's = Gl.glGetError
+        Dim image_id As Integer = -1
+        'Dim app_local As String = Application.StartupPath.ToString
+
+        Dim texID As UInt32
+        texID = Ilu.iluGenImage() ' /* Generation of one image name */
+        Il.ilBindImage(texID) '; /* Binding of image name */
+        Dim success = Il.ilGetError
+        Il.ilLoad(Il.IL_PNG, fs)
+        success = Il.ilGetError
+        If success = Il.IL_NO_ERROR Then
+            'Ilu.iluFlipImage()
+            Ilu.iluMirror()
+            Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
+            Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
+
+
+            Il.ilConvertImage(Il.IL_BGRA, Il.IL_UNSIGNED_BYTE)
+
+            success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
+            'If your image contains alpha channel you can replace IL_RGB with IL_RGBA */
+            Gl.glGenTextures(1, image_id)
+            Gl.glEnable(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
+
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
+            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)
+
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
+            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
+            Il.ilGetData()) '  Texture specification 
+            'Gl.glGenerateMipmapEXT(Gl.GL_TEXTURE_2D)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Il.ilBindImage(0)
+            Ilu.iluDeleteImage(texID)
+            Return image_id
+        Else
+            Stop
+        End If
+        Return Nothing
+    End Function
+
     Public Function Make_Depth_texture(size As Integer) As Integer
         'use for shadow mapping opjects
         'creates an empty texture ready for writing to

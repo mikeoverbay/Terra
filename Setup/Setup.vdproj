@@ -45,6 +45,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0A8639ED707C4A2EB2C7AE16E670742E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0AD3CC1756D24240A2CF874784CDBED1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0B91F86D06FD4D978C733294D52EA920"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -238,6 +250,12 @@
         "Entry"
         {
         "MsmKey" = "8:_2CD9A1A3855E4BF8A599F843CEB331B2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2FB760E90024470E924264BB9BC5C80D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -454,6 +472,12 @@
         "Entry"
         {
         "MsmKey" = "8:_617EEEEE16BE4ACF9CBA089AE0513407"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_61D1F56A054E4C98AD410AD5E66967C9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1330,49 +1354,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A84D2CD1E6684BEEBAC614928CC88EF7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_922AD9617921815938FE4F1440D8879F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A8A0906E0B0BC8E79FE80D68104CAB70"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_ED9769D54DF5C163439259900072032F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8C9AC8AFA81FCC93257D3447C278A7D5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EF75A15CF2B2283C32EE1D4A5349E019"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AFE032B90970D8FF805E531922B6C5AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_49DBF77BCD4A69C239730055A0B65E9B"
+        "OwnerKey" = "8:_0BB3A47F3407B8C15816E4E9F88A7F7C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1384,7 +1366,49 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0BB3A47F3407B8C15816E4E9F88A7F7C"
+        "OwnerKey" = "8:_49DBF77BCD4A69C239730055A0B65E9B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_AFE032B90970D8FF805E531922B6C5AB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_EF75A15CF2B2283C32EE1D4A5349E019"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_8C9AC8AFA81FCC93257D3447C278A7D5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_ED9769D54DF5C163439259900072032F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A8A0906E0B0BC8E79FE80D68104CAB70"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_922AD9617921815938FE4F1440D8879F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A84D2CD1E6684BEEBAC614928CC88EF7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -1432,7 +1456,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V051.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V052.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1592,6 +1616,46 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0A8639ED707C4A2EB2C7AE16E670742E"
+            {
+            "SourcePath" = "8:..\\Terra\\Resources\\dial.x"
+            "TargetName" = "8:dial.x"
+            "Tag" = "8:"
+            "Folder" = "8:_4D355FB3199A4BB2B507406BB5D64839"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0AD3CC1756D24240A2CF874784CDBED1"
+            {
+            "SourcePath" = "8:..\\Terra\\Resources\\linear_face.png"
+            "TargetName" = "8:linear_face.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D355FB3199A4BB2B507406BB5D64839"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0B91F86D06FD4D978C733294D52EA920"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R75_SU122_54.tank"
@@ -1619,11 +1683,6 @@
             "AssemblyAsmDisplayName" = "8:FastColoredTextBox, Version=2.16.11.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_0BB3A47F3407B8C15816E4E9F88A7F7C"
-                    {
-                    "Name" = "8:FastColoredTextBox.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:FastColoredTextBox.dll"
             "TargetName" = "8:"
@@ -2243,6 +2302,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2FB760E90024470E924264BB9BC5C80D"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\compass_vertex.glsl"
+            "TargetName" = "8:compass_vertex.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_314869D3069D45E2912FD1880BD9FE11"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\G45_G_Tiger.tank"
@@ -2670,11 +2749,6 @@
             "AssemblyAsmDisplayName" = "8:Pngcs, Version=1.0.96.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_49DBF77BCD4A69C239730055A0B65E9B"
-                    {
-                    "Name" = "8:Pngcs.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Pngcs.dll"
             "TargetName" = "8:"
@@ -2960,6 +3034,26 @@
             "TargetName" = "8:G92_VK7201.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_61D1F56A054E4C98AD410AD5E66967C9"
+            {
+            "SourcePath" = "8:..\\Terra\\shaders\\compass_fragment.glsl"
+            "TargetName" = "8:compass_fragment.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3601,11 +3695,6 @@
             "AssemblyAsmDisplayName" = "8:Tao.FreeGlut, Version=2.4.0.2, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8C9AC8AFA81FCC93257D3447C278A7D5"
-                    {
-                    "Name" = "8:Tao.FreeGlut.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Tao.FreeGlut.dll"
             "TargetName" = "8:"
@@ -3712,11 +3801,6 @@
             "AssemblyAsmDisplayName" = "8:Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_922AD9617921815938FE4F1440D8879F"
-                    {
-                    "Name" = "8:Ionic.Zip.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Ionic.Zip.dll"
             "TargetName" = "8:"
@@ -4234,11 +4318,6 @@
             "AssemblyAsmDisplayName" = "8:Tao.Platform.Windows, Version=1.0.0.5, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A8A0906E0B0BC8E79FE80D68104CAB70"
-                    {
-                    "Name" = "8:Tao.Platform.Windows.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Tao.Platform.Windows.dll"
             "TargetName" = "8:"
@@ -4385,11 +4464,6 @@
             "AssemblyAsmDisplayName" = "8:Lidgren.Network, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_AFE032B90970D8FF805E531922B6C5AB"
-                    {
-                    "Name" = "8:Lidgren.Network.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Lidgren.Network.dll"
             "TargetName" = "8:"
@@ -4456,11 +4530,6 @@
             "AssemblyAsmDisplayName" = "8:ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B32A28EA6C4506631274409F90650C32"
-                    {
-                    "Name" = "8:ICSharpCode.SharpZipLib.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ICSharpCode.SharpZipLib.dll"
             "TargetName" = "8:"
@@ -5627,11 +5696,6 @@
             "AssemblyAsmDisplayName" = "8:Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_ED9769D54DF5C163439259900072032F"
-                    {
-                    "Name" = "8:Tao.OpenGl.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Tao.OpenGl.dll"
             "TargetName" = "8:"
@@ -5678,11 +5742,6 @@
             "AssemblyAsmDisplayName" = "8:Tao.DevIl, Version=1.6.8.3, Culture=neutral, PublicKeyToken=7ec4053013524957, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_EF75A15CF2B2283C32EE1D4A5349E019"
-                    {
-                    "Name" = "8:Tao.DevIl.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Tao.DevIl.dll"
             "TargetName" = "8:"
@@ -6002,15 +6061,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
-        "ProductCode" = "8:{A3597BFE-30C5-48AD-AF5B-0B7C9EE8586A}"
-        "PackageCode" = "8:{E1AF7AB6-6CD6-4E03-9E73-2294BA09D49A}"
+        "ProductCode" = "8:{6CF62A7E-95B9-4362-B65C-171879A06F44}"
+        "PackageCode" = "8:{67276E37-BCE6-46B4-B873-274C3BF5679A}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.51"
+        "ProductVersion" = "8:1.0.52"
         "Manufacturer" = "8:Coffee_"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

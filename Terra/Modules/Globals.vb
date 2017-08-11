@@ -5,6 +5,8 @@ Imports Lidgren.Network
 Imports System.Windows.Media.Media3D
 Module Globals
     '==============
+    Public compass_display_list, compass_outside As Integer
+    Public compass_tex_id, compass_outside_texture As Integer
     Public gui_pkg = New Ionic.Zip.ZipFile
     Public global_map_width As Integer
     Public triangle_count As Integer
@@ -71,7 +73,8 @@ Module Globals
     Public packet_lock As New Object
     Public Packet_in As New packet_
     Public Packet_out As packet_
-    Public render_size As UInteger = 1024
+    Public render_sizex As UInteger = 1024
+    Public render_sizey As UInteger = 1024
     Public decal_chunks(1) As decal_chunks_
     Public JUST_MAP_NAME As String = ""
     Public Structure decal_chunks_

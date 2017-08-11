@@ -99,7 +99,7 @@
       <Value Profile="(Default)">dec7th_1941</Value>
     </Setting>
     <Setting Name="game_path" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\games\World_ofrench_tanks</Value>
+      <Value Profile="(Default)">C:\games\World_of_tanks</Value>
     </Setting>
     <Setting Name="m_show_tank_names" Type="System.Windows.Forms.CheckState" Scope="User">
       <Value Profile="(Default)">Checked</Value>
@@ -160,6 +160,9 @@
     </Setting>
     <Setting Name="m_constant_updates" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="image_save_address" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

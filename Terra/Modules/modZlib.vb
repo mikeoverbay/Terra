@@ -210,6 +210,10 @@ Module modZlib
         has_high_rez_map = False
         get_light_settings()
         frmMain.make_map_buttons()
+
+        compass_display_list = read_directX_model(Application.StartupPath + "\Resources\dial.x")
+        compass_tex_id = load_png_file(Application.StartupPath + "\Resources\linear_face.png")
+
         '================================================================
         'need to reset these so changes in the menu items take effect
         'Also.. they trigger what mode to display the terrain and models
