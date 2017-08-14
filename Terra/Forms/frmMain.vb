@@ -665,6 +665,10 @@ fail_path:
         ReDim Preserve t(i + 1)
         Dim ms As New MemoryStream
         Dim entry As ZipEntry = gui_pkg(td.tank_png_path)
+        If entry Is Nothing Then
+            t(i).image = My.Resources.missing_image.Clone
+            Return
+        End If
         entry.Extract(ms)
         t(i).image = get_tank_image(ms, 0, False).Clone
         t(i).gui_string = td.tank_shortname.Replace("\", "")
@@ -697,7 +701,12 @@ fail_path:
                 butt.Width = t.image.Width * m
                 butt.Height = t.image.Height * m
                 butt.Tag = cnt.ToString + ":" + flag_s
-                butt.Text = t.gui_string.ToUpper.Replace("_", " ")
+                Try
+                    butt.Text = t.gui_string.ToUpper.Replace("_", " ")
+
+                Catch ex As Exception
+                    butt.Text = "Missing"
+                End Try
                 butt.BackgroundImage = t.image
                 butt.BackgroundImageLayout = ImageLayout.Stretch
                 butt.TextAlign = ContentAlignment.TopRight
@@ -1065,7 +1074,10 @@ fail_path:
             Dim rect = npb.ClientRectangle
             g.FillRectangle(brush2, rect)
             g.DrawString(nations(current_nation), font, brush, 0, 3)
-            g.DrawImage(Tankimagelist.Images(current_nation), 100 - 36, 0)
+            Try
+                g.DrawImage(Tankimagelist.Images(current_nation), 100 - 36, 0)
+            Catch ex As Exception
+            End Try
         End Using
 
     End Sub
@@ -1831,7 +1843,6 @@ dontaddthis:
         Dim h = pb1.Height
         If w = 0 Then
             Return
-            Gl.glDisable(Gl.GL_DEPTH_TEST)
         End If
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, welcome_screen)
 

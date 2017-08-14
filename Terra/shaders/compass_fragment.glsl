@@ -15,7 +15,7 @@ float z = v.z/v.w;
 if (z > 0.0) discard;
 
 float l = gl_FragCoord.x -location;
-float d = (l / 60.0);
+float d = (l / 65.0);
 float a = abs(cos(d));
 gColor = texture2D(colorMap, texcoord);// + mcolor;
 gColor.a = a;

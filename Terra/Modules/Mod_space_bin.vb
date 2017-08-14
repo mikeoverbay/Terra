@@ -139,19 +139,30 @@ Module Mod_space_bin
             'Console.WriteLine(k.ToString("000") + " : " + m)
         Next
         'lets compress the model_matrix_list to only used models
+        Debug.WriteLine("Building Model_Matrix_list")
         Dim mc As Integer = 0
         For i = 0 To BSMI.bsmi_t2.Length - 2
             If BSMI.bsmi_t2(i).u2_Index = 1 Then
-                mc += 1
+                If BSMI.bsmi_t7(i).u1_index = 4294967295 Or _
+                    BSMI.bsmi_t7(i).u1_index = 4294967227 Or _
+                    BSMI.bsmi_t7(i).u1_index = 4294967177 Then 'visibility mask
+                    mc += 1
+                Else
+                    Debug.WriteLine(i.ToString("0000") + ":" + BSMI.bsmi_t7(i).u1_index.ToString + ":" + Path.GetFileNameWithoutExtension(Model_Matrix_list(i).primitive_name))
+                End If
             End If
         Next
         Dim tm(mc) As model_matrix_list_
         mc = 0
         For i = 0 To BSMI.bsmi_t2.Length - 2
-            If BSMI.bsmi_t2(i).u2_Index = 1 Then
-                tm(mc) = New model_matrix_list_
-                tm(mc) = Model_Matrix_list(i)
-                mc += 1
+            If BSMI.bsmi_t7(i).u1_index = 4294967295 Or _
+                BSMI.bsmi_t7(i).u1_index = 4294967227 Or _
+                BSMI.bsmi_t7(i).u1_index = 4294967177 Then 'visibility mask
+                If BSMI.bsmi_t2(i).u2_Index = 1 Then
+                    tm(mc) = New model_matrix_list_
+                    tm(mc) = Model_Matrix_list(i)
+                    mc += 1
+                End If
             End If
         Next
         ReDim Model_Matrix_list(mc)

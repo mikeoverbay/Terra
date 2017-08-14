@@ -323,7 +323,7 @@ Module Mod_Space_Bin_Functions
 
         Next
 
-        'BSMO.t10_start = br.BaseStream.Position
+        BSMO.t10_start = br.BaseStream.Position
         'BSMO.t10_dl = br.ReadUInt32
         'BSMO.t10_dc = br.ReadUInt32
         'ReDim BSMO.bsmo_t10(BSMO.t10_dc)
@@ -445,11 +445,12 @@ Module Mod_Space_Bin_Functions
 
         BSMI.t7_dl = br.ReadUInt32 'length 4 uints
         BSMI.t7_dc = br.ReadUInt32 'count
+        Debug.WriteLine("--- BSMI.t7 ----")
         ReDim BSMI.bsmi_t7(BSMI.t7_dc)
         For k = 0 To BSMI.t7_dc - 1
             BSMI.bsmi_t7(k).u1_index = br.ReadUInt32
             If BSMI.bsmi_t7(k).u1_index <> 4294967295 Then
-                Debug.WriteLine(k.ToString("0000"))
+                Debug.WriteLine(k.ToString("00000000") + ":" + BSMI.bsmi_t7(k).u1_index.ToString)
             End If
         Next
         'br.BaseStream.Position += offset ' move to next block
@@ -470,10 +471,11 @@ Module Mod_Space_Bin_Functions
         BSMI.t4_dl = br.ReadUInt32
         BSMI.t4_dc = br.ReadUInt32
         ReDim BSMI.bsmi_t4(BSMI.t4_dc)
+        Debug.WriteLine("--- BSMI.t4 ----")
         For k = 0 To BSMI.t4_dc - 1
             BSMI.bsmi_t4(k).u1_index = br.ReadUInt32
             If BSMI.bsmi_t4(k).u1_index <> 4294967295 Then
-                Debug.WriteLine(k.ToString("0000"))
+                Debug.WriteLine(k.ToString("00000000") + ":" + BSMI.bsmi_t4(k).u1_index.ToString)
             End If
         Next
         'this next table defines more boat information
@@ -632,7 +634,7 @@ Module Mod_Space_Bin_Functions
         ReDim temp(WGSD.entry_count - 1)
         ReDim WGSD.Table_Entries(WGSD.entry_count)
         ReDim decal_matrix_list(WGSD.entry_count - 1)
-
+        Debug.WriteLine("Decals====================")
         For k = 0 To WGSD.entry_count - 1
             'If k = 350 Then
             '    Stop
@@ -650,7 +652,9 @@ Module Mod_Space_Bin_Functions
             WGSD.Table_Entries(k).u_key = br.ReadUInt32
 
             WGSD.Table_Entries(k).unknown_2 = br.ReadUInt32 'Unknown always 0?
-
+            If WGSD.Table_Entries(k).unknown_2 <> 2216829733 Then
+                Debug.WriteLine(WGSD.Table_Entries(k).unknown_2.ToString)
+            End If
             WGSD.Table_Entries(k).flags = br.ReadUInt32
             decal_matrix_list(k).flags = WGSD.Table_Entries(k).flags
 
@@ -689,6 +693,14 @@ Module Mod_Space_Bin_Functions
             'End If
 
             WGSD.Table_Entries(k).visibilityMask = br.ReadUInt32 'always 0xFFFFFFFF?
+            If WGSD.Table_Entries(k).visibilityMask <> 4294967295 Then
+                'Stop
+                Debug.WriteLine(k.ToString + ":" + WGSD.Table_Entries(k).visibilityMask.ToString("00000000000"))
+            End If
+            If WGSD.Table_Entries(k).visibilityMask <> 4294967295 Then
+                GoTo ignore_this
+            End If
+
             'now we can get the strings from the keys.
             WGSD.Table_Entries(k).diffuseMap = find_str_BWST(WGSD.Table_Entries(k).diffuseMapKey)
             WGSD.Table_Entries(k).normalMap = find_str_BWST(WGSD.Table_Entries(k).normalMapKey)
@@ -699,6 +711,7 @@ Module Mod_Space_Bin_Functions
                 WGSD.Table_Entries(k).normalMap = "Stone06_NM.dds"
             End If
             decal_matrix_list(k).decal_normal = WGSD.Table_Entries(k).normalMap
+ignore_this:
             decal_matrix_list(k).influence = CInt((WGSD.Table_Entries(k).flags And &HFF00) / 256)
             If decal_matrix_list(k).influence = 6 Then
                 decal_matrix_list(k).influence = 2

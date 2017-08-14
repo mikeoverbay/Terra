@@ -551,7 +551,7 @@ dont_grab_this:
         frmMapInfo.I__General_Info_tb.Text += "Models: " + Format("0000", Model_Matrix_list.Length - 1) + vbCrLf
 
         'We are going to create the water now.. before closing the PKGs.. may want to get
-        'textures from them?? This app does not refresh nonstop. no point in animated textures for the water
+        'textures from them??
         If m_water_ Then
             water_loaded = True
             If BWWa.bwwa_t1(0).width > 0 Then
@@ -927,7 +927,7 @@ dont_grab_this:
                         GoTo skip_this
                     End If
                     If Model_Matrix_list(m).primitive_name.ToLower.Contains("wgl_banner") _
-                        Or Model_Matrix_list(m).primitive_name.ToLower.Contains("000_base") _
+                        Or Model_Matrix_list(m).primitive_name.ToLower.Contains("00000_base") _
                         Or Model_Matrix_list(m).primitive_name.ToLower.Contains("particles") Then
                         GoTo skip_this
                     End If
