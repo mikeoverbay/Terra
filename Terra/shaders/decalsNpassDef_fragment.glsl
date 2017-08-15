@@ -72,12 +72,12 @@ void main(){
     vec3 fx = dFdx(WorldPosition.xyz);
     vec3 fy = dFdy(WorldPosition.xyz);
     // grab the existing normal.
-    vec3 n = normalize(texture2D(normal_in, UV.xy * uv_wrap.xy).xyz*2.0-1.0);
+    vec3 n = normalize(texture2D(normal_in, UV.xy).xyz*2.0-1.0);
     vec3 t = normalize(fx);
     vec3 b = normalize(fy);
     mat3 TBN = mat3(t,b,n);
 
-    vec4 normalDef = texture2D(normal_in, UV.xy * uv_wrap.xy);
+    vec4 normalDef = texture2D(normal_in, UV.xy );
     //================================================
     //================================================
     //Get texture UVs
