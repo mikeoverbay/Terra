@@ -106,10 +106,10 @@ Public Class frmTanks
 		SplitContainer1.Panel2.Controls.Clear()
 
         Dim ww = SplitContainer1.Panel1.Width - 6
-        If american_tanks.Length = 1 Then
-            Return
-        End If
-        Dim t = american_tanks(1).image.Width
+        'If american_tanks.Length = 1 Then
+        '    Return
+        'End If
+        Dim t = 160
         Dim l As New Label
         Dim fnt As New Font(frmMain.pfc.Families(0), 6, FontStyle.Regular)
 
@@ -121,7 +121,7 @@ Public Class frmTanks
             butt.Font = fnt
             Dim m = ww / t
             butt.Width = t * m
-            butt.Height = american_tanks(0).image.Height * m
+            butt.Height = 100 * m
             butt.Tag = "1_" & i.ToString
             butt.Text = ""
             butt.BackgroundImage = My.Resources.open_slot
@@ -153,7 +153,7 @@ Public Class frmTanks
             butt.Font = fnt
             Dim m = ww / t
             butt.Width = t * m
-            butt.Height = american_tanks(0).image.Height * m
+            butt.Height = 100 * m
             butt.Tag = "2_" & i.ToString
             butt.Text = ""
             butt.BackgroundImage = My.Resources.open_slot

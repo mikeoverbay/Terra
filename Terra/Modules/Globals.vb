@@ -246,6 +246,7 @@ Module Globals
     Public lodMapSize, normalMapSize, heightMapSize, aoMapSize, _
               holeMapSize, shadowMapSize, blendMapsize As UInt32
     Public z_move As Boolean = False
+    Public gun_move As Boolean = False
     Public move_mod As Boolean = False
     Public rename_x As Integer
     Public rename_y As Integer

@@ -1588,7 +1588,7 @@ jump_normal:
             For Each f In w
                 Dim ms As New MemoryStream
                 f.Extract(ms)
-                Debug.WriteLine(f.FileName)
+                'Debug.WriteLine(f.FileName)
                 animated_water_ids(cnt) = get_texture(ms, False)
                 cnt += 1
             Next

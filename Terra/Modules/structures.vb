@@ -119,14 +119,19 @@ Module structures
         Public loc_x As Single
         Public loc_z As Single
         Public t_rotation As Single
+        Public g_rotation As Single
         Public turret_location As vect3
+        Public gun_location As vect3
         Public rot_limit_l As Single
         Public rot_limit_r As Single
+        Public gun_limit_u As Single
+        Public gun_limit_d As Single
         'This will be in the form of "n_a_n_n" 
         'team (1 or 2) _ (nation Am,Ru,Ge... Po) _ (index) _ button index
         Public id As String
-        Public tank_displaylist As Integer
-        Public tank_displaylist2 As Integer
+        Public tank_body As Integer
+        Public tank_turret As Integer
+        Public tank_gun As Integer
         Public type As Integer
         Public name As String
         Public comment As String

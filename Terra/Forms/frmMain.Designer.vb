@@ -112,6 +112,7 @@ Partial Class frmMain
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.m_load_old = New System.Windows.Forms.ToolStripMenuItem()
         Me.pb1.SuspendLayout()
         Me.mainMenu.SuspendLayout()
         Me.SuspendLayout()
@@ -164,7 +165,7 @@ Partial Class frmMain
         '
         'm_file
         '
-        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_map_info, Me.m_render_stats, Me.m_developer, Me.m_post_effect_viewer, Me.m_load_options})
+        Me.m_file.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_load_map, Me.ToolStripMenuItem10, Me.m_set_path, Me.ToolStripMenuItem3, Me.m_save, Me.m_load, Me.m_load_old, Me.ToolStripMenuItem7, Me.m_exit, Me.ToolStripSeparator6, Me.m_map_info, Me.m_render_stats, Me.m_developer, Me.m_post_effect_viewer, Me.m_load_options})
         Me.m_file.ForeColor = System.Drawing.Color.Black
         Me.m_file.Name = "m_file"
         resources.ApplyResources(Me.m_file, "m_file")
@@ -654,6 +655,11 @@ Partial Class frmMain
         resources.ApplyResources(Me.SaveFileDialog1, "SaveFileDialog1")
         Me.SaveFileDialog1.InitialDirectory = Global.Terra.My.MySettings.Default.game_path
         '
+        'm_load_old
+        '
+        Me.m_load_old.Name = "m_load_old"
+        resources.ApplyResources(Me.m_load_old, "m_load_old")
+        '
         'frmMain
         '
         resources.ApplyResources(Me, "$this")
@@ -763,5 +769,6 @@ Partial Class frmMain
     Friend WithEvents m_SSAO As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents m_constant_updates As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_load_old As System.Windows.Forms.ToolStripMenuItem
 
 End Class

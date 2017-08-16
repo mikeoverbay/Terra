@@ -476,6 +476,9 @@ fail_path:
             End If
 
         End If
+        If e.KeyCode = Keys.Space Then
+            gun_move = True
+        End If
         If e.KeyCode = 17 Then
             If Not z_move Then
                 z_move = True ' CTRL KEY
@@ -512,6 +515,10 @@ fail_path:
     Private Sub Form1_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
         MOVE_TANK = False
         ROTATE_TANK = False
+        If gun_move Then
+            gun_move = False
+            need_screen_update()
+        End If
         If move_mod Then
             move_mod = False
             need_screen_update()
@@ -629,19 +636,23 @@ fail_path:
         ReDim locations.team_2(15)
         For u = 0 To 14
             locations.team_1(u) = New t_l
-            If locations.team_1(u).tank_displaylist > 0 Then
-                Gl.glDeleteLists(locations.team_1(u).tank_displaylist, 1)
+            If locations.team_1(u).tank_body > 0 Then
+                Gl.glDeleteLists(locations.team_1(u).tank_body, 1)
+                Gl.glDeleteLists(locations.team_1(u).tank_turret, 1)
+                Gl.glDeleteLists(locations.team_1(u).tank_gun, 1)
             End If
-            locations.team_1(u).tank_displaylist = -1
+            locations.team_1(u).tank_body = -1
             locations.team_1(u).id = ""
             locations.team_1(u).comment = ""
             locations.team_1(u).name = ""
 
             locations.team_2(u) = New t_l
-            If locations.team_2(u).tank_displaylist > 0 Then
-                Gl.glDeleteLists(locations.team_2(u).tank_displaylist, 1)
+            If locations.team_2(u).tank_body > 0 Then
+                Gl.glDeleteLists(locations.team_2(u).tank_body, 1)
+                Gl.glDeleteLists(locations.team_2(u).tank_turret, 1)
+                Gl.glDeleteLists(locations.team_2(u).tank_gun, 1)
             End If
-            locations.team_2(u).tank_displaylist = -1
+            locations.team_2(u).tank_body = -1
             locations.team_2(u).id = ""
             locations.team_2(u).comment = ""
             locations.team_2(u).name = ""
@@ -1147,25 +1158,42 @@ dontaddthis:
         Dim b As New BinaryReader(f_)
         Dim s1 = b.ReadString
         Dim s2 = b.ReadString
+        Dim s3 = b.ReadString
+        Dim s4 = b.ReadString
         Dim version = b.ReadUInt32
 
 
         Dim poly_count1 As UInt32 = b.ReadUInt32 * 3
         Dim poly_count2 As UInt32 = b.ReadUInt32 * 3
-
+        Dim poly_count3 As UInt32 = b.ReadUInt32 * 3
+        'turret info
         tank.turret_location.x = b.ReadSingle
+        tank.turret_location.y = b.ReadSingle
         tank.turret_location.z = -b.ReadSingle
-
         tank.rot_limit_l = b.ReadSingle
         tank.rot_limit_r = b.ReadSingle
+        'gun info
 
-        If tank.tank_displaylist > 0 Then
-            Gl.glDeleteLists(tank.tank_displaylist, 1)
+        tank.gun_location.x = b.ReadSingle
+        tank.gun_location.y = b.ReadSingle
+        tank.gun_location.z = -b.ReadSingle
+        tank.gun_limit_u = b.ReadSingle
+        tank.gun_limit_d = b.ReadSingle
+        'read off 9 unused singles for future use
+        For i = 0 To 8
+            b.ReadSingle()
+        Next
+
+        'body
+        If tank.tank_body > 0 Then
+            Gl.glDeleteLists(tank.tank_body, 1)
+            Gl.glDeleteLists(tank.tank_turret, 1)
+            Gl.glDeleteLists(tank.tank_gun, 1)
         End If
         Dim ID = Gl.glGenLists(1)
         Gl.glNewList(ID, Gl.GL_COMPILE)
 
-        tank.tank_displaylist = ID
+        tank.tank_body = ID
         Gl.glBegin(Gl.GL_TRIANGLES)
         Dim cnt As Integer = 0 ' for debug
         'start pushing vertices
@@ -1190,15 +1218,44 @@ dontaddthis:
 
         Gl.glFinish()
         '-----------------------------------
-        'turret and gun
+        'turret
         ID = Gl.glGenLists(1)
         Gl.glNewList(ID, Gl.GL_COMPILE)
 
-        tank.tank_displaylist2 = ID
+        tank.tank_turret = ID
         Gl.glBegin(Gl.GL_TRIANGLES)
         cnt = 0 ' for debug
         'start pushing vertices
         For c As UInt32 = 0 To poly_count2 - 1
+
+            v(0) = -b.ReadSingle '- tank.turret_location.x
+            v(1) = b.ReadSingle
+            v(2) = -b.ReadSingle '- tank.turret_location.z
+
+            n(0) = b.ReadSingle
+            n(1) = b.ReadSingle
+            n(2) = b.ReadSingle
+            'uv(0) = b.ReadSingle
+            'uv(1) = b.ReadSingle
+            Gl.glNormal3fv(n)
+            'Gl.glTexCoord2fv(uv)
+            Gl.glVertex3fv(v)
+
+            cnt += 1
+        Next
+        Gl.glEnd()
+        Gl.glEndList()
+
+        '-----------------------------------
+        'gun
+        ID = Gl.glGenLists(1)
+        Gl.glNewList(ID, Gl.GL_COMPILE)
+
+        tank.tank_gun = ID
+        Gl.glBegin(Gl.GL_TRIANGLES)
+        cnt = 0 ' for debug
+        'start pushing vertices
+        For c As UInt32 = 0 To poly_count3 - 1
 
             v(0) = -b.ReadSingle '- tank.turret_location.x
             v(1) = b.ReadSingle
@@ -1554,8 +1611,8 @@ dontaddthis:
         stopGL = True
         Application.DoEvents()
         autoEventScreen.Reset()
-        While gl_busy
-        End While
+        'While gl_busy
+        'End While
         If Not (Wgl.wglMakeCurrent(pb1_hDC, pb1_hRC)) Then
             MessageBox.Show("Unable to make rendering context current")
             End
@@ -1722,7 +1779,7 @@ dontaddthis:
                 '                ' cant let this try and draw shit that isnt there yet!!!
                 Dim cv = 57.2957795
                 For i = 0 To 14
-                    If locations.team_1(i).tank_displaylist > -1 Then
+                    If locations.team_1(i).tank_body > -1 Then
                         red = i + 1
                         green = 0
                         blue = 0
@@ -1738,7 +1795,7 @@ dontaddthis:
                         Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
                         Gl.glRotatef(rz, 0.0, 0.0, 1.0)
                         Gl.glRotatef(rx, -1.0, 0.0, 0.0)
-                        Gl.glCallList(locations.team_1(i).tank_displaylist)
+                        Gl.glCallList(locations.team_1(i).tank_body)
                         Gl.glPopMatrix()
                         '------------------------------------
                         'turret/gun
@@ -1753,12 +1810,28 @@ dontaddthis:
                         Gl.glRotatef(locations.team_1(i).t_rotation, 0.0, 1.0, 0.0)
                         Gl.glTranslatef(-locations.team_1(i).turret_location.x, 0.0, -locations.team_1(i).turret_location.z)
 
-                        Gl.glCallList(locations.team_1(i).tank_displaylist2)
+                        Gl.glCallList(locations.team_1(i).tank_turret)
+                        Gl.glPopMatrix()
+                        'gun rotation
+                        Gl.glPushMatrix()
+
+                        Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
+                        Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                        Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                        Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                        Gl.glTranslatef(locations.team_1(i).turret_location.x, locations.team_1(i).turret_location.y, locations.team_1(i).turret_location.z)
+                        Gl.glRotatef(locations.team_1(i).t_rotation, 0.0, 1.0, 0.0)
+                        Gl.glTranslatef(locations.team_1(i).gun_location.x, locations.team_1(i).gun_location.y, locations.team_1(i).gun_location.z)
+                        Gl.glRotatef(locations.team_1(i).g_rotation, 1.0, 0.0, 0.0)
+                        Gl.glTranslatef(-locations.team_1(i).gun_location.x, -locations.team_1(i).gun_location.y, -locations.team_1(i).gun_location.z)
+                        Gl.glTranslatef(-locations.team_1(i).turret_location.x, -locations.team_1(i).turret_location.y, -locations.team_1(i).turret_location.z)
+                        Gl.glCallList(locations.team_1(i).tank_gun)
                         Gl.glPopMatrix()
                     End If
                 Next
                 For i = 0 To 14
-                    If locations.team_2(i).tank_displaylist > -1 Then
+                    If locations.team_2(i).tank_body > -1 Then
                         red = 0
                         green = 0
                         blue = i + 1
@@ -1773,10 +1846,10 @@ dontaddthis:
                         Gl.glRotatef(cv * rot, 0.0, 1.0, 0.0)
                         Gl.glRotatef(rz, 0.0, 0.0, 1.0)
                         Gl.glRotatef(rx, -1.0, 0.0, 0.0)
-                        Gl.glCallList(locations.team_2(i).tank_displaylist)
+                        Gl.glCallList(locations.team_2(i).tank_body)
                         Gl.glPopMatrix()
                         '------------------------------------
-                        'turret/gun
+                        'turret
                         Gl.glPushMatrix()
 
 
@@ -1789,7 +1862,24 @@ dontaddthis:
                         Gl.glRotatef(locations.team_2(i).t_rotation, 0.0, 1.0, 0.0)
                         Gl.glTranslatef(-locations.team_2(i).turret_location.x, 0.0, -locations.team_2(i).turret_location.z)
 
-                        Gl.glCallList(locations.team_2(i).tank_displaylist2)
+                        Gl.glCallList(locations.team_2(i).tank_turret)
+                        Gl.glPopMatrix()
+                        'gun rotation
+                        Gl.glPushMatrix()
+
+                        Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
+                        Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                        Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                        Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                        Gl.glTranslatef(locations.team_2(i).turret_location.x, locations.team_2(i).turret_location.y, locations.team_2(i).turret_location.z)
+                        Gl.glRotatef(locations.team_2(i).t_rotation, 0.0, 1.0, 0.0)
+                        Gl.glTranslatef(locations.team_2(i).gun_location.x, locations.team_2(i).gun_location.y, locations.team_2(i).gun_location.z)
+                        Gl.glRotatef(locations.team_2(i).g_rotation, 1.0, 0.0, 0.0)
+                        Gl.glTranslatef(-locations.team_2(i).gun_location.x, -locations.team_2(i).gun_location.y, -locations.team_2(i).gun_location.z)
+                        Gl.glTranslatef(-locations.team_2(i).turret_location.x, -locations.team_2(i).turret_location.y, -locations.team_2(i).turret_location.z)
+
+                        Gl.glCallList(locations.team_2(i).tank_gun)
                         Gl.glPopMatrix()
                     End If
                 Next
@@ -2981,7 +3071,7 @@ skip:
             Gl.glUseProgram(shader_list.tankDef_shader)
             For i = 0 To 14
                 Gl.glColor4f(0.4!, 0.0!, 0.0!, 1.0)
-                If locations.team_1(i).tank_displaylist > -1 Then
+                If locations.team_1(i).tank_body > -1 Then
                     Gl.glPushMatrix()
                     Gl.glMatrixMode(Gl.GL_MODELVIEW)
                     Gl.glLoadIdentity()
@@ -3011,7 +3101,7 @@ skip:
                     If tankID = i Then
                         Gl.glColor4f(0.5, 0.5, 0.0, 1.0)
                     End If
-                    Gl.glCallList(locations.team_1(i).tank_displaylist)
+                    Gl.glCallList(locations.team_1(i).tank_body)
 
                     'turret rotation
                     Gl.glPushMatrix()
@@ -3033,12 +3123,53 @@ skip:
                     Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
                     Gl.glPopMatrix()
 
-                    Gl.glCallList(locations.team_1(i).tank_displaylist2)
+                    Gl.glCallList(locations.team_1(i).tank_turret)
+                    'gun rotation
+                    Gl.glPushMatrix()
+
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW)
+                    Gl.glLoadIdentity()
+
+
+                    Gl.glTranslatef(locations.team_1(i).loc_x, y_, locations.team_1(i).loc_z)
+                    Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                    Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                    Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                    Gl.glTranslatef(locations.team_1(i).turret_location.x, locations.team_1(i).turret_location.y, locations.team_1(i).turret_location.z)
+                    Gl.glRotatef(locations.team_1(i).t_rotation, 0.0, 1.0, 0.0)
+                    Gl.glTranslatef(locations.team_1(i).gun_location.x, locations.team_1(i).gun_location.y, locations.team_1(i).gun_location.z)
+                    Gl.glRotatef(locations.team_1(i).g_rotation, 1.0, 0.0, 0.0)
+                    Gl.glTranslatef(-locations.team_1(i).gun_location.x, -locations.team_1(i).gun_location.y, -locations.team_1(i).gun_location.z)
+                    Gl.glTranslatef(-locations.team_1(i).turret_location.x, -locations.team_1(i).turret_location.y, -locations.team_1(i).turret_location.z)
+
+                    Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
+                    Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
+                    Gl.glPopMatrix()
+                    If tankID = i Then
+                        Dim v1(3) As Single
+                        Dim v2(3) As Single
+                        Gl.glColor4f(0.99, 0.0, 0.0, 1.0)
+                        v1(0) = locations.team_1(i).gun_location.x + locations.team_1(i).turret_location.x
+                        v1(1) = locations.team_1(i).gun_location.y + locations.team_1(i).turret_location.y
+                        v1(2) = locations.team_1(i).gun_location.z + locations.team_1(i).turret_location.z
+                        v2(0) = locations.team_1(i).gun_location.x + locations.team_1(i).turret_location.x
+                        v2(1) = locations.team_1(i).gun_location.y + locations.team_1(i).turret_location.y
+                        v2(2) = -1000.0!
+                        Gl.glBegin(Gl.GL_LINES)
+                        Gl.glVertex3fv(v1)
+                        Gl.glVertex3fv(v2)
+                        Gl.glEnd()
+                        Gl.glColor4f(0.5, 0.5, 0.0, 1.0)
+
+                    End If
+                    Gl.glCallList(locations.team_1(i).tank_gun)
+
                 End If
             Next
             For i = 0 To 14
                 Gl.glColor4f(0.0, 0.3, 0.0, 1.0)
-                If locations.team_2(i).tank_displaylist > -1 Then
+                If locations.team_2(i).tank_body > -1 Then
                     Gl.glPushMatrix()
                     Gl.glMatrixMode(Gl.GL_MODELVIEW)
                     Gl.glLoadIdentity()
@@ -3067,7 +3198,7 @@ skip:
                     If tankID = i + 100 Then
                         Gl.glColor4f(0.5, 0.5, 0.0, 1.0)
                     End If
-                    Gl.glCallList(locations.team_2(i).tank_displaylist)
+                    Gl.glCallList(locations.team_2(i).tank_body)
                     'turret rotation
                     Gl.glPushMatrix()
 
@@ -3088,7 +3219,48 @@ skip:
                     Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
                     Gl.glPopMatrix()
 
-                    Gl.glCallList(locations.team_2(i).tank_displaylist2)
+                    Gl.glCallList(locations.team_2(i).tank_turret)
+                    'gun rotation
+                    Gl.glPushMatrix()
+
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW)
+                    Gl.glLoadIdentity()
+
+
+                    Gl.glTranslatef(locations.team_2(i).loc_x, y_, locations.team_2(i).loc_z)
+                    Gl.glRotatef(cv * rot, 0.0!, 1.0!, 0.0!)
+                    Gl.glRotatef(rz, 0.0!, 0.0!, 1.0!)
+                    Gl.glRotatef(rx, -1.0!, 0.0!, 0.0!)
+
+                    Gl.glTranslatef(locations.team_2(i).turret_location.x, locations.team_2(i).turret_location.y, locations.team_2(i).turret_location.z)
+                    Gl.glRotatef(locations.team_2(i).t_rotation, 0.0, 1.0, 0.0)
+                    Gl.glTranslatef(locations.team_2(i).gun_location.x, locations.team_2(i).gun_location.y, locations.team_2(i).gun_location.z)
+                    Gl.glRotatef(locations.team_2(i).g_rotation, 1.0, 0.0, 0.0)
+                    Gl.glTranslatef(-locations.team_2(i).gun_location.x, -locations.team_2(i).gun_location.y, -locations.team_2(i).gun_location.z)
+                    Gl.glTranslatef(-locations.team_2(i).turret_location.x, -locations.team_2(i).turret_location.y, -locations.team_2(i).turret_location.z)
+
+                    Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, mat)
+                    Gl.glUniformMatrix4fv(tankDef_matrix, 1, 0, mat)
+                    Gl.glPopMatrix()
+                    If tankID = i + 100 Then
+                        Dim v1(3) As Single
+                        Dim v2(3) As Single
+                        Gl.glColor4f(0.99, 0.0, 0.0, 1.0)
+                        v1(0) = locations.team_2(i).gun_location.x + locations.team_2(i).turret_location.x
+                        v1(1) = locations.team_2(i).gun_location.y + locations.team_2(i).turret_location.y
+                        v1(2) = locations.team_2(i).gun_location.z + locations.team_2(i).turret_location.z
+                        v2(0) = locations.team_2(i).gun_location.x + locations.team_2(i).turret_location.x
+                        v2(1) = locations.team_2(i).gun_location.y + locations.team_2(i).turret_location.y
+                        v2(2) = -1000.0!
+                        Gl.glBegin(Gl.GL_LINES)
+                        Gl.glVertex3fv(v1)
+                        Gl.glVertex3fv(v2)
+                        Gl.glEnd()
+                        Gl.glColor4f(0.5, 0.5, 0.0, 1.0)
+
+                    End If
+                    Gl.glCallList(locations.team_2(i).tank_gun)
+
                 End If
             Next
         End If
@@ -3852,12 +4024,12 @@ over_it:
             End If
             If maploaded And m_show_tank_names.Checked Then
                 For i = 0 To 14
-                    If locations.team_1(i).tank_displaylist > -1 Then
+                    If locations.team_1(i).tank_body > -1 Then
                         If locations.team_1(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_1(i).scrn_coords(0) - ((locations.team_1(i).name.Length / 2) * 8), locations.team_1(i).scrn_coords(1) - pb1.Height, locations.team_1(i).name, 1.0, 0.0, 0.0, 1.0)
                         End If
                     End If
-                    If locations.team_2(i).tank_displaylist > -1 Then
+                    If locations.team_2(i).tank_body > -1 Then
                         If locations.team_2(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_2(i).scrn_coords(0) - ((locations.team_2(i).name.Length / 2) * 8), locations.team_2(i).scrn_coords(1) - pb1.Height, locations.team_2(i).name, 0.0, 1.0, 0.0, 1.0)
                         End If
@@ -3867,12 +4039,12 @@ over_it:
             End If
             If maploaded And m_show_tank_comments.Checked Then
                 For i = 0 To 14
-                    If locations.team_1(i).tank_displaylist > -1 Then
+                    If locations.team_1(i).tank_body > -1 Then
                         If locations.team_1(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_1(i).scrn_coords(0) - ((locations.team_1(i).comment.Length / 2) * 8), locations.team_1(i).scrn_coords(1) - pb1.Height - 15, locations.team_1(i).comment, 1.0, 1.0, 1.0, 1.0)
                         End If
                     End If
-                    If locations.team_2(i).tank_displaylist > -1 Then
+                    If locations.team_2(i).tank_body > -1 Then
                         If locations.team_2(i).scrn_coords(2) < 1.0 Then
                             glutPrintBox(locations.team_2(i).scrn_coords(0) - ((locations.team_2(i).comment.Length / 2) * 8), locations.team_2(i).scrn_coords(1) - pb1.Height - 15, locations.team_2(i).comment, 1.0, 1.0, 1.0, 1.0)
                         End If
@@ -3908,8 +4080,10 @@ over_it:
                 If tankID > -1 Then
                     If tankID > 99 Then
                         str += " Rotation:" + locations.team_2(tankID - 100).t_rotation.ToString("000")
+                        str += ":" + locations.team_2(tankID - 100).g_rotation.ToString("00")
                     Else
                         str += " Rotation:" + locations.team_1(tankID).t_rotation.ToString("000")
+                        str += ":" + locations.team_1(tankID).g_rotation.ToString("00")
                     End If
                 End If
                 ' Dim yp = get_Z_at_XY(u_look_point_X, u_look_point_Z)
@@ -4105,7 +4279,7 @@ over_it:
 
         For t1 = 0 To 14
             Gl.glColor3f(0.9!, 0.0!, 0.0!)
-            If locations.team_1(t1).tank_displaylist > -1 Then
+            If locations.team_1(t1).tank_body > -1 Then
                 Dim lx = (((locations.team_1(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' + (ic_x * scale)
                 Dim ly = (((locations.team_1(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, tank_mini_icons(locations.team_1(t1).type))
@@ -4125,7 +4299,7 @@ over_it:
                 Gl.glEnd()
             End If
             Gl.glColor3f(0.0!, 0.9!, 0.0!)
-            If locations.team_2(t1).tank_displaylist > -1 Then
+            If locations.team_2(t1).tank_body > -1 Then
                 Dim lx = (((locations.team_2(t1).loc_x + xc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_x * scale)
                 Dim ly = (((locations.team_2(t1).loc_z + yc) / vs) * (-xy)) + (minimap_size / 2.0) ' - (ic_y * scale)
 
@@ -4361,7 +4535,7 @@ over_it:
 
 
         For t1 = 0 To 14
-            If locations.team_1(t1).tank_displaylist > -1 Then
+            If locations.team_1(t1).tank_body > -1 Then
                 lx = locations.team_1(t1).loc_x
                 ly = locations.team_1(t1).loc_z
                 glutPrint(lx + (((locations.team_1(t1).name.Length / 2) * 8) + 2) * ts, ly, locations.team_1(t1).name, 0.0, 0.0, 0.0, 0.3)
@@ -4369,7 +4543,7 @@ over_it:
                 glutPrint(lx + ((locations.team_1(t1).name.Length / 2) * 8) * ts, ly, locations.team_1(t1).name, 1.0, 1.0, 1.0, 1.0)
 
             End If
-            If locations.team_2(t1).tank_displaylist > -1 Then
+            If locations.team_2(t1).tank_body > -1 Then
                 lx = locations.team_2(t1).loc_x
                 ly = locations.team_2(t1).loc_z
                 glutPrint(lx + (((locations.team_2(t1).name.Length / 2) * 8) + 2) * ts, ly, locations.team_2(t1).name, 0.0, 0.0, 0.0, 0.3)
@@ -4587,25 +4761,46 @@ over_it:
                 rm = -am
             End If
             If rm Then
-                If tankID > -1 Then
-                    If tankID > 99 Then
-                        Dim r = locations.team_2(tankID - 100).t_rotation
-                        r += rm
-                        If r < locations.team_2(tankID - 100).rot_limit_l Then r = locations.team_2(tankID - 100).rot_limit_l
-                        If r > locations.team_2(tankID - 100).rot_limit_r Then r = locations.team_2(tankID - 100).rot_limit_r
-                        If r < -360 Then r += 360
-                        If r > 360 Then r -= 360
-                        locations.team_2(tankID - 100).t_rotation = r
-                    Else
-                        Dim r = locations.team_1(tankID).t_rotation
-                        r += rm
-                        If r < locations.team_1(tankID).rot_limit_l Then r = locations.team_1(tankID).rot_limit_l
-                        If r > locations.team_1(tankID).rot_limit_r Then r = locations.team_1(tankID).rot_limit_r
-                        If r < -360 Then r += 360
-                        If r > 360 Then r -= 360
-                        locations.team_1(tankID).t_rotation = r
+                If gun_move Then
+                    'gun rotation
+                    If tankID > -1 Then
+                        If tankID > 99 Then
+                            Dim r = locations.team_2(tankID - 100).g_rotation
+                            r += rm
+                            If r < locations.team_2(tankID - 100).gun_limit_d Then r = locations.team_2(tankID - 100).gun_limit_d
+                            If r > locations.team_2(tankID - 100).gun_limit_u Then r = locations.team_2(tankID - 100).gun_limit_u
+                            locations.team_2(tankID - 100).g_rotation = r
+                        Else
+                            Dim r = locations.team_1(tankID).g_rotation
+                            r += rm
+                            If r < locations.team_1(tankID).gun_limit_d Then r = locations.team_1(tankID).gun_limit_d
+                            If r > locations.team_1(tankID).gun_limit_u Then r = locations.team_1(tankID).gun_limit_u
+                            locations.team_1(tankID).g_rotation = r
+                        End If
                     End If
                     activity = True 'force screen updates
+                Else
+                    'turret rotation
+                    If tankID > -1 Then
+                        If tankID > 99 Then
+                            Dim r = locations.team_2(tankID - 100).t_rotation
+                            r += rm
+                            If r < locations.team_2(tankID - 100).rot_limit_l Then r = locations.team_2(tankID - 100).rot_limit_l
+                            If r > locations.team_2(tankID - 100).rot_limit_r Then r = locations.team_2(tankID - 100).rot_limit_r
+                            If r < -360 Then r += 360
+                            If r > 360 Then r -= 360
+                            locations.team_2(tankID - 100).t_rotation = r
+                        Else
+                            Dim r = locations.team_1(tankID).t_rotation
+                            r += rm
+                            If r < locations.team_1(tankID).rot_limit_l Then r = locations.team_1(tankID).rot_limit_l
+                            If r > locations.team_1(tankID).rot_limit_r Then r = locations.team_1(tankID).rot_limit_r
+                            If r < -360 Then r += 360
+                            If r > 360 Then r -= 360
+                            locations.team_1(tankID).t_rotation = r
+                        End If
+                        activity = True 'force screen updates
+                    End If
                 End If
             End If
         End If
@@ -5936,6 +6131,19 @@ no_move_xz:
                 bw.Write(locations.team_1(i).loc_z)
                 bw.Write(locations.team_1(i).rot_y)
                 bw.Write(locations.team_1(i).t_rotation)
+                bw.Write(locations.team_1(i).g_rotation)
+                '9 extra singes for future additions
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+                bw.Write(1.0!)
             Next
             For i = 0 To 14
                 btn = frmTanks.SplitContainer1.Panel2.Controls(i)
@@ -5946,11 +6154,75 @@ no_move_xz:
                 bw.Write(locations.team_2(i).loc_z)
                 bw.Write(locations.team_2(i).rot_y)
                 bw.Write(locations.team_2(i).t_rotation)
+                bw.Write(locations.team_2(i).g_rotation)
+                '9 extra singes for future additions
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+
+                bw.Write(1.0!)
+                bw.Write(1.0!)
+                bw.Write(1.0!)
             Next
             fs.Close()
             bw.Close()
 
         End If
+    End Sub
+    Private Sub m_load_old_Click(sender As Object, e As EventArgs) Handles m_load_old.Click
+        If OpenFileDialog1.ShowDialog(Me) = Forms.DialogResult.OK Then
+            maploaded = False
+            SHOW_MAPS = False
+            m_comment.Text = ""
+            m_comment.Visible = False
+            flush_data()
+            Dim fs As New FileStream(OpenFileDialog1.FileName, FileMode.Open, FileAccess.Read)
+            Dim br As New BinaryReader(fs)
+            Dim btn As New Button
+            frmTanks.Visible = True
+            While Not frmTanks.Visible
+
+            End While
+            load_map_name = br.ReadString
+            tankID = -1
+            Dim ma = load_map_name.Split(".")
+            For Each n In loadmaplist
+                If n.name.Contains(ma(0)) Then
+                    Me.Text = n.realname
+                    Exit For
+                End If
+            Next
+            JUST_MAP_NAME = Path.GetFileNameWithoutExtension(OpenFileDialog1.FileName)
+            open_pkg(load_map_name)
+            Dim txt As String = ""
+            For i = 0 To 29
+                uTank.comment = br.ReadString
+                uTank.name = br.ReadString
+                uTank.id = br.ReadString
+                uTank.loc_x = br.ReadSingle
+                uTank.loc_z = br.ReadSingle
+                uTank.rot_y = br.ReadSingle
+                uTank.t_rotation = br.ReadSingle
+
+                net_button_update()
+                Application.DoEvents()
+            Next
+            fs.Close()
+            br.Close()
+            br.Dispose()
+            tankID = -1
+            Packet_out.tankId = -1
+
+            m_reset_tanks.Visible = False
+            frmTanks.Visible = False
+            position_camera()
+            need_screen_update()
+        End If
+
     End Sub
 
     Private Sub m_load_Click(sender As Object, e As EventArgs) Handles m_load.Click
@@ -5987,6 +6259,20 @@ no_move_xz:
                 uTank.loc_z = br.ReadSingle
                 uTank.rot_y = br.ReadSingle
                 uTank.t_rotation = br.ReadSingle
+                uTank.g_rotation = br.ReadSingle
+                '9 extra singles for future additions
+                br.ReadSingle()
+                br.ReadSingle()
+                br.ReadSingle()
+
+                br.ReadSingle()
+                br.ReadSingle()
+                br.ReadSingle()
+
+                br.ReadSingle()
+                br.ReadSingle()
+                br.ReadSingle()
+
                 net_button_update()
                 Application.DoEvents()
             Next
@@ -6031,6 +6317,7 @@ no_move_xz:
             locations.team_1(b_index).comment = uTank.comment
             locations.team_1(b_index).name = uTank.name
             locations.team_1(b_index).t_rotation = uTank.t_rotation
+            locations.team_1(b_index).g_rotation = uTank.g_rotation
             Select Case ar(1)
                 Case "Am"
                     set_up_location_1(american_tanks, locations.team_1, "_" + ar(1) + "_", b_index, Id)
@@ -6067,6 +6354,7 @@ no_move_xz:
             locations.team_2(b_index).comment = uTank.comment
             locations.team_2(b_index).name = uTank.name
             locations.team_2(b_index).t_rotation = uTank.t_rotation
+            locations.team_2(b_index).g_rotation = uTank.g_rotation
             Select Case ar(1)
                 Case "Am"
                     set_up_location_2(american_tanks, locations.team_2, "_" + ar(1) + "_", b_index, Id)

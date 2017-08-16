@@ -642,6 +642,9 @@ Module Mod_Space_Bin_Functions
             decal_matrix_list(k) = New decal_matrix_list_
             ReDim Preserve WGSD.Table_Entries(k).matrix(16)
             WGSD.Table_Entries(k).unknown_1 = br.ReadUInt32 'Unknown always 0?
+            If WGSD.Table_Entries(k).unknown_1 <> 0 Then
+                'Stop
+            End If
             For i = 0 To 15
                 WGSD.Table_Entries(k).matrix(i) = br.ReadSingle
             Next
@@ -657,7 +660,7 @@ Module Mod_Space_Bin_Functions
             End If
             WGSD.Table_Entries(k).flags = br.ReadUInt32
             decal_matrix_list(k).flags = WGSD.Table_Entries(k).flags
-
+            Debug.WriteLine(k.ToString("0000") + ":" + decal_matrix_list(k).flags.ToString("X"))
             WGSD.Table_Entries(k).off_x = br.ReadSingle
             WGSD.Table_Entries(k).off_y = br.ReadSingle
             WGSD.Table_Entries(k).off_z = br.ReadSingle
@@ -677,9 +680,9 @@ Module Mod_Space_Bin_Functions
             If decal_matrix_list(k).offset.z <> 0 Then
                 Stop
             End If
-            'If decal_matrix_list(k).offset.w <> 0 Then
-            '    Stop
-            'End If
+            If decal_matrix_list(k).offset.w <> 0 Then
+                Stop
+            End If
 
             WGSD.Table_Entries(k).uv_wrapping_u = br.ReadSingle
             WGSD.Table_Entries(k).uv_wrapping_v = br.ReadSingle

@@ -56,6 +56,7 @@ S22_Strv_S1:Strv S1:sweden:8:Destoryer:gui/maps/icons/vehicle/sweden-S22_Strv_S1
 A100_T49:T49:usa:9:Light:gui/maps/icons/vehicle/usa-A100_T49.png
 A14_T30:T30:usa:9:Destoryer:gui/maps/icons/vehicle/usa-A14_T30.png
 A40_T95:T95:usa:9:Destoryer:gui/maps/icons/vehicle/usa-A40_T95.png
+A63_M46_Patton:M46 Patton:usa:9:Medium:gui/maps/icons/vehicle/usa-A63_M46_Patton.png
 A66_M103:M103:usa:9:Heavy:gui/maps/icons/vehicle/usa-A66_M103.png
 A88_M53_55:M53\/M55:usa:9:Artillary:gui/maps/icons/vehicle/usa-A88_M53_55.png
 A89_T54E1:T54E1:usa:9:Medium:gui/maps/icons/vehicle/usa-A89_T54E1.png
@@ -128,4 +129,3 @@ R96_Object_430:Obj. 430:ussr:10:Medium:gui/maps/icons/vehicle/ussr-R96_Object_43
 R97_Object_140:Obj. 140:ussr:10:Medium:gui/maps/icons/vehicle/ussr-R97_Object_140.png
 S11_Strv_103B:Strv 103B:sweden:10:Destoryer:gui/maps/icons/vehicle/sweden-S11_Strv_103B.png
 S16_Kranvagn:Kranvagn:sweden:10:Heavy:gui/maps/icons/vehicle/sweden-S16_Kranvagn.png
-A63_M46_Patton:M46 Patton:usa:9:Medium:gui/maps/icons/vehicle/usa-A63_M46_Patton.png
