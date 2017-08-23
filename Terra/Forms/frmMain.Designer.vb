@@ -38,6 +38,7 @@ Partial Class frmMain
         Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_load = New System.Windows.Forms.ToolStripMenuItem()
+        Me.m_load_old = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem7 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_exit = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
@@ -112,7 +113,6 @@ Partial Class frmMain
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
-        Me.m_load_old = New System.Windows.Forms.ToolStripMenuItem()
         Me.pb1.SuspendLayout()
         Me.mainMenu.SuspendLayout()
         Me.SuspendLayout()
@@ -199,6 +199,11 @@ Partial Class frmMain
         '
         Me.m_load.Name = "m_load"
         resources.ApplyResources(Me.m_load, "m_load")
+        '
+        'm_load_old
+        '
+        Me.m_load_old.Name = "m_load_old"
+        resources.ApplyResources(Me.m_load_old, "m_load_old")
         '
         'ToolStripMenuItem7
         '
@@ -654,11 +659,6 @@ Partial Class frmMain
         '
         resources.ApplyResources(Me.SaveFileDialog1, "SaveFileDialog1")
         Me.SaveFileDialog1.InitialDirectory = Global.Terra.My.MySettings.Default.game_path
-        '
-        'm_load_old
-        '
-        Me.m_load_old.Name = "m_load_old"
-        resources.ApplyResources(Me.m_load_old, "m_load_old")
         '
         'frmMain
         '
