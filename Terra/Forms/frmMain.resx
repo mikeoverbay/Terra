@@ -576,6 +576,39 @@
   <data name="m_Orbit_Light.Text" xml:space="preserve">
     <value>Orbiting Light</value>
   </data>
+  <data name="m_mouseSpeed.Items" xml:space="preserve">
+    <value>0.1</value>
+  </data>
+  <data name="m_mouseSpeed.Items1" xml:space="preserve">
+    <value>0.2</value>
+  </data>
+  <data name="m_mouseSpeed.Items2" xml:space="preserve">
+    <value>0.3</value>
+  </data>
+  <data name="m_mouseSpeed.Items3" xml:space="preserve">
+    <value>0.4</value>
+  </data>
+  <data name="m_mouseSpeed.Items4" xml:space="preserve">
+    <value>0.5</value>
+  </data>
+  <data name="m_mouseSpeed.Items5" xml:space="preserve">
+    <value>0.6</value>
+  </data>
+  <data name="m_mouseSpeed.Items6" xml:space="preserve">
+    <value>0.7</value>
+  </data>
+  <data name="m_mouseSpeed.Items7" xml:space="preserve">
+    <value>0.8</value>
+  </data>
+  <data name="m_mouseSpeed.Items8" xml:space="preserve">
+    <value>0.9</value>
+  </data>
+  <data name="m_mouseSpeed.Items9" xml:space="preserve">
+    <value>1.0</value>
+  </data>
+  <data name="m_mouseSpeed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 23</value>
+  </data>
   <data name="m_settings.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 20</value>
   </data>
@@ -696,10 +729,10 @@
   <data name="m_edit_shaders.Text" xml:space="preserve">
     <value>Edit Shader</value>
   </data>
-  <data name="HelpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="m_help.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
   </data>
-  <data name="HelpToolStripMenuItem.Text" xml:space="preserve">
+  <data name="m_help.Text" xml:space="preserve">
     <value>&amp;Help</value>
   </data>
   <data name="m_mini_up.Size" type="System.Drawing.Size, System.Drawing">
@@ -2435,6 +2468,12 @@
   <data name="&gt;&gt;m_Orbit_Light.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;m_mouseSpeed.Name" xml:space="preserve">
+    <value>m_mouseSpeed</value>
+  </data>
+  <data name="&gt;&gt;m_mouseSpeed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;m_session.Name" xml:space="preserve">
     <value>m_session</value>
   </data>
@@ -2543,10 +2582,10 @@
   <data name="&gt;&gt;m_edit_shaders.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;HelpToolStripMenuItem.Name" xml:space="preserve">
-    <value>HelpToolStripMenuItem</value>
+  <data name="&gt;&gt;m_help.Name" xml:space="preserve">
+    <value>m_help</value>
   </data>
-  <data name="&gt;&gt;HelpToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;m_help.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_mini_up.Name" xml:space="preserve">

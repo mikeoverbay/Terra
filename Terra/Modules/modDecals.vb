@@ -2,6 +2,7 @@
 Imports System.IO
 Imports System.Math
 Imports System
+Imports SlimDX
 Module modDecals
     Public decal_cache() As decal_
     Public Structure decal_
@@ -36,7 +37,53 @@ Module modDecals
             'Dim id As Integer
             'id = Gl.glGenLists(1)
             'Gl.glNewList(id, Gl.GL_COMPILE)
-            get_box_corners(k)
+            Select Case decal_matrix_list(k).influence
+                Case 2
+                    get_box_corners(k, 2.0!)
+                Case 16
+                    get_box_corners(k, 0.5!)
+                Case 18
+                    get_box_corners(k, 0.85!)
+                Case Else
+                    'Stop
+                    get_box_corners(k, 0.85!)
+            End Select
+            Dim m = decal_matrix_list(k).matrix
+            'If k = 47 Then
+            '    Stop
+            'End If
+            'If k = 60 Then
+            '    Stop
+            'End If
+            Dim sm As New Matrix
+            sm.M11 = m(0)
+            sm.M12 = m(1)
+            sm.M13 = m(2)
+            sm.M14 = m(3)
+
+            sm.M21 = m(4)
+            sm.M22 = m(5)
+            sm.M23 = m(6)
+            sm.M24 = m(7)
+
+            sm.M31 = m(8)
+            sm.M32 = m(9)
+            sm.M33 = m(10)
+            sm.M34 = m(11)
+
+            sm.M41 = m(12)
+            sm.M42 = m(13)
+            sm.M43 = m(14)
+            sm.M44 = m(15)
+
+            Dim md = sm.Determinant
+            If md < 0 Then
+                decal_matrix_list(k).cull_method = Gl.GL_CCW
+            Else
+                decal_matrix_list(k).cull_method = Gl.GL_CW
+            End If
+        
+            Debug.WriteLine("id:" + k.ToString("0.000") + " Method:" + decal_matrix_list(k).cull_method.ToString)
             'now that we have the transforms,, we can figure out which chunks this decal touches.
             decal_matrix_list(k).display_id = Gl.glGenLists(1)
             Gl.glNewList(decal_matrix_list(k).display_id, Gl.GL_COMPILE)
@@ -88,48 +135,48 @@ skipthis:
         End With
 
     End Sub
-    Private Sub get_box_corners(ByVal decal As Integer)
+    Private Sub get_box_corners(ByVal decal As Integer, ByVal z_scale As Single)
         With decal_matrix_list(decal)
             ReDim .BB(8)
             ' left side -----------
             .lbl.x = -0.5 'left bottom left
             .lbl.y = -0.5
-            .lbl.z = -0.5
+            .lbl.z = -z_scale
             .BB(0) = .lbl
             '
             .lbr.x = 0.5 ' left bottom right
             .lbr.y = -0.5
-            .lbr.z = -0.5
+            .lbr.z = -z_scale
             .BB(1) = .lbr
             '
             .ltl.x = -0.5 'left top left
             .ltl.y = 0.5
-            .ltl.z = -0.5
+            .ltl.z = -z_scale
             .BB(2) = .ltl
             '
             .ltr.x = 0.5 ' left top right
             .ltr.y = 0.5
-            .ltr.z = -0.5
+            .ltr.z = -z_scale
             .BB(3) = .ltr
             ' right side ----------
             .rbl.x = -0.5 ' right bottom left
             .rbl.y = -0.5
-            .rbl.z = 0.5
+            .rbl.z = z_scale
             .BB(4) = .rbl
             '
             .rbr.x = 0.5 ' right bottom right
             .rbr.y = -0.5
-            .rbr.z = 0.5
+            .rbr.z = z_scale
             .BB(5) = .rbr
             '
             .rtl.x = -0.5 ' right top left
             .rtl.y = 0.5
-            .rtl.z = 0.5
+            .rtl.z = z_scale
             .BB(6) = .rtl
             '
             .rtr.x = 0.5 ' right top right
             .rtr.y = 0.5
-            .rtr.z = 0.5
+            .rtr.z = z_scale
             .BB(7) = .rtr
 
         End With
@@ -225,6 +272,14 @@ saveit:
         vo.y = (m(1) * v.x) + (m(5) * v.y) + (m(9) * v.z)
         vo.z = (m(2) * v.x) + (m(6) * v.y) + (m(10) * v.z)
 
+        vo.x += m(12)
+        vo.y += m(13)
+        vo.z += m(14)
+        Return vo
+
+    End Function
+    Public Function translate_only(ByVal v As vect3, ByVal m() As Single) As vect3
+        Dim vo As vect3
         vo.x += m(12)
         vo.y += m(13)
         vo.z += m(14)

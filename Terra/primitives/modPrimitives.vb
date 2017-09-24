@@ -1046,6 +1046,15 @@ dont_save_this:
         n1 = convert_normal(Md.normals(i + 0))
         n2 = convert_normal(Md.normals(i + 1))
         n3 = convert_normal(Md.normals(i + 2))
+        'If n1.Length < 0.5 Then
+        '    Stop
+        'End If
+        'If n2.Length < 0.5 Then
+        '    Stop
+        'End If
+        'If n3.Length < 0.5 Then
+        '    Stop
+        'End If
         n1.Normalize()
         n2.Normalize()
         n3.Normalize()
@@ -1089,8 +1098,8 @@ dont_save_this:
             bitangent *= -1.0
         End If
         t1 = CrossProduct(bitangent, n1)
-        t2 = CrossProduct(bitangent, n1)
-        t3 = CrossProduct(bitangent, n1)
+        t2 = CrossProduct(bitangent, n2)
+        t3 = CrossProduct(bitangent, n3)
 
         t1 = tangent - (Vector3D.DotProduct(t1, n1) * n1)
         t2 = tangent - (Vector3D.DotProduct(t2, n1) * n2)
@@ -2644,6 +2653,9 @@ get_billboard_data:
 
 
         Dim radius, thickness As Single
+        Gl.glFrontFace(Gl.GL_CW)
+        Gl.glEnable(Gl.GL_CULL_FACE)
+        Gl.glRenderMode(Gl.GL_BACK)
         radius = 6.0
         thickness = 1.0
         Gl.glUseProgram(shader_list.ring_Shader)
@@ -2665,6 +2677,7 @@ get_billboard_data:
         Gl.glUseProgram(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glDisable(Gl.GL_BLEND)
+        Gl.glFrontFace(Gl.GL_CCW)
         Return
 
     End Sub

@@ -2279,9 +2279,11 @@ skip:
         If maploaded And SHOW_RINGS Then
             G_Buffer.attach_color_only()
             Gl.glEnable(Gl.GL_BLEND)
+            Gl.glFrontFace(Gl.GL_CW)
             draw_base_ring(-team_1.x, team_1.z, 1)
             draw_base_ring(-team_2.x, team_2.z, 2)
             Gl.glDisable(Gl.GL_BLEND)
+            Gl.glFrontFace(Gl.GL_CCW)
 
             G_Buffer.attachFOBtextures()
         End If
@@ -2909,8 +2911,8 @@ skip:
         width = pb1.Width + pb1.Width Mod 1
         height = pb1.Height + pb1.Height Mod 1
         Gl.glFrontFace(Gl.GL_CW)
-        Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-        Gl.glDisable(Gl.GL_CULL_FACE)
+        Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL)
+        Gl.glEnable(Gl.GL_CULL_FACE)
         Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glDepthMask(Gl.GL_FALSE)
 
@@ -2930,8 +2932,8 @@ skip:
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
+        'Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
 
 
         For k = 0 To decal_matrix_list.Length - 1
@@ -2939,6 +2941,7 @@ skip:
                 'If decal_matrix_list(k).influence <> influence Then
 
                 If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                    Gl.glFrontFace(.cull_method)
                     Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
                     Gl.glUniform3f(prjd_topright, .rtr.x, .rtr.y, .rtr.z)
                     Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
@@ -2957,9 +2960,7 @@ skip:
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
         Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT)
-        'Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
-        'ResizeGL()
-        'ViewPerspective()
+       
         Gl.glDisable(Gl.GL_BLEND)
         Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glClearColor(0.0F, 0.0F, 0.4F, 0.0F)
@@ -2987,6 +2988,7 @@ skip:
                 'If decal_matrix_list(k).influence <> influence Then
 
                 If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
+                    Gl.glFrontFace(.cull_method)
                     Gl.glUniformMatrix4fv(decal_matrix_id, 1, Gl.GL_FALSE, .matrix)
                     Gl.glUniform3f(decal_tr_id, .rtr.x, .rtr.y, .rtr.z)
                     Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
@@ -3017,6 +3019,8 @@ skip:
         Dim e1 = Gl.glGetError
 
         G_Buffer.attachFOBtextures()
+        Gl.glFrontFace(Gl.GL_CCW)
+        Gl.glDisable(Gl.GL_CULL_FACE)
         If m_wire_decals.Checked Then
             Gl.glDisable(Gl.GL_LIGHTING)
             G_Buffer.attach_color_only()
@@ -5502,7 +5506,7 @@ no_move_xz:
     Private Sub check_mouse()
         Dim dead As Integer = 0
         Dim t As Double
-        Dim M_Speed As Double = 0.8
+        Dim M_Speed As Double = 0.4
         Dim tempX, tempZ As Single
         While _STARTED
 
@@ -6041,9 +6045,7 @@ no_move_xz:
         get_light_settings()
     End Sub
 
-    Private Sub HelpToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HelpToolStripMenuItem.Click
-        frmHelp.Show()
-    End Sub
+
 
     Private Sub m_low_quality_trees_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles m_low_quality_trees.Click
         If Not _STARTED Then
@@ -6693,5 +6695,17 @@ no_move_xz:
     End Sub
 
  
+    Private Sub m_mouseSpeed_Paint(sender As Object, e As PaintEventArgs) Handles m_mouseSpeed.Paint
+        Const iconSize = 16
+        If e.ClipRectangle.IntersectsWith(m_mouseSpeed.Bounds) Then
+            Dim x As Integer = (26 / 2) - (iconSize / 2)
+            Dim y As Integer = m_mouseSpeed.Bounds.Y + ((m_mouseSpeed.Bounds.Height / 2) - (iconSize / 2))
+            e.Graphics.DrawImage(My.Resources.mouse_image, x, y)
+        End If
+    End Sub
+
+    Private Sub m_help_Click(sender As Object, e As EventArgs) Handles m_help.Click
+        Process.Start(Application.StartupPath + "\html\info.html")
+    End Sub
 End Class
 

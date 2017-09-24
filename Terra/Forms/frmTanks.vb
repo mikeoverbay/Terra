@@ -178,7 +178,7 @@ Public Class frmTanks
             butt.Location = (New System.Drawing.Point(2, i * butt.Height))
         Next
         Dim wo = Me.Height - Me.ClientSize.Height
-        Dim h = american_tanks(0).image.Height * (ww / t)
+        Dim h = 100 * (ww / t)
         Me.Height = (15 * h) + wo
 
     End Sub

@@ -84,13 +84,13 @@ void main(void)
     /*===================================================================*/
     // FOG calculation... using distance from camera and height on map.
     // It's a more natural height based fog than plastering the screen with it.
-    float height = 2.0-(sin((FragPos.y / (50.0 + mapHeight))*3.14158));
+    float height = 1.5-(sin((FragPos.y / mapHeight)*(3.14158*0.65)));
     const float LOG2 = 1.442695;
     float z = viewDistance ;
 
     if (flag ==160) {z*=0.75;}//cut fog level down if this is water.
 
-    float density = (gl_Fog.density * height) * 0.5;
+    float density = (gl_Fog.density * height) * 0.75;
     float fogFactor = exp2(-density * density * z * z * LOG2);
     fogFactor = clamp(fogFactor, 0.0, 1.0);
     vec4 fog_color = gl_Fog.color* ambient_level*3.0;

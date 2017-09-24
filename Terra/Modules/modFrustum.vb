@@ -1,10 +1,12 @@
 ﻿
 Imports System.Math
-
+Imports SlimDX
 Module modFrustum
     Public frustum(6, 4) As Single
 
     Public culled_count As Integer
+
+
     Public Sub check_terrain_visible()
         If Not m_terrain_ And Not terrain_loaded Then Return
         For i = 0 To test_count

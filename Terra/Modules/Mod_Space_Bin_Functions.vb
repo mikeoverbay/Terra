@@ -41,10 +41,6 @@ Module Mod_Space_Bin_Functions
         Public priority As Integer
         Public influence As Integer
         Public texture_matrix() As Single
-        Public top_left As vect3
-        Public top_right As vect3
-        Public bot_left As vect3
-        Public bot_right As vect3
         Public lbl As vect3
         Public lbr As vect3
         Public ltl As vect3
@@ -56,6 +52,7 @@ Module Mod_Space_Bin_Functions
         Public BB() As vect3
         Public visible As Boolean
         Public flags As UInteger
+        Public cull_method As Integer
     End Structure
 #End Region
 

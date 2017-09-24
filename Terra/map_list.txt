@@ -53,5 +53,6 @@
 101_dday.png:Overlord
 103_ruinberg_winter.png:Winterberg
 114_czech.png:Pilsen
+# 212_epic_random_valley.png:Epic Random
 # 109_battlecity_ny.png:Battle City
 #112_eiffel_tower_ctf.png:Paris - unloadable.. Its 10 x 12 grid is not normal

@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_025F505750482F3EB4EAB28A7902949D"
+        "OwnerKey" = "8:_0C5BF608457D480B87B630800FAE9C40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_07D8D6A0B1084A46AA88CDD0CF4A83CE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -309,6 +315,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3DFE76800A9B46948A143D3FE5899E7C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_41128F8005F9422392C7A348A4AD08AF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -448,6 +460,12 @@
         "Entry"
         {
         "MsmKey" = "8:_57B64D6CBF974E6EA44427FBBD30730D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_58D199DC52554F16A2564F95A1DDC2D4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -790,12 +808,6 @@
         "Entry"
         {
         "MsmKey" = "8:_9BEFE449D6B4465598A2C015CD60256F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9E400F05B6774E859A1C3890769C6B70"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1390,6 +1402,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_025F505750482F3EB4EAB28A7902949D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AFE032B90970D8FF805E531922B6C5AB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1456,7 +1474,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Terra!_Setup_V055.msi"
+        "OutputFilename" = "8:..\\Terra!_Setup_V056.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1516,6 +1534,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_025F505750482F3EB4EAB28A7902949D"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SlimDX, Version=2.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_025F505750482F3EB4EAB28A7902949D"
+                    {
+                    "Name" = "8:SlimDX.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SlimDX.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_07D8D6A0B1084A46AA88CDD0CF4A83CE"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\R40_T-54.tank"
@@ -2487,6 +2536,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3DFE76800A9B46948A143D3FE5899E7C"
+            {
+            "SourcePath" = "8:..\\Terra\\html\\imgs\\become_a_patron_button.png"
+            "TargetName" = "8:become_a_patron_button.png"
+            "Tag" = "8:"
+            "Folder" = "8:_A477C8F669A948908276F908A6F46C8F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_41128F8005F9422392C7A348A4AD08AF"
             {
             "SourcePath" = "8:..\\Terra\\tanks\\F19_Lorraine40t.tank"
@@ -2964,6 +3033,26 @@
             "TargetName" = "8:G110_Typ_205.tank"
             "Tag" = "8:"
             "Folder" = "8:_D56EF6FBAF1D48CDA490B0506712A46C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_58D199DC52554F16A2564F95A1DDC2D4"
+            {
+            "SourcePath" = "8:..\\Terra\\html\\info.html"
+            "TargetName" = "8:info.html"
+            "Tag" = "8:"
+            "Folder" = "8:_13D1966B5F6E4E1AA069F8A9C9C0967F"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4126,26 +4215,6 @@
             "TargetName" = "8:shadow_fragment.glsl"
             "Tag" = "8:"
             "Folder" = "8:_468EF3751EC14B278661D79FC11AD10B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9E400F05B6774E859A1C3890769C6B70"
-            {
-            "SourcePath" = "8:..\\Terra\\info.html"
-            "TargetName" = "8:info.html"
-            "Tag" = "8:"
-            "Folder" = "8:_5C011705BA544A5EA2CCDDE0559CBF0F"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6022,6 +6091,28 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_13D1966B5F6E4E1AA069F8A9C9C0967F"
+                    {
+                    "Name" = "8:html"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_F223FDA6717F41FBB74EC50AC4402192"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_A477C8F669A948908276F908A6F46C8F"
+                            {
+                            "Name" = "8:imgs"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_85D6EAC81A534677936A84398D678862"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_468EF3751EC14B278661D79FC11AD10B"
                     {
                     "Name" = "8:shaders"
@@ -6106,15 +6197,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Terra!"
-        "ProductCode" = "8:{E8427A6E-3A07-4F0D-9587-623789C6C36E}"
-        "PackageCode" = "8:{AC3D17AD-3770-45C4-86C7-495BD95FC738}"
+        "ProductCode" = "8:{B8060653-6BE0-48CE-8B98-CA14707E3E09}"
+        "PackageCode" = "8:{DAA777A2-5F82-46D6-BC61-FE86B7BC40C3}"
         "UpgradeCode" = "8:{519FEBB7-B41B-48CF-A553-54E3840CDE5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.55"
+        "ProductVersion" = "8:1.0.56"
         "Manufacturer" = "8:Coffee_"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

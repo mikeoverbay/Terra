@@ -51,13 +51,17 @@ Module modZlib
 
         ms.Dispose()
         Dim t As DataSet = xmldataset.Copy
+        Dim bb As DataTable = t.Tables("boundingbox")
         Dim t1 As DataTable = t.Tables("team1")
         Dim t2 As DataTable = t.Tables("team2")
-        Dim bb As DataTable = t.Tables("boundingbox")
         Dim s1 As String = t1.Rows(0).Item(0)
         Dim s2 As String = t2.Rows(0).Item(0)
         Dim bb_bl As String = bb.Rows(0).Item(0)
         Dim bb_ur As String = bb.Rows(0).Item(1)
+        If s1.Length = 1 Then
+            s1 = t1.Rows(1).Item(2)
+            s2 = t1.Rows(1).Item(2)
+        End If
         t.Dispose()
         t1.Dispose()
         t2.Dispose()

@@ -89,6 +89,7 @@ Partial Class frmMain
         Me.ToolStripMenuItem11 = New System.Windows.Forms.ToolStripSeparator()
         Me.m_fly_map = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_Orbit_Light = New System.Windows.Forms.ToolStripMenuItem()
+        Me.m_mouseSpeed = New System.Windows.Forms.ToolStripComboBox()
         Me.m_session = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_host_session = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -107,7 +108,7 @@ Partial Class frmMain
         Me.m_mini_down = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_find_Item_menu = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_edit_shaders = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.m_help = New System.Windows.Forms.ToolStripMenuItem()
         Me.m_mini_up = New System.Windows.Forms.ToolStripMenuItem()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
@@ -159,7 +160,7 @@ Partial Class frmMain
         '
         resources.ApplyResources(Me.mainMenu, "mainMenu")
         Me.mainMenu.BackColor = System.Drawing.SystemColors.MenuBar
-        Me.mainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_file, Me.m_settings, Me.m_session, Me.m_layout_mode, Me.m_reset_tanks, Me.m_show_chat, Me.m_render_to_bitmap, Me.m_comment, Me.m_clear_tank_comments, Me.m_minizoom, Me.m_mini_down, Me.m_find_Item_menu, Me.m_edit_shaders, Me.HelpToolStripMenuItem, Me.m_mini_up})
+        Me.mainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_file, Me.m_settings, Me.m_session, Me.m_layout_mode, Me.m_reset_tanks, Me.m_show_chat, Me.m_render_to_bitmap, Me.m_comment, Me.m_clear_tank_comments, Me.m_minizoom, Me.m_mini_down, Me.m_find_Item_menu, Me.m_edit_shaders, Me.m_help, Me.m_mini_up})
         Me.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow
         Me.mainMenu.Name = "mainMenu"
         '
@@ -248,7 +249,7 @@ Partial Class frmMain
         '
         'm_settings
         '
-        Me.m_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_lighting, Me.ToolStripMenuItem13, Me.m_small_lights, Me.m_FXAA, Me.m_SSAO, Me.m_g_settings, Me.ToolStripSeparator8, Me.m_constant_updates, Me.ToolStripMenuItem14, Me.m_show_minimap, Me.m_show_status, Me.m_info_window, Me.ToolStripMenuItem11, Me.m_fly_map, Me.m_Orbit_Light})
+        Me.m_settings.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_lighting, Me.ToolStripMenuItem13, Me.m_small_lights, Me.m_FXAA, Me.m_SSAO, Me.m_g_settings, Me.ToolStripSeparator8, Me.m_constant_updates, Me.ToolStripMenuItem14, Me.m_show_minimap, Me.m_show_status, Me.m_info_window, Me.ToolStripMenuItem11, Me.m_fly_map, Me.m_Orbit_Light, Me.m_mouseSpeed})
         Me.m_settings.ForeColor = System.Drawing.Color.Black
         Me.m_settings.Name = "m_settings"
         resources.ApplyResources(Me.m_settings, "m_settings")
@@ -523,6 +524,13 @@ Partial Class frmMain
         Me.m_Orbit_Light.Name = "m_Orbit_Light"
         resources.ApplyResources(Me.m_Orbit_Light, "m_Orbit_Light")
         '
+        'm_mouseSpeed
+        '
+        Me.m_mouseSpeed.Items.AddRange(New Object() {resources.GetString("m_mouseSpeed.Items"), resources.GetString("m_mouseSpeed.Items1"), resources.GetString("m_mouseSpeed.Items2"), resources.GetString("m_mouseSpeed.Items3"), resources.GetString("m_mouseSpeed.Items4"), resources.GetString("m_mouseSpeed.Items5"), resources.GetString("m_mouseSpeed.Items6"), resources.GetString("m_mouseSpeed.Items7"), resources.GetString("m_mouseSpeed.Items8"), resources.GetString("m_mouseSpeed.Items9")})
+        Me.m_mouseSpeed.Name = "m_mouseSpeed"
+        resources.ApplyResources(Me.m_mouseSpeed, "m_mouseSpeed")
+        Me.m_mouseSpeed.Text = Global.Terra.My.MySettings.Default.mouse_speed_text
+        '
         'm_session
         '
         Me.m_session.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.m_host_session, Me.ToolStripSeparator1, Me.m_join_session, Me.ToolStripMenuItem12, Me.ToolStripSeparator2, Me.ToolStripSeparator3, Me.m_join_server_as_host})
@@ -633,11 +641,11 @@ Partial Class frmMain
         Me.m_edit_shaders.Name = "m_edit_shaders"
         resources.ApplyResources(Me.m_edit_shaders, "m_edit_shaders")
         '
-        'HelpToolStripMenuItem
+        'm_help
         '
-        Me.HelpToolStripMenuItem.ForeColor = System.Drawing.Color.Black
-        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        resources.ApplyResources(Me.HelpToolStripMenuItem, "HelpToolStripMenuItem")
+        Me.m_help.ForeColor = System.Drawing.Color.Black
+        Me.m_help.Name = "m_help"
+        resources.ApplyResources(Me.m_help, "m_help")
         '
         'm_mini_up
         '
@@ -678,22 +686,22 @@ Partial Class frmMain
         Me.PerformLayout()
 
     End Sub
-	Friend WithEvents pb1 As System.Windows.Forms.Panel
-	Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
-	Friend WithEvents OpenFileDialog2 As System.Windows.Forms.OpenFileDialog
-	Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
+    Friend WithEvents pb1 As System.Windows.Forms.Panel
+    Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
+    Friend WithEvents OpenFileDialog2 As System.Windows.Forms.OpenFileDialog
+    Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
     Friend WithEvents mainMenu As System.Windows.Forms.MenuStrip
-	Friend WithEvents m_file As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_load_map As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_exit As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_settings As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_lighting As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_g_settings As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_session As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_host_session As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents m_join_session As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents ToolStripMenuItem12 As System.Windows.Forms.ToolStripSeparator
-	Friend WithEvents HelpToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_file As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_load_map As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_exit As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_settings As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_lighting As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_g_settings As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_session As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_host_session As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_join_session As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem12 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents m_help As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_show_models As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_show_trees As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents m_show_water As System.Windows.Forms.ToolStripMenuItem
@@ -770,5 +778,6 @@ Partial Class frmMain
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents m_constant_updates As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents m_load_old As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents m_mouseSpeed As System.Windows.Forms.ToolStripComboBox
 
 End Class

@@ -701,6 +701,18 @@ Namespace My
                 Me("image_save_address") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0.5")>  _
+        Public Property mouse_speed_text() As String
+            Get
+                Return CType(Me("mouse_speed_text"),String)
+            End Get
+            Set
+                Me("mouse_speed_text") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
