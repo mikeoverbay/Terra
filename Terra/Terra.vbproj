@@ -40,8 +40,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>6</ApplicationRevision>
-    <ApplicationVersion>1.0.5.6</ApplicationVersion>
+    <ApplicationRevision>7</ApplicationRevision>
+    <ApplicationVersion>1.0.5.7</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -692,7 +692,13 @@
     <None Include="tanks\A100_T49.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="tanks\A115_Chrysler_K.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="tanks\A117_T26E5.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\A120_M48A5.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\A12_T32.tank">
@@ -708,6 +714,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\A38_T92.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\A39_T28.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\A40_T95.tank">
@@ -737,9 +746,6 @@
     <None Include="tanks\A83_T110E4.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="tanks\A84_M48A1.tank">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="tanks\A85_T110E3.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -747,6 +753,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\A89_T54E1.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\A90_T69.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\A92_M60.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\A97_M41_Bulldog.tank">
@@ -788,7 +800,7 @@
     <None Include="tanks\Ch29_Type_62C_prot.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="tanks\Ch41_WZ_111_5A.tank">
+    <None Include="tanks\Ch36_WZ111_1G_FT.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\Cz02_TVP_T50.tank">
@@ -833,6 +845,12 @@
     <None Include="tanks\F65_FCM_50t.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="tanks\F67_Bat_Chatillon155_55.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\F71_AMX_30_prototype.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="tanks\F72_AMX_30.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -869,10 +887,16 @@
     <None Include="tanks\G126_HWK_12.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="tanks\G16_PzVIB_Tiger_II.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="tanks\G37_Ferdinand.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\G42_Maus.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\G44_JagdTiger.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\G45_G_Tiger.tank">
@@ -888,6 +912,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\G56_E-100.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\G58_VK4502P.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\G61_G_E.tank">
@@ -980,6 +1007,9 @@
     <None Include="tanks\J14_Type_61.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="tanks\J20_Type_2605.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="tanks\J25_Type_4.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -990,6 +1020,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\R107_LTB.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tanks\R110_Object_260.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="tanks\R111_ISU130.tank">
@@ -1058,6 +1091,9 @@
     <None Include="tanks\R93_Object263.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="tanks\R95_Object_907.tank">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="tanks\R96_Object_430.tank">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1117,9 +1153,9 @@
     </Content>
     <None Include="Resources\missing_image.bmp" />
     <None Include="Resources\mouse_image.jpeg" />
-    <Content Include="SlimDX.dll">
+    <None Include="SlimDX.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="tanks\tanknames.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

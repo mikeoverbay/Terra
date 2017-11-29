@@ -708,9 +708,9 @@ fail_path:
         For Each t In tanks
             If t.image IsNot Nothing Then
                 Dim butt As New Button
-                Dim m = ww / t.image.Width
-                butt.Width = t.image.Width * m
-                butt.Height = t.image.Height * m
+                Dim m = ww / 160
+                butt.Width = 160 * m
+                butt.Height = 100 * m
                 butt.Tag = cnt.ToString + ":" + flag_s
                 Try
                     butt.Text = t.gui_string.ToUpper.Replace("_", " ")
