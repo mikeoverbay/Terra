@@ -652,7 +652,7 @@
     <value>Sess&amp;ion</value>
   </data>
   <data name="m_layout_mode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 20</value>
+    <value>86, 20</value>
   </data>
   <data name="m_layout_mode.Text" xml:space="preserve">
     <value>Team Layout</value>
@@ -697,7 +697,7 @@
     <value>False</value>
   </data>
   <data name="m_clear_tank_comments.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 20</value>
+    <value>135, 20</value>
   </data>
   <data name="m_clear_tank_comments.Text" xml:space="preserve">
     <value>Clear Tank Comments</value>
@@ -715,7 +715,7 @@
     <value>28, 20</value>
   </data>
   <data name="m_find_Item_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 20</value>
+    <value>69, 20</value>
   </data>
   <data name="m_find_Item_menu.Text" xml:space="preserve">
     <value>Dev Tools</value>

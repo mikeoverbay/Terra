@@ -84,10 +84,14 @@ void main(){
     WorldPosition.xy += 0.5;
     WorldPosition.y *= -1.0;
     vec4 color = texture2D(colorMap, WorldPosition.xy * uv_wrap.xy);
-    vec4 bump = normalize(texture2D(normalMap, WorldPosition.xy*uv_wrap.xy)*2.0-1.0);
-    bump.y *= -1.0;
-    bump.w = texture2D(normalMap, WorldPosition.xy).w; // specular is in the normal maps alpha channel
-    bump.xyz = TBN * bump.xyz;
+    vec4 bump;
+    bump.xy = (texture2D(normalMap, WorldPosition.xy * uv_wrap.xy).ag);
+        ;
+        bump.z = clamp(sqrt(1.0 - dot(bump.xy, bump.xy)),-1.0,1.0);
+        bump.xyz   = normalize(bump.xyz);
+    //bump.y *= -1.0;
+    bump.w = texture2D(normalMap, WorldPosition.xy * uv_wrap.xy).w; // specular is in the normal maps alpha channel
+   
     vec4 bump_out;
 
     bump_out.xyz = normalize(bump.xyz + n.xyz)*0.5+0.5; // put in 0.0 to 1.0 range.

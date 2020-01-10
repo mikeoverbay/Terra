@@ -53,12 +53,17 @@ void main(void) {
         base *= d2;
         }
     bump.xyz = TBN * (bump.xyz * 2.0 -1.0);
+	//==============================================
+	//hack to draw atlas models in grey color
+	if (length(base.xyz)==0.0) base.xyz = vec3(0.25);
+	//==============================================
     gColor = base;
+    //gColor = vec4(0.5, 0.5, 0.95, 1.0);
     if (is_bumped ==1 ){
         gNormal.xyz =  normalize(n.xyz + bump.xyz)*0.5+0.5;
     }else{
-        gNormal.xyz =  normalize(n.xyz)*0.5+0.5;
     }
+        gNormal.xyz =  normalize(n.xyz)*0.5+0.5;
     gNormal.w = 0.35;
     gPosition = Vertex;
     gFlag = ((flag)/255.0);

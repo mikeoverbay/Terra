@@ -19,6 +19,7 @@ void main (void)
   vec4 base = texture2D(colorMap,  texCoord);
 
   gColor = base;
+  gColor = vec4(0.0, 0.3, 0.0, 1.0);
   gNormal.xyz = normalize(n.xyz)*0.5+0.5;
   gNormal.w = 0.5;
   gPosition = Vertex;

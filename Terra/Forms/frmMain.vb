@@ -179,22 +179,24 @@ Public Class frmMain
         End Try
         script_pkg.Dispose()
         ms.Dispose()
-        Dim matName, entry As DataTable
-        matName = xmldataset.Tables("matName")
+        Dim entry, mName As DataTable
         entry = xmldataset.Tables("entry")
-        Dim q = From fname_ In entry.AsEnumerable _
-                  Join mName In matName On fname_("entry_Id") Equals _
-                  mName("entry_Id") _
-             Select _
+        mName = xmldataset.Tables("matName")
+        Dim q = From fname_ In entry.AsEnumerable Join mat In mName On _
+                fname_.Field(Of Int32)("entry_ID") Equals mat.Field(Of Int32)("entry_ID") _
+                              Select _
                   filename = fname_.Field(Of String)("filename"), _
-                  mat = mName.Field(Of String)("matName_Text")
+                  mat = mat.Field(Of String)("matName_Text")
 
         dest_buildings.filename = New List(Of String)
         dest_buildings.matName = New List(Of String)
         For Each it In q
-            If InStr(it.filename, "bld_Construc") = 0 Then
-                dest_buildings.filename.Add(it.filename.Replace("model", "visual").ToLower)
-                dest_buildings.matName.Add(it.mat.ToLower)
+            If it.mat IsNot Nothing Then
+
+                If InStr(it.filename, "bld_Construc") = 0 Then
+                    dest_buildings.filename.Add(it.filename.Replace("model", "visual").ToLower)
+                    dest_buildings.matName.Add(it.mat.ToLower)
+                End If
             End If
         Next
         '---------------------------------------
@@ -712,11 +714,15 @@ fail_path:
                 butt.Width = 160 * m
                 butt.Height = 100 * m
                 butt.Tag = cnt.ToString + ":" + flag_s
-                Try
+                If t.gui_string IsNot Nothing Then
                     butt.Text = t.gui_string.ToUpper.Replace("_", " ")
+                Else
+                    butt.Text = "Missing"
+
+                End If
+                Try
 
                 Catch ex As Exception
-                    butt.Text = "Missing"
                 End Try
                 butt.BackgroundImage = t.image
                 butt.BackgroundImageLayout = ImageLayout.Stretch
@@ -2572,6 +2578,9 @@ skip:
                         Gl.glCallList(Models.models(model).componets(k).callList_ID)
                         Gl.glPopMatrix()
                     Next
+                Else
+                    Dim xxx = 0
+
                 End If
             Next
             Gl.glDisable(Gl.GL_POLYGON_OFFSET_FILL)
@@ -2626,7 +2635,9 @@ skip:
             For model As UInt32 = 0 To loaded_models.stack.Length - 2
                 'If Models.models(model).visible Then
                 '    If Models.matrix(model).matrix IsNot Nothing Then
-
+                'If loaded_models.names(model).Contains("monastery_05") Then
+                'Stop
+                'End If
                 Gl.glPushMatrix()
                 'Gl.glMultMatrixf(Models.matrix(model).matrix)
                 For k = 0 To loaded_models.stack(model)._count - 1
@@ -2919,10 +2930,9 @@ skip:
         Gl.glUseProgram(shader_list.decalsCpassDef_shader)
         Gl.glUniform1i(prjd_depthmap, 0)
         Gl.glUniform1i(prjd_color, 1)
-        'Gl.glUniform1i(prjd_normal_in, 3)
         Gl.glUniform1i(prjd_flagmap, 2)
-        'Gl.glUniform2f(prjd_FOV, width, heigth)
         Gl.glEnable(Gl.GL_BLEND)
+
         Gl.glBlendEquationSeparate(Gl.GL_FUNC_ADD, Gl.GL_FUNC_ADD)
         Gl.glBlendFuncSeparate(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA, Gl.GL_ONE, Gl.GL_ONE_MINUS_SRC_ALPHA)
         Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -2932,14 +2942,10 @@ skip:
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-        'Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
-        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
 
 
         For k = 0 To decal_matrix_list.Length - 1
             With decal_matrix_list(k)
-                'If decal_matrix_list(k).influence <> influence Then
-
                 If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
                     Gl.glFrontFace(.cull_method)
                     Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
@@ -2951,8 +2957,8 @@ skip:
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
 
                     Gl.glCallList(decal_matrix_list(k).display_id)
+
                 End If
-                'End If
             End With
         Next
         Gl.glUseProgram(0)
@@ -2985,7 +2991,6 @@ skip:
 
         For k = 0 To decal_matrix_list.Length - 1
             With decal_matrix_list(k)
-                'If decal_matrix_list(k).influence <> influence Then
 
                 If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
                     Gl.glFrontFace(.cull_method)
@@ -3001,7 +3006,6 @@ skip:
 
                     Gl.glCallList(decal_matrix_list(k).display_id)
                 End If
-                'End If
             End With
         Next
         Gl.glUseProgram(0)
@@ -3033,7 +3037,6 @@ skip:
                     If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
                         Gl.glPushMatrix()
                         Gl.glMultMatrixf(.matrix)
-                        'glutSolidCube(1.0)
                         Gl.glCallList(decal_matrix_list(k).display_id)
                         Gl.glBegin(Gl.GL_LINES)
                         Gl.glVertex3f(0.0, 0.0, 0.0)
@@ -4358,7 +4361,12 @@ over_it:
         Try
             Dim xr = Floor((mex / minimap_size) * 10)
             Dim yr = Floor((mey / minimap_size) * 10)
-            coordStr = alpha(CInt(yr)) + numer(CInt(xr))
+
+            If CInt(xr) < numer.Length And CInt(yr) < alpha.Length Then
+                coordStr = alpha(CInt(yr)) + numer(CInt(xr))
+
+            End If
+
         Catch ex As Exception
         End Try
         'Catch ex As Exception

@@ -11,6 +11,7 @@ Imports System.Windows.Forms
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Xml
+Imports Ionic.Zip
 
 Module vis_main
     Public xmldataset As New DataSet
@@ -268,9 +269,10 @@ Module vis_main
         'If fn.Contains("bldAM_008") Then
         '    Stop
         'End If
-        'If material.Contains("n_stone") Then
-        '    Return False
-        'End If
+        If material.Contains("n_stone") Then
+            Debug.WriteLine(material + " " + peice.ToString("00"))
+            'Return True
+        End If
         'If material.Contains("n_wood") Then
         '    Return False
         'End If
@@ -472,25 +474,48 @@ clouds:
 
     End Function
 	Public Function getMapSizes(ByVal abs_name As String) As Boolean
-		Dim terrain As New DataTable
-		Dim ds As DataSet = xmldataset.Copy
-		terrain = ds.Tables("terrain").Copy
-		Dim nset As DataTable = ds.Tables("map_" & abs_name)
-		Dim sun_scale As String = ""
-		Dim skyrow = nset.Rows(0)
-		Try
-			skyDomeName = skyrow("skyDome") ' assign to globa
-		Catch ex As Exception
-			nset = ds.Tables("SkyDome")
-			skyrow = nset.Rows(0)
-			skyDomeName = skyrow("SkyDome_Text")
-		End Try
-		Try
-            'sun_scale = skyrow("PS_SUN_MULT_CORRECTOR")
-            'sun_multiplier = Convert.ToSingle(sun_scale)
-		Catch ex As Exception
-			sun_multiplier = 0.5
-        End Try
+        'Dim terrain As New DataTable
+        Dim ms As New MemoryStream
+        Dim f As ZipEntry = active_pkg("spaces\" + abs_name + "\environments\environments.xml")
+        If f IsNot Nothing Then
+            f.Extract(ms)
+            openXml_stream(ms, abs_name)
+        Else
+
+        End If
+        Dim ds As DataSet = xmldataset.Copy
+        Dim te As DataTable = ds.Tables("map_" + abs_name)
+        Dim q = From row In te Select ename = row.Field(Of String)("environment")
+
+        Dim e_path = "spaces\" + abs_name + "\environments\" + q(0).Replace(".", "-") + "\skyDome\skyBox.model"
+        skyDomeName = e_path.Replace("\", "/")
+        'terrain = ds.Tables("terrain").Copy
+        'f = active_pkg(e_path + "\environment.xml")
+        'If f IsNot Nothing Then
+        '    ms = New MemoryStream
+        '    f.Extract(ms)
+        '    openXml_stream(ms, abs_name)
+        'Else
+        'End If
+
+
+        'Dim nset As DataTable = ds.Tables("map_" & abs_name)
+
+        'Dim sun_scale As String = ""
+        'Dim skyrow = nset.Rows(0)
+        'Try
+        '    skyDomeName = skyrow("skyDome") ' assign to globa
+        'Catch ex As Exception
+        '    nset = ds.Tables("SkyDome")
+        '    skyrow = nset.Rows(0)
+        '    skyDomeName = skyrow("SkyDome_Text")
+        'End Try
+        'Try
+        '    'sun_scale = skyrow("PS_SUN_MULT_CORRECTOR")
+        '    'sun_multiplier = Convert.ToSingle(sun_scale)
+        'Catch ex As Exception
+        '    sun_multiplier = 0.5
+        'End Try
         'Try
 
 
@@ -528,8 +553,10 @@ clouds:
 
 
 
-        terrain.Dispose()
+
+        ' terrain.Dispose()
         ds.Dispose()
+        te.Dispose()
     End Function
 	Public Sub setupthedome()
         ReDim Preserve Models.models(1)

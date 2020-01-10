@@ -254,11 +254,15 @@ Module modZlib
         'this zip stays until the very end when everything is loaded
         'This file contains most of the images and models on all the maps
         Dim hd_name = name.Replace(".pkg", "_hd.pkg")
-        shared_content1 = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_sandbox.pkg")
-        shared_content2 = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content.pkg")
+        shared_content_sandbox_part1 = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_sandbox-part1.pkg")
+        shared_content_sandbox_part2 = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_sandbox-part2.pkg")
+        shared_content_part1 = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content-part1.pkg")
+        shared_content_part2 = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content-part2.pkg")
         Try
-            shared_content1_hd = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_sandbox_hd.pkg")
-            shared_content2_hd = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_hd.pkg")
+            shared_content_sandbox_part1_hd = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_sandbox_hd-part1.pkg")
+            shared_content_sandbox_part2_hd = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_sandbox_hd-part2.pkg")
+            shared_content_part1_hd = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_hd-part1.pkg")
+            shared_content_part2_hd = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\shared_content_hd-part2.pkg")
             active_pkg_hd = Ionic.Zip.ZipFile.Read(GAME_PATH & "\res\packages\" & hd_name)
             If active_pkg_hd Is Nothing Then
                 has_high_rez_map = False
@@ -308,7 +312,7 @@ Module modZlib
         Dim space_bin_file As Ionic.Zip.ZipEntry = active_pkg("spaces/" & abs_name & "/space.bin")
         If space_bin_file IsNot Nothing Then
 
-            Dim space_ms As New MemoryStream
+            Dim space_ms As New MemoryStream(space_bin_file.UncompressedSize)
             space_bin_file.Extract(space_ms)
             Dim space_br As New BinaryReader(space_ms)
             Dim space_bin_data(space_ms.Length) As Byte
@@ -319,8 +323,8 @@ Module modZlib
         Else
             MsgBox("Unable to load Space.bin", MsgBoxStyle.Exclamation, "File Error...")
             active_pkg.Dispose()
-            shared_content1.Dispose()
-            shared_content2.Dispose()
+            shared_content_sandbox_part1.Dispose()
+            shared_content_part1.Dispose()
             Return False
         End If
 
@@ -366,7 +370,7 @@ Module modZlib
                 ReDim Preserve maplist(cnt)
                 ReDim Preserve sec_list(cnt)
             End If
-            If contents(pos).ToLower.Contains("color_tex.dds") Then
+            If contents(pos).ToLower.Contains("global_am.dds") Then
                 main_color_texture = contents(pos).ToString
             End If
 dont_grab_this:
@@ -506,7 +510,7 @@ dont_grab_this:
         GC.WaitForFullGCComplete()
         '**********************************************
         '**********************************************
-        load_trees()
+        'load_trees()
         GC.Collect()
         GC.WaitForFullGCComplete()
         '**********************************************
@@ -569,18 +573,22 @@ dont_grab_this:
         End If
         'these packages are HUGE!.. I need to find a way to read as needed.
         active_pkg.Dispose()    ' VERY IMPORTANT !!!
-        shared_content1.Dispose() ' VERY IMPORTANT !!!
-        shared_content2.Dispose() ' VERY IMPORTANT !!!
+        shared_content_sandbox_part1.Dispose() ' VERY IMPORTANT !!!
+        shared_content_sandbox_part2.Dispose() ' VERY IMPORTANT !!!
+        shared_content_part1.Dispose() ' VERY IMPORTANT !!!
+        shared_content_part2.Dispose() ' VERY IMPORTANT !!!
         Try
             active_pkg_hd.Dispose() ' VERY IMPORTANT !!!
         Catch ex As Exception
         End Try
         Try
-            shared_content1_hd.Dispose() ' VERY IMPORTANT !!!
+            shared_content_sandbox_part1_hd.Dispose() ' VERY IMPORTANT !!!
+            shared_content_sandbox_part2_hd.Dispose() ' VERY IMPORTANT !!!
         Catch ex As Exception
         End Try
         Try
-            shared_content2_hd.Dispose() ' VERY IMPORTANT !!!
+            shared_content_part1_hd.Dispose() ' VERY IMPORTANT !!!
+            shared_content_part2_hd.Dispose() ' VERY IMPORTANT !!!
         Catch ex As Exception
         End Try
         frmMain.ProgressBar1.Visible = False
@@ -626,12 +634,12 @@ dont_grab_this:
         make_lights()
         For i = 0 To Model_Matrix_list.Length - 2
             With Model_Matrix_list(i)
-                If l_cnt / 3 = light_count Then
+                If l_cnt / 3 >= max_light_count - 3 Then
                     Return ' no slots left for lights
                 End If
                 If Model_Matrix_list(i).primitive_name IsNot Nothing Then
 
-                    If Model_Matrix_list(i).primitive_name.ToLower.Contains("env423_streetlamp") Then
+                    If Model_Matrix_list(i).primitive_name.Contains("hd_env_EU_040_StreetLamp_02") Then
                         Dim v As vect3
                         '1
                         v.x = 0.0
@@ -768,10 +776,10 @@ dont_grab_this:
                     read_heights(cdata, map)
 
                     Dim texture As Ionic.Zip.ZipEntry = ck("terrain2/lodTexture.dds")
-                    texture.Extract(tms)
-                    Using btm As New Bitmap(build_textures(map, tms).Clone, 64, 64)
-                        maplist(map).bmap = btm.Clone 'used only for grid listing utility
-                    End Using
+                    'texture.Extract(tms)
+                    'Using btm As New Bitmap(build_textures(map, tms).Clone, 64, 64)
+                    '    maplist(map).bmap = btm.Clone 'used only for grid listing utility
+                    'End Using
                     'maplist(map).bmap = build_textures(map, tms).Clone
                     GC.Collect()
                     Dim holes As Ionic.Zip.ZipEntry = ck("terrain2/holes")
@@ -858,7 +866,7 @@ dont_grab_this:
                     If main_map Is Nothing Then
                         MsgBox("Can't find main texture")
                     End If
-                    main_map.Extract(main_map_ms)
+                    'main_map.Extract(main_map_ms)
                     'MsgBox("Debug stop")
                     Dim w = Sqrt(maplist.Length - 1)
                     'Convert memorystream in to the color_tex image id.
@@ -963,6 +971,7 @@ skip_this:
     End Sub
 
     Private Sub load_trees()
+
         If m_trees_ Then
             trees_loaded = True
             frmMain.ProgressBar1.Value = 0
@@ -1120,51 +1129,101 @@ skip_this:
     End Sub
 
     Public Function get_shared(name As String) As Ionic.Zip.ZipEntry
+        'search all packages for this item
         Dim et As Ionic.Zip.ZipEntry = Nothing
-        If Not has_high_rez_map Then
-            et = active_pkg(name)
+        Dim et2 As Ionic.Zip.ZipEntry = Nothing
+        et = active_pkg(name)
+        If et Is Nothing Then
+            et = shared_content_sandbox_part1(name)
             If et Is Nothing Then
-                et = shared_content1(name)
+                et = shared_content_sandbox_part2(name)
                 If et Is Nothing Then
-                    et = shared_content2(name)
-                End If
-            End If
-            If et IsNot Nothing Then
-                Return et
-            End If
-        Else
-            If has_high_rez_map Then
-                Dim hd_name = name.Replace(".dds", "_hd.dds")
-                et = active_pkg_hd(hd_name)
-                If et Is Nothing Then
-                    et = shared_content1_hd(hd_name)
+                    et = shared_content_part1(name)
                     If et Is Nothing Then
-                        et = shared_content2_hd(hd_name)
-                        If et Is Nothing Then
-                            et = active_pkg(name)
-                            If et Is Nothing Then
-                                et = shared_content1(name)
-                                If et Is Nothing Then
-                                    et = shared_content2(name)
-                                End If
-                            End If
-                        End If
+                        et = shared_content_part2(name)
                     End If
                 End If
             End If
         End If
-
+        Dim hd_name = name.Replace(".dds", "_hd.dds")
+        et2 = active_pkg_hd(hd_name)
+        If et2 Is Nothing Then
+            et2 = shared_content_sandbox_part1_hd(hd_name)
+            If et2 Is Nothing Then
+                et2 = shared_content_sandbox_part2_hd(name)
+                If et2 Is Nothing Then
+                    et2 = shared_content_part1_hd(hd_name)
+                    If et2 Is Nothing Then
+                        et2 = shared_content_part2_hd(hd_name)
+                    End If
+                End If
+            End If
+        End If
+        If et2 Is Nothing And et Is Nothing Then
+            try_map_pkgs(et, et2, name)
+        End If
+        If et2 IsNot Nothing And has_high_rez_map Then Return et2
         Return et
     End Function
     Public Function get_shared_model(name As String) As Ionic.Zip.ZipEntry
-        Dim et As Ionic.Zip.ZipEntry = Nothing
-        et = active_pkg(name)
-        If et Is Nothing Then
-            et = shared_content1(name)
-            If et Is Nothing Then
-                et = shared_content2(name)
-            End If
-        End If
+        Dim et As Ionic.Zip.ZipEntry = get_shared(name)
         Return et
     End Function
+    Private Sub try_map_pkgs(ByRef et As Ionic.Zip.ZipEntry, ByRef et2 As Ionic.Zip.ZipEntry, name As String)
+        Dim iPath = My.Settings.game_path + "\res\packages\"
+        Dim f_info = Directory.GetFiles(iPath)
+
+        Dim PKGS(150) As String
+        Dim cnt = 0
+        name = Path.GetFileName(name)
+        Dim hd_name = name.Replace(".dds", "_hd.dds")
+
+        'first, lets get a list of all the map files.
+        For Each m In f_info
+            If m.ToLower.Contains(".pkg") And Not m.ToLower.Contains("vehicles") _
+                And Not m.ToLower.Contains("scripts") _
+                And Not m.ToLower.Contains("shaders") _
+                And Not m.ToLower.Contains("particles") _
+                And Not m.ToLower.Contains("newyear") _
+                And Not m.ToLower.Contains("audio") _
+                And Not m.ToLower.Contains("hangar") _
+                Then
+                PKGS(cnt) = m
+                cnt += 1
+            End If
+
+        Next
+        For i = 0 To cnt - 1
+            Using z As New Ionic.Zip.ZipFile(PKGS(i))
+                For Each item In z
+                    If item.FileName.ToLower.Contains(name) Then
+                        ' item.Extract(oPath, ExtractExistingFileAction.OverwriteSilently)
+                        If Not item.IsDirectory Then 'dont want empty directories
+                            et = item
+                            et2 = Nothing
+                            z.Dispose()
+                            GC.Collect()
+                            Return
+                        End If
+                        Application.DoEvents()
+                    End If
+                    If item.FileName.ToLower.Contains(hd_name) Then
+                        ' item.Extract(oPath, ExtractExistingFileAction.OverwriteSilently)
+                        If Not item.IsDirectory Then 'dont want empty directories
+                            et2 = item
+                            et = Nothing
+                            z.Dispose()
+                            GC.Collect()
+                            Return
+                        End If
+                        Application.DoEvents()
+                    End If
+                Next
+            End Using
+        Next
+
+
+    End Sub
+
+
 End Module

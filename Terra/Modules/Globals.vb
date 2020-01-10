@@ -40,6 +40,8 @@ Module Globals
     Public drawbuffer1() = {Gl.GL_NONE, Gl.GL_COLOR_ATTACHMENT1_EXT}
     Public attachstatus(5) As Integer
 
+    Public skyDomePath As String = ""
+
     Public MV(16) As Single
     Public lightProject(16) As Single
     Public selected_map_hit As Integer = 0
@@ -210,10 +212,14 @@ Module Globals
     Public gl_busy As Boolean = False
     Public seammapID As Integer
     Public test_count As Int32
-    Public shared_content1 As Ionic.Zip.ZipFile
-    Public shared_content2 As Ionic.Zip.ZipFile
-    Public shared_content1_hd As Ionic.Zip.ZipFile
-    Public shared_content2_hd As Ionic.Zip.ZipFile
+    Public shared_content_sandbox_part1 As Ionic.Zip.ZipFile
+    Public shared_content_sandbox_part2 As Ionic.Zip.ZipFile
+    Public shared_content_part1 As Ionic.Zip.ZipFile
+    Public shared_content_part2 As Ionic.Zip.ZipFile
+    Public shared_content_sandbox_part1_hd As Ionic.Zip.ZipFile
+    Public shared_content_sandbox_part2_hd As Ionic.Zip.ZipFile
+    Public shared_content_part1_hd As Ionic.Zip.ZipFile
+    Public shared_content_part2_hd As Ionic.Zip.ZipFile
     Public active_pkg As Ionic.Zip.ZipFile
     Public active_pkg_hd As Ionic.Zip.ZipFile
     Public maploaded As Boolean = False

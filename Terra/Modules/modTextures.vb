@@ -3,6 +3,7 @@ Imports Tao.OpenGl
 Imports Tao.Platform.Windows
 Imports Tao.FreeGlut
 Imports Tao.FreeGlut.Glut
+Imports Tao.DevIl
 Imports System.IO
 Imports System.Windows
 Imports System.Math
@@ -350,6 +351,7 @@ Module modTextures
     Public Function get_texture(ByRef ms As MemoryStream, ByVal shrink As Boolean) As Integer
         'Dim s As String = ""
         's = Gl.glGetError
+        'Return 1
         Dim image_id As Integer = -1
         'Dim app_local As String = Application.StartupPath.ToString
         Dim texID As UInt32
@@ -359,6 +361,12 @@ Module modTextures
         texID = Ilu.iluGenImage() ' /* Generation of one image name */
         Il.ilBindImage(texID) '; /* Binding of image name */
         Dim success = Il.ilGetError
+        Dim c = 0
+        While success <> Il.IL_NO_ERROR
+            success = Il.ilGetError
+            c += 1
+        End While
+
         Il.ilLoadL(Il.IL_DDS, textIn, textIn.Length)
         success = Il.ilGetError
         If success = Il.IL_NO_ERROR Then
@@ -397,11 +405,20 @@ Module modTextures
             Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, _
             Il.ilGetData()) '  Texture specification 
             Gl.glFinish()
+            success = Il.ilGetError
         Else
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
+            Il.ilBindImage(0)
+            Ilu.iluDeleteImage(texID)
+            'File.WriteAllBytes("c:\!_dds_dump\dump.dds", textIn)
+            ms.Close()
+            ms.Dispose()
+            Return 37
             MsgBox("Out of memory error at :get texture:", MsgBoxStyle.Critical, "Well Shit!")
             End
         End If
         'ReDim textIn(0)
+        'File.WriteAllBytes("c:\!_dds_dump\dump.dds", textIn)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
         Ilu.iluDeleteImage(texID)
@@ -479,6 +496,7 @@ Module modTextures
     Public Function get_normal_texture(ByRef ms As MemoryStream, ByVal shrink As Boolean) As Integer
         'Dim s As String = ""
         's = Gl.glGetError
+        'Return 1
         Dim image_id As Integer = -1
         'Dim app_local As String = Application.StartupPath.ToString
 
@@ -520,6 +538,7 @@ Module modTextures
 
             Gl.glFinish()
         Else
+            Return 1
             MsgBox("failed to create normalMap Texture", MsgBoxStyle.Exclamation, "Damn..")
         End If
         ReDim textIn(0)

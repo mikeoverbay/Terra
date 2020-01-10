@@ -61,11 +61,11 @@ Module modPrimitives
             thefile = m_name
             Models.Model_list(model_ID) = m_name
         Else
-            mergerd_entry = get_shared_model(m_name)
-            If mergerd_entry IsNot Nothing Then
-                thefile = m_name
-                Models.Model_list(model_ID) = m_name
-            End If
+            'mergerd_entry = get_shared_model(m_name)
+            'If mergerd_entry IsNot Nothing Then
+            '    thefile = m_name
+            '    Models.Model_list(model_ID) = m_name
+            'End If
         End If
 
 
@@ -155,7 +155,7 @@ fing_loop:
         If xmlentry Is Nothing Then
             xmlentry = get_shared(v_name)
             If xmlentry Is Nothing Then
-                xmlentry = shared_content2(v_name)
+                xmlentry = shared_content_part1(v_name)
                 If xmlentry Is Nothing Then
 
                     ms.Close()
@@ -203,7 +203,7 @@ fing_loop:
         If xmlentry Is Nothing Then
             xmlentry = get_shared_model(p_name)
             If xmlentry Is Nothing Then
-                xmlentry = shared_content2(p_name)
+                xmlentry = shared_content_part1(p_name)
                 If xmlentry Is Nothing Then
                     vms.Close()
                     vms.Dispose()
@@ -218,9 +218,10 @@ fing_loop:
 
         End If
         Models.Model_list(model_ID) = thefile
-        'If InStr(p_name, "bldAS_011") > 0 Then
-        '    Stop
-        'End If
+        'id = 3963
+        If thefile.ToLower.Contains("bld_19_02_monastery_06_basilica") Then
+            'Stop
+        End If
         'If thefile.Contains("Willy") Then
         '    'Stop
         'End If
@@ -547,11 +548,11 @@ fing_loop:
                 End If
                 If loadtex Then
                     If Not get_textures_and_names(model_id, cur_pointer, os_loop, has_uv2) Then
-                        GoTo dont_save_this
+                        'GoTo dont_save_this
                     End If
                 End If
                 If Models.models(model_id).componets(cur_pointer).color_name Is Nothing Then
-                    GoTo dont_save_this
+                    'GoTo dont_save_this
                 End If
                 'resize to fit
                 Try
@@ -1328,18 +1329,20 @@ Good_image:
             'End If
             Try
                 Dim entry1 As Ionic.Zip.ZipEntry
-                entry1 = get_shared(.color_name)
+                entry1 = active_pkg(.color_name)
                 If entry1 Is Nothing Then
                     entry1 = get_shared(.color_name)
                     If entry1 Is Nothing Then
                         Debug.Write("cant find: " & .color_name & vbCrLf)
+                    Else
+                        entry1.Extract(ms)
+
                     End If
-                    entry1.Extract(ms)
                 Else
                     entry1.Extract(ms)
                 End If
             Catch ex As Exception
-                Stop
+                MsgBox("crashed finding textures. modPrimitives ~ line 1345")
             End Try
             'If .color_name.Contains("env404_Sign.dds") Then
             '    .color_id = Load_DDS_File(Application.StartupPath + "\Resources\env404_Sign_hd.dds")
@@ -1376,14 +1379,14 @@ jump_color:
                 Next
                 If .color2_name = "none" Then GoTo check_normal
                 .color2_name = .color2_name.Replace(".tga", ".dds")
-                Dim entry1 = get_shared(.color2_name)
+                Dim entry1 = active_pkg(.color2_name)
                 ms = New MemoryStream
                 If entry1 Is Nothing Then
                     entry1 = get_shared(.color2_name)
                     If entry1 Is Nothing Then
                         Debug.Write("cant find: " & .color2_Id & vbCrLf)
                     End If
-                    entry1.Extract(ms)
+                    'entry1.Extract(ms)
                 Else
                     entry1.Extract(ms)
                 End If
@@ -1422,7 +1425,7 @@ check_normal:
                 Else
                     .GAmap = False
                 End If
-                Dim entry1 = get_shared(.normal_name)
+                Dim entry1 = active_pkg(.normal_name)
                 ms = New MemoryStream
                 If entry1 Is Nothing Then
                     entry1 = get_shared(.normal_name)

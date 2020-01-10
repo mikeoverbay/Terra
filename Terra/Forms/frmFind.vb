@@ -18,13 +18,22 @@
         For i = 0 To Model_Matrix_list.Count - 2
             Dim cnt As Integer = 0
             If Model_Matrix_list(i).primitive_name.ToLower.Contains(search_tb.Text.ToLower) Then
-                results_tb.Text += i.ToString + ": " + Model_Matrix_list(i).primitive_name + vbCrLf
+                results_tb.Text += i.ToString + ": " + Model_Matrix_list(i).primitive_name + ":Model" + vbCrLf
                 found = True
             End If
         Next
-		If Not found Then
-			results_tb.Text = "*** Nothing was Found! ***"
-		End If
+        For i = 0 To decal_matrix_list.Count - 1
+            Dim cnt As Integer = 0
+            If decal_matrix_list(i).decal_texture IsNot Nothing Then
+                If decal_matrix_list(i).decal_texture.ToLower.Contains(search_tb.Text.ToLower) Then
+                    results_tb.Text += i.ToString + ": " + decal_matrix_list(i).decal_texture + ":Decal" + vbCrLf
+                    found = True
+                End If
+            End If
+        Next
+        If Not found Then
+            results_tb.Text = "*** Nothing was Found! ***"
+        End If
 	End Sub
 
 	Private Sub grid_list_btn_Click(sender As Object, e As EventArgs) Handles grid_list_btn.Click
@@ -78,9 +87,15 @@
             Dim L = CInt(mapa(0))
 
             Dim x, y, z As Single
-            x = Model_Matrix_list(L).matrix(12)
-            y = Model_Matrix_list(L).matrix(13)
-            z = Model_Matrix_list(L).matrix(14)
+            If mapa(2).Contains("Model") Then
+                x = Model_Matrix_list(L).matrix(12)
+                y = Model_Matrix_list(L).matrix(13)
+                z = Model_Matrix_list(L).matrix(14)
+            Else
+                x = decal_matrix_list(L).matrix(12)
+                y = decal_matrix_list(L).matrix(13)
+                z = decal_matrix_list(L).matrix(14)
+            End If
 
             look_point_X = x
             u_look_point_X = x

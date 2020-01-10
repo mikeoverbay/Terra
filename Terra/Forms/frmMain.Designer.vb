@@ -390,7 +390,6 @@ Partial Class frmMain
         '
         Me.m_high_rez_Terrain.Checked = Global.Terra.My.MySettings.Default.hi_rez_terra
         Me.m_high_rez_Terrain.CheckOnClick = True
-        Me.m_high_rez_Terrain.CheckState = System.Windows.Forms.CheckState.Checked
         Me.m_high_rez_Terrain.Name = "m_high_rez_Terrain"
         resources.ApplyResources(Me.m_high_rez_Terrain, "m_high_rez_Terrain")
         '
@@ -403,7 +402,6 @@ Partial Class frmMain
         '
         Me.m_show_uv2.Checked = Global.Terra.My.MySettings.Default.m_show_uv2
         Me.m_show_uv2.CheckOnClick = True
-        Me.m_show_uv2.CheckState = System.Windows.Forms.CheckState.Checked
         Me.m_show_uv2.Name = "m_show_uv2"
         resources.ApplyResources(Me.m_show_uv2, "m_show_uv2")
         '

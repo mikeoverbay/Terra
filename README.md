@@ -6,6 +6,14 @@ World of Tanks map off line viewer and battle design tool.
 
 Writen in VB.net using Visual Studio 13.
 
+# Terra no longer works!
+Do to the massive changes in the game engine and the new tree and terrain formats, Terra can no longer read any of the data.
+After 5 years of work on and off, this project is dead.
+I am not mad over it.. but a little frustrated.
+It was a good learning experince of nothing else.
+I learned how to do projected screen space decals (Used in Tank Exporter), Deferred Shading and mnay other things.
+
+
 ### Update: 3/7/17
 I have cleaned a lot of the code and also fixed some rendering issues.
 Render time is faster now.

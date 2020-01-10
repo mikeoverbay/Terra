@@ -108,7 +108,7 @@
       <Value Profile="(Default)">Checked</Value>
     </Setting>
     <Setting Name="hi_rez_terra" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="m_bumpMap" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -120,7 +120,7 @@
       <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="m_show_uv2" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="s_gray_level" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>

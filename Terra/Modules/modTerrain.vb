@@ -519,7 +519,7 @@ set_mask:
                     map_layers(map).used_layers = map_layers(map).used_layers Or 8
             End Select
         Else
-            If Not map_name.ToLower.ToLower.Contains("color_tex") Then
+            If Not map_name.ToLower.ToLower.Contains("global_am") Then
                 frmMapInfo.I__Map_Textures_tb.Text += "No Normal Map in layer data.  Map:" + map.ToString + "   Layer:" + layer.ToString + vbCrLf 'save info
 
             End If
@@ -677,7 +677,7 @@ set_mask:
         'map_layers(map).layers(layer).image = 
         '================= get color map
         'if get_main_texture is false, it wont read the huge main texture again!
-        If map_name.ToLower.Contains("color_tex") Then
+        If map_name.ToLower.Contains("global_am") Then
             cnt = map_layer_cache.Length
             ReDim Preserve map_layer_cache(cnt)
             map_layer_cache(cnt - 1) = New tree_textures_
@@ -734,7 +734,7 @@ try_again:
 
                 If retry Then
                     normal_update = False
-                    If Not n_map_name.ToLower.Contains("color_tex") Then ' stop spamming
+                    If Not n_map_name.ToLower.Contains("global_am") Then ' stop spamming
                         frmMapInfo.I__Map_Textures_tb.Text += "MISSING TEXTURE: " + n_map_name + vbCrLf 'save info
                     End If
                     Return True
@@ -2255,7 +2255,7 @@ Endy:
             Dim success As Boolean = Il.ilTexImage(psize, psize, 0, 4, Il.IL_BGRA, Gl.GL_UNSIGNED_BYTE, Nothing) '  Texture specification 
             If Not success Then
                 Dim er = Il.ilGetError
-                MsgBox("Error splitting up color_tex image:" + er.ToString, MsgBoxStyle.Exclamation, "Well Shit!")
+                MsgBox("Error splitting up Global_AM image:" + er.ToString, MsgBoxStyle.Exclamation, "Well Shit!")
             End If
             Dim ptr_2 As IntPtr = Il.ilGetData()
             Gl.glReadPixels(0, 0, psize, psize, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
@@ -2281,7 +2281,7 @@ Endy:
                 get_layer_image(cnt, layer)
             Next
             For layer = 1 To map_layers(cnt).layer_count
-                If map_layers(cnt).layers(layer).l_name.ToLower.Contains("color_tex") Then
+                If map_layers(cnt).layers(layer).l_name.ToLower.Contains("global_am") Then
                     map_layers(cnt).layers(layer).text_id = image
                     map_layers(cnt).main_texture = layer
                     GC.Collect()
@@ -2382,7 +2382,7 @@ Endy:
                 Dim success As Boolean = Il.ilTexImage(sec_width, sec_width, 0, 4, Il.IL_BGRA, Gl.GL_UNSIGNED_BYTE, Nothing) '  Texture specification 
                 If Not success Then
                     Dim er = Il.ilGetError
-                    MsgBox("Error splitting up color_tex image:" + er.ToString, MsgBoxStyle.Exclamation, "Well Shit!")
+                    MsgBox("Error splitting up Global_AM image:" + er.ToString, MsgBoxStyle.Exclamation, "Well Shit!")
                 End If
                 Dim ptr_2 As IntPtr = Il.ilGetData()
                 Gl.glReadPixels(x1, y1, CInt(sec_width), CInt(sec_width), Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, ptr_2)
@@ -2406,7 +2406,7 @@ Endy:
                     get_layer_image(cnt, layer)
                 Next
                 For layer = 1 To map_layers(cnt).layer_count
-                    If map_layers(cnt).layers(layer).l_name.ToLower.Contains("color_tex") Then
+                    If map_layers(cnt).layers(layer).l_name.ToLower.Contains("global_am") Then
                         map_layers(cnt).layers(layer).text_id = image
                         map_layers(cnt).main_texture = layer
                         GC.Collect()

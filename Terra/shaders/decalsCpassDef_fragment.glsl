@@ -82,7 +82,7 @@ void main(){
     WorldPosition.y *= -1.0;
 
     vec4 color = texture2D(colorMap, WorldPosition.xy*uv_wrap.xy);
-    color.a *= a_table[influence];
+    //color.a *= a_table[influence];
     if (color.a < 0.05) { discard; }
     gColor = color;
 

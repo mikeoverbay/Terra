@@ -36,11 +36,12 @@ Module Mod_space_bin
             old_pos = br.BaseStream.Position
             br.BaseStream.Position = space_table_rows(t_cnt).section_Start
             space_table_rows(t_cnt).data = br.ReadBytes(space_table_rows(t_cnt).section_length)
+            Debug.WriteLine(space_table_rows(t_cnt).header)
             ' save data to drive (only for hacking the files)
-            'If True Then
-            '    File.WriteAllBytes("C:\!_bin_data\" + space_table_rows(t_cnt).header + ".bin", _
-            '                        space_table_rows(t_cnt).data)
-            'End If
+            If True Then
+                File.WriteAllBytes("C:\!_bin_data\" + space_table_rows(t_cnt).header + ".bin", _
+                                    space_table_rows(t_cnt).data)
+            End If
         Next
         BWST = New BWST_
         BWSG = New BWSG_
@@ -56,6 +57,7 @@ Module Mod_space_bin
             Select Case True
                 Case header = "BSGD"
                     get_BSGD_data(t_cnt)
+                    Exit For
             End Select
         Next
 
@@ -63,40 +65,47 @@ Module Mod_space_bin
         GC.Collect()
         GC.WaitForFullGCComplete()
         'The order these tables are created is very important as some rely on previous tables data!
+        'get string table first!
         For t_cnt = 0 To table_size - 1
             Dim header As String = space_table_rows(t_cnt).header
             Select Case True
                 Case header = "BWST"
                     get_BWST_data(t_cnt)
-                Case header = "BWAL"
+            End Select
+        Next
+
+        For t_cnt = 0 To table_size - 1
+            Dim header As String = space_table_rows(t_cnt).header
+            Select Case True
                 Case header = "BWCS"
                 Case header = "BWSG"
                     get_BWSG_data(t_cnt)
                 Case header = "BWT2"
                     'get_BWT2_data(t_cnt)
                 Case header = "BWSS"
-                Case header = "BSMI"
+                Case header = "BSMI" 'Matrix data
                     get_BSMI_data(t_cnt)
                 Case header = "WSMI"
                     get_WSMI_data(t_cnt)
-                Case header = "BSMO"
+                Case header = "BSMO" 'models
                     get_BSMO_data(t_cnt)
                 Case header = "WSMO"
-                Case header = "BSMA"
+                Case header = "BSMA" 'materials
                     get_BSMA_data(t_cnt)
-                Case header = "SpTr"
+                Case header = "SpTr" ' speed tree
                     get_SpTr_data(t_cnt)
                 Case header = "BWfr"
-                Case header = "WGSD"
+                Case header = "WGSD" 'decals
                     get_WGSD_data(t_cnt)
                 Case header = "WTCP"
-                Case header = "BWWa"
+                Case header = "BWWa" 'water
                     get_BWWa_data(t_cnt)
                 Case header = "BWSV"
                 Case header = "BWPs"
                 Case header = "CENT"
                 Case header = "UDOS"
                 Case header = "WGDE"
+                    get_BGDE_data(t_cnt) '?
                 Case header = "WGDN"
                 Case header = "BWLC"
                 Case header = "WTau"
@@ -104,24 +113,28 @@ Module Mod_space_bin
             End Select
 
         Next
+        '===========================================================================
         ' save data to drive (only for debuging)
-        If False Then
+        If True Then
             File.WriteAllText("C:\!_bin_data\" + "BW_Strings.txt", _
                                 bw_strings.ToString)
         End If
         bw_strings.Clear()
+        '===========================================================================
         ReDim Model_Matrix_list(BSMI.t3_dc)
+        Dim cnt As Integer = 0
+
         For k = 0 To BSMI.t3_dc - 1
-            For i = 0 To BSMI.bsmi_t6.Length - 2 ' check if this is part of a destroyed building
-                If BSMI.bsmi_t6(i).u1_index = k Then
-                    Model_Matrix_list(k).exclude = True
-                Else
-                    Model_Matrix_list(k).exclude = False
-                End If
-            Next
+
+            Model_Matrix_list(k) = New model_matrix_list_
+            'Model_Matrix_list(k).exclude = False
+
             Dim BSMO_Index = BSMI.bsmi_t3(k).BSMO_Index
             Dim m = BSMO.bsmo_t2(BSMO_Index).model_str
-            Model_Matrix_list(k) = New model_matrix_list_
+            If m.ToLower.Contains("building_wall1") Then
+                'Stop
+            End If
+
             Model_Matrix_list(k).primitive_name = m.Replace("primitives", "model")
 
             Model_Matrix_list(k).matrix = BSMI.bsmi_t1(k).matrix
@@ -136,44 +149,75 @@ Module Mod_space_bin
             Model_Matrix_list(k).BB_Max = BSMO.bsmo_t4(BSMO_Index).max_BB
             ReDim Model_Matrix_list(k).BB(8)
             get_translated_bb_model(Model_Matrix_list(k))
-            'Console.WriteLine(k.ToString("000") + " : " + m)
+            bw_strings.Append(k.ToString("0000") + " : " + m + vbCrLf)
+            If BSMI.bsmi_t6(k).u1_index <> 4294967295 Then
+                cnt += 1
+                'Debug.WriteLine(k.ToString("00000") + " : " + m)
+                'Debug.WriteLine("1 " + BSMI.bsmi_t6(k).u1_index.ToString("x"))
+            End If
+            If BSMI.bsmi_t6(k).u2_index <> 4294967295 Then
+                'Debug.WriteLine("2 " + ":" + BSMI.bsmi_t6(k).u2_index.ToString("x"))
+            End If
+            If BSMI.bsmi_t6(k).u3_index <> 4294967295 Then
+                'Debug.WriteLine("3 " + ":" + BSMI.bsmi_t6(k).u3_index.ToString("x"))
+            End If
+            '===========================================================================
+            'get non rendered primitive groups
+            Dim mask_pnt = BSMO.bsmo_t1(BSMO_Index).mask_pointer
+            Dim exclude_list_pnt As UInt32 = BSMO.bsmo_t1(BSMO_Index).exclude_list
+            Dim exclude_start As UInt32 = BSMO.bsmo_t6(exclude_list_pnt).exclude_start
+            Dim exclude_end As UInt32 = BSMO.bsmo_t6(exclude_list_pnt).exclude_end
+            Dim x_size As Int32 = exclude_end - exclude_start
+            If x_size > 0 Then
+
+                ReDim Model_Matrix_list(k).exclude_list(x_size)
+                For j As UInt32 = exclude_start To exclude_end
+                    Model_Matrix_list(k).exclude_list(j - exclude_start) = BSMO.bsmo_t7(j).group_index
+                Next
+            End If
+            '===========================================================================
+
         Next
+        Debug.WriteLine(cnt.ToString("00000"))
+        '===========================================================================
+        If True Then
+            File.WriteAllText("C:\!_bin_data\" + "model_Strings.txt", _
+                                bw_strings.ToString)
+        End If
+        bw_strings.Clear()
+        '===========================================================================
+
         'lets compress the model_matrix_list to only used models
         Debug.WriteLine("Building Model_Matrix_list")
-        Dim mc As Integer = 0
-        For i = 0 To BSMI.bsmi_t2.Length - 2
-            If BSMI.bsmi_t2(i).u2_Index = 1 Then
-                If BSMI.bsmi_t7(i).u1_index = 4294967295 Or _
-                    BSMI.bsmi_t7(i).u1_index = 4294967227 Or _
-                    BSMI.bsmi_t7(i).u1_index = 4294967177 Then 'visibility mask
-                    mc += 1
-                Else
-                    Debug.WriteLine(i.ToString("0000") + ":" + BSMI.bsmi_t7(i).u1_index.ToString + ":" + Path.GetFileNameWithoutExtension(Model_Matrix_list(i).primitive_name))
-                End If
-            End If
-        Next
-        Dim tm(mc) As model_matrix_list_
-        mc = 0
-        For i = 0 To BSMI.bsmi_t2.Length - 2
-            If BSMI.bsmi_t7(i).u1_index = 4294967295 Or _
-                BSMI.bsmi_t7(i).u1_index = 4294967227 Or _
-                BSMI.bsmi_t7(i).u1_index = 4294967177 Then 'visibility mask
-                If BSMI.bsmi_t2(i).u2_Index = 1 Then
+        Dim mc As Int32 = 0
+        Dim HQ As Integer = 1
+        Dim tm(BSMI.bsmi_t2.Length) As model_matrix_list_
+        For i = 0 To BSMI.bsmi_t7.Length - 2
+            If BSMI.bsmi_t3(i).BSMO_Index2 = HQ Then
+                If BSMI.bsmi_t7(i).v_mask = &HFFFFFFFF Then 'visibility mask
                     tm(mc) = New model_matrix_list_
                     tm(mc) = Model_Matrix_list(i)
                     mc += 1
+                Else
+                    Debug.WriteLine(i.ToString("00000") + ":" + BSMI.bsmi_t7(i).v_mask.ToString("x") + ":" + Path.GetFileNameWithoutExtension(Model_Matrix_list(i).primitive_name))
                 End If
             End If
         Next
+        ReDim Preserve tm(mc)
         ReDim Model_Matrix_list(mc)
+        'pack the Model_Matrix_list to used models.
         For i = 0 To mc
             Model_Matrix_list(i) = tm(i)
+            If Model_Matrix_list(i).exclude = True Then
+                Debug.WriteLine(i.ToString("0000") + " : " + Model_Matrix_list(i).primitive_name)
+            End If
+
         Next
         mr.Dispose()
         br.Close()
         'clean up some space
         bw_strings.Clear()
-
+        tm = Nothing
         BWST = Nothing
         BWSG = Nothing
         BSGD = Nothing

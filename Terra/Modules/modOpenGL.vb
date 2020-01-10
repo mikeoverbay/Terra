@@ -32,15 +32,15 @@ Module modOpenGL
 
     Public stars_display_id As Integer
     Public field_of_view As Single = 60.0
-    Public light_count As Integer = 256
-    Public sl_light_pos(64 * 3) As Single
-    Public sl_light_color(64 * 3) As Single
+    Public max_light_count As Integer = 256
+    Public sl_light_pos(max_light_count * 3) As Single
+    Public sl_light_color(max_light_count * 3) As Single
     Public Sub make_lights()
         Dim rand As New Random
         Dim scale As Single = 100.0
-        ReDim sl_light_pos(light_count * 3)
-        ReDim sl_light_color(light_count * 3)
-        For i = 0 To (light_count - 1) * 3 Step 3
+        ReDim sl_light_pos(max_light_count * 3)
+        ReDim sl_light_color(max_light_count * 3)
+        For i = 0 To (max_light_count - 1) * 3 Step 3
             sl_light_pos(i) = (2.0 * rand.NextDouble - 1.0) * 800
             sl_light_pos(i + 1) = rand.NextDouble * 100
             sl_light_pos(i + 2) = (2.0 * rand.NextDouble - 1.0) * 800

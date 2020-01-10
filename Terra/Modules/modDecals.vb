@@ -28,6 +28,7 @@ Module modDecals
             End If
             'Gl.glPushMatrix()
 
+            decal_matrix_list(k).good = True
 
             decal_matrix_list(k).matrix(1) *= -1.0
             decal_matrix_list(k).matrix(2) *= -1.0
@@ -83,7 +84,7 @@ Module modDecals
                 decal_matrix_list(k).cull_method = Gl.GL_CW
             End If
         
-            Debug.WriteLine("id:" + k.ToString("0.000") + " Method:" + decal_matrix_list(k).cull_method.ToString)
+            'Debug.WriteLine("id:" + k.ToString("0.000") + " Method:" + decal_matrix_list(k).cull_method.ToString)
             'now that we have the transforms,, we can figure out which chunks this decal touches.
             decal_matrix_list(k).display_id = Gl.glGenLists(1)
             Gl.glNewList(decal_matrix_list(k).display_id, Gl.GL_COMPILE)
@@ -186,7 +187,11 @@ skipthis:
     End Sub
 
     Private Sub get_decal_textures(ByVal k As Integer)
-        If Not decal_matrix_list(k).good Then Return
+        If Not decal_matrix_list(k).good Then
+            Debug.WriteLine(k.ToString("0000") + " : " + decal_matrix_list(k).decal_texture)
+            Return
+        Else
+        End If
         If get_decal_diffuse(k) Then
             Return ' found this in cache or not at all
         Else
@@ -216,6 +221,9 @@ skipthis:
         End If
         name_e.Extract(ms)
         decal_matrix_list(k).texture_id = get_texture(ms, frmMain.m_low_quality_textures.Checked)
+        If decal_matrix_list(k).texture_id < 1 Then
+            Stop
+        End If
         ms.Dispose()
 
         frmMapInfo.I__Decal_Textures_tb.Text += "Color: " + name + vbCrLf

@@ -61,6 +61,7 @@ Module Mod_space_bin_variables
         Public position As vect3
         Public width As Single
         Public height As Single
+        Public plane As Single
         Public orientation As Single
 
     End Structure
@@ -128,17 +129,21 @@ Module Mod_space_bin_variables
         Public t9_start As UInt32
         Public t9_dl As UInt32
         Public t9_dc As UInt32
-
+        Public anim_list_start As Long
+        Public anima_cnt As UInt32
+        Public anima_dlen As UInt32
+        Public anima_list() As UInt32
         Public bsmi_t1() As bsmi_t1_
         Public bsmi_t2() As bsmi_t2_
         Public bsmi_t3() As bsmi_t3_
         Public bsmi_t4() As bsmi_t4_
         Public bsmi_t5() As bsmi_t5_
         Public bsmi_t6() As bsmi_t6_
-        Public bsmi_t7() As bsmi_t4_
-        Public bsmi_t8() As bsmi_t5_
-        Public bsmi_t9() As bsmi_t4_
+        Public bsmi_t7() As bsmi_t7_
+        Public bsmi_t8() As bsmi_t8_
+        Public bsmi_t9() As bsmi_t9_
     End Structure
+
     Public Structure bsmi_t1_
         Public matrix() As Single
     End Structure
@@ -148,21 +153,42 @@ Module Mod_space_bin_variables
     End Structure
     Public Structure bsmi_t3_
         Public BSMO_Index As UInt32
+        Public BSMO_Index2 As UInt32
     End Structure
     Public Structure bsmi_t4_
         Public u1_index As UInt32
+        Public u2_index As UInt32
+        Public str_key As UInt32
+        Public flags As UInt32
+        Public mask As UInt32
+        Public factor As Single
+        Public s1 As Single
+        Public s2 As Single
+    End Structure
+    Public Structure vMask_
+        Public vMask As UInt32
     End Structure
     Public Structure bsmi_t5_
+        Public u1_index As UInt32
+    End Structure
+    Public Structure bsmi_t6_
         Public u1_index As UInt32
         Public u2_index As UInt32
         Public u3_index As UInt32
         Public u4_index As UInt32
     End Structure
-    Public Structure bsmi_t6_
-        Public u1_index As UInt32
-    End Structure
     Public Structure bsmi_t7_
-        Public u1_index As UInt32
+        Public v_mask As Int32
+    End Structure
+    Public Structure bsmi_t8_
+        Public v As UInt32
+    End Structure
+    Public Structure bsmi_t9_
+        Public s1 As Single
+        Public s2 As Single
+        Public s3 As Single
+        Public s4 As Single
+        Public s5 As Single
     End Structure
 
     Public BSMA As BSMA_
@@ -179,36 +205,32 @@ Module Mod_space_bin_variables
         Public t3_dl As UInt32
         Public t3_dc As UInt32
 
-        Public t4_start As UInt32
-        Public t4_dl As UInt32
-        Public t4_dc As UInt32
-
-        Public t5_start As UInt32
-        Public t5_dl As UInt32
-        Public t5_dc As UInt32
-
+        Public shaders() As String
         Public bsma_t1() As bsma_t1_
         Public bsma_t2() As bsma_t2_
         Public bsma_t3() As bsma_t3_
-        Public bsma_t4() As bsma_t4_
-        Public bsma_t5() As bsma_t5_
+
     End Structure
     Public Structure bsma_t1_
         Public fx_index As UInt32
         Public index_start As UInt64
         Public index_end As UInt64
+        Public bwst_key As UInt32
+        Public identifier As String
     End Structure
     Public Structure bsma_t2_
+        Public bwst_key_or_value As UInt32
+        Public property_type As UInt32
         Public bwst_key As UInt32
-        Public shader_string As String
+        Public property_string As String
+        Public val_boolean As Boolean
+        Public val_float As Single
+        Public val_int As Integer
+        Public val_vec4 As vect4
+        Public texture_string As String
     End Structure
     Public Structure bsma_t3_
-        Public Property_key As UInt32
-        Public Property_string As String
-        Public value_type As UInt32
-        Public value_type_string As String
-        Public value As UInt32
-        Public value_string As String
+        Public float_val As Single
     End Structure
     Public Structure bsma_t4_
         Public matrix() As Single
@@ -283,8 +305,8 @@ Module Mod_space_bin_variables
     End Structure
     Public Structure bsmo_t1_
         'points in to table 6?
-        Public node_start As UInt32
-        Public node_end As UInt32
+        Public mask_pointer As UInt32
+        Public exclude_list As UInt32
     End Structure
 
     Public Structure bsmo_t2_
@@ -304,11 +326,11 @@ Module Mod_space_bin_variables
         Public max_BB As vect3
     End Structure
     Public Structure bsmo_t5_
-        Public Mask As UInt32
+        Public mask As UInt32
     End Structure
     Public Structure bsmo_t6_
-        Public start_index As UInt32
-        Public end_index As UInt32
+        Public exclude_start As UInt32
+        Public exclude_end As UInt32
     End Structure
     Public Structure bsmo_t7_
         Public u1_uint32 As UInt32
@@ -328,11 +350,11 @@ Module Mod_space_bin_variables
         Public v As UInt32
     End Structure
     Public Structure bsmo_t10_
-        Public v As UInt32
+        Public int1 As UInt32
+        Public int2 As UInt32
     End Structure
     Public Structure bsmo_t11_
-        Public index As UInt32
-        Public matrix() As Single
+        Public int1 As UInt32
 
     End Structure
 
@@ -413,14 +435,15 @@ Module Mod_space_bin_variables
         Public Table_Entries() As WGSD_entries_
     End Structure
     Public Structure WGSD_entries_
-        Public unknown_1 As UInt32
+        Public v1, v2 As UInt32
+        Public accuracyType As Byte
         Public matrix() As Single
         Public diffuseMapKey As UInt32
         Public normalMapKey As UInt32
-        Public u_key As UInt32
-        Public unknown_2 As UInt32
+        Public gmmMapkey As UInt32
+        Public extrakey As UInt32
         '
-        Public flags As UInt32
+        Public flags As UInt16
         '
         Public off_x As Single
         Public off_y As Single
@@ -430,10 +453,17 @@ Module Mod_space_bin_variables
         Public uv_wrapping_u As Single
         Public uv_wrapping_v As Single
         Public visibilityMask As UInt32
+
+        Public tiles_fade As Single
+        Public parallax_offset As Single
+        Public parallax_amplitude As Single
         '---------------------------
         Public diffuseMap As String
         Public normalMap As String
+        Public gmmMap As String
         Public extraMap As String
+        '---------------------------
+        Public s1, s2, s3 As String
     End Structure
 
     Public BWSG As BWSG_
@@ -498,6 +528,35 @@ Module Mod_space_bin_variables
         Public data() As Byte
     End Structure
 
+    Public Structure BGDE_t1_
+        Public int1 As UInt32 '?
+        Public int2 As UInt32
+        Public int3 As UInt32
+    End Structure
+    Public Structure BGDE_t2_
+        Public int1 As UInt32 '?
+        Public int2 As UInt32
+    End Structure
+    Public Structure BGDE_t3_
+        Public int1 As UInt32 '?
+    End Structure
+    Public Structure BGDE_
+        Public t1_pos As Long
+        Public t1_dc As UInt32
+        Public t1_dl As UInt32
+
+        Public t2_pos As Long
+        Public t2_dc As UInt32
+        Public t2_dl As UInt32
+
+        Public t3_pos As Long
+        Public t3_dc As UInt32
+        Public t3_dl As UInt32
+        Public BGDE_t1() As BGDE_t1_
+        Public BGDE_t2() As BGDE_t2_
+        Public BGDE_t3() As BGDE_t3_
+    End Structure
+    Public BGDE As BGDE_
     ' Public Structure vect3
     '    Public X, Y, Z As Single
     'End Structure
