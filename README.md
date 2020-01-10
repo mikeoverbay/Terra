@@ -13,7 +13,7 @@ Atlas maps for the terrain and buildings.
 
 GMM deferred rendering.
 
-Finish decryping all the data to place itmes on the map including water on all maps.
+Finish decrypting all the data to place itmes on the map including water on all maps.
 
 I am going to have to go to LOD selection of the models. Terra is going to be to slow at rendering once the textures are added to the terrain and models. They have removed the merged models and now only use models split up to trash parts of them.
 
