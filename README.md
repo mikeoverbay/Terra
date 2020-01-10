@@ -6,6 +6,20 @@ World of Tanks map off line viewer and battle design tool.
 
 Writen in VB.net using Visual Studio 13.
 
+# Sorta working!
+There are many things that need to be sorted out.
+
+Atlas maps for the terrain and buildings.
+
+GMM deferred rendering.
+
+Finish decryping all the data to place itmes on the map including water on all maps.
+
+I am going to have to go to LOD selection of the models. Terra is going to be to slow at rendering once the textures are added to the terrain and models. They have removed the merged models and now only use models split up to trash parts of them.
+
+I am commiting this so Maxim can have a look at the code.
+
+
 # Terra no longer works!
 Do to the massive changes in the game engine and the new tree and terrain formats, Terra can no longer read any of the data.
 After 5 years of work on and off, this project is dead.
