@@ -8,7 +8,7 @@
 		If search_tb.Text.Length = 0 Then
 			Return
 		End If
-     
+
         If Not maploaded Then
             MsgBox("Load a map before trying to find something, OK?", MsgBoxStyle.Exclamation, "No MAP Loaded!")
             Return
@@ -17,9 +17,11 @@
 		Dim found As Boolean = False
         For i = 0 To Model_Matrix_list.Count - 2
             Dim cnt As Integer = 0
-            If Model_Matrix_list(i).primitive_name.ToLower.Contains(search_tb.Text.ToLower) Then
-                results_tb.Text += i.ToString + ": " + Model_Matrix_list(i).primitive_name + ":Model" + vbCrLf
-                found = True
+            If Model_Matrix_list(i).primitive_name IsNot Nothing Then
+                If Model_Matrix_list(i).primitive_name.ToLower.Contains(search_tb.Text.ToLower) Then
+                    results_tb.Text += i.ToString + ": " + Model_Matrix_list(i).primitive_name + ":Model" + vbCrLf
+                    found = True
+                End If
             End If
         Next
         For i = 0 To decal_matrix_list.Count - 1

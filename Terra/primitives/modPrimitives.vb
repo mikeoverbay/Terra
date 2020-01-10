@@ -48,7 +48,7 @@ Module modPrimitives
         '    'Stop
         'End If
         'Destructible buildings are stored as components and as a merged version.
-        'The mergerd version is faster to load and is a sigle mesh.
+        'The mergerd version is faster to load and is a sigle mesh. 
 
         thefile = Models.Model_list(model_ID).ToLower
         thefile = thefile.Replace("model", "visual_processed")

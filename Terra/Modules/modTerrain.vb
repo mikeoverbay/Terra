@@ -79,7 +79,7 @@ Module modTerrain
     End Sub
 
 
-   Public Sub get_dominate_texture(ByVal map As Integer, ByVal ms As MemoryStream)
+    Public Sub get_dominate_texture(ByVal map As Integer, ByVal ms As MemoryStream)
 
         Dim enc As New System.Text.ASCIIEncoding
 
@@ -1009,7 +1009,7 @@ try_again:
         'frmShowImage.draw_texture(mix_texture_Id)
         mix_texture_Id = blur_image(mix_texture_Id, "vert", True)
         mix_texture_Id = blur_image(mix_texture_Id, "horz", True)
-      
+
 
     End Sub
     Public Function blur_image(ByRef image As Integer, orientatin As String, filter As Boolean) As Integer
@@ -1080,7 +1080,7 @@ try_again:
         End If
         Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, frmMain.pb2.Width, frmMain.pb2.Height, 0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-      
+
         Return image
     End Function
     Public Sub get_map_extremes()
@@ -2811,7 +2811,7 @@ exit2:
         T_4.x = bl.X + maplist(map).location.x - 50
         T_4.y = bl.Y + maplist(map).location.y - 50
         T_4.z = bl.Z
-      
+
         Dim agl = Atan2(w.Y - tr.Y, w.X - tr.X)
         If agl <= PI * 0.75 Then
             altitude = find_altitude(tr, bl, br, w)
@@ -2843,7 +2843,7 @@ domath:
         flipYZ(q)
         flipYZ(r)
         flipYZ(f)
-      
+
         Cursor_point.X = f.X
         Cursor_point.Z = f.Z
         'It returns that value as a double

@@ -332,7 +332,7 @@ Module modTextures
         Return dummy
     End Function
     Public Sub make_mix_texture_id(map As Integer, b As Bitmap)
-        
+
         b.RotateFlip(RotateFlipType.RotateNoneFlipX)
         Gl.glGenTextures(1, map_layers(map).mix_texture_Id)
         Dim bitmapData = b.LockBits(New Rectangle(0, 0, b.Width, _
@@ -487,7 +487,7 @@ Module modTextures
         ReDim textIn(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
-        ilu.iludeleteimage(texID)
+        Ilu.iluDeleteImage(texID)
         ms.Close()
         ms.Dispose()
         'GC.Collect()
@@ -544,7 +544,7 @@ Module modTextures
         ReDim textIn(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
-        ilu.iludeleteimage(texID)
+        Ilu.iluDeleteImage(texID)
         ms.Close()
         ms.Dispose()
         Return image_id
@@ -602,7 +602,7 @@ Module modTextures
         ReDim textIn(0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Il.ilBindImage(0)
-        ilu.iludeleteimage(texID)
+        Ilu.iluDeleteImage(texID)
         ms.Close()
         ms.Dispose()
         'GC.Collect()
@@ -696,7 +696,7 @@ Module modTextures
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, image_id)
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR)
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR)
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_true)
+                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE)
 
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT)
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT)

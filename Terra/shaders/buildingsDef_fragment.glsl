@@ -53,7 +53,7 @@ void main(void) {
         base *= d2;
         }
     bump.xyz = TBN * (bump.xyz * 2.0 -1.0);
-	//==============================================
+	//============================================== 
 	//hack to draw atlas models in grey color
 	if (length(base.xyz)==0.0) base.xyz = vec3(0.25);
 	//==============================================

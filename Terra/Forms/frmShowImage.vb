@@ -3,7 +3,7 @@ Imports System.Math
 Public Class frmShowImage
     Dim old_width, old_heigth As Integer
     Dim old_w, old_h As Double
-	Dim old_location As Point
+    Dim old_location As Point
     Public ready_to_render As Boolean = False
     Public current_image As Integer = 0
     Private me_w, me_h As Integer

@@ -11,7 +11,7 @@ uniform sampler2D colorMap;
 
 in vec2 texCoord;
 in vec3 n;
-in vec4 Vertex;
+in vec4 Vertex; 
 
 void main (void)
 {

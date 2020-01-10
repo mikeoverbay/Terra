@@ -19,7 +19,7 @@ in vec4 positionWS; // world space
 in mat4 invd_mat; // inverse decal matrix
 
 in mat4 matPrjInv; // inverse projection matrix
-in int flag;
+in int flag; 
 
 void clip(vec3 v){
     if (v.x > tr.x || v.x < bl.x ) { discard; }
