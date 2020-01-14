@@ -39,6 +39,7 @@ Module Mod_Space_Bin_Functions
         Public decal_texture As String
         Public decal_normal As String
         Public decal_gmm As String
+        Public decal_extra As String
         Public matrix() As Single
         Public good As Boolean
         Public offset As vect4
@@ -57,6 +58,8 @@ Module Mod_Space_Bin_Functions
         Public visible As Boolean
         Public flags As UInteger
         Public cull_method As Integer
+        Public is_parallax As Boolean
+        Public is_wet As Boolean
     End Structure
 #End Region
 
@@ -183,12 +186,14 @@ Module Mod_Space_Bin_Functions
             BSMO.bsmo_t1(k).mask_pointer = br.ReadUInt32
         Next
         '
+
         BSMO.t2_start = br.BaseStream.Position
         BSMO.t2_dl = br.ReadUInt32
         BSMO.t2_dc = br.ReadUInt32
         'skip unknow shit
         Dim np = BSMO.t2_dc * BSMO.t2_dl + BSMO.t2_start
         br.BaseStream.Position = np
+
 
         'these 2 are junk i guess
         BSMO.t2_dl = br.ReadUInt32
@@ -217,7 +222,7 @@ Module Mod_Space_Bin_Functions
             BSMO.bsmo_t2(k).index_from = br.ReadUInt32
             BSMO.bsmo_t2(k).index_to = br.ReadUInt32
             If BSMO.bsmo_t2(k).BWST_String_key > 0 Then
-                BSMO.bsmo_t2(k).model_str = find_str_BWST(BSMO.bsmo_t2(k).BWST_String_key)
+                BSMO.bsmo_t2(k).model_str = find_str_BWST(BSMO.bsmo_t2(k).BWST_String_key) '.Replace("_tess", "")
             Else
                 BSMO.bsmo_t2(k).model_str = "Nothing"
             End If
@@ -321,7 +326,7 @@ Module Mod_Space_Bin_Functions
 
     End Sub
 
-    Public Sub get_WSMI_data(ByVal t_cnt As Integer)
+    Public Sub get_WTbl_data(ByVal t_cnt As Integer)
 
         Dim ms As New MemoryStream(space_table_rows(t_cnt).data)
         Dim br As New BinaryReader(ms)
@@ -427,8 +432,7 @@ Module Mod_Space_Bin_Functions
             End If
         Next
 
-        'List of destructible models
-        'now there is a huge bunch of more FFFFFFFF data
+        'List of visible models
         'table order is wrong but i dont want to rename all of them because of this new table.
         BSMI.t7_start = br.BaseStream.Position
 
@@ -503,7 +507,7 @@ Module Mod_Space_Bin_Functions
         BSMI.t6_dc = br.ReadUInt32
         ReDim BSMI.bsmi_t6(BSMI.t6_dc)
         For k = 0 To BSMI.t6_dc - 1
-            BSMI.bsmi_t6(k).u1_index = br.ReadUInt32 'boat id by model index
+            BSMI.bsmi_t6(k).u1_index = br.ReadUInt32 'skined model ID if not &hffffffff ?
             BSMI.bsmi_t6(k).u2_index = br.ReadUInt32 'setting of some kind
             BSMI.bsmi_t6(k).u3_index = br.ReadUInt32 'always zero?
             'BSMI.bsmi_t6(k).u4_index = br.ReadUInt32 'setting of some kind
@@ -703,19 +707,6 @@ Module Mod_Space_Bin_Functions
             decal_matrix_list(k).offset.y = WGSD.Table_Entries(k).off_y
             decal_matrix_list(k).offset.z = WGSD.Table_Entries(k).off_z
             decal_matrix_list(k).offset.w = WGSD.Table_Entries(k).off_w
-
-            If decal_matrix_list(k).offset.x <> 0 Then
-                'Stop
-            End If
-            If decal_matrix_list(k).offset.y <> 0 Then
-                'Stop
-            End If
-            If decal_matrix_list(k).offset.z <> 0 Then
-                'Stop
-            End If
-            If decal_matrix_list(k).offset.w <> 0 Then
-                'Stop
-            End If
 
             WGSD.Table_Entries(k).uv_wrapping_u = br.ReadSingle
             WGSD.Table_Entries(k).uv_wrapping_v = br.ReadSingle
@@ -979,6 +970,7 @@ ignore_this2:
         ms.Position = tbl0_end
         BWSG.table_1_d_length = br.ReadUInt32
         BWSG.table_1_entry_count = br.ReadUInt32
+
         ReDim BWSG.Table_1_entries(BWSG.table_1_entry_count)
         Dim tbl1_end = ms.Position + (BWSG.table_1_d_length * BWSG.table_1_entry_count)
         For k = 0 To BWSG.table_1_entry_count - 1
@@ -1013,14 +1005,17 @@ ignore_this2:
                 End If
             End If
         Next
+
         Dim tbl2_end = ms.Position
 
         BWSG.table_3_start = tbl2_end
+
         BWSG.table_3_d_length = br.ReadUInt32
         BWSG.table_3_entry_count = br.ReadUInt32
-        Dim tbl3_end = ms.Position + (BWSG.table_2_d_length * BWSG.table_3_d_length) + 8
+
         ReDim BWSG.table_3_entries(BWSG.table_3_entry_count)
         ReDim BWSG.data_chunks(BWSG.table_3_entry_count)
+
         For k = 0 To BWSG.table_3_entry_count - 1
             BWSG.table_3_entries(k).data_length = br.ReadUInt32
         Next
@@ -1031,6 +1026,8 @@ ignore_this2:
             ReDim BWSG.data_chunks(k).data(BWSG.table_3_entries(k).data_length)
             BWSG.data_chunks(k).data = BSGD_br.ReadBytes(BWSG.table_3_entries(k).data_length)
         Next
+
+
         BSGD_br.Dispose()
         BSGD_ms.Close()
         BSGD_ms.Dispose()

@@ -311,8 +311,26 @@ Module modZlib
         'open the space.bin file
         Dim space_bin_file As Ionic.Zip.ZipEntry = active_pkg("spaces/" & abs_name & "/space.bin")
         If space_bin_file IsNot Nothing Then
+            ' This is all new code -------------------
+            space_bin_file.Extract(Temp_Storage, ExtractExistingFileAction.OverwriteSilently)
+            If Not ReadSpaceBinData(space_bin_file.FileName) Then
+                space_bin_file = Nothing
+                MsgBox("Error decoding Space.bin", MsgBoxStyle.Exclamation, "File Error...")
+                dispose_package_zips()
+                Return False
+            End If
+            space_bin_file = Nothing
+        Else
+            space_bin_file = Nothing
+            MsgBox("Unable to load Space.bin", MsgBoxStyle.Exclamation, "File Error...")
+            dispose_package_zips()
+            Return False
+        End If
 
+
+        If False Then
             Dim space_ms As New MemoryStream(space_bin_file.UncompressedSize)
+            space_bin_file.Extract()
             space_bin_file.Extract(space_ms)
             Dim space_br As New BinaryReader(space_ms)
             Dim space_bin_data(space_ms.Length) As Byte
@@ -321,11 +339,11 @@ Module modZlib
             space_br.Close()
             space_ms.Dispose()
         Else
-            MsgBox("Unable to load Space.bin", MsgBoxStyle.Exclamation, "File Error...")
-            active_pkg.Dispose()
-            shared_content_sandbox_part1.Dispose()
-            shared_content_part1.Dispose()
-            Return False
+            'MsgBox("Unable to load Space.bin", MsgBoxStyle.Exclamation, "File Error...")
+            'active_pkg.Dispose()
+            'shared_content_sandbox_part1.Dispose()
+            'shared_content_part1.Dispose()
+            'Return False
         End If
 
 
@@ -455,7 +473,7 @@ dont_grab_this:
         '====================================================
         'let the user know whats going on
         cnt = 0
-        tb1.Text = "Extracting Data from .pkg files..."
+        tb1.text = "Extracting Data from .pkg files..."
         'get all the chunks and cdata parts and save them
         For p = 0 To sec_list.Length - 2
             ReDim maplist(cnt).cdata(1)
@@ -562,7 +580,7 @@ dont_grab_this:
         'textures from them??
         If m_water_ Then
             water_loaded = True
-            If BWWa.bwwa_t1(0).width > 0 Then
+            If cBWWa.bwwa_t1(0).width > 0 Then
                 water.IsWater = True
                 build_water()
                 'make_water_mesh() 'experimental.. Too slow to use as is
@@ -571,26 +589,11 @@ dont_grab_this:
                 GC.Collect()
             End If
         End If
-        'these packages are HUGE!.. I need to find a way to read as needed.
-        active_pkg.Dispose()    ' VERY IMPORTANT !!!
-        shared_content_sandbox_part1.Dispose() ' VERY IMPORTANT !!!
-        shared_content_sandbox_part2.Dispose() ' VERY IMPORTANT !!!
-        shared_content_part1.Dispose() ' VERY IMPORTANT !!!
-        shared_content_part2.Dispose() ' VERY IMPORTANT !!!
-        Try
-            active_pkg_hd.Dispose() ' VERY IMPORTANT !!!
-        Catch ex As Exception
-        End Try
-        Try
-            shared_content_sandbox_part1_hd.Dispose() ' VERY IMPORTANT !!!
-            shared_content_sandbox_part2_hd.Dispose() ' VERY IMPORTANT !!!
-        Catch ex As Exception
-        End Try
-        Try
-            shared_content_part1_hd.Dispose() ' VERY IMPORTANT !!!
-            shared_content_part2_hd.Dispose() ' VERY IMPORTANT !!!
-        Catch ex As Exception
-        End Try
+        '##################################################################
+        'These packages are HUGE!.. I need to find a way to read as needed.
+        dispose_package_zips()
+        '##################################################################
+
         frmMain.ProgressBar1.Visible = False
         'let the renderer know the models are loaded and ready
         sw.Stop() ' stopwatch for load time
@@ -602,10 +605,10 @@ dont_grab_this:
         Dim tm = sw.Elapsed
         Dim t = Format(tm.Seconds, "00")
         Dim mt = Format(tm.Minutes, "00")
-        tb1.Text = "Load time " + mt + ":" + t + vbCrLf
-        tb1.Text += "Reused Textures: " + saved_texture_loads.ToString + vbCrLf
-        tb1.Text += "Reused Models: " + saved_model_loads.ToString + vbCrLf
-        tb1.Text += "lod2 used: " + lod2_swap.ToString + _
+        tb1.text = "Load time " + mt + ":" + t + vbCrLf
+        tb1.text += "Reused Textures: " + saved_texture_loads.ToString + vbCrLf
+        tb1.text += "Reused Models: " + saved_model_loads.ToString + vbCrLf
+        tb1.text += "lod2 used: " + lod2_swap.ToString + _
                                         "   lod1 used: " + lod1_swap.ToString + _
                                         "   lod0 used: " + lod0_swap.ToString
 
@@ -628,6 +631,31 @@ dont_grab_this:
         position(3) = 1.0
         frmMain.need_screen_update()
     End Function
+
+    Public Sub dispose_package_zips()
+        'disposes all the package data zip files
+        active_pkg.Dispose()    ' VERY IMPORTANT !!!
+        shared_content_sandbox_part1.Dispose() ' VERY IMPORTANT !!!
+        shared_content_sandbox_part2.Dispose() ' VERY IMPORTANT !!!
+        shared_content_part1.Dispose() ' VERY IMPORTANT !!!
+        shared_content_part2.Dispose() ' VERY IMPORTANT !!!
+        Try
+            active_pkg_hd.Dispose() ' VERY IMPORTANT !!!
+        Catch ex As Exception
+        End Try
+        Try
+            shared_content_sandbox_part1_hd.Dispose() ' VERY IMPORTANT !!!
+            shared_content_sandbox_part2_hd.Dispose() ' VERY IMPORTANT !!!
+        Catch ex As Exception
+        End Try
+        Try
+            shared_content_part1_hd.Dispose() ' VERY IMPORTANT !!!
+            shared_content_part2_hd.Dispose() ' VERY IMPORTANT !!!
+        Catch ex As Exception
+        End Try
+        GC.Collect()
+    End Sub
+
     Public Sub find_street_lights()
         Dim l_cnt As Integer = 0
         LIGHT_COUNT_ = 0

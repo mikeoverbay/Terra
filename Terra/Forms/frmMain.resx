@@ -339,17 +339,11 @@
   <data name="m_post_effect_viewer.Text" xml:space="preserve">
     <value>G-Buffer Viewer</value>
   </data>
-  <data name="m_post_effect_viewer.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="m_load_options.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 22</value>
   </data>
   <data name="m_load_options.Text" xml:space="preserve">
     <value>Disable load/View of...</value>
-  </data>
-  <data name="m_load_options.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
   </data>
   <data name="m_file.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 20</value>

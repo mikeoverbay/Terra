@@ -13,6 +13,9 @@ Module Globals
     Public m_decals_, m_terrain_, m_trees_, m_sky_, m_water_, m_bases_, m_models_ As Boolean
     Public map_odd As Boolean = False
     '===============
+    Public Temp_Storage As String = ""
+    '===============
+
     Public terrain_loaded As Boolean
     Public trees_loaded As Boolean
     Public decals_loaded As Boolean

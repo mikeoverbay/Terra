@@ -1455,12 +1455,12 @@ jump_normal:
     End Function
 
     Public Sub build_water()
-        water.size_.x = BWWa.bwwa_t1(0).width
-        water.size_.z = BWWa.bwwa_t1(0).height
-        water.orientation = BWWa.bwwa_t1(0).orientation
-        water.position.x = BWWa.bwwa_t1(0).position.x
-        water.position.y = BWWa.bwwa_t1(0).position.y
-        water.position.z = BWWa.bwwa_t1(0).position.z
+        water.size_.x = cBWWa.bwwa_t1(0).width
+        water.size_.z = cBWWa.bwwa_t1(0).height
+        water.orientation = cBWWa.bwwa_t1(0).orientation
+        water.position.x = cBWWa.bwwa_t1(0).position.x
+        water.position.y = cBWWa.bwwa_t1(0).position.y
+        water.position.z = cBWWa.bwwa_t1(0).position.z
 
         ReDim water.matrix(16)
         'build the waters matrix;

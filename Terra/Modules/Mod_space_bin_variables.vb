@@ -25,9 +25,11 @@ Module Mod_space_bin_variables
         Public Property_name As String
         Public Property_value As Object
     End Structure
+    '============================================================================================
     Public BSMA_PropertyType() = {" ", "Bool", "Float", "Int", "?", "Vector4", "String", "?"}
 
 
+    '============================================================================================
     Public SpTr As SpTr_
     Public Structure SpTr_
         Public d_length As UInt32
@@ -42,6 +44,7 @@ Module Mod_space_bin_variables
         Public Tree_name As String
         Public Matrix() As Single
     End Structure
+    '============================================================================================
 
     Public BWWa As BWWa_
     Public Structure BWWa_
@@ -68,6 +71,7 @@ Module Mod_space_bin_variables
     Public Structure bwwa_t2_
 
     End Structure
+    '============================================================================================
 
     Public WSMI As WSMI_
     Public Structure WSMI_
@@ -91,6 +95,7 @@ Module Mod_space_bin_variables
         Public flag1 As UInt32
 
     End Structure
+    '============================================================================================
 
     Public BSMI As BSMI_
     Public Structure BSMI_
@@ -191,6 +196,7 @@ Module Mod_space_bin_variables
         Public s5 As Single
     End Structure
 
+    '============================================================================================
     Public BSMA As BSMA_
     Public Structure BSMA_
         Public t1_start As UInt32
@@ -239,6 +245,7 @@ Module Mod_space_bin_variables
         Public vector4 As vect4
     End Structure
 
+    '============================================================================================
 
     Public BSMO As BSMO_
     Public Structure BSMO_
@@ -357,6 +364,7 @@ Module Mod_space_bin_variables
         Public int1 As UInt32
 
     End Structure
+    '============================================================================================
 
     Public BWST As BWST_
     Public Structure BWST_
@@ -371,6 +379,7 @@ Module Mod_space_bin_variables
         Public key As UInt32
         Public str As String
     End Structure
+    '============================================================================================
 
     Public BWT2 As BWT2_
     Public Structure BWT2_
@@ -426,6 +435,7 @@ Module Mod_space_bin_variables
     Public Structure grid_info_
 
     End Structure
+    '============================================================================================
 
 
     Public WGSD As WGSD_
@@ -465,6 +475,7 @@ Module Mod_space_bin_variables
         '---------------------------
         Public s1, s2, s3 As String
     End Structure
+    '============================================================================================
 
     Public BWSG As BWSG_
     Public Structure BWSG_
@@ -527,6 +538,7 @@ Module Mod_space_bin_variables
     Public Structure BSGD_
         Public data() As Byte
     End Structure
+    '============================================================================================
 
     Public Structure BGDE_t1_
         Public int1 As UInt32 '?

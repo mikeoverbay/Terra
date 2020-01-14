@@ -85,8 +85,8 @@ Module Mod_space_bin
                 Case header = "BWSS"
                 Case header = "BSMI" 'Matrix data
                     get_BSMI_data(t_cnt)
-                Case header = "WSMI"
-                    get_WSMI_data(t_cnt)
+                Case header = "WTbl"
+                    get_WTbl_data(t_cnt)
                 Case header = "BSMO" 'models
                     get_BSMO_data(t_cnt)
                 Case header = "WSMO"

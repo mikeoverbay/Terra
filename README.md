@@ -7,6 +7,19 @@ World of Tanks map off line viewer and battle design tool.
 Writen in VB.net using Visual Studio 13.
 
 # Sorta working!
+
+THE MSI IS BUILT! You can install it but it won't display:</br>
+1. Terrain textures.</br>
+2. Water correctly and/or in the right locations/size.</br>
+3. Buildings parts that use atlas textures are not textured.</br>
+4. NO TREES! I have not decoded the .SRT tree files.</br>
+5. Some maps crash.. Restart Terra and load a different one.</br>
+6. Some items are drawn that should not be like barrier walls.</br>
+7. Other broken things about Terra.</br>
+
+DO NOT REPORT BUGS! I am more than aware of the problems.</br>
+
+
 There are many things that need to be sorted out.
 
 Atlas maps for the terrain and buildings.

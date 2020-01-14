@@ -124,7 +124,13 @@ Public Class frmMain
         Thread.CurrentThread.CurrentCulture = nonInvariantCulture
         frmSplash.Show()
         set_frmLoadOptions()
-
+        '===================
+        Temp_Storage = Path.GetTempPath ' this gets the user temp storage folder
+        Temp_Storage += "terra_temp\"
+        If Not System.IO.Directory.Exists(Temp_Storage) Then
+            System.IO.Directory.CreateDirectory(Temp_Storage)
+        End If
+        '===================
         cam_x = 0
         cam_y = 0
         cam_z = 10
