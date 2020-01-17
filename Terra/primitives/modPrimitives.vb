@@ -33,6 +33,7 @@ Imports Ionic
 
 
 Module modPrimitives
+    Public bw_strings As New StringBuilder
     Public d_hx, d_hy As Integer
     Dim thefile As String
     Public short_vertex_type As Boolean = False ' used to tell display list maker if this is a short vertex xtznuv type
@@ -948,7 +949,7 @@ dont_save_this:
         Dim y As Int32 = (pky << 10L) >> 21
         Dim x As Int32 = (pkx << 21L) >> 21
         Dim p As New vect3
-      
+
         p.x = CSng(x) / 1023.0!
         p.y = CSng(y) / 1023.0!
         p.z = CSng(z) / 511.0!
@@ -1066,14 +1067,14 @@ dont_save_this:
         'compute new normal
         Dim n As Vector3D = CrossProduct(v0 - v2, v1 - v2)
         Dim uv0, uv1, uv2 As Vector3D
-        uv0.x = Md.UVs(i + 0).u
+        uv0.X = Md.UVs(i + 0).u
         uv0.Y = Md.UVs(i + 0).v
         uv0.Z = 1.0
-        uv1.x = Md.UVs(i + 1).u
-        uv1.y = Md.UVs(i + 1).v
+        uv1.X = Md.UVs(i + 1).u
+        uv1.Y = Md.UVs(i + 1).v
         uv1.Z = 1.0
         uv2.X = Md.UVs(i + 2).u
-        uv2.y = Md.UVs(i + 2).v
+        uv2.Y = Md.UVs(i + 2).v
         uv2.Z = 1.0
         'compute uv-wraping normal
         Dim flip As Double = 0.0
@@ -1084,10 +1085,10 @@ dont_save_this:
         Dim deltaUV1 As vect2
         Dim deltaUV2 As vect2
 
-        deltaUV1.x = (uv1.x - uv0.x)
-        deltaUV1.y = (uv1.y - uv0.y)
-        deltaUV2.x = (uv2.x - uv0.x)
-        deltaUV2.y = (uv2.y - uv0.y)
+        deltaUV1.x = (uv1.X - uv0.X)
+        deltaUV1.y = (uv1.Y - uv0.Y)
+        deltaUV2.x = (uv2.X - uv0.X)
+        deltaUV2.y = (uv2.Y - uv0.Y)
 
         Dim f As Single = 1.0F / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x)
 

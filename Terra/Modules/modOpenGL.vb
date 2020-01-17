@@ -153,21 +153,30 @@ try_again:
         'make_post_FBO_and_Textures()
         'create_decal_FBO()
         G_Buffer.init()
-        'noise_map_id = Load_DDS_File(Application.StartupPath + "\Resources\noise.dds")
-        Gl.glGetFloatv(Gl.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
-        '-----------------------------------
-		'next line creates the FBOs and Textures needed to shadow map. Still under development.
+        'next line creates the FBOs and Textures needed to shadow map. Still under development.
 		'frmMain.create_shadow_render_texture()
 		frmMain.pb2.visible = False
         Gl.glGetIntegerv(Gl.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max_texture_units)
         Dim gl_strings As String
         gl_strings = Gl.glGetString(Gl.GL_EXTENSIONS).Replace(vbLf, vbCrLf)
         gl_strings = gl_strings.Replace(" ", vbCrLf)
+
+        'noise_map_id = Load_DDS_File(Application.StartupPath + "\Resources\noise.dds")
+        '-----------------------------------
+        Gl.glGetFloatv(Gl.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
+        '-----------------------------------
         Dim max_uniforms As Integer
         Gl.glGetIntegerv(Gl.GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, max_uniforms)
-
+        '-----------------------------------
+        Dim maxDrawBuf = 0
+        Gl.glGetIntegerv(Gl.GL_MAX_DRAW_BUFFERS, maxDrawBuf)
+        '-----------------------------------
+        Dim maxAttach = 0
+        Gl.glGetIntegerv(Gl.GL_MAX_COLOR_ATTACHMENTS_EXT, maxAttach)
         '================================================================
         'this hangs the app for some reason
+        'Dim rs = Wgl.wglGetExtensionsStringARB(pb1_hDC)
+
         'If gl_strings.ToLower.Contains("wgl_ext_swap_control") Then
         '    Wgl.wglSwapIntervalEXT(1)
         'End If

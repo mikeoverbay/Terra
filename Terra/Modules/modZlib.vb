@@ -191,6 +191,7 @@ Module modZlib
         triangle_count = 0 ' very important lol!!
         GC.Collect()
     End Sub
+
     Public Function open_pkg(ByVal name As String) As Boolean
 
         'This function reads the data and creates the map, models, trees and everything else.
@@ -328,24 +329,23 @@ Module modZlib
         End If
 
 
-        If False Then
-            Dim space_ms As New MemoryStream(space_bin_file.UncompressedSize)
-            space_bin_file.Extract()
-            space_bin_file.Extract(space_ms)
-            Dim space_br As New BinaryReader(space_ms)
-            Dim space_bin_data(space_ms.Length) As Byte
-            space_bin_data = space_ms.GetBuffer
-            get_spaceBin_data(space_bin_data)
-            space_br.Close()
-            space_ms.Dispose()
-        Else
-            'MsgBox("Unable to load Space.bin", MsgBoxStyle.Exclamation, "File Error...")
-            'active_pkg.Dispose()
-            'shared_content_sandbox_part1.Dispose()
-            'shared_content_part1.Dispose()
-            'Return False
-        End If
-
+        'If False Then
+        '    Dim space_ms As New MemoryStream(space_bin_file.UncompressedSize)
+        '    space_bin_file.Extract()
+        '    space_bin_file.Extract(space_ms)
+        '    Dim space_br As New BinaryReader(space_ms)
+        '    Dim space_bin_data(space_ms.Length) As Byte
+        '    space_bin_data = space_ms.GetBuffer
+        '    get_spaceBin_data(space_bin_data)
+        '    space_br.Close()
+        '    space_ms.Dispose()
+        'Else
+        '    'MsgBox("Unable to load Space.bin", MsgBoxStyle.Exclamation, "File Error...")
+        '    'active_pkg.Dispose()
+        '    'shared_content_sandbox_part1.Dispose()
+        '    'shared_content_part1.Dispose()
+        '    'Return False
+        'End If
 
 
 
@@ -534,6 +534,11 @@ dont_grab_this:
         '**********************************************
         '**********************************************
         load_decals()
+        'code to spilt up road_map.bin
+        Dim r_m As Ionic.Zip.ZipEntry = active_pkg("spaces/" & abs_name & "/road_map.bin")
+        If r_m IsNot Nothing Then
+            split_road_map(r_m)
+        End If
         GC.Collect()
         GC.WaitForFullGCComplete()
         '**********************************************
@@ -543,20 +548,6 @@ dont_grab_this:
         If m_bases_ Then
             bases_loaded = True
         End If
-        '======================================
-        'this is all done in the terrainMarkers_shader now.
-        ''lets make the sector outlines
-        'sector_outlineID = Gl.glGenLists(1)
-        'Gl.glNewList(sector_outlineID, Gl.GL_COMPILE)
-        'create_grid_marks()
-        'Gl.glEndList()
-        ''lets make the map outside border
-        'map_borderId = Gl.glGenLists(1)
-        'Gl.glNewList(map_borderId, Gl.GL_COMPILE)
-        'make_map_boarder()
-        'Gl.glEndList()
-        '======================================
-
 
         '**********************************************
         glob_str = ""
@@ -572,7 +563,7 @@ dont_grab_this:
 
         '*******************************************************************************************
 
-        frmMapInfo.I__General_Info_tb.Text += "Decals: " + Format("0000", decal_matrix_list.Length - 1) + vbCrLf
+        frmMapInfo.I__General_Info_tb.Text += "Decals: " + Format("0000", (decal_matrix_list.Length + road_decal_count) - 1) + vbCrLf
         frmMapInfo.I__General_Info_tb.Text += "Trees: " + Format("0000", speedtree_matrix_list.Length - 1) + vbCrLf
         frmMapInfo.I__General_Info_tb.Text += "Models: " + Format("0000", Model_Matrix_list.Length - 1) + vbCrLf
 
@@ -803,7 +794,7 @@ dont_grab_this:
                     heights.Extract(cdata)
                     read_heights(cdata, map)
 
-                    Dim texture As Ionic.Zip.ZipEntry = ck("terrain2/lodTexture.dds")
+                    'Dim texture As Ionic.Zip.ZipEntry = ck("terrain2/lodTexture.dds")
                     'texture.Extract(tms)
                     'Using btm As New Bitmap(build_textures(map, tms).Clone, 64, 64)
                     '    maplist(map).bmap = btm.Clone 'used only for grid listing utility
@@ -811,7 +802,7 @@ dont_grab_this:
                     'maplist(map).bmap = build_textures(map, tms).Clone
                     GC.Collect()
                     Dim holes As Ionic.Zip.ZipEntry = ck("terrain2/holes")
-
+                    ReDim maplist(map).holes(63, 63) ' set to 0 when on ReDim
                     If holes IsNot Nothing Then
                         maplist(map).has_holes = 1
                         holes.Extract(holes_ms)
@@ -820,9 +811,9 @@ dont_grab_this:
                         maplist(map).has_holes = 0
                     End If
                     ' dont know how to use it :(
-                    'Dim dominate As Ionic.Zip.ZipEntry = ck("terrain2/dominantTextures")
-                    'dominate.Extract(dom)
-                    'get_dominate_texture(map, dom) 'gets the dominate texture map
+                    Dim dominate As Ionic.Zip.ZipEntry = ck("terrain2/dominanttextures")
+                    dominate.Extract(dom)
+                    get_dominate_texture(map, dom) 'gets the dominate texture map
 
                     get_location(map)   'finds location in the world
                     build_terra(map) 'builds the geometry
@@ -894,7 +885,7 @@ dont_grab_this:
                     If main_map Is Nothing Then
                         MsgBox("Can't find main texture")
                     End If
-                    'main_map.Extract(main_map_ms)
+                    main_map.Extract(main_map_ms)
                     'MsgBox("Debug stop")
                     Dim w = Sqrt(maplist.Length - 1)
                     'Convert memorystream in to the color_tex image id.
@@ -1174,15 +1165,17 @@ skip_this:
             End If
         End If
         Dim hd_name = name.Replace(".dds", "_hd.dds")
-        et2 = active_pkg_hd(hd_name)
-        If et2 Is Nothing Then
-            et2 = shared_content_sandbox_part1_hd(hd_name)
+        If has_high_rez_map Then
+            et2 = active_pkg_hd(hd_name)
             If et2 Is Nothing Then
-                et2 = shared_content_sandbox_part2_hd(name)
+                et2 = shared_content_sandbox_part1_hd(hd_name)
                 If et2 Is Nothing Then
-                    et2 = shared_content_part1_hd(hd_name)
+                    et2 = shared_content_sandbox_part2_hd(name)
                     If et2 Is Nothing Then
-                        et2 = shared_content_part2_hd(hd_name)
+                        et2 = shared_content_part1_hd(hd_name)
+                        If et2 Is Nothing Then
+                            et2 = shared_content_part2_hd(hd_name)
+                        End If
                     End If
                 End If
             End If
@@ -1203,7 +1196,7 @@ skip_this:
 
         Dim PKGS(150) As String
         Dim cnt = 0
-        name = Path.GetFileName(name)
+        name = Path.GetFileName(name.Replace("/", "\"))
         Dim hd_name = name.Replace(".dds", "_hd.dds")
 
         'first, lets get a list of all the map files.
@@ -1235,14 +1228,16 @@ skip_this:
                         End If
                         Application.DoEvents()
                     End If
-                    If item.FileName.ToLower.Contains(hd_name) Then
-                        ' item.Extract(oPath, ExtractExistingFileAction.OverwriteSilently)
-                        If Not item.IsDirectory Then 'dont want empty directories
-                            et2 = item
-                            et = Nothing
-                            z.Dispose()
-                            GC.Collect()
-                            Return
+                    If has_high_rez_map Then
+                        If item.FileName.ToLower.Contains(hd_name) Then
+                            ' item.Extract(oPath, ExtractExistingFileAction.OverwriteSilently)
+                            If Not item.IsDirectory Then 'dont want empty directories
+                                et2 = item
+                                et = Nothing
+                                z.Dispose()
+                                GC.Collect()
+                                Return
+                            End If
                         End If
                         Application.DoEvents()
                     End If

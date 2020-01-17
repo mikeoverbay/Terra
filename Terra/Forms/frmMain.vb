@@ -297,10 +297,10 @@ fail_path:
 
         m_fly_map.Checked = False
         m_Orbit_Light.Checked = False
+        _STARTED = False ' stops all controls and OpenGL draw
         If maploaded Then
             save_light_settings() ' save the settings before closing if a map is loaded!
         End If
-        _STARTED = False ' stops all controls and OpenGL draw
         'if we are connected and the user 'X'es out. we have do deal with this.
         If frmShowImage.Visible Then
             frmShowImage.Close()
@@ -2363,11 +2363,15 @@ skip:
                     If Not m_high_rez_Terrain.Checked Or Not hz_loaded Then
                         'low rez terrain
                         Gl.glUseProgram(shader_list.lzTerrainDef_shader)
-                        Gl.glUniform1i(c_address2, 0)
+                        Gl.glUniform1i(lz_colorAddress, 0)
+                        Gl.glUniform1i(lz_Has_Holes, maplist(i).has_holes)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
+                        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).dominateId)
+                        'Gl.glBindTexture(Gl.GL_TEXTURE_2D, dummy_texture)
 
                         rendermode = True
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
                     Else
                         'hi rez terrain.
                         Gl.glUseProgram(shader_list.terrainDef_shader)
@@ -2397,50 +2401,47 @@ skip:
 
                         Gl.glUniform1i(render_has_holes, maplist(i).has_holes)
 
-                        Gl.glUniform1i(render_hole_texture, 0)
-                        Gl.glUniform1i(layer_1, 1)
-                        Gl.glUniform1i(layer_2, 2)
-                        Gl.glUniform1i(layer_3, 3)
-                        Gl.glUniform1i(layer_4, 4)
-                        Gl.glUniform1i(n_layer_1, 5)
-                        Gl.glUniform1i(n_layer_2, 6)
-                        Gl.glUniform1i(n_layer_3, 7)
-                        Gl.glUniform1i(n_layer_4, 8)
-                        Gl.glUniform1i(mixtexture, 9)
-                        Gl.glUniform1i(c_address, 10)
+                        Gl.glUniform1i(layer_1, 0)
+                        Gl.glUniform1i(layer_2, 1)
+                        Gl.glUniform1i(layer_3, 2)
+                        Gl.glUniform1i(layer_4, 3)
+                        Gl.glUniform1i(n_layer_1, 4)
+                        Gl.glUniform1i(n_layer_2, 5)
+                        Gl.glUniform1i(n_layer_3, 6)
+                        Gl.glUniform1i(n_layer_4, 7)
+                        Gl.glUniform1i(mixtexture, 8)
+                        Gl.glUniform1i(c_address, 9)
 
                         ' bind all the textures
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).HolesId)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE1)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).text_id)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE2)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).text_id)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE3)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).text_id)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE4)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).text_id)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 5)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 6)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 5)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).norm_id)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 7)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 6)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id)
 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 8)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 7)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).norm_id)
                         'bind the mix layer. 
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 9)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 8)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).mix_texture_Id)
                         'bind lowrez colormap
-                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 10)
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 9)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
                     End If
                     Gl.glCallList(maplist(i).calllist_Id)
@@ -2922,6 +2923,9 @@ skip:
 
     Private Sub draw_g_decals()
 
+        Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_REPLACE)
+
+
         G_Buffer.attach_color_and_postion_only()
 
         Dim width, height As Integer
@@ -2950,6 +2954,25 @@ skip:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
 
 
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
+        For j = 0 To road_decals.Length - 1
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, road_decals(j).textures(0).textureID)
+            For k = 0 To road_decals(j).road_decal_list.Length - 1
+                With road_decals(j).road_decal_list(k)
+                    If .good And .visible Then
+                        Gl.glFrontFace(.cull_method)
+                        Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
+                        Gl.glUniform3f(prjd_topright, .rtr.x, .rtr.y, .rtr.z)
+                        Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
+                        Gl.glUniform2f(prjd_uv_wrap, 1.0!, 1.0!)
+                        Gl.glUniform1i(prjd_influence, CInt(2))
+
+                        Gl.glCallList(.display_id)
+
+                    End If
+                End With
+            Next
+        Next
         For k = 0 To decal_matrix_list.Length - 1
             With decal_matrix_list(k)
                 If decal_matrix_list(k).good And decal_matrix_list(k).visible Then
@@ -2967,12 +2990,15 @@ skip:
                 End If
             End With
         Next
+
+
+
         Gl.glUseProgram(0)
         '====================================================================================
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
         Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT)
-       
+
         Gl.glDisable(Gl.GL_BLEND)
         Gl.glDisable(Gl.GL_DEPTH_TEST)
         Gl.glClearColor(0.0F, 0.0F, 0.4F, 0.0F)
@@ -2995,6 +3021,27 @@ skip:
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
 
+        For j = 0 To road_decals.Length - 1
+            For k = 0 To road_decals(j).road_decal_list.Length - 1
+                Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, road_decals(j).textures(0).textureID)
+                Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, road_decals(j).textures(1).textureID)
+                With road_decals(j).road_decal_list(k)
+                    If .good And .visible Then
+                        Gl.glFrontFace(.cull_method)
+                        Gl.glUniformMatrix4fv(prjd_matrix, 1, Gl.GL_FALSE, .matrix)
+                        Gl.glUniform3f(decal_tr_id, .rtr.x, .rtr.y, .rtr.z)
+                        Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
+                        Gl.glUniform2f(decal_uv_wrap, 1.0!, 1.0!)
+                        Gl.glUniform1i(decal_influence, CInt(2))
+
+                        Gl.glCallList(.display_id)
+
+                    End If
+                End With
+            Next
+        Next
         For k = 0 To decal_matrix_list.Length - 1
             With decal_matrix_list(k)
 
@@ -3014,6 +3061,7 @@ skip:
                 End If
             End With
         Next
+
         Gl.glUseProgram(0)
         Gl.glReadBuffer(Gl.GL_BACK)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
@@ -3037,6 +3085,23 @@ skip:
             Gl.glUseProgram(shader_list.wire_shader)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(1.0, 1.0, 1.0)
+
+            For j = 0 To road_decals.Length - 1
+                For k = 0 To road_decals(j).road_decal_list.Length - 1
+                    With road_decals(j).road_decal_list(k)
+                        If .good And .visible Then
+                            Gl.glPushMatrix()
+                            Gl.glMultMatrixf(.matrix)
+                            Gl.glCallList(.display_id)
+                            Gl.glBegin(Gl.GL_LINES)
+                            Gl.glVertex3f(0.0, 0.0, 0.0)
+                            Gl.glVertex3f(0.0, 0.0, -2.0)
+                            Gl.glEnd()
+                            Gl.glPopMatrix()
+                        End If
+                    End With
+                Next
+            Next
             For k = 0 To decal_matrix_list.Length - 1
                 With decal_matrix_list(k)
 
@@ -3052,6 +3117,7 @@ skip:
                     End If
                 End With
             Next
+
             Gl.glUseProgram(0)
             G_Buffer.attachFOBtextures()
         End If
@@ -3530,6 +3596,7 @@ over_it:
         check_models_visible() 'not sure if this is the best place for this
         check_trees_visible()
         check_decals_visible()
+        check_road_decals_visible()
         If frmStats.Visible Then
             cull_time += swat2.ElapsedMilliseconds
             frmStats.rt_culled_count.Text = culled_count.ToString("0000")
@@ -5295,9 +5362,11 @@ no_move_xz:
         Models = New model_
         ReDim Model_Matrix_list(0)
         ReDim decal_matrix_list(0)
+        ReDim road_decals(0)
         ReDim speedtree_matrix_list(0)
         Model_Matrix_list(0) = New model_matrix_list_
         decal_matrix_list(0) = New decal_matrix_list_
+        road_decals(0) = New roads_
         speedtree_matrix_list(0) = New speedtree_matrix_list_
         Try
             frmTanks.make_btns()
@@ -5841,7 +5910,9 @@ no_move_xz:
         Try
             If Me.InvokeRequired Then
                 SyncLock lockdrawing
-                    Me.Invoke(New update_screen_delegate(AddressOf update_screen))
+                    If _STARTED Then
+                        Me.Invoke(New update_screen_delegate(AddressOf update_screen))
+                    End If
                 End SyncLock
             Else
                 draw_scene()

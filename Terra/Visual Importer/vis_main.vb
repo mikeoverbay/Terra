@@ -270,7 +270,7 @@ Module vis_main
         '    Stop
         'End If
         If material.Contains("n_stone") Then
-            Debug.WriteLine(material + " " + peice.ToString("00"))
+            'Debug.WriteLine(material + " " + peice.ToString("00"))
             'Return True
         End If
         'If material.Contains("n_wood") Then

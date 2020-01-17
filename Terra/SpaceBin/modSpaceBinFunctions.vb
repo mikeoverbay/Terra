@@ -257,12 +257,15 @@ Module modSpaceBinFunctions
             'Get tbl 7
             ds = br.ReadUInt32 'data size per entry in bytes
             tl = br.ReadUInt32 ' number of entries in this table
+            br.BaseStream.Position += (ds * tl)
+            GoTo skip_unknown1
             ReDim cBSMI.tbl_7(tl - 1)
             For k = 0 To tl - 1
                 cBSMI.tbl_7(k).unknown1 = br.ReadUInt32
                 cBSMI.tbl_7(k).unknown2 = br.ReadUInt32
             Next
             '--------------------------------------------------------------
+skip_unknown1:
 
             'Get skined_tbl
             ds = br.ReadUInt32 'data size per entry in bytes
@@ -961,10 +964,10 @@ ignore_this2:
         Return "ERROR!"
     End Function
     Private Function find_str_SpTr(ByVal key As UInt32) As String
-        For z = 0 To SpTr.entry_count - 1
-            If key = SpTr.Stree(z).key Then
+        For z = 0 To cSPTR.Stree.Length - 1
+            If key = cSPTR.Stree(z).key Then
                 'Console.WriteLine("key: " + key.ToString("x8").ToUpper + vbCrLf)
-                Return SpTr.Stree(z).Tree_name
+                Return cSPTR.Stree(z).Tree_name
             End If
         Next
         Return "ERROR!"

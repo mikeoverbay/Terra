@@ -190,6 +190,7 @@
     <Compile Include="Forms\frmStats.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Modules\modRoadDecals.vb" />
     <Compile Include="Modules\modWater.vb" />
     <Compile Include="Modules\ApplicationEvents.vb" />
     <Compile Include="Forms\frmTestView.Designer.vb">
@@ -292,9 +293,6 @@
     <Compile Include="Modules\ModRenderClasses.vb" />
     <Compile Include="Modules\modTextures.vb" />
     <Compile Include="Modules\ModTriangleHolderClass.vb" />
-    <Compile Include="Modules\Mod_space_bin.vb" />
-    <Compile Include="Modules\Mod_Space_Bin_Functions.vb" />
-    <Compile Include="Modules\Mod_space_bin_variables.vb" />
     <Compile Include="Modules\Mod_X_file.vb" />
     <Compile Include="primitives\frmFullScreen.Designer.vb">
       <DependentUpon>frmFullScreen.vb</DependentUpon>

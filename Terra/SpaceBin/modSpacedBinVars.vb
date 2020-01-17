@@ -1,6 +1,62 @@
 ﻿Imports System.Text
 
 Module modSpacedBinVars
+#Region "Structures"
+
+    Public Model_Matrix_list() As model_matrix_list_
+    Public Structure model_matrix_list_
+        Public primitive_name As String
+        Public matrix() As Single
+        Public mask As Boolean
+        Public BB_Min As vect3
+        Public BB_Max As vect3
+        Public BB() As vect3
+        Public exclude As Boolean
+        Public destructible As Boolean
+        Public exclude_list() As Integer
+    End Structure
+
+    Public speedtree_matrix_list() As speedtree_matrix_list_
+    Public Structure speedtree_matrix_list_
+        Public tree_name As String
+        Public matrix() As Single
+    End Structure
+    Public decal_matrix_list() As decal_matrix_list_
+    Public Structure decal_matrix_list_
+        Public u_wrap As Single
+        Public v_wrap As Single
+        Public decal_data() As vertex_data
+        Public texture_id As Integer
+        Public normal_id As Integer
+        Public gmm_id As Integer
+        Public display_id As Integer
+        Public decal_texture As String
+        Public decal_normal As String
+        Public decal_gmm As String
+        Public decal_extra As String
+        Public matrix() As Single
+        Public good As Boolean
+        Public offset As vect4
+        Public priority As Integer
+        Public influence As Integer
+        Public texture_matrix() As Single
+        Public lbl As vect3
+        Public lbr As vect3
+        Public ltl As vect3
+        Public ltr As vect3
+        Public rbl As vect3
+        Public rbr As vect3
+        Public rtl As vect3
+        Public rtr As vect3
+        Public BB() As vect3
+        Public visible As Boolean
+        Public flags As UInteger
+        Public cull_method As Integer
+        Public is_parallax As Boolean
+        Public is_wet As Boolean
+    End Structure
+#End Region
+
 #Region "BSGD"
     Public cBSGD As cBSGD_
     Public Structure cBSGD_
@@ -314,7 +370,7 @@ Module modSpacedBinVars
 
 #Region "BWAL"
     'bigworld asset list
-    Public cBWAL As CBWAL_
+    Public cBWAL As cBWAL_
     Public Structure cBWAL_
         Public assetList() As assetList_
 
@@ -369,7 +425,7 @@ Module modSpacedBinVars
 
 #Region "SpTr"
     'speed tree table
-    Public cSPTR As cSpTr_
+    Public cSPTR As cSPTR_
     Public Structure cSPTR_
         Public Stree() As cStree_
 

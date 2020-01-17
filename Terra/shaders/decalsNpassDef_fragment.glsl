@@ -19,7 +19,7 @@ in vec4 positionWS; // world space
 in mat4 invd_mat; // inverse decal matrix
 
 in mat4 matPrjInv; // inverse projection matrix
-in int flag; 
+flat in int flag; 
 
 void clip(vec3 v){
     if (v.x > tr.x || v.x < bl.x ) { discard; }
@@ -85,9 +85,9 @@ void main(){
     WorldPosition.y *= -1.0;
     vec4 color = texture2D(colorMap, WorldPosition.xy * uv_wrap.xy);
     vec4 bump;
-    bump.xy = (texture2D(normalMap, WorldPosition.xy * uv_wrap.xy).ag);
+    bump.xz = (texture2D(normalMap, WorldPosition.xy * uv_wrap.xy).ag);
         ;
-        bump.z = clamp(sqrt(1.0 - dot(bump.xy, bump.xy)),-1.0,1.0);
+        bump.y = clamp(sqrt(1.0 - dot(bump.xz, bump.xz)),-1.0,1.0);
         bump.xyz   = normalize(bump.xyz);
     //bump.y *= -1.0;
     bump.w = texture2D(normalMap, WorldPosition.xy * uv_wrap.xy).w; // specular is in the normal maps alpha channel

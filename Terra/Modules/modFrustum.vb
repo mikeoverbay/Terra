@@ -14,11 +14,38 @@ Module modFrustum
         Next
     End Sub
 
+    Public Sub check_road_decals_visible()
+        If Not m_decals_ And Not decals_loaded Then Return
+        For k = 0 To road_decals.Length - 1
+            For i = 0 To road_decals(k).road_decal_list.Length - 1
+                If road_decals(k).road_decal_list(i).good Then
+                    Dim l1 = Abs(eyeX - road_decals(k).road_decal_list(i).matrix(12))
+                    Dim l2 = Abs(eyeZ - road_decals(k).road_decal_list(i).matrix(14))
+                    Dim d = l1 ^ 2 + l2 ^ 2
+                    If d > 160000 Then
+                        road_decals(k).road_decal_list(i).visible = False
+                    Else
+                        road_decals(k).road_decal_list(i).visible = CubeInFrustum(road_decals(k).road_decal_list(i).BB)
+                    End If
+                End If
+            Next
+        Next
+    End Sub
+
     Public Sub check_decals_visible()
         If Not m_decals_ And Not decals_loaded Then Return
         For i = 0 To decal_matrix_list.Length - 1
             If decal_matrix_list(i).good Then
-                decal_matrix_list(i).visible = CubeInFrustum(decal_matrix_list(i).BB)
+                'decal_matrix_list(i).visible = CubeInFrustum(decal_matrix_list(i).BB)
+                Dim l1 = Abs(eyeX - decal_matrix_list(i).matrix(12))
+                Dim l2 = Abs(eyeZ - decal_matrix_list(i).matrix(14))
+                Dim d = l1 ^ 2 + l2 ^ 2
+                If d > 160000 Then
+                    decal_matrix_list(i).visible = False
+                Else
+                    decal_matrix_list(i).visible = CubeInFrustum(decal_matrix_list(i).BB)
+                End If
+
             End If
         Next
     End Sub

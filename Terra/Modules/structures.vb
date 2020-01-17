@@ -97,13 +97,20 @@ Module structures
         Public n_name As String
         Public text_id As Integer
         Public norm_id As Integer
+        Public l_name2 As String
+        Public n_name2 As String
+        Public text_id2 As Integer
+        Public norm_id2 As Integer
+
         Public sizex, sizez As Integer
         Public u As Single
         Public v As Single
         Public r As Single
         Public uP As vect4
         Public vP As vect4
-        Dim ms As IO.MemoryStream
+        Dim data() As Byte
+        Dim Mix_data() As Byte
+        Dim ms As MemoryStream
         'Public raw_data() As Byte
         Public image As Bitmap
     End Structure
@@ -365,7 +372,6 @@ Module structures
         Public HZ_normMapID As Int32
         Public colorMapId As Int32
         Public HZ_colorMapID As Int32
-        Public HolesId As Int32
         Public dominateId As Int32
         Public location As vect3
         Public name As String
@@ -377,6 +383,7 @@ Module structures
         Public flora() As flora_
         Public flora_count As UInt32
         Public heights(,) As Single
+        Public holes(,) As Single
         Public heights_avg As Single
         Public seamCallId As Integer
         Public has_holes As Integer
@@ -414,6 +421,7 @@ Module structures
         Public map As Integer
         Public t As vect3
         Public bt As vect3
+        Public hole As Single
     End Structure
     Public Function get_length_vertex(v As vertex_data)
         Dim s As Single = v.x + v.y + v.z

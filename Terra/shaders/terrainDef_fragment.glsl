@@ -49,6 +49,7 @@ in vec4 world_vertex;
 in float ln;
 in vec4 mask_2;
 in mat3 TBN;
+in float hole;
 ////////////////////////////////////////////////////////////////
 
 vec4 add_norms (in vec4 n1 , in vec4 n2){
@@ -58,8 +59,7 @@ vec4 add_norms (in vec4 n1 , in vec4 n2){
 void main(void)
 {
     // lets check for a hole before doing any math.. It saves time
-    float hole = texture2D(hole_texture, texCoord/10.0).x;
-    if (has_holes == 1)
+    if (has_holes > 0.0)
       {
         if ( hole >0.0) {discard;}
       }
@@ -164,8 +164,9 @@ void main(void)
     out_n = add_norms(out_n, n4 );
 
   
-    gColor = base;
-    gNormal.xyz = normalize(out_n.xyz)*0.5+0.5;
+    gColor = base*0.0001 + texture2D(layer_1, color_uv);;
+gColor.a = 1.0;
+    gNormal.xyz = normalize(out_n.xyz * 0.0001 + n.xyz)*0.5+0.5;
     gNormal.a = spec;
     gPosition = world_vertex;
     gFlag =(64.0/255.0);

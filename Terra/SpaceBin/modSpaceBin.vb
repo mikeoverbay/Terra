@@ -41,15 +41,7 @@ Module modSpaceBin
             space_bin_Chunk_table(t_cnt).chunk_Start = br.ReadInt64
             space_bin_Chunk_table(t_cnt).chunk_length = br.ReadInt64
             old_pos = br.BaseStream.Position
-            If False Then 'set to True to save eace chunk
-                If Not Directory.Exists("C:\!_bin_data\") Then
-                    Directory.CreateDirectory("C:\!_bin_data\")
-                End If
-                f.Position = space_bin_Chunk_table(t_cnt).chunk_Start
-                Dim buff = br.ReadBytes(space_bin_Chunk_table(t_cnt).chunk_length)
-                File.WriteAllBytes("C:\!_bin_data\" + space_bin_Chunk_table(t_cnt).chunk_name + ".bin", _
-                                    space_table_rows(t_cnt).data)
-            End If
+
         Next
         If True Then
             If Not Directory.Exists("C:\!_bin_data\") Then
@@ -58,6 +50,16 @@ Module modSpaceBin
             File.WriteAllText("C:\!_bin_data\headers.txt", sb.ToString)
         End If
 
+        If True Then
+            If Not Directory.Exists("C:\!_bin_data\") Then
+                Directory.CreateDirectory("C:\!_bin_data\")
+            End If
+            For i = 0 To space_bin_Chunk_table.Length - 1
+                br.BaseStream.Position = space_bin_Chunk_table(i).chunk_Start
+                Dim d = br.ReadBytes(space_bin_Chunk_table(i).chunk_length)
+                File.WriteAllBytes("C:\!_bin_data\" + JUST_MAP_NAME + "_" + space_bin_Chunk_table(i).chunk_name + ".bin", d)
+            Next
+        End If
         'we mush grab this data first!
         For t_cnt = 0 To table_size - 1
             Dim header As String = space_bin_Chunk_table(t_cnt).chunk_name

@@ -31,55 +31,8 @@ Module modTerrain
     End Structure
 #Region "Layer buidlng functions"
 
-    Public Sub get_decal_bin(ByVal ms As MemoryStream)
-        'I can load the data but I don't know how to use it.
-        'There are some numbers that look like chunk addresses
-        'but even that's iffy.
-        Dim enc As New System.Text.ASCIIEncoding
 
-        ms.Position = 0
-        Dim br As New BinaryReader(ms)
-
-        'unzip the data
-        ms.Position = 0
-        Dim s_buff(16) As Byte
-        s_buff = br.ReadBytes(16)
-        Dim texture_name = enc.GetString(s_buff)
-
-
-
-        ms.Position = 36
-        Dim mg1 = br.ReadInt32
-        Dim mg2 = br.ReadInt32
-        Dim uncompressedsize = br.ReadInt32
-        Dim buff(4096) As Byte
-        'Dim ps As New MemoryStream(buff)
-        Dim count As UInteger = 0
-        Dim total_read As Integer = 0
-        'Dim p_w As New StreamWriter(ps)
-
-        Using Decompress As Zlib.ZlibStream = New Zlib.ZlibStream(ms, Zlib.CompressionMode.Decompress, False)
-            Decompress.BufferSize = 4096
-            Dim numRead As Integer
-            numRead = Decompress.Read(buff, total_read, buff.Length)
-            While numRead > 0
-                If buff.Length < numRead + total_read Then
-                    ReDim Preserve buff(numRead + total_read + 1)
-                End If
-                numRead = Decompress.Read(buff, total_read, numRead)
-                total_read += numRead
-            End While
-        End Using
-
-        'Dim p_rd As New BinaryReader(ps)
-        ReDim Preserve buff(total_read)
-        Dim c_buff((total_read) * 4) As Byte
-        'File.WriteAllBytes("C:\decal_binary.data", buff)
-        ms.Dispose()
-    End Sub
-
-
-    Public Sub get_dominate_texture(ByVal map As Integer, ByVal ms As MemoryStream)
+    Public Sub get_dominate_texture(ByVal map As Integer, ByRef ms As MemoryStream)
 
         Dim enc As New System.Text.ASCIIEncoding
 
@@ -187,8 +140,8 @@ Module modTerrain
         End If
     End Sub
 
-    Public Sub open_hole_info(ByVal map As Integer, ByVal ms As MemoryStream)
-
+    Public Sub open_hole_info(ByVal map As Integer, ByRef ms As MemoryStream)
+        'Unpacks and creates a red channel only hole map texture for the hole data in terrain2
         ms.Position = 0
         Dim br As New BinaryReader(ms)
 
@@ -212,7 +165,9 @@ Module modTerrain
                 total_read += numRead 'debug
             Loop
         End Using
-
+        If False Then
+            File.WriteAllBytes("c:\!_bin_data\hole_data_" + map.ToString + ".bin", buff)
+        End If
         Dim p_rd As New BinaryReader(ps)
         ps.Position = 0
         magic1 = p_rd.ReadUInt32
@@ -229,60 +184,26 @@ Module modTerrain
         Dim dbuff((stride * 8) * (h * 2) * 4) As Byte ' make room
         count = 0
         'convert to 4 color data.
+        ReDim maplist(map).holes((stride * 8) - 1, (h * 2) - 1)
+        
+
         For z1 = 0 To (h * 2) - 1
             For x1 = 0 To (stride) - 1
                 Dim val = data((z1 * stride) + x1)
                 For q = 0 To 7
                     Dim b = (1 And (val >> q))
                     If b > 0 Then b = 1
-                    dbuff((((z1 * stride * 8) + (x1 * 8) + q) * 4)) = CByte(b) * 255 'r only care about X/red in shader
-                    'dbuff((((z * stride) + (x * 8) + q + 1) * 4)) = CByte(b) * 255 'g
-                    'dbuff((((z * stride) + (x * 8) + q + 2) * 4)) = CByte(b) * 255 'b
-                    'dbuff((((z * stride) + (x * 8) + q + 3) * 4)) = CByte(b) * 255 'a
-                    count = (((z1 * stride * 8) + (x1 * 8) + q) * 4) 'debug
+                    maplist(map).holes(63 - ((x1 * 8) + q), z1) = b
                 Next
             Next
         Next
-        '------------------------------------------------------------------
-        w = stride * 8 : h = h * 2
-        'need point in to dbuff color buffer array
-        Dim bufPtr As IntPtr = Marshal.AllocHGlobal(dbuff.Length - 1)
-        Marshal.Copy(dbuff, 0, bufPtr, dbuff.Length - 1) ' copy dbuff to pufPtr's memory
-        Dim texID = Ilu.iluGenImage() ' Generation of one image name
-        Il.ilBindImage(texID) ' Binding of image name 
-        Dim success = Il.ilGetError
 
-        Il.ilTexImage(w, h, 1, 4, Il.IL_RGBA, Il.IL_UNSIGNED_BYTE, bufPtr) ' Create new image from pufPtr's data
-        success = Il.ilGetError
-        Marshal.FreeHGlobal(bufPtr) ' free this up
-        If success = Il.IL_NO_ERROR Then
-            Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
-            Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
-            Dim f = Il.IL_FALSE
-            Dim t = Il.IL_TRUE
-            Ilu.iluMirror()
-
-            Gl.glGenTextures(1, maplist(map).HolesId) ' make texture id
-            Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(map).HolesId) ' bind the texture
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST) ' no filtering
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Il.ilGetInteger(Il.IL_IMAGE_BPP), Il.ilGetInteger(Il.IL_IMAGE_WIDTH), _
-            Il.ilGetInteger(Il.IL_IMAGE_HEIGHT), 0, Il.ilGetInteger(Il.IL_IMAGE_FORMAT), Gl.GL_UNSIGNED_BYTE, Il.ilGetData()) '  Texture specification 
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-            Il.ilBindImage(0)
-            Ilu.iluDeleteImage(texID)
-            'post_depth_image_id = maplist(map).HolesId
-            'frmTestView.update_screen()
-            'Stop
-        Else
-            MsgBox("Error creating map hole texture! Il Error" + success.ToString, MsgBoxStyle.Exclamation, "Well Shit...")
-        End If
         br.Close()
         br.Dispose()
         ms.Dispose()
+
     End Sub
+
     Public Sub get_horizonShadowMap(map As Integer, e As Ionic.Zip.ZipEntry)
         'unused function
         Dim data(e.UncompressedSize) As Byte
@@ -366,6 +287,37 @@ Module modTerrain
 
     End Sub
 
+    Public Function split_blend_texture_data(ByRef ck As Ionic.Zip.ZipFile, ByVal map As Integer) As Boolean
+        Dim blend As Ionic.Zip.ZipEntry = ck("terrain2/blend_textures")
+        Dim ms As New MemoryStream
+        blend.Extract(ms)
+        ms.Position = 0
+        If map = 7 Then
+            'Stop
+        End If
+        Dim br As New BinaryReader(ms)
+
+        Dim magic = br.ReadUInt32()
+        Dim section_cnt = br.ReadUInt32
+        section_cnt = 4
+        Dim sec_sizes(section_cnt - 1) As UInt32
+        For i = 0 To section_cnt - 1
+            sec_sizes(i) = br.ReadUInt32
+        Next
+
+        For i = 0 To section_cnt - 1
+            Dim len = sec_sizes(i)
+            If len > 0 Then
+                map_layers(map).layers(i + 1).data = br.ReadBytes(len)
+                If False Then
+                    File.WriteAllBytes("C:\!_bin_data\Map " + map.ToString("000") + " layer_" + _
+                                       i.ToString + ".bin", map_layers(map).layers(i + 1).data)
+                End If
+            End If
+        Next
+        Return True
+    End Function
+
     Public Function get_layers(ByVal ck As Ionic.Zip.ZipFile, map As Integer) As Integer
         Dim layer_count As Integer = 0
         ReDim map_layers(map).layers(4)
@@ -379,48 +331,42 @@ Module modTerrain
         map_layers(map).layers(2).norm_id = dummy_texture
         map_layers(map).layers(3).norm_id = dummy_texture
         map_layers(map).layers(4).norm_id = dummy_texture
-        'this is useless so far.. may try horizonShadow file at some point.
-        '	Dim HSM As Ionic.Zip.ZipEntry = ck("terrain2/horizonShadows")
-        '	get_horizonShadowMap(map, HSM)
-
 
         layer_uv_list += "..........................................." + vbCrLf
         Dim sm = "map:" + map.ToString + vbCrLf
         layer_uv_list += sm
         'Look for each layer file. If it exist, go get its data.
-        Dim layer1 As Ionic.Zip.ZipEntry = ck("terrain2/layer 1")
-        If layer1 IsNot Nothing Then
-            map_layers(map).layers(1).ms = New MemoryStream
-            layer1.Extract(map_layers(map).layers(1).ms)
-            get_layer_data(map_layers(map).layers(1).ms, 1, map)
-            map_layers(map).layers(1).ms.Dispose()
+        '================================================================
+        'get blend_textures and split in to an array of raw data
+        split_blend_texture_data(ck, map)
+
+        If map_layers(map).layers(1).data IsNot Nothing Then
+            get_layer_data(1, map)
+            'map_layers(map).layers(1).ms.Dispose()
             layer_count += 1
         End If
-        Dim layer2 As Ionic.Zip.ZipEntry = ck("terrain2/layer 2")
-        If layer2 IsNot Nothing Then
-            map_layers(map).layers(2).ms = New MemoryStream
-            layer2.Extract(map_layers(map).layers(2).ms)
-            get_layer_data(map_layers(map).layers(2).ms, 2, map)
-            map_layers(map).layers(2).ms.Dispose()
+
+        If map_layers(map).layers(2).data IsNot Nothing Then
+            get_layer_data(2, map)
+            'map_layers(map).layers(2).ms.Dispose()
             layer_count += 1
         End If
-        Dim layer3 As Ionic.Zip.ZipEntry = ck("terrain2/layer 3")
-        If layer3 IsNot Nothing Then
-            map_layers(map).layers(3).ms = New MemoryStream
-            layer3.Extract(map_layers(map).layers(3).ms)
-            get_layer_data(map_layers(map).layers(3).ms, 3, map)
-            map_layers(map).layers(3).ms.Dispose()
+
+        If map_layers(map).layers(3).data IsNot Nothing Then
+            get_layer_data(3, map)
+            'map_layers(map).layers(3).ms.Dispose()
             layer_count += 1
         End If
-        Dim layer4 As Ionic.Zip.ZipEntry = ck("terrain2/layer 4")
-        If layer4 IsNot Nothing Then
-            map_layers(map).layers(4).ms = New MemoryStream
-            layer4.Extract(map_layers(map).layers(4).ms)
-            get_layer_data(map_layers(map).layers(4).ms, 4, map)
-            map_layers(map).layers(4).ms.Dispose()
+
+        If map_layers(map).layers(4).data IsNot Nothing Then
+            get_layer_data(4, map)
+            'map_layers(map).layers(4).ms.Dispose()
             layer_count += 1
         End If
+
+
         map_layers(map).layer_count = layer_count
+
         'If layer_count = 2 Then
         '	set_layer_2(map)
         'End If
@@ -436,26 +382,65 @@ Module modTerrain
         'Application.DoEvents()
         'Application.DoEvents()
     End Function
-    Public Sub get_layer_data(ms As MemoryStream, layer As Integer, map As Integer)
+
+    Public Sub get_layer_data(layer As Integer, map As Integer)
+        Dim ms As New MemoryStream(map_layers(map).layers(layer).data)
         ms.Position = 0
         Dim b As New BinaryReader(ms)
 
-        'read magic
-        b.ReadInt32()
+        Dim magic = b.ReadInt32() 'Magic
+
+        Dim version = b.ReadInt32() 'version?
+
         'read size
-        map_layers(map).layers(layer).sizex = b.ReadInt32 ' get size in x
-        map_layers(map).layers(layer).sizez = b.ReadInt32 ' get size in z
+        map_layers(map).layers(layer).sizex = b.ReadInt16 ' get size in x
+        map_layers(map).layers(layer).sizez = b.ReadInt16 ' get size in z
+        Dim uk = b.ReadInt16()
+        If uk <> 19 Then
+            Stop
+        End If
+        '------------------------------------------
+        'get textures
+        Dim tex_cnt = b.ReadUInt16
+        b.ReadUInt32() 'fill
+        b.ReadUInt32() 'fill
+
+        Dim bs = b.ReadUInt32
+        Dim d = b.ReadBytes(bs)
+        map_layers(map).layers(layer).l_name = Encoding.UTF8.GetString(d, 0, d.Length)
+        'Debug.WriteLine(map.ToString + " 1 " + map_layers(map).layers(layer).l_name)
+
+        If tex_cnt > 1 Then
+            bs = b.ReadUInt32
+            d = b.ReadBytes(bs)
+            map_layers(map).layers(layer).l_name2 = Encoding.UTF8.GetString(d, 0, d.Length)
+            'Debug.WriteLine(map.ToString + " 2 " + map_layers(map).layers(layer).l_name2)
+
+        End If
+        '------------------------------------------
+        map_layers(map).layers(layer).Mix_data = b.ReadBytes(16384)
+
         'there should always be a layer 1 and at this point we need to create the mix value bitmap
         If layer = 1 Then
-            map_layers(map).mix_image = New Bitmap(map_layers(map).layers(layer).sizex, map_layers(map).layers(layer).sizex, Imaging.PixelFormat.Format32bppArgb)
+            map_layers(map).mix_image = New Bitmap(256, 256, Imaging.PixelFormat.Format32bppArgb)
         End If
-        b.ReadInt32() 'read off unused int32
+        GoTo set_mask
+
+        '--------------------------------------------------------------------------------------------------------------
+        '--------------------------------------------------------------------------------------------------------------
+        '--------------------------------------------------------------------------------------------------------------
+
+
+        b.ReadInt32() 'read off
         'read uv mapping. The next 8 bytes are actually 2 vect4 numbers. We want the X and the Z from these
         'read unused
         If map = 42 Then
             'Stop
         End If
 
+        For i = 0 To 11 ' read off unknown stuff
+            b.ReadUInt32()
+        Next
         Dim u, v As vect4
         u.x = b.ReadSingle
         u.y = b.ReadSingle
@@ -507,6 +492,9 @@ Module modTerrain
             b.ReadByte()
             b.ReadByte()
             b.ReadByte()
+
+
+            '=======================================
 set_mask:
             Select Case layer
                 Case 1
@@ -525,12 +513,11 @@ set_mask:
             End If
 
         End If
-        get_layer_mix(ms, map, layer)
-        's.Dispose()
-        b.Close()
-        b.Dispose()
+        get_layer_mix(map, layer)
+        ms.Dispose()
 
     End Sub
+
     Public Sub set_layer_2(ByVal map As Int32)
         Dim cnt As UInt32 = 0
         Dim i As UInt32 = 0
@@ -559,41 +546,15 @@ set_mask:
 
         Return
     End Sub
-    Public Sub get_layer_mix(ByRef s As MemoryStream, ByVal map As Int32, ByRef layer As Integer)
-        Dim data((map_layers(map).layers(layer).sizex * map_layers(map).layers(layer).sizex)) As Byte
+
+    Public Sub get_layer_mix(ByVal map As Int32, ByRef layer As Integer)
+        'Dim data((map_layers(map).layers(layer).sizex * map_layers(map).layers(layer).sizex)) As Byte
         Dim cnt As UInt32 = 0
         Dim i As UInt32 = 0
         Dim cols As Integer = 0
         Dim x, y As Integer
-        Using s
-            'Try
-            's.Position = 0
-            Dim buf(s.Length) As Byte
 
-            's.Position = 16 'skip bigworld header stuff
-            Dim rdr As New PngReader(s) ' create png from stream 's'
-            Dim imginfo As ImageInfo = rdr.ImgInfo
-            cols = imginfo.Cols
-            rdr.ChunkLoadBehaviour = ChunkLoadBehaviour.LOAD_CHUNK_ALWAYS
-            x = rdr.ImgInfo.Cols
-            y = rdr.ImgInfo.Rows
-            ReDim data(rdr.ImgInfo.Cols * rdr.ImgInfo.Rows)
-            For i = 0 To map_layers(map).layers(layer).sizex - 1
-                Dim iline As ImageLine  ' create place to hold a scan line
-                iline = rdr.GetRow(i)
-                For j = 0 To iline.Scanline.Length - 1
-                    'get the line and convert from word to byte and save in our buffer 'data'
-                    Dim bytes() As Byte = BitConverter.GetBytes(iline.Scanline(j))
-                    data(cnt) = bytes(0)
-                    cnt += 1
-                Next
-            Next
-            rdr.End()
-            s.Close()
-            s.Dispose()
-        End Using
-
-        Dim rect As New Rectangle(0, 0, map_layers(map).mix_image.Width, map_layers(map).mix_image.Height)
+        Dim rect As New Rectangle(0, 0, 256, 256)
         Dim bmpData As System.Drawing.Imaging.BitmapData = map_layers(map).mix_image.LockBits(rect, _
              Drawing.Imaging.ImageLockMode.ReadWrite, map_layers(map).mix_image.PixelFormat)
 
@@ -608,22 +569,60 @@ set_mask:
         Dim lc As Integer = map_layers(map).layer_count
         Dim check As ULong = 0
         ' Set the color byte based on its layer. A, R, G and B
-        For i = 0 To data.Length - 2
-            Select Case layer
-                Case 1
-                    check += data(i)
-                    rgbValues((i * 4) + 0) = data(i)
-                Case 2
-                    check += data(i)
-                    rgbValues((i * 4) + 1) = data(i)
-                Case 3
-                    check += data(i)
-                    rgbValues((i * 4) + 2) = data(i)
-                Case 4
-                    check += data(i)
-                    rgbValues((i * 4) + 3) = data(i)
-            End Select
-        Next
+        Dim repeat As Boolean = True
+loop_it:
+        For lp = 1 To 1
+
+
+
+            Dim x_cnt = 0
+            Dim y_cnt = 0
+            cnt = 0
+            For i = 0 To 126
+
+                For j = 0 To 127
+                    For k = 0 To 1
+
+                        Select Case layer
+                            Case 1
+                                check += map_layers(map).layers(layer).Mix_data(j + (i * 128))
+                                Dim pos = y_cnt
+                                If repeat Then
+                                    rgbValues(x_cnt + pos + 0) = map_layers(map).layers(layer).Mix_data(j + (i * 128)) ' And &HF
+                                    rgbValues(x_cnt + pos + 1) = map_layers(map).layers(layer).Mix_data(j + (i * 128)) ' And &HF
+                                    cnt += 1
+                                    x_cnt += 4
+                                    rgbValues(x_cnt + pos + 0) += map_layers(map).layers(layer).Mix_data(j + (i * 128)) ' And &HF
+                                    rgbValues(x_cnt + pos + 1) += map_layers(map).layers(layer).Mix_data(j + (i * 128)) ' And &HF
+                                    cnt += 1
+                                    x_cnt += 4
+                                Else
+                                    rgbValues(x_cnt + pos + 0) += map_layers(map).layers(layer).Mix_data(j + (i * 128)) ' And &HF
+                                    x_cnt += 4
+                                    rgbValues(x_cnt + pos + 1) += map_layers(map).layers(layer).Mix_data(j + (i * 128)) ' And &HF
+                                    x_cnt += 4
+
+                                End If
+
+                            Case 2
+                                check += map_layers(map).layers(layer).data(i)
+                                'rgbValues((i * 4) + 1) = map_layers(map).layers(layer).data(i)
+                            Case 3
+                                check += map_layers(map).layers(layer).data(i)
+                                'rgbValues((i * 4) + 2) = map_layers(map).layers(layer).data(i)
+                            Case 4
+                                check += map_layers(map).layers(layer).data(i)
+                                'rgbValues((i * 4) + 3) = map_layers(map).layers(layer).data(i)
+                        End Select
+                        If x_cnt > bmpData.Stride - 1 Then
+                            x_cnt = 0
+                            y_cnt += bmpData.Stride
+                        End If
+                    Next 'k
+                Next 'j
+            Next 'i
+            repeat = False
+        Next 'lp
 
         If check = 0 Then
             '	MsgBox("This layer has no blend values - Map: " + map.ToString + " layer: " + layer.ToString, MsgBoxStyle.Exclamation, "Debug:")
@@ -636,6 +635,7 @@ set_mask:
 
         Return
     End Sub
+
     Public Function ResizeImage(ByVal image As Image, _
   ByVal size As Size, Optional ByVal preserveAspectRatio As Boolean = True) As Image
         Dim newWidth As Integer
@@ -665,7 +665,10 @@ set_mask:
 
     Public Function get_layer_color_image(map As Integer, layer As Integer) As Boolean
         Dim cnt = map_layer_cache.Length
-        Dim map_name As String = map_layers(map).layers(layer).l_name + "dds"
+        Dim map_name As String = map_layers(map).layers(layer).l_name
+
+        'Debug.WriteLine(map.ToString + " " + map_name)
+
         For i = 0 To cnt - 1
             If map_layer_cache(i).name = map_name Then
                 map_layers(map).layers(layer).text_id = map_layer_cache(i).textureID
@@ -706,16 +709,19 @@ set_mask:
         map_layer_cache(cnt - 1).textureID = map_layers(map).layers(layer).text_id
         Return False
     End Function
+
     Public Function get_layer_normal_image(map As Integer, layer As Integer) As Boolean
         Dim cnt = map_layer_cache.Length
         Dim normal_update As Boolean = True
+        map_layers(map).layers(layer).n_name = map_layers(map).layers(layer).l_name.Replace("_AM", "_NM")
+        Dim n_map_name As String = map_layers(map).layers(layer).n_name
+        'Debug.WriteLine(map.ToString + " " + n_map_name)
 
-        Dim n_map_name As String = map_layers(map).layers(layer).n_name + "dds"
         'check if this texture already exists
         If frmMain.m_high_rez_Terrain.Checked Then 'only if we are using bumps
             'check if this texture already exists
             cnt = normalMap_layer_cache.Length
-            n_map_name = map_layers(map).layers(layer).n_name + "dds"
+            n_map_name = map_layers(map).layers(layer).n_name
             For i = 0 To cnt - 1
                 If normalMap_layer_cache(i).normalname = n_map_name Then
                     map_layers(map).layers(layer).norm_id = normalMap_layer_cache(i).textureNormID
@@ -768,6 +774,7 @@ try_again:
 
         Return False
     End Function
+
     Public Function get_layer_image(map As Integer, layer As Integer) As Boolean
         're-writing this
         If Not frmMain.m_high_rez_Terrain.Checked Then Return False 'no hires terrain textures
@@ -1220,7 +1227,7 @@ try_again:
                         End If
                         uv.x = -(x1 - k)
                         uv.y = -v2
-                        process_verts(x1, y, uv, mesh_stride)
+                        process_verts(x1, y, uv, mesh_stride, map)
                     Next x1
                 Next v2
                 Gl.glEnd()
@@ -1252,21 +1259,27 @@ try_again:
                     End If
                     uv.x = -(x1 - k)
                     uv.y = -v2
-                    process_verts(x1, y, uv, mesh_stride)
+                    process_verts(x1, y, uv, mesh_stride, map)
                 Next x1
             Next v2
             Gl.glEnd()
             Gl.glEndList()
         Next
     End Sub
-    Private Sub process_verts(ByVal x As Integer, ByVal y As Integer, ByVal uv As vect2, ByVal mesh_stride As Integer)
+    Private Sub process_verts(ByVal x As Integer, ByVal y As Integer, ByVal uv As vect2, ByVal mesh_stride As Integer, ByVal map As Integer)
         Dim p1, p2, p3, p4 As vertex_data
         Dim l1, l2, l3, l4 As Integer
         l1 = x + 0 + y
         l2 = x + 1 + y
         l3 = x + 0 + y + mesh_stride
         l4 = x + 1 + y + mesh_stride
-
+        Dim u, v As Integer
+        u = Abs(uv.x)
+        v = Abs(uv.y)
+        'h1 = Convert.ToSingle(maplist(map).holes(u, v))
+        'h2 = Convert.ToSingle(maplist(map).holes(u + 1, v))
+        'h3 = Convert.ToSingle(maplist(map).holes(u, v + 1))
+        'h4 = Convert.ToSingle(maplist(map).holes(u + 1, v + 1))
         Dim p1_u, p1_v As Single
         Dim p2_u, p2_v As Single
         Dim p3_u, p3_v As Single
@@ -1297,42 +1310,42 @@ try_again:
         '    Stop
         'End If
         Gl.glNormal3f(p1.nx, p1.ny, p1.nz)
-        Gl.glMultiTexCoord2f(0, p1_u, p1_v)
+        Gl.glMultiTexCoord3f(0, p1_u, p1_v, p1.hole) ' hole flag in z of glMultiTexCoord3f
         Gl.glMultiTexCoord3f(2, p1.t.x, p1.t.y, p1.t.z)
         Gl.glMultiTexCoord3f(3, p1.bt.x, p1.bt.y, p1.bt.z)
         'Gl.glMultiTexCoord2f(4, p1.fog_uv.x, p1.fog_uv.y)
         Gl.glVertex3f(p1.x, p1.y, p1.z)
 
         Gl.glNormal3f(p3.nx, p3.ny, p3.nz)
-        Gl.glMultiTexCoord2f(0, p3_u, p3_v)
+        Gl.glMultiTexCoord3f(0, p3_u, p3_v, p3.hole)
         Gl.glMultiTexCoord3f(2, p3.t.x, p3.t.y, p3.t.z)
         Gl.glMultiTexCoord3f(3, p3.bt.x, p3.bt.y, p3.bt.z)
         'Gl.glMultiTexCoord2f(4, p3.fog_uv.x, p3.fog_uv.y)
         Gl.glVertex3f(p3.x, p3.y, p3.z)
 
         Gl.glNormal3f(p2.nx, p2.ny, p2.nz)
-        Gl.glMultiTexCoord2f(0, p2_u, p2_v)
+        Gl.glMultiTexCoord3f(0, p2_u, p2_v, p2.hole)
         Gl.glMultiTexCoord3f(2, p2.t.x, p2.t.y, p2.t.z)
         Gl.glMultiTexCoord3f(3, p2.bt.x, p2.bt.y, p2.bt.z)
         'Gl.glMultiTexCoord2f(4, p2.fog_uv.x, p2.fog_uv.y)
         Gl.glVertex3f(p2.x, p2.y, p2.z)
         '===============================
         Gl.glNormal3f(p3.nx, p3.ny, p3.nz)
-        Gl.glMultiTexCoord2f(0, p3_u, p3_v)
+        Gl.glMultiTexCoord3f(0, p3_u, p3_v, p3.hole)
         Gl.glMultiTexCoord3f(2, p3.t.x, p3.t.y, p3.t.z)
         Gl.glMultiTexCoord3f(3, p3.bt.x, p3.bt.y, p3.bt.z)
         'Gl.glMultiTexCoord2f(4, p3.fog_uv.x, p3.fog_uv.y)
         Gl.glVertex3f(p3.x, p3.y, p3.z)
 
         Gl.glNormal3f(p4.nx, p4.ny, p4.nz)
-        Gl.glMultiTexCoord2f(0, p4_u, p4_v)
+        Gl.glMultiTexCoord3f(0, p4_u, p4_v, p4.hole)
         Gl.glMultiTexCoord3f(2, p4.t.x, p4.t.y, p4.t.z)
         Gl.glMultiTexCoord3f(3, p4.bt.x, p4.bt.y, p4.bt.z)
         'Gl.glMultiTexCoord2f(4, p4.fog_uv.x, p4.fog_uv.y)
         Gl.glVertex3f(p4.x, p4.y, p4.z)
 
         Gl.glNormal3f(p2.nx, p2.ny, p2.nz)
-        Gl.glMultiTexCoord2f(0, p2_u, p2_v)
+        Gl.glMultiTexCoord3f(0, p2_u, p2_v, p2.hole)
         Gl.glMultiTexCoord3f(2, p2.t.x, p2.t.y, p2.t.z)
         Gl.glMultiTexCoord3f(3, p2.bt.x, p2.bt.y, p2.bt.z)
         'Gl.glMultiTexCoord2f(4, p2.fog_uv.x, p2.fog_uv.y)
@@ -1434,25 +1447,28 @@ try_again:
                 topleft.z = bmp_data((i), (j))
                 topleft.u = (i) * uvScale
                 topleft.v = (j) * uvScale
-
+                topleft.hole = maplist(map).holes(i, j)
 
                 topRight.x = (i + 1) - w_
                 topRight.y = (j) - h_
                 topRight.z = bmp_data((i + 1), (j))
                 topRight.u = (i + 1) * uvScale
                 topRight.v = (j) * uvScale
+                topRight.hole = maplist(map).holes(i, j)
 
                 bottomRight.x = (i + 1) - w_
                 bottomRight.y = (j + 1) - h_
                 bottomRight.z = bmp_data((i + 1), (j + 1))
                 bottomRight.u = (i + 1) * uvScale
                 bottomRight.v = (j + 1) * uvScale
+                bottomRight.hole = maplist(map).holes(i, j)
 
                 bottomleft.x = (i) - w_
                 bottomleft.y = (j + 1) - h_
                 bottomleft.z = bmp_data((i), (j + 1))
                 bottomleft.u = (i) * uvScale
                 bottomleft.v = (j + 1) * uvScale
+                bottomleft.hole = maplist(map).holes(i, j)
 
                 make_world_triangle(topRight, bottomRight, topleft, scale, map)
                 make_world_triangle(topleft, bottomRight, bottomleft, scale, map)
@@ -1485,24 +1501,6 @@ try_again:
         store_in_mesh(vt2, map)
         store_in_mesh(vt3, map)
 
-        'Gl.glNormal3f(n.x, n.z, n.y)
-        'Gl.glTexCoord2f(vt1.u, vt1.v)
-        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
-        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
-        'Gl.glVertex3f(vt1.x, vt1.z, vt1.y)
-
-        'Gl.glNormal3f(n.x, n.z, n.y)
-        'Gl.glTexCoord2f(vt2.u, vt2.v)
-        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
-        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
-        'Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
-
-        'Gl.glNormal3f(n.x, n.z, n.y)
-        'Gl.glTexCoord2f(vt3.u, vt3.v)
-        'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
-        'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
-        'Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
-
 
     End Sub
 
@@ -1515,7 +1513,10 @@ try_again:
         Dim a, b, n As vect3
         'Dim tangent, biTangent As vect3
         ' ComputeTangentBasis(vt1, vt2, vt3, tangent, biTangent)
-
+        Dim h1, h2, h3 As Single
+        h1 = vt1.hole
+        h2 = vt1.hole
+        h3 = vt3.hole
         a.x = vt1.x - vt2.x
         a.y = vt1.y - vt2.y
         a.z = vt1.z - vt2.z
@@ -1544,19 +1545,19 @@ try_again:
         'store_in_mesh(vt3, map)
 
         Gl.glNormal3f(n.x, n.z, n.y)
-        Gl.glTexCoord2f(vt1.u, vt1.v)
+        Gl.glTexCoord3f(vt1.u, vt1.v, h1)
         'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
         'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt1.x, vt1.z, vt1.y)
 
         Gl.glNormal3f(n.x, n.z, n.y)
-        Gl.glTexCoord2f(vt2.u, vt2.v)
+        Gl.glTexCoord3f(vt2.u, vt2.v, h2)
         'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
         'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt2.x, vt2.z, vt2.y)
 
         Gl.glNormal3f(n.x, n.z, n.y)
-        Gl.glTexCoord2f(vt3.u, vt3.v)
+        Gl.glTexCoord3f(vt3.u, vt3.v, h3)
         'Gl.glMultiTexCoord3f(1, tangent.x, tangent.y, tangent.z)
         'Gl.glMultiTexCoord3f(2, biTangent.x, biTangent.y, biTangent.z)
         Gl.glVertex3f(vt3.x, vt3.z, vt3.y)
@@ -1665,25 +1666,29 @@ try_again:
                 topleft.z = tl
                 topleft.u = almost1 - uvinc
                 topleft.v = almost1 - uvinc
-
+                topleft.hole = maplist(mapBoard(mmx, mmy)).holes(63, 63)
 
                 topRight.x = cur_x + (scale * 2)
                 topRight.y = yl
                 topRight.z = tr
                 topRight.u = almost1
                 topRight.v = almost1 - uvinc
+                topRight.hole = maplist(mapBoard(mmx, mmy)).holes(0, 63)
 
                 bottomleft.x = cur_x + scale
                 bottomleft.y = yu
                 bottomleft.z = bl
                 bottomleft.u = almost1 - uvinc
                 bottomleft.v = almost1 '
+                bottomleft.hole = maplist(mapBoard(mmx, mmy)).holes(63, 0)
 
                 bottomRight.x = cur_x + (scale * 2)
                 bottomRight.y = yu
                 bottomRight.z = br
                 bottomRight.u = almost1 '
                 bottomRight.v = almost1
+                bottomRight.hole = maplist(mapBoard(mmx, mmy)).holes(0, 0)
+
                 make_strip_triangle(topRight, bottomRight, topleft, mapBoard(mboardX, mboardy))
                 make_strip_triangle(topleft, bottomRight, bottomleft, mapBoard(mboardX, mboardy))
 

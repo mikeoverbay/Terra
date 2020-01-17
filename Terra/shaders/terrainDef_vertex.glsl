@@ -12,11 +12,13 @@ out vec4 Vertex;
 out vec4 world_vertex;
 out vec4 mask_2;
 out mat3 TBN;
+out float hole;
 
 void main(void)
 { 
     gl_Position = ftransform();
     texCoord = -gl_MultiTexCoord0.xy;
+    hole = gl_MultiTexCoord0.z;
     vec4 point = gl_Vertex;
     Vertex = gl_Vertex;
     Vertex.x *= -1.0;//For Texture Translation!!
