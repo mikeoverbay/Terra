@@ -914,7 +914,9 @@ dont_grab_this:
 
                     'create the blured mix textures.
                     'ReWrote to use single textures with 8 padding all around for bluring!!
-                    create_mixMaps()
+                    For i = 1 To 4
+                        create_mixMaps(i)
+                    Next
                     GC.Collect()
                     GC.WaitForFullGCComplete()
                     '

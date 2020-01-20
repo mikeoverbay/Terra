@@ -51,6 +51,7 @@ Public Class frmMain
     'Dim TextArea As RectangleF
     'Dim TabArea As Rectangle
 #Region "variables"
+    Dim sun_lock As Boolean
     Dim bias() As Single = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0}
     Dim autoEventScreen As New Threading.AutoResetEvent(False)
     Dim swat2 As New Stopwatch
@@ -298,6 +299,7 @@ fail_path:
         m_fly_map.Checked = False
         m_Orbit_Light.Checked = False
         _STARTED = False ' stops all controls and OpenGL draw
+        Thread.Sleep(500)
         If maploaded Then
             save_light_settings() ' save the settings before closing if a map is loaded!
         End If
@@ -329,6 +331,7 @@ fail_path:
         End Try
         Application.Exit()
     End Sub
+
     Private Sub Form1_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         If m_comment.Focused Then '' if typing a tank comment, we dont want to change any thing.
             Return
@@ -2378,22 +2381,22 @@ skip:
 
 
                         u = map_layers(i).layers(1).uP
-                        Gl.glUniform4f(layer0U, u.x, u.y, u.z, u.w)
+                        Gl.glUniform4f(layer0UT1, u.x, u.y, u.z, u.w)
                         u = map_layers(i).layers(2).uP
-                        Gl.glUniform4f(layer1U, u.x, u.y, u.z, u.w)
+                        Gl.glUniform4f(layer1UT1, u.x, u.y, u.z, u.w)
                         u = map_layers(i).layers(3).uP
-                        Gl.glUniform4f(layer2U, u.x, u.y, u.z, u.w)
+                        Gl.glUniform4f(layer2UT1, u.x, u.y, u.z, u.w)
                         u = map_layers(i).layers(4).uP
-                        Gl.glUniform4f(layer3U, u.x, u.y, u.z, u.w)
+                        Gl.glUniform4f(layer3UT1, u.x, u.y, u.z, u.w)
 
                         v = map_layers(i).layers(1).vP
-                        Gl.glUniform4f(layer0V, v.x, v.y, v.z, v.w)
+                        Gl.glUniform4f(layer0VT1, v.x, v.y, v.z, v.w)
                         v = map_layers(i).layers(2).vP
-                        Gl.glUniform4f(layer1V, v.x, v.y, v.z, v.w)
+                        Gl.glUniform4f(layer1VT1, v.x, v.y, v.z, v.w)
                         v = map_layers(i).layers(3).vP
-                        Gl.glUniform4f(layer2V, v.x, v.y, v.z, v.w)
+                        Gl.glUniform4f(layer2VT1, v.x, v.y, v.z, v.w)
                         v = map_layers(i).layers(4).vP
-                        Gl.glUniform4f(layer3V, v.x, v.y, v.z, v.w)
+                        Gl.glUniform4f(layer3VT1, v.x, v.y, v.z, v.w)
 
                         Gl.glUniform1i(main_texture, map_layers(i).main_texture)
 
@@ -2401,16 +2404,33 @@ skip:
 
                         Gl.glUniform1i(render_has_holes, maplist(i).has_holes)
 
-                        Gl.glUniform1i(layer_1, 0)
-                        Gl.glUniform1i(layer_2, 1)
-                        Gl.glUniform1i(layer_3, 2)
-                        Gl.glUniform1i(layer_4, 3)
-                        Gl.glUniform1i(n_layer_1, 4)
-                        Gl.glUniform1i(n_layer_2, 5)
-                        Gl.glUniform1i(n_layer_3, 6)
-                        Gl.glUniform1i(n_layer_4, 7)
-                        Gl.glUniform1i(mixtexture, 8)
-                        Gl.glUniform1i(c_address, 9)
+                        Gl.glUniform1i(layer_1T1, 0)
+                        Gl.glUniform1i(layer_2T1, 1)
+                        Gl.glUniform1i(layer_3T1, 2)
+                        Gl.glUniform1i(layer_4T1, 3)
+
+                        Gl.glUniform1i(layer_1T2, 4)
+                        Gl.glUniform1i(layer_2T2, 5)
+                        Gl.glUniform1i(layer_3T2, 6)
+                        Gl.glUniform1i(layer_4T2, 7)
+
+                        Gl.glUniform1i(n_layer_1T1, 8)
+                        Gl.glUniform1i(n_layer_2T1, 9)
+                        Gl.glUniform1i(n_layer_3T1, 10)
+                        Gl.glUniform1i(n_layer_4T1, 11)
+
+                        Gl.glUniform1i(n_layer_1T2, 12)
+                        Gl.glUniform1i(n_layer_2T2, 13)
+                        Gl.glUniform1i(n_layer_3T2, 14)
+                        Gl.glUniform1i(n_layer_4T2, 15)
+
+
+                        Gl.glUniform1i(mixtexture1, 16)
+                        Gl.glUniform1i(mixtexture2, 17)
+                        Gl.glUniform1i(mixtexture3, 18)
+                        Gl.glUniform1i(mixtexture4, 19)
+
+                        Gl.glUniform1i(terrain_c_address, 20)
 
                         ' bind all the textures
 
@@ -2425,34 +2445,67 @@ skip:
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).text_id)
-
+                        '------------------------------------------------------------------
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).text_id2)
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 5)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).norm_id)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).text_id2)
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 6)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).text_id2)
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 7)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).norm_id)
-                        'bind the mix layer. 
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).text_id2)
+                        '------------------------------------------------------------------
+                        '------------------------------------------------------------------
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 8)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).mix_texture_Id)
-                        'bind lowrez colormap
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
+
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 9)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 10)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 11)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).norm_id)
+                        '------------------------------------------------------------------
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 12)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id2)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 13)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id2)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 14)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id2)
+
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 15)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).norm_id2)
+                        '------------------------------------------------------------------
+                        'bind the mix layer. 
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 16)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).mix_texture_Id)
+                        'bind the mix layer. 
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 17)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).mix_texture_Id)
+                        'bind the mix layer. 
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 18)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).mix_texture_Id)
+                        'bind the mix layer. 
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 19)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(4).mix_texture_Id)
+                        'bind lowrez colormap
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 20)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
                     End If
                     Gl.glCallList(maplist(i).calllist_Id)
                 End If
             Next
             Gl.glUseProgram(0)
-            For patato = 0 To 4
+            For patato = 0 To 20
                 Gl.glActiveTexture(Gl.GL_TEXTURE0 + patato)
-                Gl.glEnable(Gl.GL_TEXTURE_2D)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-                Gl.glDisable(Gl.GL_TEXTURE_2D)
             Next
         End If
         Gl.glActiveTexture(Gl.GL_TEXTURE0)
@@ -2891,7 +2944,7 @@ skip:
             Gl.glUseProgram(0)
             Gl.glEnable(Gl.GL_LIGHTING)
         End If
-
+        'oddly, there is no shader code for this!
         If m_low_quality_trees.Checked And Not m_wire_trees.Checked Then
             Gl.glEnable(Gl.GL_CULL_FACE)
             Gl.glActiveTexture(Gl.GL_TEXTURE0)
@@ -5924,15 +5977,19 @@ no_move_xz:
 
     Private Delegate Sub draw_maps_buttons_delegate()
     Public Sub draw_maps_buttons()
-        Try
-            If Me.InvokeRequired Then
-                Me.Invoke(New draw_maps_buttons_delegate(AddressOf draw_maps_buttons))
-            Else
-                gl_pick_map(mouse.X, mouse.Y)
-            End If
-        Catch ex As Exception
+        If _STARTED Then
+            Try
+                If Me.InvokeRequired Then
+                    If _STARTED Then
+                        Me.Invoke(New draw_maps_buttons_delegate(AddressOf draw_maps_buttons))
+                    End If
+                Else
+                    gl_pick_map(mouse.X, mouse.Y)
+                End If
+            Catch ex As Exception
 
-        End Try
+            End Try
+        End If
     End Sub
     Private Sub m_Orbit_Light_CheckedChanged(sender As Object, e As EventArgs) Handles m_Orbit_Light.CheckedChanged
         If m_Orbit_Light.Checked Then

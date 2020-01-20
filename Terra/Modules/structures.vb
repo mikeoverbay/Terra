@@ -90,9 +90,9 @@ Module structures
         Public main_texture_id As Integer
         Public mix_image As Bitmap
         Public color_tex As Bitmap
-        Public mix_texture_Id As Integer
     End Structure
     Public Structure layer_data_
+        Public mix_texture_Id As Integer
         Public l_name As String
         Public n_name As String
         Public text_id As Integer

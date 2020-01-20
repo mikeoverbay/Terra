@@ -1,4 +1,3 @@
-// render_fragment.txt
 // used to render blended hirez terrain
 //
 //
@@ -9,32 +8,59 @@ layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gPosition;
 layout (location = 3) out float gFlag;
 
-uniform sampler2D layer_1;
-uniform sampler2D layer_2;
-uniform sampler2D layer_3;
-uniform sampler2D layer_4;
-uniform sampler2D n_layer_1;
-uniform sampler2D n_layer_2;
-uniform sampler2D n_layer_3;
-uniform sampler2D n_layer_4;
+uniform sampler2D layer_1T1;
+uniform sampler2D layer_2T1;
+uniform sampler2D layer_3T1;
+uniform sampler2D layer_4T1;
+
+uniform sampler2D layer_1T2;
+uniform sampler2D layer_2T2;
+uniform sampler2D layer_3T2;
+uniform sampler2D layer_4T2;
+
+uniform sampler2D n_layer_1T1;
+uniform sampler2D n_layer_2T1;
+uniform sampler2D n_layer_3T1;
+uniform sampler2D n_layer_4T1;
+
+uniform sampler2D n_layer_1T2;
+uniform sampler2D n_layer_2T2;
+uniform sampler2D n_layer_3T2;
+uniform sampler2D n_layer_4T2;
+
+uniform sampler2D mixtexture1;
+uniform sampler2D mixtexture2;
+uniform sampler2D mixtexture3;
+uniform sampler2D mixtexture4;
+
 //low rex color map
 uniform sampler2D colorMap;
-uniform sampler2D mixtexture;
-uniform sampler2D hole_texture;
 
 
 uniform int has_holes;
 
 // more and more crap added :)
 //translation vectors
-uniform vec4 layer0U;
-uniform vec4 layer1U;
-uniform vec4 layer2U;
-uniform vec4 layer3U;
-uniform vec4 layer0V;
-uniform vec4 layer1V;
-uniform vec4 layer2V;
-uniform vec4 layer3V;
+uniform vec4 layer0UT1;
+uniform vec4 layer1UT1;
+uniform vec4 layer2UT1;
+uniform vec4 layer3UT1;
+
+uniform vec4 layer0UT2;
+uniform vec4 layer1UT2;
+uniform vec4 layer2UT2;
+uniform vec4 layer3UT2;
+
+
+uniform vec4 layer0VT1;
+uniform vec4 layer1VT1;
+uniform vec4 layer2VT1;
+uniform vec4 layer3VT1;
+
+uniform vec4 layer0VT2;
+uniform vec4 layer1VT2;
+uniform vec4 layer2VT2;
+uniform vec4 layer3VT2;
 
 uniform float l_ambient;
 uniform float l_texture;
@@ -61,17 +87,32 @@ void main(void)
     // lets check for a hole before doing any math.. It saves time
     if (has_holes > 0.0)
       {
-        if ( hole >0.0) {discard;}
+        //if ( hole >0.0) {discard;}
       }
     vec4 t1;
     vec4 t2;
     vec4 t3;
     vec4 t4;
+
+    vec4 t1_2;
+    vec4 t2_2;
+    vec4 t3_2;
+    vec4 t4_2;
+
     vec4 n1;
     vec4 n2;
     vec4 n3;
     vec4 n4;
-    vec4 MixLevel;
+
+    vec4 n1_2;
+    vec4 n2_2;
+    vec4 n3_2;
+    vec4 n4_2;
+
+    vec2 MixLevel1;
+    vec2 MixLevel2;
+    vec2 MixLevel3;
+    vec2 MixLevel4;
     vec4 Nmix1;
     vec4 Coutmix;
     vec4 Noutmix;
@@ -81,97 +122,154 @@ void main(void)
     vec3 PN2;
     vec3 PN3;
     vec3 PN4;
+
     vec2 color_uv = texCoord.xy *0.1;
     vec3 vAmbient = vec3(l_ambient, l_ambient, l_ambient);
 
     //calcualte texcoords for mix texture.
-    float scale = 256.0/272.0;
+    float scale = 128.0/144.0;
     mix_coords = color_uv;
     mix_coords *= scale;
-    mix_coords += .030303030;// = 8/264
+    mix_coords += .0588235;// = 8/264
+
     // layer 4 ---------------------------------------------
     vec2 tv4;
-    tv4 = vec2(dot(-layer3U, Vertex), dot(layer3V, Vertex));
-    t4 = texture2D(layer_4, -tv4 + .5);
-    n4 = texture2D(n_layer_4, -tv4 + .5);
+    tv4 = vec2(dot(-layer3UT1, Vertex), dot(layer3VT1, Vertex));
+    t4 = texture2D(layer_4T1, -tv4 + .5);
+    n4 = texture2D(n_layer_4T1, -tv4 + .5);
+    //
+    vec2 tv4_2 = vec2(dot(-layer3UT2, Vertex), dot(layer3VT2, Vertex));
+    t4_2 = texture2D(layer_4T2, -tv4_2 + .5);
+    n4_2 = texture2D(n_layer_4T2, -tv4_2 + .5);
+
     // layer 3 ---------------------------------------------
     vec2 tv3;
-    tv3 = vec2(dot(-layer2U, Vertex), dot(layer2V, Vertex));
-    t3 = texture2D(layer_3, -tv3 + .5);
-    n3 = texture2D(n_layer_3, -tv3 + .5);
+    tv3 = vec2(dot(-layer2UT1, Vertex), dot(layer2VT1, Vertex));
+    t3 = texture2D(layer_3T1, -tv3 + .5);
+    n3 = texture2D(n_layer_3T1, -tv3 + .5);
+    //
+    vec2 tv3_2;
+    tv3_2 = vec2(dot(-layer2UT2, Vertex), dot(layer2VT2, Vertex));
+    t3_2 = texture2D(layer_3T2, -tv3_2 + .5);
+    n3_2 = texture2D(n_layer_3T2, -tv3_2 + .5);
+
     // layer 2 ---------------------------------------------
     vec2 tv2;
-    tv2 = vec2(dot(-layer1U, Vertex), dot(layer1V, Vertex));
-    t2 = texture2D(layer_2, -tv2 + .5);
-    n2 = texture2D(n_layer_2, -tv2 + .5);
+    tv2 = vec2(dot(-layer1UT1, Vertex), dot(layer1VT1, Vertex));
+    t2 = texture2D(layer_2T1, -tv2 + .5);
+    n2 = texture2D(n_layer_2T1, color_uv);
+    //
+    vec2 tv2_2;
+    tv2_2 = vec2(dot(-layer1UT2, Vertex), dot(layer1VT2, Vertex));
+    t2_2 = texture2D(layer_2T2, -tv2_2 + .5);
+    n2_2 = texture2D(n_layer_2T2, color_uv);
+
     // layer 1 ---------------------------------------------
     vec2 tv1;
-    tv1 = vec2(dot(-layer0U, Vertex), dot(layer0V, Vertex));
-    t1 = texture2D(layer_1, -tv1 + .5);
-    n1 = texture2D(n_layer_1, -tv1 + .5);
+    tv1 = vec2(dot(-layer0UT1, Vertex), dot(layer0VT1, Vertex));
+    t1 = texture2D(layer_1T1, -tv1 + .5);
+    n1 = texture2D(n_layer_1T1, color_uv);
+    //
+    vec2 tv1_2;
+    tv1_2 = vec2(dot(-layer0UT2, Vertex), dot(layer0VT2, Vertex));
+    t1_2 = texture2D(layer_1T2, -tv1_2 + .5);
+    n1_2 = texture2D(n_layer_1T2, color_uv);
+    //
+
     //------------------------------------------------------------------
     
-    MixLevel = texture2D(mixtexture, mix_coords.xy).rgba;
+    MixLevel1.rg = texture2D(mixtexture1, mix_coords.xy).ga;
+    MixLevel2.rg = texture2D(mixtexture2, mix_coords.xy).ga;
+    MixLevel3.rg = texture2D(mixtexture3, mix_coords.xy).ga;
+    MixLevel4.rg = texture2D(mixtexture4, mix_coords.xy).ga;
    
     //Which ever is the Color_Tex can't be translated.
-    t1 = mix(texture2D(layer_1, color_uv), t1, mask_2.r);
-    t2 = mix(texture2D(layer_2, color_uv), t2, mask_2.g);
-    t3 = mix(texture2D(layer_3, color_uv), t3, mask_2.b);
-    t4 = mix(texture2D(layer_4, color_uv), t4, mask_2.a);
+    //t1 = mix(texture2D(layer_1T1, color_uv), t1, 1.0)+vec4(0.3,0.3,0.3,1.0);
+    //t1_2 = mix(texture2D(layer_1T2, color_uv), t1_2, 1.0)+vec4(0.3,0.3,0.3,1.0);
+
     //
      
     //Now we mix our color
-    vec4 base;
-    base  = t4 * MixLevel.a ;
-    base += t3 * MixLevel.b ;
-    base += t2 * MixLevel.g ;
-    base += t1 * MixLevel.r ;
+    vec4 base = vec4(0.0);
+
+    base += t1 * MixLevel1.r ;
+    base += t1_2 * MixLevel1.g ;
    
+    base += t2 * MixLevel2.r ;
+    base += t2_2 * MixLevel2.g ;
+
+    base += t3 * MixLevel3.r ;
+    base += t3_2 * MixLevel3.g ;
+
+    base += t4 * MixLevel4.r ;
+    base += t4_2 * MixLevel4.g ;
 
     float spec;
-    spec  = n4.a * MixLevel.a ;
-    spec += n3.a * MixLevel.b ;
-    spec += n2.a * MixLevel.g ;
-    spec += n1.a * MixLevel.r ;
+
+    spec = n2.a * MixLevel1.r ;
+    spec += n1_2.a * MixLevel1.g ;
 
     //This blends between low and highrez by distance
     //We remove the color_tex from the low rez image as its added back
     //after the lighting is calculated. This makes the colors of
     //the textures less washed out.
-    base.rgb = mix(texture2D(colorMap, color_uv).rgb, base.rgb, ln) ;
+    //DISABLED UNTIL WE SORT THE REST OUT!
+    //base.rgb = mix(texture2D(colorMap, color_uv).rgb, base.rgb, ln) ;
 
     //Get our normal maps.
-    n1.rgb = normalize(2.0 * n1.rgb - 1.0) * MixLevel.r;
-    n2.rgb = normalize(2.0 * n2.rgb - 1.0) * MixLevel.g;
-    n3.rgb = normalize(2.0 * n3.rgb - 1.0) * MixLevel.b;
-    n4.rgb = normalize(2.0 * n4.rgb - 1.0) * MixLevel.a;
+    n1.rgb = normalize(2.0 * n1.rgb - 1.0) * MixLevel1.r;
+    n1_2.rgb = normalize(2.0 * n1_2.rgb - 1.0) * MixLevel1.g;
+
+    n2.rgb = normalize(2.0 * n2.rgb - 1.0) * MixLevel2.r;
+    n2_2.rgb = normalize(2.0 * n2_2.rgb - 1.0) * MixLevel2.g;
+
+    n3.rgb = normalize(2.0 * n3.rgb - 1.0) * MixLevel3.r;
+    n3_2.rgb = normalize(2.0 * n3_2.rgb - 1.0) * MixLevel3.g;
+
+    n4.rgb = normalize(2.0 * n4.rgb - 1.0) * MixLevel4.r;
+    n4_2.rgb = normalize(2.0 * n4_2.rgb - 1.0) * MixLevel4.g;
     //flip Y axis
     n1.y *= -1.0;
     n2.y *= -1.0;
     n3.y *= -1.0;
     n4.y *= -1.0;
-    n1.rgb = TBN * n1.rgb * MixLevel.r;
-    n2.rgb = TBN * n2.rgb * MixLevel.g;
-    n3.rgb = TBN * n3.rgb * MixLevel.b;
-    n4.rgb = TBN * n4.rgb * MixLevel.a;
+
+    n1_2.y *= -1.0;
+    n2_2.y *= -1.0;
+    n3_2.y *= -1.0;
+    n4_2.y *= -1.0;
+
+    n1.rgb = (TBN * n1.rgb) * MixLevel1.r;
+    n1_2.rgb = (TBN * n1_2.rgb) * MixLevel1.g;
+
+    n2.rgb = (TBN * n2.rgb) * MixLevel2.r;
+    n2_2.rgb = (TBN * n2_2.rgb) * MixLevel2.g;
+
+    n3.rgb = (TBN * n3.rgb) * MixLevel3.r;
+    n3_2.rgb = (TBN * n3_2.rgb) * MixLevel3.g;
+
+    n4.rgb = (TBN * n4.rgb) * MixLevel4.r;
+    n4_2.rgb = (TBN * n4_2.rgb) * MixLevel4.g;
     //-------------------------------------------------------------
     vec3 N = normalize(n);
     
     vec4 out_n = vec4(N,0.0);
     out_n = add_norms(out_n, n1 );
+    out_n = add_norms(out_n, n1_2 );
     out_n = add_norms(out_n, n2 );
+    out_n = add_norms(out_n, n2_2 );
     out_n = add_norms(out_n, n3 );
+    out_n = add_norms(out_n, n3_2 );
     out_n = add_norms(out_n, n4 );
+    out_n = add_norms(out_n, n4_2 );
 
-  
-    gColor = base*0.0001 + texture2D(layer_1, color_uv);;
-gColor.a = 1.0;
-    gNormal.xyz = normalize(out_n.xyz * 0.0001 + n.xyz)*0.5+0.5;
+
+    gColor = base;
+    gColor.a = 1.0;
+    gNormal.xyz = normalize(out_n.xyz )*0.5+0.5;
     gNormal.a = spec;
     gPosition = world_vertex;
     gFlag =(64.0/255.0);
   
 }
-
-
 

@@ -330,6 +330,7 @@
     <Compile Include="SpaceBin\modSpaceBin.vb" />
     <Compile Include="SpaceBin\modSpaceBinFunctions.vb" />
     <Compile Include="SpaceBin\modSpacedBinVars.vb" />
+    <Compile Include="TerrainLayers\ModTerrainLayers.vb" />
     <Compile Include="Visual Importer\packed_section.vb" />
     <Compile Include="Visual Importer\primitive_file.vb" />
     <Compile Include="Visual Importer\vis_main.vb" />
