@@ -243,6 +243,7 @@ fail_path:
         Application.DoEvents()
         Application.DoEvents()
         '-------------------------------------------------
+        TestTexture = load_png_MIPS_file(Application.StartupPath + "\Resources\TextureBorder.png")
         ' This has to be before any textures are created.
         'It sets the first texture to start deleting from!
         flush_data()
@@ -397,6 +398,13 @@ fail_path:
         End If
         If e.KeyCode = Keys.E Then
             frmEditFrag.Show()
+        End If
+        If e.KeyCode = Keys.F9 Then
+            If DrawTextureBorders = 1 Then
+                DrawTextureBorders = 0
+            Else
+                DrawTextureBorders = 1
+            End If
         End If
         If e.KeyCode = Keys.F1 Then
             m_info_window.PerformClick()
@@ -2426,6 +2434,7 @@ skip:
                         Gl.glUniform3f(c_position, eyeX, eyeY, eyeZ) 'must have this for distance calculations
 
                         Gl.glUniform1i(render_has_holes, maplist(i).has_holes)
+                        Gl.glUniform1i(t_testing_mode, DrawTextureBorders)
 
                         Gl.glUniform1i(layer_1T1, 0)
                         Gl.glUniform1i(layer_2T1, 1)
@@ -2454,6 +2463,7 @@ skip:
                         Gl.glUniform1i(mixtexture4, 19)
 
                         Gl.glUniform1i(terrain_c_address, 20)
+                        Gl.glUniform1i(t_test_texture_address, 21)
 
                         ' bind all the textures
 
@@ -2521,6 +2531,9 @@ skip:
                         'bind lowrez colormap
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 20)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, maplist(i).colorMapId)
+                        'textureBoarder
+                        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 21)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, TestTexture)
                     End If
                     Gl.glCallList(maplist(i).calllist_Id)
                 End If
@@ -5984,11 +5997,9 @@ no_move_xz:
     Public Sub update_screen()
 
         Try
-            If Me.InvokeRequired Then
+            If Me.InvokeRequired And _STARTED Then
                 SyncLock lockdrawing
-                    If _STARTED Then
-                        Me.Invoke(New update_screen_delegate(AddressOf update_screen))
-                    End If
+                    Me.Invoke(New update_screen_delegate(AddressOf update_screen))
                 End SyncLock
             Else
                 draw_scene()
@@ -6002,16 +6013,14 @@ no_move_xz:
     Public Sub draw_maps_buttons()
         If _STARTED Then
             Try
-                If Me.InvokeRequired Then
-                    If _STARTED Then
-                        Me.Invoke(New draw_maps_buttons_delegate(AddressOf draw_maps_buttons))
-                    End If
+                If Me.InvokeRequired And _STARTED Then
+                    Me.Invoke(New draw_maps_buttons_delegate(AddressOf draw_maps_buttons))
                 Else
                     gl_pick_map(mouse.X, mouse.Y)
                 End If
             Catch ex As Exception
 
-            End Try
+        End Try
         End If
     End Sub
     Private Sub m_Orbit_Light_CheckedChanged(sender As Object, e As EventArgs) Handles m_Orbit_Light.CheckedChanged

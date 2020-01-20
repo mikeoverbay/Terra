@@ -330,14 +330,16 @@ Module shader_loader
     Public layer0UT2, layer1UT2, layer2UT2, layer3UT2 As Integer
     Public layer0VT1, layer1VT1, layer2VT1, layer3VT1 As Integer
     Public layer0VT2, layer1VT2, layer2VT2, layer3VT2 As Integer
-    Public texture_mask, render_has_holes As Integer
+    Public texture_mask, render_has_holes, t_testing_mode, t_test_texture_address As Integer
     Private Sub set_terrainDef_variables()
-        '23 TEXTURES!!! 
+        '22 TEXTURES!!! 
         texture_mask = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "texture_mask")
         'No idea how to use this or if its even needed.
         ' color_correct_addy = Gl.glGetUniformLocation(shader_list.render_shader, "dom_")
 
         render_has_holes = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "has_holes")
+        t_testing_mode = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "test_mode")
+        t_test_texture_address = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "test_texture")
         '--------------------------------------------------------------------------
         layer_1T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_1T1")
         layer_1T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_1T2")

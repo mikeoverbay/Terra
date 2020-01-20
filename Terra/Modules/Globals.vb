@@ -50,6 +50,10 @@ Module Globals
     Public selected_map_hit As Integer = 0
     Public tl_, tr_, br_, bl_ As Vector3D
 
+    '======================
+    Public TestTexture As Integer = 0
+    Public DrawTextureBorders As Integer = 0
+    '======================
 
     Public decal_grid_size As Integer = 32
     Public decal_count As Integer = 0
