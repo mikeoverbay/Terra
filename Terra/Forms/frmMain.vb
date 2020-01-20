@@ -2379,26 +2379,49 @@ skip:
                         'hi rez terrain.
                         Gl.glUseProgram(shader_list.terrainDef_shader)
 
-
-                        u = map_layers(i).layers(1).uP
+                        'UV transform values
+                        u = map_layers(i).layers(1).uP1
                         Gl.glUniform4f(layer0UT1, u.x, u.y, u.z, u.w)
-                        u = map_layers(i).layers(2).uP
+                        u = map_layers(i).layers(1).uP2
+                        Gl.glUniform4f(layer0UT2, u.x, u.y, u.z, u.w)
+
+                        u = map_layers(i).layers(2).uP1
                         Gl.glUniform4f(layer1UT1, u.x, u.y, u.z, u.w)
-                        u = map_layers(i).layers(3).uP
+                        u = map_layers(i).layers(2).uP2
+                        Gl.glUniform4f(layer1UT2, u.x, u.y, u.z, u.w)
+
+                        u = map_layers(i).layers(3).uP1
                         Gl.glUniform4f(layer2UT1, u.x, u.y, u.z, u.w)
-                        u = map_layers(i).layers(4).uP
+                        u = map_layers(i).layers(3).uP2
+                        Gl.glUniform4f(layer2UT2, u.x, u.y, u.z, u.w)
+
+                        u = map_layers(i).layers(4).uP1
                         Gl.glUniform4f(layer3UT1, u.x, u.y, u.z, u.w)
+                        u = map_layers(i).layers(4).uP2
+                        Gl.glUniform4f(layer3UT2, u.x, u.y, u.z, u.w)
 
-                        v = map_layers(i).layers(1).vP
+
+                        v = map_layers(i).layers(1).vP1
                         Gl.glUniform4f(layer0VT1, v.x, v.y, v.z, v.w)
-                        v = map_layers(i).layers(2).vP
-                        Gl.glUniform4f(layer1VT1, v.x, v.y, v.z, v.w)
-                        v = map_layers(i).layers(3).vP
-                        Gl.glUniform4f(layer2VT1, v.x, v.y, v.z, v.w)
-                        v = map_layers(i).layers(4).vP
-                        Gl.glUniform4f(layer3VT1, v.x, v.y, v.z, v.w)
+                        v = map_layers(i).layers(1).vP2
+                        Gl.glUniform4f(layer0VT2, v.x, v.y, v.z, v.w)
 
-                        Gl.glUniform1i(main_texture, map_layers(i).main_texture)
+                        v = map_layers(i).layers(2).vP1
+                        Gl.glUniform4f(layer1VT1, v.x, v.y, v.z, v.w)
+                        v = map_layers(i).layers(2).vP2
+                        Gl.glUniform4f(layer1VT2, v.x, v.y, v.z, v.w)
+
+                        v = map_layers(i).layers(3).vP1
+                        Gl.glUniform4f(layer2VT1, v.x, v.y, v.z, v.w)
+                        v = map_layers(i).layers(3).vP2
+                        Gl.glUniform4f(layer2VT2, v.x, v.y, v.z, v.w)
+
+                        v = map_layers(i).layers(4).vP1
+                        Gl.glUniform4f(layer3VT1, v.x, v.y, v.z, v.w)
+                        v = map_layers(i).layers(4).vP2
+                        Gl.glUniform4f(layer3VT2, v.x, v.y, v.z, v.w)
+
+                        Gl.glUniform1i(texture_mask, map_layers(i).texture_mask)
 
                         Gl.glUniform3f(c_position, eyeX, eyeY, eyeZ) 'must have this for distance calculations
 
@@ -2463,7 +2486,7 @@ skip:
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 9)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).norm_id)
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 10)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id)
@@ -2475,7 +2498,7 @@ skip:
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id2)
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 13)
-                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(1).norm_id2)
+                        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(2).norm_id2)
 
                         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 14)
                         Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(i).layers(3).norm_id2)
@@ -4585,15 +4608,18 @@ over_it:
         Gl.glEnable(Gl.GL_DEPTH_TEST)
         Gl.glDisable(Gl.GL_BLEND)
         If water.IsWater Then
-            Gl.glColor3f(0.0, 0.15, 0.25)
-            Gl.glFrontFace(Gl.GL_CW)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
-            Gl.glDisable(Gl.GL_CULL_FACE)
-            Gl.glPushMatrix()
-            Gl.glTranslatef(0.0, 0.015, 0.0)
-            Gl.glMultMatrixf(water.matrix)
-            Gl.glCallList(water.displayID_plane)
-            Gl.glPopMatrix()
+            If m_water_ Then
+
+                Gl.glColor3f(0.0, 0.15, 0.25)
+                Gl.glFrontFace(Gl.GL_CW)
+                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL)
+                Gl.glDisable(Gl.GL_CULL_FACE)
+                Gl.glPushMatrix()
+                Gl.glTranslatef(0.0, 0.015, 0.0)
+                Gl.glMultMatrixf(water.matrix)
+                Gl.glCallList(water.displayID_plane)
+                Gl.glPopMatrix()
+            End If
 
         End If
         draw_g_terrain()
@@ -5397,10 +5423,7 @@ no_move_xz:
         decal_cache(0) = New decal_
         ReDim texture_cache(0)
         texture_cache(0) = New tree_textures_
-        ReDim normalMap_layer_cache(0)
-        normalMap_layer_cache(0) = New tree_textures_
-        ReDim map_layer_cache(0)
-        map_layer_cache(0) = New tree_textures_
+        ReDim layer_texture_cache(0)
         ReDim treeCache(0)
         treeCache(0) = New flora_
         ReDim maplist(0)

@@ -67,12 +67,14 @@ uniform float l_texture;
 uniform float gray_level;
 uniform float gamma;
 
+
 in vec3 eyeVec;
 in vec2 texCoord;
 in vec3 n;
 in vec4 Vertex;
 in vec4 world_vertex;
 in float ln;
+in vec4 mask_1;
 in vec4 mask_2;
 in mat3 TBN;
 in float hole;
@@ -80,14 +82,14 @@ in float hole;
 
 vec4 add_norms (in vec4 n1 , in vec4 n2){
     n1.xyz += n2.xyz;
-    return n1;   
+    return normalize(n1);   
 }
 void main(void)
 {
     // lets check for a hole before doing any math.. It saves time
     if (has_holes > 0.0)
       {
-        //if ( hole >0.0) {discard;}
+        if ( hole >0.0) {discard;}
       }
     vec4 t1;
     vec4 t2;
@@ -123,14 +125,14 @@ void main(void)
     vec3 PN3;
     vec3 PN4;
 
-    vec2 color_uv = texCoord.xy *0.1;
+    vec2 color_uv = texCoord.xy * 0.1;
     vec3 vAmbient = vec3(l_ambient, l_ambient, l_ambient);
 
     //calcualte texcoords for mix texture.
     float scale = 128.0/144.0;
     mix_coords = color_uv;
     mix_coords *= scale;
-    mix_coords += .0588235;// = 8/264
+    mix_coords += .055555555;// = 8/144
 
     // layer 4 ---------------------------------------------
     vec2 tv4;
@@ -140,7 +142,7 @@ void main(void)
     //
     vec2 tv4_2 = vec2(dot(-layer3UT2, Vertex), dot(layer3VT2, Vertex));
     t4_2 = texture2D(layer_4T2, -tv4_2 + .5);
-    n4_2 = texture2D(n_layer_4T2, -tv4_2 + .5);
+    n4_2 = texture2D(n_layer_4T1, -tv4_2 + .5);
 
     // layer 3 ---------------------------------------------
     vec2 tv3;
@@ -157,35 +159,44 @@ void main(void)
     vec2 tv2;
     tv2 = vec2(dot(-layer1UT1, Vertex), dot(layer1VT1, Vertex));
     t2 = texture2D(layer_2T1, -tv2 + .5);
-    n2 = texture2D(n_layer_2T1, color_uv);
+    n2 = texture2D(n_layer_2T1, -tv2 + .5);
     //
     vec2 tv2_2;
     tv2_2 = vec2(dot(-layer1UT2, Vertex), dot(layer1VT2, Vertex));
     t2_2 = texture2D(layer_2T2, -tv2_2 + .5);
-    n2_2 = texture2D(n_layer_2T2, color_uv);
+    n2_2 = texture2D(n_layer_2T2, -tv2_2 + .5);
 
     // layer 1 ---------------------------------------------
     vec2 tv1;
     tv1 = vec2(dot(-layer0UT1, Vertex), dot(layer0VT1, Vertex));
     t1 = texture2D(layer_1T1, -tv1 + .5);
-    n1 = texture2D(n_layer_1T1, color_uv);
+    n1 = texture2D(n_layer_1T1, -tv1 + .5);
     //
     vec2 tv1_2;
     tv1_2 = vec2(dot(-layer0UT2, Vertex), dot(layer0VT2, Vertex));
     t1_2 = texture2D(layer_1T2, -tv1_2 + .5);
-    n1_2 = texture2D(n_layer_1T2, color_uv);
+    n1_2 = texture2D(n_layer_1T2, -tv1_2 + .5);
     //
 
     //------------------------------------------------------------------
     
-    MixLevel1.rg = texture2D(mixtexture1, mix_coords.xy).ga;
-    MixLevel2.rg = texture2D(mixtexture2, mix_coords.xy).ga;
-    MixLevel3.rg = texture2D(mixtexture3, mix_coords.xy).ga;
-    MixLevel4.rg = texture2D(mixtexture4, mix_coords.xy).ga;
+    MixLevel1.rg = texture2D(mixtexture1, mix_coords.xy).ag;
+    MixLevel2.rg = texture2D(mixtexture2, mix_coords.xy).ag;
+    MixLevel3.rg = texture2D(mixtexture3, mix_coords.xy).ag;
+    MixLevel4.rg = texture2D(mixtexture4, mix_coords.xy).ag;
    
-    //Which ever is the Color_Tex can't be translated.
-    //t1 = mix(texture2D(layer_1T1, color_uv), t1, 1.0)+vec4(0.3,0.3,0.3,1.0);
-    //t1_2 = mix(texture2D(layer_1T2, color_uv), t1_2, 1.0)+vec4(0.3,0.3,0.3,1.0);
+    vec4 empty = vec4(0.0);
+
+      //mask out empty textures.
+    t1 = mix(t1, empty, mask_1.a);
+    t1_2 = mix(t1_2, empty, mask_1.b);
+    t2 = mix(t2, empty, mask_1.g);
+    t2_2 = mix(t2_2, empty, mask_1.r);
+
+    t3 = mix(t3, empty, mask_2.a);
+    t3_2 = mix(t3_2, empty, mask_2.b);
+    t4 = mix(t4, empty, mask_2.g);
+    t4_2 = mix(t4_2, empty, mask_2.r);
 
     //
      
@@ -254,15 +265,14 @@ void main(void)
     vec3 N = normalize(n);
     
     vec4 out_n = vec4(N,0.0);
-    out_n = add_norms(out_n, n1 );
-    out_n = add_norms(out_n, n1_2 );
-    out_n = add_norms(out_n, n2 );
-    out_n = add_norms(out_n, n2_2 );
-    out_n = add_norms(out_n, n3 );
-    out_n = add_norms(out_n, n3_2 );
-    out_n = add_norms(out_n, n4 );
-    out_n = add_norms(out_n, n4_2 );
-
+    out_n = add_norms(out_n, mix(n1, empty, mask_1.a));
+    out_n = add_norms(out_n, mix(n1_2, empty, mask_1.b));
+    out_n = add_norms(out_n, mix(n2, empty, mask_1.g));
+    out_n = add_norms(out_n, mix(n2_2, empty, mask_1.r));
+    out_n = add_norms(out_n, mix(n3, empty, mask_2.a));
+    out_n = add_norms(out_n, mix(n3_2, empty, mask_2.b));
+    out_n = add_norms(out_n, mix(n3, empty, mask_2.g));
+    out_n = add_norms(out_n, mix(n4_2, empty, mask_2.r));
 
     gColor = base;
     gColor.a = 1.0;

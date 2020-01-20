@@ -63,30 +63,20 @@
                 Return
             End If
         Next
-        For i = 0 To texture_cache.Length - 1
-            If shr_name = texture_cache(i).name2 Then
-                show_texture(texture_cache(i).texture2ID)
-                Return
-            End If
-        Next
+
         For i = 0 To texture_cache.Length - 1
             If shr_name = texture_cache(i).normalname Then
                 show_texture(texture_cache(i).textureNormID)
                 Return
             End If
         Next
-        For i = 0 To map_layer_cache.Length - 1
-            If shr_name = map_layer_cache(i).name Then
-                show_texture(map_layer_cache(i).textureID)
+        For i = 0 To layer_texture_cache.Length - 1
+            If shr_name = layer_texture_cache(i).name Then
+                show_texture(layer_texture_cache(i).id)
                 Return
             End If
         Next
-        For i = 0 To normalMap_layer_cache.Length - 1
-            If shr_name = normalMap_layer_cache(i).normalname Then
-                show_texture(normalMap_layer_cache(i).textureNormID)
-                Return
-            End If
-        Next
+
         For i = 0 To tree_textures.Length - 1
             If shr_name = tree_textures(i).name Then
                 show_texture(tree_textures(i).textureID)

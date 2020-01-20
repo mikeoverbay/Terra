@@ -237,9 +237,7 @@ Module modZlib
         Dim sw As New Stopwatch
         sw.Start()
         get_team_locations(name)
-
-        map_layer_cache(0) = New tree_textures_ ' uses the same data members as the trees.
-        normalMap_layer_cache(0) = New tree_textures_ ' uses the same data members as the trees.
+        layer_texture_cache(0) = New texture_
         tree_textures(0) = New tree_textures_
         treeCache(0) = New flora_
         Dim contents As New List(Of String)
@@ -912,11 +910,42 @@ dont_grab_this:
                     frmMain.ProgressBar1.Minimum = 0
                     frmMain.ProgressBar1.Value = 0
 
+                    'create render mask for terrainDEF_Shader
+                    For i = 0 To test_count
+
+                        Dim mask As Integer = 0
+                        If map_layers(i).layers(1).l_name <> "" Then
+                            mask = mask Or 1
+                        End If
+                        If map_layers(i).layers(1).l_name2 <> "" Then
+                            mask = mask Or 2
+                        End If
+                        If map_layers(i).layers(2).l_name <> "" Then
+                            mask = mask Or 4
+                        End If
+                        If map_layers(i).layers(2).l_name2 <> "" Then
+                            mask = mask Or 8
+                        End If
+                        If map_layers(i).layers(3).l_name <> "" Then
+                            mask = mask Or 16
+                        End If
+                        If map_layers(i).layers(3).l_name2 <> "" Then
+                            mask = mask Or 32
+                        End If
+                        If map_layers(i).layers(4).l_name <> "" Then
+                            mask = mask Or 64
+                        End If
+                        If map_layers(i).layers(4).l_name2 <> "" Then
+                            mask = mask Or 128
+                        End If
+                        map_layers(i).texture_mask = mask
+                    Next
                     'create the blured mix textures.
-                    'ReWrote to use single textures with 8 padding all around for bluring!!
+                    'Rewrote to use single textures with 8 padding all around for bluring!!
                     For i = 1 To 4
                         create_mixMaps(i)
                     Next
+
                     GC.Collect()
                     GC.WaitForFullGCComplete()
                     '

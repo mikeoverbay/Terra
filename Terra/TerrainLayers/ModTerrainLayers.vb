@@ -77,7 +77,7 @@ Module ModTerrainLayers
         Public r2 As vect4
         Public scale As vect4
     End Structure
-    Dim cur_layer As Integer = 0
+    Dim cur_layer_info_pnt As Integer = 0
 #Region "Layer building functions"
 
 
@@ -385,8 +385,9 @@ Module ModTerrainLayers
         For i = 0 To 7
             layer_info.used_on(i) = br.ReadUInt32
         Next
-
-        ReDim layer_info.render_info(map_count)
+        ReDim layer_info.render_info(0)
+        layer_info.render_info(0) = New layer_render_info_entry_
+        ReDim Preserve layer_info.render_info(7)
         For i = 0 To map_count - 1
             layer_info.render_info(i) = New layer_render_info_entry_
             br.ReadUInt32() 'magic
@@ -440,19 +441,19 @@ Module ModTerrainLayers
 
     Public Function get_layers(ByVal ck As Ionic.Zip.ZipFile, map As Integer) As Integer
         Dim layer_count As Integer = 0
-        cur_layer = 0
+        cur_layer_info_pnt = 0
         ReDim map_layers(map).layers(4)
         map_layers(map).used_layers = 0
         map_layers(map).layers(1).text_id = dummy_texture 'preset these to the dummys so they are not empty.
         map_layers(map).layers(2).text_id = dummy_texture
         map_layers(map).layers(3).text_id = dummy_texture
         map_layers(map).layers(4).text_id = dummy_texture
-        map_layers(map).layers(1).text_id2 = dummy_texture 'preset these to the dummys so they are not empty.
+        map_layers(map).layers(1).text_id2 = dummy_texture
         map_layers(map).layers(2).text_id2 = dummy_texture
         map_layers(map).layers(3).text_id2 = dummy_texture
         map_layers(map).layers(4).text_id2 = dummy_texture
 
-        map_layers(map).layers(1).norm_id = dummy_texture
+        map_layers(map).layers(1).norm_id = dummy_texture 'preset these to the dummys so they are not empty.
         map_layers(map).layers(2).norm_id = dummy_texture
         map_layers(map).layers(3).norm_id = dummy_texture
         map_layers(map).layers(4).norm_id = dummy_texture
@@ -460,6 +461,12 @@ Module ModTerrainLayers
         map_layers(map).layers(2).norm_id2 = dummy_texture
         map_layers(map).layers(3).norm_id2 = dummy_texture
         map_layers(map).layers(4).norm_id2 = dummy_texture
+
+        map_layers(map).layers(1).mix_texture_Id = dummy_texture 'preset these to the dummys so they are not empty.
+        map_layers(map).layers(2).mix_texture_Id = dummy_texture
+        map_layers(map).layers(3).mix_texture_Id = dummy_texture
+        map_layers(map).layers(4).mix_texture_Id = dummy_texture
+
 
         layer_uv_list += "..........................................." + vbCrLf
         Dim sm = "map:" + map.ToString + vbCrLf
@@ -590,6 +597,7 @@ Module ModTerrainLayers
         Dim buf = b.ReadBytes(16384) 'read the DDS data with out a header. It has none!
         '------------------------------------------
         'Create a dds.. add header followed by the data from blend_textures
+
         ReDim map_layers(map).layers(layer).Mix_data(DDS_HEADER_SIZE + 16384)
         DDS_HEADER_ARRAY.CopyTo(map_layers(map).layers(layer).Mix_data, 0) 'copy the DDS header
         buf.CopyTo(map_layers(map).layers(layer).Mix_data, DDS_HEADER_SIZE) 'copy DDS data
@@ -608,21 +616,34 @@ Module ModTerrainLayers
 
         'read uv mapping. The next 8 bytes are actually 2 vect4 numbers. We want the X and the Z from these
         'read unused
-        Dim u = layer_info.render_info(layer).u
-        Dim v = layer_info.render_info(layer).v
-        map_layers(map).layers(layer).uP = u
-        map_layers(map).layers(layer).vP = v
+        Dim u = layer_info.render_info(cur_layer_info_pnt).u
+        Dim v = layer_info.render_info(cur_layer_info_pnt).v
+        map_layers(map).layers(layer).uP1 = u
+        map_layers(map).layers(layer).vP1 = v
+
+        cur_layer_info_pnt += 1
+
+        Dim u2 = layer_info.render_info(cur_layer_info_pnt).u
+        Dim v2 = layer_info.render_info(cur_layer_info_pnt).v
+        map_layers(map).layers(layer).uP2 = u2
+        map_layers(map).layers(layer).vP2 = v2
+
+        cur_layer_info_pnt += 1
+
         'Debug.Write("map" + map.ToString + " layer:" + layer.ToString + " U:" + _
         '				  map_layers(map).layers(layer).u.ToString + " V:" + map_layers(map).layers(layer).v.ToString + vbCrLf)
         'Dim sx = Sign(u.x) * Sqrt((u.x ^ 2) + (u.z ^ 2))
         'Dim sy = Sign(v.y) * Sqrt((v.x ^ 2) + (v.z ^ 2))
         'Dim rt = Atan2(v.x, v.z)
 
-        Dim su = "  u.x:" + u.x.ToString + "  u.y:" + u.y.ToString + "  u.z:" + u.z.ToString + "  u.w:" + u.w.ToString
-        Dim sv = "  v.x:" + v.x.ToString + "  v.y:" + v.y.ToString + "  v.z:" + v.z.ToString + "  v.w:" + v.w.ToString
+        Dim su = "  u.x:" + u.x.ToString("000.00000") + "  u.y:" + u.y.ToString("000.00000") + "  u.z:" + u.z.ToString("000.00000") + "  u.w:" + u.w.ToString("000.00000")
+        Dim sv = "  v.x:" + v.x.ToString("000.00000") + "  v.y:" + v.y.ToString("000.00000") + "  v.z:" + v.z.ToString("000.00000") + "  v.w:" + v.w.ToString("000.00000")
+        Dim su2 = "  u.x:" + u2.x.ToString("000.00000") + "  u.y:" + u2.y.ToString("000.00000") + "  u.z:" + u2.z.ToString("000.00000") + "  u.w:" + u2.w.ToString("000.00000")
+        Dim sv2 = "  v.x:" + v2.x.ToString("000.00000") + "  v.y:" + v2.y.ToString("000.00000") + "  v.z:" + v2.z.ToString("000.00000") + "  v.w:" + v2.w.ToString("000.00000")
         'Dim sc = "scale x:" + sx.ToString + "   scale y:" + sy.ToString
         'Dim rs = "rotation:" + rt.ToString
-        layer_uv_list += su + vbCrLf + sv + vbCrLf + vbCrLf
+        layer_uv_list += "U1 V1 :" + su + vbCrLf + sv + vbCrLf + vbCrLf
+        layer_uv_list += "U2 V2 :" + su2 + vbCrLf + sv2 + vbCrLf + vbCrLf
 
 
 
@@ -771,17 +792,20 @@ loop_it:
 
     Public Function get_layer_color_image(map As Integer, layer As Integer) As Boolean
         'this will be rewrote 
-        Dim cnt = map_layer_cache.Length
+        Dim cnt = layer_texture_cache.Length
         Dim map_name As String = map_layers(map).layers(layer).l_name
         Dim map_name2 As String = map_layers(map).layers(layer).l_name2
 
         'Debug.WriteLine(map.ToString + " " + map_name)
         '------------------ texture 1
+        If map_name = "" Then
+            map_layers(map).layers(layer).text_id = dummy_texture
+        End If
         For i = 0 To cnt - 1
-            If map_layer_cache(i).name = map_name Then
-                map_layers(map).layers(layer).text_id = map_layer_cache(i).textureID
+            If layer_texture_cache(i).name = map_name Then
+                map_layers(map).layers(layer).text_id = layer_texture_cache(i).id
                 saved_texture_loads += 1
-                Return False
+                GoTo get_map_2
             End If
         Next
 
@@ -790,10 +814,10 @@ loop_it:
         '================= get color map
         'if get_main_texture is false, it wont read the huge main texture again!
         If map_name.ToLower.Contains("global_am") Then
-            cnt = map_layer_cache.Length
-            ReDim Preserve map_layer_cache(cnt)
-            map_layer_cache(cnt - 1) = New tree_textures_
-            map_layer_cache(cnt - 1).name = map_name
+            cnt = layer_texture_cache.Length
+            ReDim Preserve layer_texture_cache(cnt)
+            layer_texture_cache(cnt - 1) = New texture_
+            layer_texture_cache(cnt - 1).name = map_name
         Else
             Dim map_entry As Ionic.Zip.ZipEntry = active_pkg(map_name)
             If map_entry Is Nothing Then
@@ -811,30 +835,38 @@ loop_it:
         frmMapInfo.I__Map_Textures_tb.Text += "Color: " + map_name + vbCrLf 'save info
 
         'update the cache
-        cnt = map_layer_cache.Length
-        ReDim Preserve map_layer_cache(cnt)
-        map_layer_cache(cnt - 1) = New tree_textures_
-        map_layer_cache(cnt - 1).name = map_name
-        map_layer_cache(cnt - 1).textureID = map_layers(map).layers(layer).text_id
+        cnt = layer_texture_cache.Length
+        ReDim Preserve layer_texture_cache(cnt)
+        layer_texture_cache(cnt - 1) = New texture_
+        layer_texture_cache(cnt - 1).name = map_name
+        layer_texture_cache(cnt - 1).id = map_layers(map).layers(layer).text_id
 
         '------------------ texture 2
-        cnt = map_layer_cache.Length
+        '------------------ texture 2
+        '------------------ texture 2
+        '------------------ texture 2
+        '------------------ texture 2
+        '------------------ texture 2
+get_map_2:
+        If map_name2 = "" Then
+            map_layers(map).layers(layer).text_id2 = dummy_texture
+            Return False
+        End If
+        cnt = layer_texture_cache.Length
         For i = 0 To cnt - 1
-            If map_layer_cache(i).name = map_name2 Then
-                map_layers(map).layers(layer).text_id2 = map_layer_cache(i).textureID
+            If layer_texture_cache(i).name = map_name2 Then
+                map_layers(map).layers(layer).text_id2 = layer_texture_cache(i).id
                 saved_texture_loads += 1
                 Return False
             End If
         Next
-
         '================= get color map 2
-        If map_name2 = "" Then Return False
         'if get_main_texture is false, it wont read the huge main texture again!
         If map_name2.ToLower.Contains("global_am") Then
-            cnt = map_layer_cache.Length
-            ReDim Preserve map_layer_cache(cnt)
-            map_layer_cache(cnt - 1) = New tree_textures_
-            map_layer_cache(cnt - 1).name = map_name2
+            cnt = layer_texture_cache.Length
+            ReDim Preserve layer_texture_cache(cnt)
+            layer_texture_cache(cnt - 1) = New texture_
+            layer_texture_cache(cnt - 1).name = map_name2
         Else
             Dim map_entry As Ionic.Zip.ZipEntry = active_pkg(map_name2)
             If map_entry Is Nothing Then
@@ -844,6 +876,7 @@ loop_it:
                     Return True
                 End If
             End If
+            dds = New MemoryStream
             map_entry.Extract(dds)
             map_layers(map).layers(layer).text_id2 = build_layer_color_texture(map, dds, layer)        'We dont need the Bitmap. This saves some time
             dds.Dispose()
@@ -852,17 +885,17 @@ loop_it:
         frmMapInfo.I__Map_Textures_tb.Text += "Color: " + map_name2 + vbCrLf 'save info
 
         'update the cache
-        cnt = map_layer_cache.Length
-        ReDim Preserve map_layer_cache(cnt)
-        map_layer_cache(cnt - 1) = New tree_textures_
-        map_layer_cache(cnt - 1).name = map_name2
-        map_layer_cache(cnt - 1).textureID = map_layers(map).layers(layer).text_id2
+        cnt = layer_texture_cache.Length
+        ReDim Preserve layer_texture_cache(cnt)
+        layer_texture_cache(cnt - 1) = New texture_
+        layer_texture_cache(cnt - 1).name = map_name2
+        layer_texture_cache(cnt - 1).id = map_layers(map).layers(layer).text_id2
 
         Return False
     End Function
 
     Public Function get_layer_normal_image(map As Integer, layer As Integer) As Boolean
-        Dim cnt = map_layer_cache.Length
+        Dim cnt = layer_texture_cache.Length
         Dim normal_update As Boolean = True
         map_layers(map).layers(layer).n_name = map_layers(map).layers(layer).l_name.Replace("_AM", "_NM")
         map_layers(map).layers(layer).n_name2 = map_layers(map).layers(layer).l_name2.Replace("_AM", "_NM")
@@ -872,18 +905,19 @@ loop_it:
 
         ' get normal_map 1 ----------------------------------------------------------------
         'check if this texture already exists
-        If frmMain.m_high_rez_Terrain.Checked Then 'only if we are using bumps
-            'check if this texture already exists
-            cnt = normalMap_layer_cache.Length
-            n_map_name = map_layers(map).layers(layer).n_name
-            For i = 0 To cnt - 1
-                If normalMap_layer_cache(i).normalname = n_map_name Then
-                    map_layers(map).layers(layer).norm_id = normalMap_layer_cache(i).textureNormID
-                    saved_texture_loads += 1
-                    Return False
-                End If
-            Next
+        If n_map_name = "" Then
+            map_layers(map).layers(layer).norm_id = dummy_texture
         End If
+        'check if this texture already exists
+        cnt = layer_texture_cache.Length
+        n_map_name = map_layers(map).layers(layer).n_name
+        For i = 0 To cnt - 1
+            If layer_texture_cache(i).name = n_map_name Then
+                map_layers(map).layers(layer).norm_id = layer_texture_cache(i).id
+                saved_texture_loads += 1
+                GoTo get_map_2
+            End If
+        Next
         Dim retry As Boolean = False
 try_again1:
         '================= get norml map
@@ -903,8 +937,8 @@ try_again1:
                 retry = True ' to stop endless looping
                 n_map_name = map_layers(map).layers(layer).l_name.Replace(".", "") + "_NM.dds"
                 For i = 0 To cnt - 1
-                    If normalMap_layer_cache(i).normalname = n_map_name Then
-                        map_layers(map).layers(layer).norm_id = normalMap_layer_cache(i).textureNormID
+                    If layer_texture_cache(i).name = n_map_name Then
+                        map_layers(map).layers(layer).norm_id = layer_texture_cache(i).id
                         saved_texture_loads += 1
                         Return False
                     End If
@@ -919,34 +953,39 @@ try_again1:
         frmMapInfo.I__Map_Textures_tb.Text += "Normal: " + n_map_name + vbCrLf 'save info
 
         'update the cache
-        cnt = normalMap_layer_cache.Length
-        ReDim Preserve normalMap_layer_cache(cnt)
-        normalMap_layer_cache(cnt - 1) = New tree_textures_
-        normalMap_layer_cache(cnt - 1).normalname = n_map_name
-        normalMap_layer_cache(cnt - 1).textureNormID = map_layers(map).layers(layer).norm_id
+        cnt = layer_texture_cache.Length
+        ReDim Preserve layer_texture_cache(cnt)
+        layer_texture_cache(cnt - 1) = New texture_
+        layer_texture_cache(cnt - 1).name = n_map_name
+        layer_texture_cache(cnt - 1).id = map_layers(map).layers(layer).norm_id
 
         ' get normal_map 2 ----------------------------------------------------------------
-        If n_map_name = "" Then Return False
-        'check if this texture already exists
-        If frmMain.m_high_rez_Terrain.Checked Then 'only if we are using bumps
-            'check if this texture already exists
-            cnt = normalMap_layer_cache.Length
-            n_map_name2 = map_layers(map).layers(layer).n_name2
-            For i = 0 To cnt - 1
-                If normalMap_layer_cache(i).normalname = n_map_name2 Then
-                    map_layers(map).layers(layer).norm_id2 = normalMap_layer_cache(i).textureNormID
-                    saved_texture_loads += 1
-                    Return False
-                End If
-            Next
+        ' get normal_map 2 ----------------------------------------------------------------
+        ' get normal_map 2 ----------------------------------------------------------------
+        ' get normal_map 2 ----------------------------------------------------------------
+        ' get normal_map 2 ----------------------------------------------------------------
+get_map_2:
+        If n_map_name2 = "" Then
+            map_layers(map).layers(layer).norm_id2 = dummy_texture
+            Return False
         End If
+        'check if this texture already exists
+        cnt = layer_texture_cache.Length
+        n_map_name2 = map_layers(map).layers(layer).n_name2
+        For i = 0 To cnt - 1
+            If layer_texture_cache(i).name = n_map_name2 Then
+                map_layers(map).layers(layer).norm_id2 = layer_texture_cache(i).id
+                saved_texture_loads += 1
+                Return False
+            End If
+        Next
         Dim retry2 As Boolean = False
 try_again2:
         '================= get norml map
         Dim nmap_entry2 As Ionic.Zip.ZipEntry = active_pkg(n_map_name)
         If nmap_entry2 Is Nothing Then
             nmap_entry2 = get_shared(n_map_name2)
-            If nmap_entry Is Nothing Then
+            If nmap_entry2 Is Nothing Then
 
                 If retry2 Then
                     If Not n_map_name2.ToLower.Contains("global_am") Then ' stop spamming
@@ -958,8 +997,8 @@ try_again2:
                 retry2 = True ' to stop endless looping
                 n_map_name2 = map_layers(map).layers(layer).l_name.Replace(".", "") + "_NM.dds"
                 For i = 0 To cnt - 1
-                    If normalMap_layer_cache(i).normalname = n_map_name2 Then
-                        map_layers(map).layers(layer).norm_id2 = normalMap_layer_cache(i).textureNormID
+                    If layer_texture_cache(i).name = n_map_name2 Then
+                        map_layers(map).layers(layer).norm_id2 = layer_texture_cache(i).id
                         saved_texture_loads += 1
                         Return False
                     End If
@@ -968,18 +1007,18 @@ try_again2:
             End If
         End If
         Dim mdds2 As New MemoryStream
-        nmap_entry.Extract(mdds)
-        map_layers(map).layers(layer).norm_id2 = build_layer_normal_texture(map, mdds, layer)
-        mdds.Dispose()
+        nmap_entry2.Extract(mdds2)
+        map_layers(map).layers(layer).norm_id2 = build_layer_normal_texture(map, mdds2, layer)
+        mdds2.Dispose()
 
         frmMapInfo.I__Map_Textures_tb.Text += "Normal: " + n_map_name + vbCrLf 'save info
 
         'update the cache
-        cnt = normalMap_layer_cache.Length
-        ReDim Preserve normalMap_layer_cache(cnt)
-        normalMap_layer_cache(cnt - 1) = New tree_textures_
-        normalMap_layer_cache(cnt - 1).normalname = n_map_name2
-        normalMap_layer_cache(cnt - 1).textureNormID = map_layers(map).layers(layer).norm_id2
+        cnt = layer_texture_cache.Length
+        ReDim Preserve layer_texture_cache(cnt)
+        layer_texture_cache(cnt - 1) = New texture_
+        layer_texture_cache(cnt - 1).name = n_map_name2
+        layer_texture_cache(cnt - 1).id = map_layers(map).layers(layer).norm_id2
 
         Return False
     End Function

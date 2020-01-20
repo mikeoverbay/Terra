@@ -6,10 +6,11 @@ Imports Tao.OpenGl
 Imports Tao.Platform.Windows
 Module shader_loader
     Public shader_list As New shader_list_
+    'list of all shaders used.
     Public Class shader_list_
         Public ring_Shader As Integer
         Public alphaTransparent_shader As Integer
-        Public lowQualityTrees_shader As Integer
+        Public lowQualityTrees_shader As Integer 'There is no shader code for this yet there is no error thrown!
         Public branchDef_shader As Integer
         Public buildingsDef_shader As Integer
         Public colorMapper_shader As Integer
@@ -49,34 +50,24 @@ Module shader_loader
 
 #Region "variables"
 
-    Public view_normal_mode_ As Integer
     Public normal_mode As Integer = 0
-    Public normal_length_ As Integer
-    Public render_has_holes As Integer
-    Public c_address, n_address, a_address, t_address, c_position As Integer
+    Public n_address, a_address, t_address, c_position As Integer
     Public n_address2, a_address2, t_address2 As Integer
     Public a_address3, t_address3 As Integer
     Public a_address5 As Integer
 
 
     Public n_address6, f_address6, a_address6, t_address6 As Integer
-    Public layer_1, layer_2, layer_3, layer_4, n_layer_1, n_layer_2, n_layer_3, n_layer_4 As Integer
-    Public main_texture, is_bumped, gamma, gamma_2 As Integer
+    Public is_bumped, gamma, gamma_2 As Integer
     Public gamma_3, branch_gamma_level_id, gamma_6, c_position3, branch_eye_pos_id, is_bumped4, is_bumped5 As Integer
-    Public layer0U, layer1U, layer2U, layer3U As Integer
-    Public layer0V, layer1V, layer2V, layer3V As Integer
     Public gray_level_1, gray_level_2, gray_level_3, gray_level_6, branch_gray_level_id As Integer
     Public u_mat1, u_mat2 As Integer
-    Public mixtexture As Integer
-    Public sun_lock As Boolean = False
     Public leaf_ambient_level_id, branch_ambient_level_id, decal_ambient, model_ambient As Integer
     Public decal_uv_wrap, decal_influence As Integer
-    Public bump_out_ As Integer
     Public vismap_address As Integer
     Public noise_map_address As Integer
     Public basic_color, basic_normal, basic_color_level, basic_gamma As Integer
     Public frond_ambient_level_id As Integer
-    Public colorMapper_mask_address, colorMapper_colorMap_address As Integer
     ' Public color_correct_addy As Integer
 #End Region
 
@@ -84,6 +75,10 @@ Module shader_loader
     Public Sub make_shaders()
         'I'm tired of all the work every time I add a shader.
         'So... Im going to automate the process.. Hey.. its a computer for fucks sake!
+        '
+        'It is important that there be ONLY shaders in the \shaders folder.
+        'There can be only one '_' character in the names and the leading has to match the shader_list name!
+        '
         Dim f_list() As String = IO.Directory.GetFiles(Application.StartupPath + "\shaders", "*fragment.glsl")
         Dim v_list() As String = IO.Directory.GetFiles(Application.StartupPath + "\shaders\", "*vertex.glsl")
         Dim g_list() As String = IO.Directory.GetFiles(Application.StartupPath + "\shaders", "*geo.glsl")
@@ -92,7 +87,7 @@ Module shader_loader
         Array.Sort(g_list)
         ReDim shaders.shader(f_list.Length - 1)
         With shaders
-
+            'we go through and find the shaders based on the second part of their names.
             For i = 0 To f_list.Length - 1
                 .shader(i) = New shaders_
                 With .shader(i)
@@ -126,7 +121,7 @@ Module shader_loader
                 Dim id = assemble_shader(vs, gs, fs, .shader_id, .shader_name, .has_geo)
                 .set_call_id(id)
                 .shader_id = id
-             
+
                 'Debug.WriteLine(.shader_name + "  Id:" + .shader_id.ToString)
             End With
         Next
@@ -143,7 +138,7 @@ Module shader_loader
         Dim info As New StringBuilder
         info.Length = 8192
         Dim info_l As Integer
-     
+
         If shader > 0 Then
             Gl.glUseProgram(0)
             Gl.glDeleteProgram(shader)
@@ -324,32 +319,67 @@ Module shader_loader
         frmShaderError.Show()
         frmShaderError.er_tb.Text += s
     End Sub
+
+
+
+    '--------------------------------------------------------------------------
+    Public layer_1T1, layer_2T1, layer_3T1, layer_4T1, n_layer_1T1, n_layer_2T1, n_layer_3T1, n_layer_4T1 As Integer
+    Public layer_1T2, layer_2T2, layer_3T2, layer_4T2, n_layer_1T2, n_layer_2T2, n_layer_3T2, n_layer_4T2 As Integer
+    Public mixtexture1, mixtexture2, mixtexture3, mixtexture4, terrain_c_address As Integer
+    Public layer0UT1, layer1UT1, layer2UT1, layer3UT1 As Integer
+    Public layer0UT2, layer1UT2, layer2UT2, layer3UT2 As Integer
+    Public layer0VT1, layer1VT1, layer2VT1, layer3VT1 As Integer
+    Public layer0VT2, layer1VT2, layer2VT2, layer3VT2 As Integer
+    Public texture_mask, render_has_holes As Integer
     Private Sub set_terrainDef_variables()
-        main_texture = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "main_texture")
+        '23 TEXTURES!!! 
+        texture_mask = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "texture_mask")
         'No idea how to use this or if its even needed.
         ' color_correct_addy = Gl.glGetUniformLocation(shader_list.render_shader, "dom_")
-      
+
         render_has_holes = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "has_holes")
         '--------------------------------------------------------------------------
-        layer_1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_1")
-        layer_2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_2")
-        layer_3 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_3")
-        layer_4 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_4")
-        n_layer_1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_1")
-        n_layer_2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_2")
-        n_layer_3 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_3")
-        n_layer_4 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_4")
-        mixtexture = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "mixtexture")
-        c_address = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "colorMap")
+        layer_1T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_1T1")
+        layer_1T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_1T2")
+        layer_2T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_2T1")
+        layer_2T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_2T2")
+        layer_3T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_3T1")
+        layer_3T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_3T2")
+        layer_4T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_4T1")
+        layer_4T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer_4T2")
+        n_layer_1T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_1T1")
+        n_layer_1T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_1T2")
+        n_layer_2T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_2T1")
+        n_layer_2T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_2T2")
+        n_layer_3T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_3T1")
+        n_layer_3T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_3T2")
+        n_layer_4T1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_4T1")
+        n_layer_4T2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "n_layer_4T2")
+
+        mixtexture1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "mixtexture1")
+        mixtexture2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "mixtexture2")
+        mixtexture3 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "mixtexture3")
+        mixtexture4 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "mixtexture4")
+
+        terrain_c_address = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "colorMap")
         'dominateTex = Gl.glGetUniformLocation(shader_list.render_shader, "DominateMap")
-        layer0U = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer0U")
-        layer1U = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer1U")
-        layer2U = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer2U")
-        layer3U = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer3U")
-        layer0V = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer0V")
-        layer1V = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer1V")
-        layer2V = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer2V")
-        layer3V = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer3V")
+        layer0UT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer0UT1")
+        layer0UT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer0UT2")
+        layer1UT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer1UT1")
+        layer1UT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer1UT2")
+        layer2UT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer2UT1")
+        layer2UT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer2UT2")
+        layer3UT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer3UT1")
+        layer3UT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer3UT2")
+
+        layer0VT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer0VT1")
+        layer0VT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer0VT2")
+        layer1VT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer1VT1")
+        layer1VT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer1VT2")
+        layer2VT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer2VT1")
+        layer2VT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer2VT2")
+        layer3VT1 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer3VT1")
+        layer3VT2 = Gl.glGetUniformLocation(shader_list.terrainDef_shader, "layer3VT2")
     End Sub
     '===============================================
     Public lz_colorAddress, lz_Has_Holes As Integer
@@ -358,6 +388,7 @@ Module shader_loader
         lz_Has_Holes = Gl.glGetUniformLocation(shader_list.lzTerrainDef_shader, "has_holes")
     End Sub
 
+    '--------------------------------------------------------------------------
     Public deferred_gcolor, deferred_gnormal, deferred_gposition, _
         deferred_light_position, deferred_cam_position, deferred_gamma, _
         deferred_spec, deferred_gray, deferred_bright, deferred_ambient, _
@@ -384,10 +415,12 @@ Module shader_loader
         'deferred_Matrix = Gl.glGetUniformLocation(shader_list.deferred_shader, "projectionmatrix")
     End Sub
 
+    Public bump_out_ As Integer
     Private Sub set_comp_variables()
         bump_out_ = Gl.glGetUniformLocation(shader_list.comp_shader, "amount")
     End Sub
 
+    Public view_normal_mode_, normal_length_ As Integer
     Private Sub set_normal_variables()
         view_normal_mode_ = Gl.glGetUniformLocation(shader_list.normal_shader, "mode")
         normal_length_ = Gl.glGetUniformLocation(shader_list.normal_shader, "l_length")
@@ -434,6 +467,7 @@ Module shader_loader
         leafColored_matrix = Gl.glGetUniformLocation(shader_list.leafcoloredDef_shader, "matrix")
     End Sub
 
+    Public colorMapper_mask_address, colorMapper_colorMap_address As Integer
     Private Sub set_colorMapper_variables()
         colorMapper_mask_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "mask")
         colorMapper_colorMap_address = Gl.glGetUniformLocation(shader_list.colorMapper_shader, "colorMap")
@@ -490,6 +524,7 @@ Module shader_loader
     Private Sub set_tankDef_variables()
         tankDef_matrix = Gl.glGetUniformLocation(shader_list.tankDef_shader, "matrix")
     End Sub
+
     Public fxaa_frameBufferSize, fxaa_texture_in As Integer
     Private Sub set_FXAA_variables()
         fxaa_frameBufferSize = Gl.glGetUniformLocation(shader_list.FXAA_shader, "frameBufSize")

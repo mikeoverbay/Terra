@@ -15,7 +15,7 @@ Module modTextures
     Public max_texture_units As Integer
     Public shadowMapID, coMapID, coMapID2, utility_texture, depthID, fboID, fboID2 As Integer
 
-    Public Sub build_layer_normal_texture(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer)
+    Public Function build_layer_normal_texture(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer) As Integer
         Dim s As String = ""
         s = Gl.glGetError
 
@@ -35,6 +35,7 @@ Module modTextures
             Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
 
             success = Il.ilConvertImage(Il.IL_RGB, Il.IL_UNSIGNED_BYTE) ' Convert every colour component into unsigned bytes
+            Ilu.iluCrop(64, 64, 0, 896, 896, 1)
             If width > 512 And width < 4096 Then
                 'Dim delta = map_layers(map).layers(layer).u * 10.0
                 'If delta = 0 Then
@@ -45,9 +46,10 @@ Module modTextures
             'Ilu.iluFlipImage()
             'Ilu.iluMirror()
             'If your image contains alpha channel you can replace IL_RGB with IL_RGBA 
-            Gl.glGenTextures(1, map_layers(map).layers(layer).norm_id)
+            Dim text_id As Integer
+            Gl.glGenTextures(1, text_id)
             Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(map).layers(layer).norm_id)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, text_id)
 
             If largestAnsio > 0 Then
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
@@ -69,15 +71,18 @@ Module modTextures
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
             Il.ilBindImage(0)
             Ilu.iluDeleteImage(texID)
+            Return text_id
         Else
             'Stop
             frmMapInfo.I__General_Info_tb.Text += "Failed to load normal texture. Map:" + map.ToString + vbCrLf
         End If
+        Il.ilBindImage(0)
+        Ilu.iluDeleteImage(texID)
         ms.Close()
         ms.Dispose()
-        Return
-    End Sub
-    Public Sub build_layer_color_texture(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer)
+        Return 0
+    End Function
+    Public Function build_layer_color_texture(ByVal map As Int32, ByVal ms As MemoryStream, ByRef layer As Integer) As Integer
         Dim s As String = ""
         s = Gl.glGetError
 
@@ -95,11 +100,14 @@ Module modTextures
         If success = Il.IL_NO_ERROR Then
             Dim width As Integer = Il.ilGetInteger(Il.IL_IMAGE_WIDTH)
             Dim height As Integer = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT)
-            success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE)    ' Convert every colour component into unsigned bytes
-            Gl.glGenTextures(1, map_layers(map).layers(layer).text_id)
+            ' Convert every colour component into unsigned bytes
+            success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE)
+            Ilu.iluCrop(64, 64, 0, 896, 896, 1)
+            Dim text_id As Integer
+            Gl.glGenTextures(1, text_id)
 
             Gl.glEnable(Gl.GL_TEXTURE_2D)
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(map).layers(layer).text_id)
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, text_id)
 
             If largestAnsio > 0 Then
                 Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnsio)
@@ -123,13 +131,16 @@ Module modTextures
             Il.ilBindImage(0)
             Ilu.iluDeleteImage(texID)
             e = Gl.glGetError
+            Return text_id
         Else
 
         End If
+        Il.ilBindImage(0)
+        Ilu.iluDeleteImage(texID)
         ms.Close()
         ms.Dispose()
-        Return
-    End Sub
+        Return 0
+    End Function
 
     Public Function get_main_tex_texture_id(ByVal ms As MemoryStream, ByVal w As Integer) As Integer
         Dim s As String = ""
@@ -331,22 +342,6 @@ Module modTextures
         GC.Collect()
         Return dummy
     End Function
-    Public Sub make_mix_texture_id(map As Integer, b As Bitmap)
-
-        b.RotateFlip(RotateFlipType.RotateNoneFlipX)
-        Gl.glGenTextures(1, map_layers(map).mix_texture_Id)
-        Dim bitmapData = b.LockBits(New Rectangle(0, 0, b.Width, _
-                             b.Height), Imaging.ImageLockMode.ReadOnly, Imaging.PixelFormat.Format32bppArgb)
-        Gl.glBindTexture(Gl.GL_TEXTURE_2D, map_layers(map).mix_texture_Id)
-
-        Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR)
-        Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST)
-        Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 4, b.Width, b.Height, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, bitmapData.Scan0)
-        b.UnlockBits(bitmapData) ' Unlock The Pixel Data From Memory
-        b.Dispose()
-        'GC.Collect()
-        Return
-    End Sub
 
     Public Function get_texture(ByRef ms As MemoryStream, ByVal shrink As Boolean) As Integer
         'Dim s As String = ""

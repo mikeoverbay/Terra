@@ -142,12 +142,20 @@ Public Class frmShowImage
             'n_list1.Add("HorizonShadow Map. Generated from data in the cdata/terrain2/.")
             For l = 1 To map_layers(map).layer_count
                 If Gl.glIsTexture(map_layers(map).layers(l).text_id) Then
-                    ListBox1.Items.Add(map_layers(map).layers(l).text_id.ToString + vbTab + " : Map/Layer " + map.ToString + "/" + l.ToString + vbTab + " layering Texture")
+                    ListBox1.Items.Add(map_layers(map).layers(l).text_id.ToString + vbTab + " : Map/Layer T1 " + map.ToString + "/" + l.ToString + vbTab + " layering Texture")
                     n_list1.Add(map_layers(map).layers(l).l_name)
                 End If
                 If Gl.glIsTexture(map_layers(map).layers(l).norm_id) Then
-                    ListBox1.Items.Add(map_layers(map).layers(l).norm_id.ToString + vbTab + " : Map/Layer " + map.ToString + "/" + l.ToString + vbTab + " layering Texture")
+                    ListBox1.Items.Add(map_layers(map).layers(l).norm_id.ToString + vbTab + " : Map/Layer N1 " + map.ToString + "/" + l.ToString + vbTab + " layering Texture")
                     n_list1.Add(map_layers(map).layers(l).n_name)
+                End If
+                If Gl.glIsTexture(map_layers(map).layers(l).text_id2) Then
+                    ListBox1.Items.Add(map_layers(map).layers(l).text_id2.ToString + vbTab + " : Map/Layer T2 " + map.ToString + "/" + l.ToString + vbTab + " layering Texture")
+                    n_list1.Add(map_layers(map).layers(l).l_name2)
+                End If
+                If Gl.glIsTexture(map_layers(map).layers(l).norm_id2) Then
+                    ListBox1.Items.Add(map_layers(map).layers(l).norm_id2.ToString + vbTab + " : Map/Layer N2 " + map.ToString + "/" + l.ToString + vbTab + " layering Texture")
+                    n_list1.Add(map_layers(map).layers(l).n_name2)
                 End If
                 cnt += 1
             Next

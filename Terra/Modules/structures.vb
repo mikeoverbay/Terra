@@ -77,16 +77,20 @@ Module structures
         End Sub
     End Structure
 
-
-    Public map_layer_cache(1) As tree_textures_
-    Public normalMap_layer_cache(1) As tree_textures_
+    Public layer_texture_cache(1) As texture_
+    Public Structure texture_
+        Public name As String
+        Public id As Integer
+    End Structure
+    'Public map_layer_cache(1) As tree_textures_
+    'Public normalMap_layer_cache(1) As tree_textures_
     Public texture_cache(1) As tree_textures_
     Public map_layers() As layer_
     Public Structure layer_
         Public used_layers As Integer
         Public layers() As layer_data_
         Public layer_count As Integer
-        Public main_texture As Integer
+        Public texture_mask As Integer
         Public main_texture_id As Integer
         Public mix_image As Bitmap
         Public color_tex As Bitmap
@@ -106,8 +110,10 @@ Module structures
         Public u As Single
         Public v As Single
         Public r As Single
-        Public uP As vect4
-        Public vP As vect4
+        Public uP1 As vect4
+        Public vP1 As vect4
+        Public uP2 As vect4
+        Public vP2 As vect4
         Dim data() As Byte
         Dim Mix_data() As Byte
         Dim ms As MemoryStream
