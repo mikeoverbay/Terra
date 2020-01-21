@@ -77,6 +77,8 @@ Module modRoadDecals
         Public cull_method As Integer
         Public is_parallax As Boolean
         Public is_wet As Boolean
+        Public fade_in As Single
+        Public fade_out As Single
     End Structure
 
 #Region "ROAD"
@@ -171,6 +173,7 @@ Module modRoadDecals
         Dim ms As MemoryStream = Nothing
         ReDim road_decals(Road_decal_sections.Length - 1)
 
+        clear_output() 'clears debug output window
         For k = 0 To Road_decal_sections.Length - 1
             FrmInfoWindow.tb1.Text = "Getting Road Decals(" + k.ToString("000") + ")"
             Application.DoEvents()
@@ -249,14 +252,52 @@ Module modRoadDecals
                 Dim something10 = br.ReadSingle
                 Dim something11 = br.ReadSingle
                 Dim something12 = br.ReadSingle
+                'these appear to be fade in - fade out values!
                 Dim something13 = br.ReadSingle
                 Dim something14 = br.ReadSingle
+                road_decals(k).road_decal_list(z).fade_in = something13
+                road_decals(k).road_decal_list(z).fade_out = something14
+
                 Dim something15 = br.ReadSingle
                 Dim something16 = br.ReadSingle
-
-
+#If 0 Then
+                Dim cnt = 1
+                Debug.Write(z.ToString("0000"))
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something1.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something2.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something3.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something4.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something5.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something6.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something7.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something8.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something9.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something10.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something11.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something12.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something13.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something14.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something15.ToString("000.0000"))
+                cnt += 1
+                Debug.Write(" u" + cnt.ToString("00") + ": " + something16.ToString("000.0000"))
+                Debug.Write(vbCrLf)
+#End If
             Next
-        Next
+        Next k
         ms.Dispose()
         GC.Collect()
         make_road_new_decals()

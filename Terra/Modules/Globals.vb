@@ -3,8 +3,16 @@ Imports Tao.FreeGlut.Glut
 Imports System.Math
 Imports Lidgren.Network
 Imports System.Windows.Media.Media3D
+Imports System.Runtime.InteropServices
+
 Module Globals
-    '==============
+    '=================================================================================
+    Public Sub clear_output()
+        Dim dte = Marshal.GetActiveObject("VisualStudio.DTE.12.0") 'change to version of visual studio
+        dte.ExecuteCommand("Edit.ClearOutputWindow")
+    End Sub
+    '=================================================================================
+
     Public compass_display_list, compass_outside As Integer
     Public compass_tex_id, compass_outside_texture As Integer
     Public gui_pkg = New Ionic.Zip.ZipFile

@@ -78,6 +78,7 @@ Module ModTerrainLayers
         Public scale As vect4
     End Structure
     Dim cur_layer_info_pnt As Integer = 0
+
 #Region "Layer building functions"
 
 
@@ -895,22 +896,22 @@ get_map_2:
     End Function
 
     Public Function get_layer_normal_image(map As Integer, layer As Integer) As Boolean
+
         Dim cnt = layer_texture_cache.Length
         Dim normal_update As Boolean = True
         map_layers(map).layers(layer).n_name = map_layers(map).layers(layer).l_name.Replace("_AM", "_NM")
         map_layers(map).layers(layer).n_name2 = map_layers(map).layers(layer).l_name2.Replace("_AM", "_NM")
         Dim n_map_name As String = map_layers(map).layers(layer).n_name
         Dim n_map_name2 As String = map_layers(map).layers(layer).n_name2
-        'Debug.WriteLine(map.ToString + " " + n_map_name)
 
         ' get normal_map 1 ----------------------------------------------------------------
-        'check if this texture already exists
         If n_map_name = "" Then
             map_layers(map).layers(layer).norm_id = dummy_texture
+            GoTo get_map_2
         End If
+
         'check if this texture already exists
         cnt = layer_texture_cache.Length
-        n_map_name = map_layers(map).layers(layer).n_name
         For i = 0 To cnt - 1
             If layer_texture_cache(i).name = n_map_name Then
                 map_layers(map).layers(layer).norm_id = layer_texture_cache(i).id
@@ -921,6 +922,7 @@ get_map_2:
         Dim retry As Boolean = False
 try_again1:
         '================= get norml map
+
         Dim nmap_entry As Ionic.Zip.ZipEntry = active_pkg(n_map_name)
         If nmap_entry Is Nothing Then
             nmap_entry = get_shared(n_map_name)
@@ -936,6 +938,7 @@ try_again1:
                 'see if we can find it by adding "_NM" to the diffuse map name.
                 retry = True ' to stop endless looping
                 n_map_name = map_layers(map).layers(layer).l_name.Replace(".", "") + "_NM.dds"
+                cnt = layer_texture_cache.Length
                 For i = 0 To cnt - 1
                     If layer_texture_cache(i).name = n_map_name Then
                         map_layers(map).layers(layer).norm_id = layer_texture_cache(i).id
@@ -951,6 +954,7 @@ try_again1:
         map_layers(map).layers(layer).norm_id = build_layer_normal_texture(map, mdds, layer)
 
         frmMapInfo.I__Map_Textures_tb.Text += "Normal: " + n_map_name + vbCrLf 'save info
+        'Debug.WriteLine(n_map_name)
 
         'update the cache
         cnt = layer_texture_cache.Length
@@ -971,7 +975,6 @@ get_map_2:
         End If
         'check if this texture already exists
         cnt = layer_texture_cache.Length
-        n_map_name2 = map_layers(map).layers(layer).n_name2
         For i = 0 To cnt - 1
             If layer_texture_cache(i).name = n_map_name2 Then
                 map_layers(map).layers(layer).norm_id2 = layer_texture_cache(i).id
@@ -981,8 +984,8 @@ get_map_2:
         Next
         Dim retry2 As Boolean = False
 try_again2:
-        '================= get norml map
-        Dim nmap_entry2 As Ionic.Zip.ZipEntry = active_pkg(n_map_name)
+        '================= get norml map2
+        Dim nmap_entry2 As Ionic.Zip.ZipEntry = active_pkg(n_map_name2)
         If nmap_entry2 Is Nothing Then
             nmap_entry2 = get_shared(n_map_name2)
             If nmap_entry2 Is Nothing Then
@@ -996,6 +999,7 @@ try_again2:
                 'see if we can find it by adding "_NM" to the diffuse map name.
                 retry2 = True ' to stop endless looping
                 n_map_name2 = map_layers(map).layers(layer).l_name.Replace(".", "") + "_NM.dds"
+                cnt = layer_texture_cache.Length
                 For i = 0 To cnt - 1
                     If layer_texture_cache(i).name = n_map_name2 Then
                         map_layers(map).layers(layer).norm_id2 = layer_texture_cache(i).id
@@ -1011,7 +1015,7 @@ try_again2:
         map_layers(map).layers(layer).norm_id2 = build_layer_normal_texture(map, mdds2, layer)
         mdds2.Dispose()
 
-        frmMapInfo.I__Map_Textures_tb.Text += "Normal: " + n_map_name + vbCrLf 'save info
+        frmMapInfo.I__Map_Textures_tb.Text += "Normal: " + n_map_name2 + vbCrLf 'save info
 
         'update the cache
         cnt = layer_texture_cache.Length

@@ -54,6 +54,8 @@ Module modSpacedBinVars
         Public cull_method As Integer
         Public is_parallax As Boolean
         Public is_wet As Boolean
+
+
     End Structure
 #End Region
 

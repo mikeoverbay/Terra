@@ -130,7 +130,9 @@ Module modZlib
 
     End Sub
     Public Function get_light_settings() As Boolean
-        Try
+
+        If File.Exists(Application.StartupPath + "/light_settings/" + load_map_name + ".light") Then
+
             Dim f = File.Open(Application.StartupPath + "/light_settings/" + load_map_name + ".light", FileMode.Open)
             Dim b_reader As New BinaryReader(f)
             'the order: all as integer
@@ -156,7 +158,8 @@ Module modZlib
             gray_level = 1.0 - (frmLighting.s_gray_level.Value / 100)
             b_reader.Dispose()
             f.Close()
-        Catch ex As Exception
+            Return True
+        Else
             lighting_terrain_texture = frmLighting.s_terrain_texture_level.Value / 50.0!
             lighting_ambient = frmLighting.s_terrain_ambient.Value / 300.0!
             lighting_fog_level = frmLighting.s_fog_level.Value / 10000.0! ' yes 10,000
@@ -164,8 +167,9 @@ Module modZlib
             gamma_level = (frmLighting.s_gamma.Value / 100) * 1.0!
             gray_level = 1.0 - (frmLighting.s_gray_level.Value / 100)
             Return False
-        End Try
-        Return True
+
+        End If
+
     End Function
     Private Sub clear_info()
         frmMapInfo.I__Map_Textures_tb.Clear()
@@ -174,6 +178,7 @@ Module modZlib
         frmMapInfo.I__Decal_Textures_tb.Clear()
         frmMapInfo.I__General_Info_tb.Clear()
     End Sub
+
     Private Sub prepare_mesh_buffers()
         'prepares the buffers used to create the mesh
         map_odd = False ' used to signal maps have odd side lengths .. IE. 9 x 9... 15 x 15
@@ -182,7 +187,7 @@ Module modZlib
         If o = 1 Then
             map_odd = True
         End If
-        'Caluculate data size for mesh. Tis will be used to average normals, tangents and bi-tangents
+        'Caluculate data size for mesh. This will be used to average normals, tangents and bi-tangents
         ReDim mesh(0) 'first, clear out any old data
         mesh(0) = New vertex_data
         GC.Collect()

@@ -163,8 +163,11 @@ Module modSpaceBin
         For k = 0 To cBSMI.model_BSMO_indexes.Length - 1
             Model_Matrix_list(k) = New model_matrix_list_
             Dim BSMO_Index = cBSMI.model_BSMO_indexes(k).BSMO_index
-
-            Dim primitive_name = cBSMO.model_entries(BSMO_Index).model_name.Replace("primitives", "model")
+            Dim primitive_name = ""
+            If cBSMO.model_entries(BSMO_Index).model_name IsNot Nothing Then
+                primitive_name = cBSMO.model_entries(BSMO_Index).model_name.Replace("primitives", "model")
+            End If
+            cBSMO.model_entries(BSMO_Index).model_name.Replace("primitives", "model")
             Model_Matrix_list(k).primitive_name = primitive_name
 
             Model_Matrix_list(k).matrix = cBSMI.matrix_list(k).matrix
@@ -205,7 +208,7 @@ Module modSpaceBin
         For i = 0 To mc
             Model_Matrix_list(i) = tm(i)
             If Model_Matrix_list(i).exclude = True Then
-                Debug.WriteLine(i.ToString("0000") + " : " + Model_Matrix_list(i).primitive_name)
+                'Debug.WriteLine(i.ToString("0000") + " : " + Model_Matrix_list(i).primitive_name)
             End If
 
         Next

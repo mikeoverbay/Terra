@@ -13,6 +13,10 @@ uniform sampler2D colorMap;
 uniform vec2 uv_wrap;
 uniform int influence;
 
+
+uniform float fade_in;
+uniform float fade_out;
+
 uniform vec3 tr;
 uniform vec3 bl;
 in vec2 TexCoords;
@@ -34,15 +38,6 @@ vec2 postProjToScreen(vec4 position)
     return 0.5 * (vec2(screenPos.x, screenPos.y) + 1);
 }
 void main(){
-    float a_table[40];// stupid hack.. i need a better way!
-    
-    for (int i =0; i<39 ; i++){
-        a_table[i] = 1.0;
-    }
-    a_table[2]=0.7;
-    a_table[16] = 1.5;
-    a_table[18] = 1.5;
-    a_table[30] = 1.5;
     // Calculate UVs
     vec2 UV = postProjToScreen(positionSS);
     /*==================================================*/
@@ -80,9 +75,21 @@ void main(){
     //Get texture UVs
     WorldPosition.xy += 0.5;
     WorldPosition.y *= -1.0;
+    float scaler = -WorldPosition.y;
 
     vec4 color = texture2D(colorMap, WorldPosition.xy*uv_wrap.xy);
-    //color.a *= a_table[influence];
+    color.a *= fade_out;
+
+    if (fade_in != fade_out)
+    {
+		float delta = fade_out - fade_in;
+		float alpha;
+		alpha = (scaler * fade_in)+fade_out;
+		if (delta >0.0) alpha = fade_in-(scaler * delta);
+		if (fade_in == fade_out) alpha = fade_in;
+		color.a *= alpha;
+    }
+  
     if (color.a < 0.05) { discard; }
     gColor = color;
 

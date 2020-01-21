@@ -11,6 +11,9 @@ uniform sampler2D normalMap;
 uniform vec2 uv_wrap;
 uniform int influence;
 
+uniform float fade_in;
+uniform float fade_out;
+
 uniform vec3 tr;
 uniform vec3 bl;in vec2 TexCoords;
 in vec4 positionSS; // screen space
@@ -83,8 +86,21 @@ void main(){
     //Get texture UVs
     WorldPosition.xy += 0.5;
     WorldPosition.y *= -1.0;
+    float scaler = -WorldPosition.y;
     vec4 color = texture2D(colorMap, WorldPosition.xy * uv_wrap.xy);
+    color.a *= fade_out;
+
+    if (fade_in != fade_out)
+    {
+		float delta = fade_out - fade_in;
+		float alpha;
+		alpha = (scaler * fade_in)+fade_out;
+		if (delta >0.0) alpha = fade_in-(scaler * delta);
+		if (fade_in == fade_out) alpha = fade_in;
+		color.a *= alpha;
+    }
 	if (color.a < 0.4) discard;
+
     vec4 bump;
     bump.xz = (texture2D(normalMap, WorldPosition.xy * uv_wrap.xy).ag);
         ;

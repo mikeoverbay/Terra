@@ -3046,7 +3046,7 @@ skip:
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
         For j = 0 To road_decals.Length - 1
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, road_decals(j).textures(0).textureID)
-            For k = 0 To road_decals(j).road_decal_list.Length - 1
+            For k = 0 To road_decals(j).road_decal_list.Length - 1 ' Step 2
                 With road_decals(j).road_decal_list(k)
                     If .good And .visible Then
                         Gl.glFrontFace(.cull_method)
@@ -3055,7 +3055,8 @@ skip:
                         Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
                         Gl.glUniform2f(prjd_uv_wrap, 1.0!, 1.0!)
                         Gl.glUniform1i(prjd_influence, CInt(2))
-
+                        Gl.glUniform1f(prjd_fade_in, .fade_in)
+                        Gl.glUniform1f(prjd_fade_out, .fade_out)
                         Gl.glCallList(.display_id)
 
                     End If
@@ -3071,6 +3072,8 @@ skip:
                     Gl.glUniform3f(prjd_bottomleft, .lbl.x, .lbl.y, .lbl.z)
                     Gl.glUniform2f(prjd_uv_wrap, .u_wrap, .v_wrap)
                     Gl.glUniform1i(prjd_influence, CInt(.influence))
+                    Gl.glUniform1f(prjd_fade_in, 1.0!) ' hard wired
+                    Gl.glUniform1f(prjd_fade_out, 1.0!) ' hard wired
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
 
@@ -3124,6 +3127,8 @@ skip:
                         Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
                         Gl.glUniform2f(decal_uv_wrap, 1.0!, 1.0!)
                         Gl.glUniform1i(decal_influence, CInt(2))
+                        Gl.glUniform1i(decal_fade_in, .fade_in)
+                        Gl.glUniform1i(decal_fade_out, .fade_out)
 
                         Gl.glCallList(.display_id)
 
@@ -3141,6 +3146,9 @@ skip:
                     Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
                     Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
                     Gl.glUniform1i(decal_influence, .influence)
+                    Gl.glUniform1i(decal_fade_in, 1.0)
+                    Gl.glUniform1i(decal_fade_out, 1.0)
+
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
@@ -3175,7 +3183,7 @@ skip:
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(1.0, 1.0, 1.0)
 
-            For j = 0 To road_decals.Length - 1
+            For j = 0 To 1 'road_decals.Length - 1
                 For k = 0 To road_decals(j).road_decal_list.Length - 1
                     With road_decals(j).road_decal_list(k)
                         If .good And .visible Then
