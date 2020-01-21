@@ -666,7 +666,7 @@ skip_unknown1:
                 GoTo read3_only
             End If
             If ty = 1 And vr = 3 Then
-                Stop
+                GoTo read3_only
             End If
             If ty = 1 And vr = 2 Then
                 Stop
