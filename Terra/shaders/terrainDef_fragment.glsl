@@ -84,7 +84,7 @@ in float hole;
 
 vec4 add_norms (in vec4 n1 , in vec4 n2){
     n1.xyz += n2.xyz;
-    return normalize(n1);   
+    return (n1);   
 }
 void main(void)
 {
@@ -134,7 +134,7 @@ void main(void)
     float scale = 128.0/144.0;
     mix_coords = color_uv;
     mix_coords *= scale;
-    mix_coords += .055555555;// = 8/144
+    mix_coords += .05555555;// = 8/144
 
     // layer 4 ---------------------------------------------
     vec2 tv4;
@@ -145,14 +145,6 @@ void main(void)
     vec2 tv2_2;
     vec2 tv1;
     vec2 tv1_2;
-    mat2 t4Mat =  mat2(-layer3UT1.x, -layer3UT1.z,layer3VT1.x,layer3VT1.z);
-    mat2 t42Mat = mat2(-layer3UT2.x, -layer3UT2.z,layer3VT2.x,layer3VT2.z);
-    mat2 t3Mat =  mat2(-layer2UT1.x, -layer2UT1.z,layer2VT1.x,layer2VT1.z);
-    mat2 t32Mat = mat2(-layer2UT2.x, -layer2UT2.z,layer2VT2.x,layer2VT2.z);
-    mat2 t2Mat =  mat2(-layer1UT1.x, -layer1UT1.z,layer1VT1.x,layer1VT1.z);
-    mat2 t22Mat = mat2(-layer1UT2.x, -layer3UT2.z,layer1VT2.x,layer1VT2.z);
-    mat2 t1Mat =  mat2(-layer0UT1.x, -layer0UT1.z,layer0VT1.x,layer0VT1.z);
-    mat2 t12Mat = mat2(-layer0UT2.x, -layer0UT2.z,layer0VT2.x,layer0VT2.z);
 
     if (test_mode == 0 )
     {
@@ -320,8 +312,6 @@ else
     n3_2.y *= -1.0;
     n4_2.y *= -1.0;
 
-
-
     n1.rgb = (TBN * n1.rgb) * MixLevel1.r;
     n1_2.rgb = (TBN * n1_2.rgb) * MixLevel1.g;
 
@@ -334,32 +324,19 @@ else
     n4.rgb = (TBN * n4.rgb) * MixLevel4.r;
     n4_2.rgb = (TBN * n4_2.rgb) * MixLevel4.g;
 
-
-    n1.xz   = -t1Mat * n1.xz;
-    n1_2.xz = -t12Mat * n1_2.xz;
-
-    n2.xz   = -t2Mat * n2.xz;
-    n2_2.xz = -t22Mat * n2_2.xz;
-
-    n3.xz   = -t3Mat * n3.xz;
-    n3_2.xz = -t32Mat * n3_2.xz;
-
-    n4.xz   = -t4Mat * n4.xz;
-    n4_2.xz = -t42Mat * n4_2.xz;
-
     //-------------------------------------------------------------
     vec3 N = normalize(n);
     
     vec4 out_n = vec4(N,0.0);
+
     out_n = add_norms(out_n, mix(n1, empty, mask_1.a));
     out_n = add_norms(out_n, mix(n1_2, empty, mask_1.b));
     out_n = add_norms(out_n, mix(n2, empty, mask_1.g));
     out_n = add_norms(out_n, mix(n2_2, empty, mask_1.r));
     out_n = add_norms(out_n, mix(n3, empty, mask_2.a));
     out_n = add_norms(out_n, mix(n3_2, empty, mask_2.b));
-    out_n = add_norms(out_n, mix(n3, empty, mask_2.g));
+    out_n = add_norms(out_n, mix(n4, empty, mask_2.g));
     out_n = add_norms(out_n, mix(n4_2, empty, mask_2.r));
-
 
     gColor = base;
     gColor.a = 1.0;

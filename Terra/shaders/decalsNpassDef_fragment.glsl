@@ -84,6 +84,7 @@ void main(){
     WorldPosition.xy += 0.5;
     WorldPosition.y *= -1.0;
     vec4 color = texture2D(colorMap, WorldPosition.xy * uv_wrap.xy);
+	if (color.a < 0.4) discard;
     vec4 bump;
     bump.xz = (texture2D(normalMap, WorldPosition.xy * uv_wrap.xy).ag);
         ;
