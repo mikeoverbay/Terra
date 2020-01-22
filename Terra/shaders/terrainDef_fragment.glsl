@@ -265,17 +265,17 @@ void main(void)
 else
 {
     base = vec4(0.4, 0.4, 0.4, 1.0);
-    base += t1* t1.a * MixLevel1.r ;
+    base += t1 * t1.a * MixLevel1.r ;
     base += t1_2 * t1_2.a * MixLevel1.g;
    
-    base += t2*t2.a * MixLevel2.r ;
-    base += t2_2*t2_2.a * MixLevel2.g;
+    base += t2 * t2.a * MixLevel2.r ;
+    base += t2_2 * t2_2.a * MixLevel2.g;
 
-    base += t3*t3.a * MixLevel3.r ;
-    base += t3_2*t3_2.a * MixLevel3.g ;
+    base += t3 * t3.a * MixLevel3.r ;
+    base += t3_2 * t3_2.a * MixLevel3.g ;
 
-    base += t4*t4.a * MixLevel4.r ;
-    base += t4_2*t4_2.a * MixLevel4.g ;
+    base += t4 * t4.a * MixLevel4.r ;
+    base += t4_2 * t4_2.a * MixLevel4.g ;
 }
     float spec;
 

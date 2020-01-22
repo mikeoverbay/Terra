@@ -255,10 +255,10 @@ Module modRoadDecals
                 'these appear to be fade in - fade out values!
                 Dim something13 = br.ReadSingle
                 Dim something14 = br.ReadSingle
-                road_decals(k).road_decal_list(z).fade_in = something13
-                road_decals(k).road_decal_list(z).fade_out = something14
-
                 Dim something15 = br.ReadSingle
+                road_decals(k).road_decal_list(z).fade_in = something14
+                road_decals(k).road_decal_list(z).fade_out = something15
+
                 Dim something16 = br.ReadSingle
 #If 0 Then
                 Dim cnt = 1

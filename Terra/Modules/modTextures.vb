@@ -103,6 +103,9 @@ Module modTextures
             ' Convert every colour component into unsigned bytes
             success = Il.ilConvertImage(Il.IL_RGBA, Il.IL_UNSIGNED_BYTE)
             Ilu.iluCrop(64, 64, 0, 896, 896, 1)
+            'Ilu.iluFlipImage()
+            'Ilu.iluMirror()
+
             Dim text_id As Integer
             Gl.glGenTextures(1, text_id)
 

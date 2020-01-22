@@ -735,6 +735,7 @@ skip_unknown1:
                 If cWGSD.decalEntries(k).extraMap <> "" Then
                     cWGSD.decalEntries(k).diffuseMap = cWGSD.decalEntries(k).extraMap
                     cWGSD.decalEntries(k).normalMap = cWGSD.decalEntries(k).extraMap
+                    GoTo ignore_this
                     If True Then
                         'some sorta special enviroment map
                         Debug.WriteLine(cWGSD.decalEntries(k).diffuseMap)
@@ -830,6 +831,7 @@ read3_only:
                 cWGSD.decalEntries(k).extraMap = find_str_BWST(cWGSD.decalEntries(k).extrakey)
                 'this is a temp hack
                 If cWGSD.decalEntries(k).extraMap <> "" Then
+                    GoTo ignore_this2
                     cWGSD.decalEntries(k).diffuseMap = cWGSD.decalEntries(k).extraMap
                     cWGSD.decalEntries(k).normalMap = cWGSD.decalEntries(k).extraMap
                     decal_matrix_list(k).is_wet = True

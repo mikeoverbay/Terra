@@ -24,7 +24,7 @@ in vec4 positionSS; // screen space
 in vec4 positionWS; // world space
 in mat4 invd_mat; // inverse decal matrix
 in mat4 matPrjInv; // inverse projection matrix
-flat in int flag;
+
 
 void clip(vec3 v){
     if (v.x > tr.x || v.x < bl.x ) { discard; }
@@ -78,17 +78,17 @@ void main(){
     float scaler = -WorldPosition.y;
 
     vec4 color = texture2D(colorMap, WorldPosition.xy*uv_wrap.xy);
-    color.a *= fade_out;
-
+    float alpha = fade_in;
+    float delta = fade_out - fade_in;
     if (fade_in != fade_out)
     {
-		float delta = fade_out - fade_in;
-		float alpha;
-		alpha = (scaler * fade_in)+fade_out;
-		if (delta >0.0) alpha = fade_in-(scaler * delta);
-		if (fade_in == fade_out) alpha = fade_in;
-		color.a *= alpha;
+        if (delta <0.0){ alpha = fade_out-(scaler * abs(delta)); }
+        if (delta >0.0){ alpha = scaler * abs(delta) + fade_in; }
     }
+
+    color.a *= alpha;
+
+
   
     if (color.a < 0.05) { discard; }
     gColor = color;

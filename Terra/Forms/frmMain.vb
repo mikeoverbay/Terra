@@ -12,6 +12,7 @@ Imports System.IO
 Imports System.Xml
 Imports System.Web
 Imports Tao.OpenGl
+Imports Tao.OpenGl.Gl
 Imports Tao.Platform.Windows
 Imports Tao.FreeGlut
 Imports Tao.FreeGlut.Glut
@@ -3041,12 +3042,11 @@ skip:
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-
-
+        'COLOR SHADER
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
         For j = 0 To road_decals.Length - 1
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, road_decals(j).textures(0).textureID)
-            For k = 0 To road_decals(j).road_decal_list.Length - 1 ' Step 2
+            For k = road_decals(j).road_decal_list.Length - 1 To 0 Step -1
                 With road_decals(j).road_decal_list(k)
                     If .good And .visible Then
                         Gl.glFrontFace(.cull_method)
@@ -3089,15 +3089,15 @@ skip:
         '====================================================================================
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
         Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, gBufferFBO)
-        Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT)
+        Gl.glReadBuffer(Gl.GL_COLOR_ATTACHMENT1_EXT) ' set to read gNormal buffer
 
         Gl.glDisable(Gl.GL_BLEND)
+
         Gl.glDisable(Gl.GL_DEPTH_TEST)
-        Gl.glClearColor(0.0F, 0.0F, 0.4F, 0.0F)
-        Gl.glClear(Gl.GL_COLOR_BUFFER_BIT Or Gl.GL_DEPTH_BUFFER_BIT)
+        'copy gNormal in to color buffer of defaul screen buffer.
         Gl.glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, Gl.GL_COLOR_BUFFER_BIT, Gl.GL_NEAREST)
         Gl.glReadBuffer(Gl.GL_BACK)
-        Gl.glBindFramebufferEXT(Gl.GL_READ_FRAMEBUFFER_EXT, 0)
+        Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0)
 
         Gl.glUseProgram(shader_list.decalsNpassDef_shader)
         Gl.glUniform1i(decal_depthmap_id, 0)
@@ -3105,6 +3105,7 @@ skip:
         Gl.glUniform1i(decal_flagmap, 2)
         Gl.glUniform1i(decal_color_map_id, 3)
         Gl.glUniform1i(decal_normal_map_id, 4)
+        Gl.glUniform1i(decal_first_pass_color, 5)
 
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gDepthTexture)
@@ -3112,9 +3113,11 @@ skip:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gNormal)
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 2)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, gFlag)
-
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 5)
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, gColor)
+        'NORMAL SHADER
         For j = 0 To road_decals.Length - 1
-            For k = 0 To road_decals(j).road_decal_list.Length - 1
+            For k = road_decals(j).road_decal_list.Length - 1 To 0 Step -1
                 Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, road_decals(j).textures(0).textureID)
                 Gl.glActiveTexture(Gl.GL_TEXTURE0 + 4)
@@ -3127,8 +3130,8 @@ skip:
                         Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
                         Gl.glUniform2f(decal_uv_wrap, 1.0!, 1.0!)
                         Gl.glUniform1i(decal_influence, CInt(2))
-                        Gl.glUniform1i(decal_fade_in, .fade_in)
-                        Gl.glUniform1i(decal_fade_out, .fade_out)
+                        Gl.glUniform1f(decal_fade_in, .fade_in)
+                        Gl.glUniform1f(decal_fade_out, .fade_out)
 
                         Gl.glCallList(.display_id)
 
@@ -3146,8 +3149,8 @@ skip:
                     Gl.glUniform3f(decal_bl_id, .lbl.x, .lbl.y, .lbl.z)
                     Gl.glUniform2f(decal_uv_wrap, .u_wrap, .v_wrap)
                     Gl.glUniform1i(decal_influence, .influence)
-                    Gl.glUniform1i(decal_fade_in, 1.0)
-                    Gl.glUniform1i(decal_fade_out, 1.0)
+                    Gl.glUniform1f(decal_fade_in, 1.0!)
+                    Gl.glUniform1f(decal_fade_out, 1.0!)
 
                     Gl.glActiveTexture(Gl.GL_TEXTURE0 + 3)
                     Gl.glBindTexture(Gl.GL_TEXTURE_2D, decal_matrix_list(k).texture_id)
@@ -3172,7 +3175,7 @@ skip:
         Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, gBufferFBO)
         'Gl.glBindFramebufferEXT(Gl.GL_DRAW_FRAMEBUFFER_EXT, gBufferFBO)
         Dim e1 = Gl.glGetError
-
+        'WIRE RENDERNING
         G_Buffer.attachFOBtextures()
         Gl.glFrontFace(Gl.GL_CCW)
         Gl.glDisable(Gl.GL_CULL_FACE)
@@ -3183,7 +3186,7 @@ skip:
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE)
             Gl.glColor3f(1.0, 1.0, 1.0)
 
-            For j = 0 To 1 'road_decals.Length - 1
+            For j = 0 To road_decals.Length - 1
                 For k = 0 To road_decals(j).road_decal_list.Length - 1
                     With road_decals(j).road_decal_list(k)
                         If .good And .visible Then
@@ -3224,7 +3227,7 @@ skip:
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
-        Gl.glActiveTexture(Gl.GL_TEXTURE0)
+        Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0)
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0)
         Gl.glDisable(Gl.GL_BLEND)
         Gl.glDepthMask(Gl.GL_TRUE)

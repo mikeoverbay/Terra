@@ -1271,7 +1271,7 @@ try_again2:
         Il.ilDeleteImages(1, texID)
         ' has to run on vertical and horz
         'frmShowImage.draw_texture(mix_texture_Id)
-        For i = 1 To 2
+        For i = 1 To 1
             mix_texture_Id = blur_image(mix_texture_Id, "vert", True)
             mix_texture_Id = blur_image(mix_texture_Id, "horz", True)
         Next

@@ -484,10 +484,11 @@ Module shader_loader
         ring_depthmap = Gl.glGetUniformLocation(shader_list.ring_Shader, "depthMap")
     End Sub
 
-    Public decal_color_map_id, decal_normal_map_id, decal_normal_in_id, _
+    Public decal_color_map_id, decal_normal_map_id, decal_normal_in_id, decal_first_pass_color, _
     decal_depthmap_id, decal_bl_id, decal_tr_id, decal_matrix_id, decal_flag, decal_flagmap, _
     decal_fade_in, decal_fade_out As Integer
     Private Sub set_decalsNpassDef_variables()
+        decal_first_pass_color = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "firstPassColor")
         decal_color_map_id = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "colorMap")
         decal_normal_map_id = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "normalMap")
         decal_depthmap_id = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "depthMap")
@@ -500,6 +501,8 @@ Module shader_loader
         decal_influence = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "influence")
         'decal_flag = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "flag")
         decal_flagmap = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "gFlag")
+        decal_fade_in = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "fade_in")
+        decal_fade_out = Gl.glGetUniformLocation(shader_list.decalsNpassDef_shader, "fade_out")
     End Sub
 
     Public prjd_color, prjd_normal, prjd_depthmap, prjd_matrix, prjd_topright, _
