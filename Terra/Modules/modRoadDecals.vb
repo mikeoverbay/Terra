@@ -228,9 +228,9 @@ Module modRoadDecals
 
             Dim ffffffff = br.ReadUInt32
             Dim something1 = br.ReadSingle
-            Dim someByte = br.ReadByte
-            Dim something2 = br.ReadSingle
-            Dim something3 = br.ReadSingle
+            Dim someByte = br.ReadByte ' This is priority
+            Dim something2 = br.ReadSingle ' This is parallax amplitude
+            Dim something3 = br.ReadSingle ' This is parallax offset
             Dim someInt16 = br.ReadUInt16
 
             Dim decal_count = br.ReadUInt32
